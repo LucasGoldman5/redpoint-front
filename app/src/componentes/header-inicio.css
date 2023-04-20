@@ -1,0 +1,27 @@
+.header-inicio{
+    width: 100%;
+}
+.header-none{
+    display: none;
+}
+.contenedor-nav-inicio{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    height: 40px;
+}
+.titulo-nav-inicio{
+    display: flex;
+    flex-direction: flex-start;
+}
+.contenedor.container{
+    width: 100%;
+}
+.nav-li-link-inicio{
+    color: white;
+    margin: 10px 6px ;
+    text-decoration: none;
+}
+.nav-li-link-inicio:hover {
+    color: red;
+}
