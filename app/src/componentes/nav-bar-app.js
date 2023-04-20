@@ -20,6 +20,7 @@ const NavBar = () => {
             <Nav.Link href="#etc">etc</Nav.Link>
             <Nav.Link href="#etc">etc</Nav.Link>
             <Nav.Link href="#etc">etc</Nav.Link>
+            {/* hola soy un comentario random */}
           </Nav>
         </Container>
       </Navbar>
