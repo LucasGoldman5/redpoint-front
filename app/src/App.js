@@ -1,4 +1,3 @@
-
 import HeaderInicio from './componentes/header-inicio';
 import HeaderGeneral from './componentes/header-general';
 import Tabla from './componentes/tabla';
