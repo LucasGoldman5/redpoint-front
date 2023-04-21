@@ -20,10 +20,8 @@ const Tabla = () =>{
     const [abrirModalAgregar, setAbrirModalAgregar] = useState(false)
     const [abrirModalEditar, setAbrirModalEditar] = useState(false);
     const [itemToEdit, setItemToEdit] = useState(null);
-    const [datosEnvio, setDatosEnvio] = useState (null);
     const [cadena,setCadena] = useState("");
-    const [newForm, setNewForm]=useState({})
-      
+
 
     const location = useLocation();
 
@@ -50,64 +48,65 @@ const Tabla = () =>{
     setAbrirModalAgregar(true)
   }
 
-    const agregar= async (data)=>{
-      console.log(data);
+  const cerrarFormulario=()=>{
+    setAbrirModalAgregar(false); 
+    setAbrirModalEditar(false)
+    setItemToEdit(null)
+  }
+
+  const agregar= async (data)=>{
+
       if(data ){
             try {
+                const queryParams = new URLSearchParams(location.search)
+                const txt = queryParams.get("txt")
                 const config = HelperBuildRequest("POST", data, "dataTablePost");
-                
-                const request = await fetch(`http://localhost:8000/api/cellphones`, config);
+                const request = await fetch(`http://localhost:8000/api/${txt}`, config);
 
-                console.log(request);
-
-                if(request.status === 200){
-                    const response = await request.json();
-                    console.log(response);
-                    if(response.error){
-                        setTimeout(()=>{
-                           console.log(response.error);
-                        },1000);
-                    }else{
-                       setTimeout( () => {
-                        const dato = JSON.stringify(response);
-                        setDataApi(dataApi.data.push(dato)) 
-                    }, 1000);  
-                    }  
-                }
+                  if(request.status === 200){
+                      const response = await request.json();
+                      if(response.error){
+                          setTimeout(()=>{
+                            console.log(response.error);
+                          },1000);
+                      }else{                      
+                          const nuevaData = {columns:dataApi.columns,data:dataApi.data.concat([response.data]),links:dataApi.links}
+                          setDataApi(nuevaData);
+                          window.location.reload()
+                      }  
+                  }
            }catch(error){
             console.log(error)
            }    
        }
-    }
-
-    const cerrarFormulario=()=>{
-      setAbrirModalAgregar(false); 
+       setAbrirModalAgregar(false)
     }
 
 
-
-    const editarMarca = (element) =>{
+    const AbrirModalEditar = (element) =>{
             setItemToEdit(element)
-            setDatosEnvio(element)
             setAbrirModalEditar(true)
-            console.log(element);
           }   
-    
-    const enviarData = (datosEnvio) =>{
+  
+          
+    const editar =  async (data) =>{
+      
+      if(data){
+        console.log(data)
       setAbrirModalEditar(false);
-      console.log(datosEnvio)
+      }
+      
     }  
 
-    const eliminarMarca=(i)=>{
 
+    const eliminarMarca=(i)=>{
       swal({
         title:"Eliminar",
-        text:`¿Seguro que desea eliminar la marca ${i.marca}`,
+        text:`¿Seguro que desea eliminar a ${Object.values(i)[1]}`,
         buttons: ["No","Si"]
       }).then(respuesta =>{
         if(respuesta){
           const nuevaData = {columns:dataApi.columns,data:dataApi.data.filter(item => item.id !== i.id),links:dataApi.links};
-          console.log(nuevaData);
           setDataApi(nuevaData);
         }
       })
@@ -135,7 +134,7 @@ const Tabla = () =>{
                 {dataApi.columns.map((column)=>(
                   <th key={column} className='th-columnas'>{column}</th>
                 ))}
-                <th>Acciones</th>
+                <th className='ultima-columna'>Acciones</th>
                 </tr>
               </thead>
               <tbody className='tbody'>
@@ -149,7 +148,7 @@ const Tabla = () =>{
                       return <td className='td' key={index}>{element[key]}</td>
                     })}
                     <td className='ultima-celda'>
-                      <button className='boton-editar' onClick={() => editarMarca(element)}><FontAwesomeIcon icon={faEdit} /></button> 
+                      <button className='boton-editar' onClick={() => AbrirModalEditar(element)}><FontAwesomeIcon icon={faEdit} /></button> 
                       <button className='boton-eliminar' onClick={() => eliminarMarca(element)}><FontAwesomeIcon icon={faTrashAlt} /></button>
                     </td>
                   </tr>
@@ -161,11 +160,10 @@ const Tabla = () =>{
             
 
           <ModalEditar
-          abrirModalEditar={abrirModalEditar}
+            abrirModalEditar={abrirModalEditar}
             itemToEdit={itemToEdit}
-            enviarData={enviarData}
+            onsubmit={editar}
             cerrarFormulario={cerrarFormulario}
-            datosEnvio={datosEnvio}
           ></ModalEditar>
 
           <ModalAgregar

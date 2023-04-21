@@ -34,7 +34,7 @@ export default function  HelperBuildRequest(method, data = {}, type = null) {
             'Content-Type':'application/json',
             'Authorization': tokenType + ' ' + userData.access_token
         },
-        body : data
+        body: JSON.stringify(data) 
         }
     }
     return {

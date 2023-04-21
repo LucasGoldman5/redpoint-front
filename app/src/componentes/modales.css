@@ -1,0 +1,11 @@
+.contenedor-boton-modal-dentro{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+.contenedor-boton-modal-fuera{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    justify-content: flex-end;
+}

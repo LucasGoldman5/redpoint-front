@@ -40,15 +40,16 @@ body{
     background: black;
     color: white;
     font-size: 20px;
-    text-align: center;
-    
+    text-align: center; 
 }
 
 .th-columnas{
     border: 1px solid rgb(255, 255, 255);
     
 }
-
+.ultima.columna{
+    max-width: 90px;
+}
 
 
 .tbody{
@@ -97,6 +98,10 @@ body{
 .td{
     width: max-content;
 }
+.td:first-child{
+    border-right: 1px solid white;
+}
+
 .td-a{
     overflow: hidden;
     display: inline-block;
@@ -112,20 +117,22 @@ body{
 
 .ultima-celda{
     background: rgb(46, 46, 46);
-    display: flex;
     justify-content: center;
     align-items: center;
     padding: 9px;
+    height: max-content;
+    border-left: 1px solid white;
+    max-width: 90px;
 }
 
 .boton-eliminar{
    background: red;
-   display: flex;
    justify-content: center;
    align-items: center;
    color: white;
    border: none;
    cursor: pointer;
+   margin-left: 2px;
 }
 .boton-eliminar:hover{
     background: rgb(124, 0, 0);
@@ -136,10 +143,9 @@ body{
     cursor: pointer;
     border: none;
     color: white;
-    margin-right: 5px;
-    display: flex;
     justify-content: center;
     align-items: center;
+    margin-right: 2px;
 }
 .boton-editar:hover{
     background: rgb(78, 78, 0);

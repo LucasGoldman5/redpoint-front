@@ -46,7 +46,7 @@ const HeaderGeneral = ( ) =>{
               <div className={menuLinksDesplegables ?"contenedor-links none" :"contenedor-links"}>
                 <li className='nav-li-link'><Link onClick={window.location.reload} to={`/Tabla/?txt=${"brands"}`}>Marcas</Link></li>
                 <li className='nav-li-link'><Link onClick={window.location.reload} to={`/Tabla/?txt=${"cellphones"}`}>celulares</Link></li> 
-                <li className='nav-li-link' >servicios</li> 
+                <li className='nav-li-link'><Link onClick={window.location.reload} to={`/Tabla/?txt=${"services"}`}>servicios</Link></li> 
               </div>
           </Nav>
           </div>
