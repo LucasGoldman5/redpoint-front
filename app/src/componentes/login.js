@@ -10,9 +10,9 @@ import GetUserData from "../helpers/getUserData";
 
 const Login = ({ingresarAplicacion}) =>{
 
- const caca = GetUserData()
+ const funcionTraer = GetUserData()
 
- console.log(caca)
+ console.log(funcionTraer)
 
     const [verContraseña, setVerContraseña] = useState(false)       
     const [loading, setLoading] = useState(false);

@@ -43,7 +43,6 @@
 
 .contenedor-links{
     display: flex;
-    padding: 10px;
     width: 20%;
     flex-direction: column;
     align-items: flex-start;
@@ -63,17 +62,26 @@
     z-index: 1;
 }
 .nav-li-link{
-    color: white;
-    margin-top: 5px;
-    margin-bottom: 5px;
+   margin-top: 5px;
+   margin-bottom: 5px;
+   display: flex;
+   justify-content: center;
+   padding-top: 5px;
+   padding-bottom: 5px; 
+   width: 100%;
+}
+.nav-li-link a{
+    color: rgb(255, 255, 255);
+    list-style: none;
     text-decoration: none;
-    z-index: 1;
+    cursor: pointer;
+    transition: all 0.2s;
 }
-.nav-li-link:hover {
-  color: rgb(255, 40, 40);
-  cursor: pointer;
-  transition: all 0.5s;
+.nav-li-link a:hover{
+    width: 35%;
+    color: rgb(68, 0, 0);
 }
+
 
 .contenedor-micuenta{
     width: 10%;
@@ -107,15 +115,14 @@
     background: rgb(156, 2, 2);
     z-index: 1000;
     width: 200px;
-    margin-top: 120px;
+    margin-top: 32px;
     position: absolute;
     padding-top: 10px;
     transition: all 1s;
     padding-bottom: 10px;
-    margin-right: 140px;
 }
 .micuenta-desplegable.none{
-    margin-top: -400px;
+    margin-top: -100px;
     background: rgb(156, 2, 2);
     z-index: 1000;
     width: 200px;
@@ -123,13 +130,18 @@
 }
 .li-micuenta{
     list-style: none;
-    color: white;
     text-align: center;
     margin-top: 5px;
     margin-bottom: 5px;
 }
-.li-micuenta:hover{
-  background: red;
-  cursor: pointer;
-  transition: all 0.5s;
+.li-micuenta a{
+    list-style: none;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.li-micuenta a:hover{
+    color: rgb(68, 0, 0);
 }

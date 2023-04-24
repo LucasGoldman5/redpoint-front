@@ -2,32 +2,48 @@ import React, {useState, useEffect} from 'react';
 import swal from 'sweetalert';
 import './tabla.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrashAlt, faEye } from '@fortawesome/free-solid-svg-icons';
 import BotonAgregar from './boton-agregar';
 import 'bootstrap/dist/css/bootstrap.css';
 import ModalAgregar from './modal-agregar';
 import ModalEditar from './modal-editar';
+import ModalVer from './modal-ver';
 import HelperBuildRequest from "../helpers/buildRequest";
-import { useLocation } from 'react-router-dom';
+import { Await, useLocation } from 'react-router-dom';
 
 
 
 
 const Tabla = () =>{
 
-    
-    const [dataApi, setDataApi] = useState([])
-    const [abrirModalAgregar, setAbrirModalAgregar] = useState(false)
+    const [dataApi, setDataApi] = useState([]);
+    const [superAdmin, setSuperAdmin] = useState(null)
+    const [abrirModalAgregar, setAbrirModalAgregar] = useState(false);
     const [abrirModalEditar, setAbrirModalEditar] = useState(false);
+    const [abrirModalVer, setAbrirModalVer] = useState(false);
     const [itemToEdit, setItemToEdit] = useState(null);
+    const [itemToSee, setItemToSee] = useState(null)
     const [cadena,setCadena] = useState("");
 
 
     const location = useLocation();
+    const traerUsuario = localStorage.getItem("Usuario");
+    
+
+    const admin = () =>{
+      let usuario = JSON.parse(traerUsuario)
+      if(usuario.user.roles === "admin"){
+        setSuperAdmin(true)
+      }else if(usuario.user.roles === "super-admin"){
+        setSuperAdmin(false)
+      }
+    }
+    
 
     useEffect(() => {
       if(dataApi.length===0){
         getData();
+        admin()
       }
     }, [])
 
@@ -51,6 +67,7 @@ const Tabla = () =>{
   const cerrarFormulario=()=>{
     setAbrirModalAgregar(false); 
     setAbrirModalEditar(false)
+    setAbrirModalVer(false)
     setItemToEdit(null)
   }
 
@@ -88,6 +105,7 @@ const Tabla = () =>{
             setAbrirModalEditar(true)
           }   
   
+      
           
     const editar =  async (data) =>{
       
@@ -99,7 +117,7 @@ const Tabla = () =>{
     }  
 
 
-    const eliminarMarca=(i)=>{
+    const eliminar=(i)=>{
       swal({
         title:"Eliminar",
         text:`¿Seguro que desea eliminar a ${Object.values(i)[1]}`,
@@ -111,6 +129,12 @@ const Tabla = () =>{
         }
       })
 
+    }
+
+
+    const AbrirModalVer = (element) => {
+      setItemToSee(element)
+      setAbrirModalVer(true); 
     }
 
 
@@ -140,16 +164,22 @@ const Tabla = () =>{
               <tbody className='tbody'>
                 {
                 dataApi.data.filter((dato) => Object.values(dato)[1].includes(cadena)).map( (element)=>  
-                  <tr className='tr-data' key={element["id"]} >
-                    {Object.keys(element).map((key,index) => {
-                      if (dataApi.links.includes(key)) {
-                        return <td className='td' key={index}><a className='td-a' href={element[key]}>{element[key]}</a></td>
-                      }
-                      return <td className='td' key={index}>{element[key]}</td>
-                    })}
+                  <tr className='tr-data' key={element["id"]}>
+                 
                     <td className='ultima-celda'>
-                      <button className='boton-editar' onClick={() => AbrirModalEditar(element)}><FontAwesomeIcon icon={faEdit} /></button> 
-                      <button className='boton-eliminar' onClick={() => eliminarMarca(element)}><FontAwesomeIcon icon={faTrashAlt} /></button>
+                      {
+                      (superAdmin)
+                       ?
+                       <div>
+                        <button className='boton-ver' onClick={() => AbrirModalVer(element)}><FontAwesomeIcon icon={faEye} /></button>
+                       </div>
+                       :
+                       <div>
+                        <button className='boton-editar' onClick={() => AbrirModalEditar(element)}><FontAwesomeIcon icon={faEdit} /></button>
+                        <button className='boton-eliminar' onClick={() => eliminar(element)}><FontAwesomeIcon icon={faTrashAlt} /></button> 
+                        <button className='boton-ver' onClick={() => AbrirModalVer(element)}><FontAwesomeIcon icon={faEye} /></button>
+                       </div>
+                      }
                     </td>
                   </tr>
                   )
@@ -167,11 +197,17 @@ const Tabla = () =>{
           ></ModalEditar>
 
           <ModalAgregar
-          abrirModalAgregar={abrirModalAgregar}
-          dataApi={dataApi}
-          cerrarFormulario={cerrarFormulario}
-          onSubmit={agregar}
+            abrirModalAgregar={abrirModalAgregar}
+            dataApi={dataApi}
+            cerrarFormulario={cerrarFormulario}
+            onSubmit={agregar}
           ></ModalAgregar>
+
+          <ModalVer
+            abrirModalVer={abrirModalVer}
+            cerrarFormulario={cerrarFormulario}
+            itemToSee={itemToSee}
+          ></ModalVer>
         </div>
 
 

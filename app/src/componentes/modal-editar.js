@@ -90,9 +90,46 @@ if(location ==="http://localhost:3000/Tabla/?txt=brands" ){
        
   </Modal>
    )
-}
-
-    
+ }else if(location === "http://localhost:3000/Tabla/?txt=services"){
+    return(
+      <Modal isOpen={abrirModalEditar}>
+        <ModalHeader style={{display: 'block'}}>
+            <div>
+                <h5  style={{float: 'center'}} >Editar Servicio</h5> 
+            </div>
+         
+        </ModalHeader>
+        <ModalBody>
+          <form className="form-group" onSubmit={handleSubmit(onsubmit)}>
+            <label htmlFor="descripcion">Descripcion</label>
+            <input className="form-control" type="text" name="modelo" id="modelo"  defaultValue={itemToEdit ? itemToEdit.description : ''} {...register('description',{ shouldUnregister: true,})} />
+            <br />
+            <label htmlFor="number">Numero de Telefono</label>
+            <input className="form-control" type="text" name="number" id="number"  defaultValue={itemToEdit ? itemToEdit.phone_number : ''}{...register('phone_number',{ shouldUnregister: true,})} />
+            <br />
+            <label htmlFor="direccion">Direccion</label>
+            <input className="form-control" type="text" name="direccion" id="direccion"  defaultValue={itemToEdit ? itemToEdit.address : ''}{...register('address',{ shouldUnregister: true,})} />
+            <br />
+            <label htmlFor="Email">Email</label>
+            <input className="form-control" type="text" name="email" id="email"  defaultValue={itemToEdit ? itemToEdit.email : ''}{...register('email',{ shouldUnregister: true,})} />
+            <br />
+            <div className="contenedor-boton-modal-dentro">
+                <button className="btn btn-success" type="submit" onClick={editar}>
+                Editar
+                </button> 
+            </div>
+          </form>
+          <div className="contenedor-boton-modal-fuera">
+               <button className="btn btn-danger boton-cancelar" onClick={cerrarFormulario}>
+                  Cancelar
+                </button>
+          </div>
+        </ModalBody>
+       
+  </Modal>
+    )
+ }
+   
 }
 
 

@@ -54,10 +54,10 @@ const HeaderGeneral = ( ) =>{
            <div className="contenedor-micuenta">
               <div onClick={menuDesplegable} className="icono-micuenta">
                   <h2 className="letra-micuenta">{(usuario) ?usuario.name.charAt(0).toUpperCase(): 'Mi'}</h2>
-                  <div className={desplegable ? "micuenta-desplegable none" : "micuenta-desplegable"}>
+                </div>
+                <div className={desplegable ? "micuenta-desplegable none" : "micuenta-desplegable"}>
                     <li className="li-micuenta">Mi cuenta</li>
                     <li  className="li-micuenta"><Link onClick={cerrarSesion} to={"*" }>Cerrar Sesion</Link> </li>
-                </div>
                 </div>
            </div>
       </Navbar>

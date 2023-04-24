@@ -96,6 +96,44 @@ if(location === "http://localhost:3000/Tabla/?txt=cellphones"){
   </Modal>
 
   )
+ }else if(location === "http://localhost:3000/Tabla/?txt=services"){
+    return(
+      <Modal isOpen={abrirModalAgregar}>
+        <ModalHeader style={{display: 'block'}}>
+            <div>
+                <h5  style={{float: 'center', color: 'red'}} >Crear Servicio</h5> 
+            </div>
+        </ModalHeader>
+        <ModalBody>
+          <form className="form-group" onSubmit={handleSubmit(onSubmit)}>
+                <label htmlFor="id">Numero de Servicio</label>
+                <input className="form-control" type="number" name="id" id="id" readOnly value={dataApi.data.length + 1} ></input>
+                <br />
+                <label htmlFor="marca">Descripcion</label>
+                <input className="form-control" type="text" name="marca"  {...register('description',{
+                  required:true
+                })} />
+                {errors.description?.type === 'required' && <p >El campo Descripcion debe ser completado</p>} 
+                <br />
+                <label htmlFor="url">Numero de Telefono</label>
+                <input className="form-control" type="text" name="numero de telefono" {...register('phone_number')} />
+                <br />
+                <label htmlFor="url">Direccion</label>
+                <input className="form-control" type="text" name="direccion" {...register('address')} />
+                <br />
+                <label htmlFor="url">Email</label>
+                <input className="form-control" type="text" name="email" {...register('email')} />
+                <br />
+                <div className="contenedor-botones-modal">
+                    <button type="submit" className="btn btn-success" onClick={agregar} >
+                    Crear
+                  </button>
+                  <button className="btn btn-danger" onClick={cerrarFormulario}>Cancelar</button>
+                </div>
+          </form>
+        </ModalBody>
+  </Modal>
+    )
  }
 
   
