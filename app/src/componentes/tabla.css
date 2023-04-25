@@ -104,15 +104,16 @@ body{
     border-right: 1px solid white;
 }
 
-.td-a{
+.td-a a{
     overflow: hidden;
     display: inline-block;
     width: 200px;
-    color: white;
+    color: rgb(129, 0, 0);
     text-overflow: ellipsis;
     white-space: nowrap;
+    text-decoration: none;
 }
-.td-a:hover{
+.td-a a:hover{
     color: red;
 }
 

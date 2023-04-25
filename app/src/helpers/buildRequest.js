@@ -37,6 +37,17 @@ export default function  HelperBuildRequest(method, data = {}, type = null) {
         body: JSON.stringify(data) 
         }
     }
+    if(type === 'dataTablePut'){
+        return{
+            method: method,
+        headers:{
+            'Accept':'application/json',
+            'Content-Type':'application/json',
+            'Authorization': tokenType + ' ' + userData.access_token
+        },
+        body: JSON.stringify(data)
+        }
+    }    
     return {
         method: method,
         headers:{

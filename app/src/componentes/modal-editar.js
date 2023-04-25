@@ -66,15 +66,15 @@ if(location ==="http://localhost:3000/Tabla/?txt=brands" ){
         </ModalHeader>
         <ModalBody>
           <form className="form-group" onSubmit={handleSubmit(onsubmit)}>
+            <input className="form-control" type="text" n id="modelo" readOnly defaultValue={itemToEdit ? itemToEdit.id : ''} {...register('id',{ shouldUnregister: true,})} />
+            <br/>
             <label htmlFor="marca">Modelo</label>
-            <input className="form-control" type="text" name="modelo" id="modelo"  defaultValue={itemToEdit ? itemToEdit.model : ''} {...register('title',{ shouldUnregister: true,})} />
-            <br />
-            <label htmlFor="Descripcion">Descripcion</label>
-            <input className="form-control" type="text" name="description" id="description" placeholder={"Agregue una descripcion al modelo"} {...register('description',{ shouldUnregister: true,})}></input>
+            <input className="form-control" type="text" name="modelo" id="modelo"  defaultValue={itemToEdit ? itemToEdit.model : ''} {...register('model',{ shouldUnregister: true,})} />
             <br />
             <label htmlFor="url">Url</label>
             <input className="form-control" type="text" name="url" id="url"  defaultValue={itemToEdit ? itemToEdit.url : ''}{...register('url',{ shouldUnregister: true,})} />
             <br />
+            <input className="form-control" type="text" name="modelo" id="modelo" readOnly defaultValue={itemToEdit ? itemToEdit.brand_id : ''} {...register('brand_id',{ shouldUnregister: true,})} />
             <div className="contenedor-boton-modal-dentro">
                 <button className="btn btn-success" type="submit" onClick={editar}>
                 Editar

@@ -36,7 +36,8 @@ if(location === "http://localhost:3000/Tabla/?txt=cellphones"){
             </ModalHeader>
             <ModalBody>
               <form className="form-group" onSubmit={handleSubmit(onSubmit)}>
-                <input className="form-control" type="number" name="id" readOnly value={`${dataApi.data.length+1}`} {...register('id')} />
+                <label htmlFor="id">Numero de orden</label>
+                <input className="form-control" type="number" name="id" readOnly value={`${dataApi.data.length+1}`}  />
                 <label htmlFor="modelo">Modelo</label>
                 <input className="form-control" type="text" name="modelo" {...register('model',{
                   required:true
