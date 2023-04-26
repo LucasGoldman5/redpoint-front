@@ -6,8 +6,6 @@ import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 const ModalVer = ({cerrarFormulario, abrirModalVer, itemToSee}) =>{
 
     const location = window.location.href
-
-  
     
     if(location === "http://localhost:3000/Tabla/?txt=cellphones"){
 
@@ -21,21 +19,15 @@ const ModalVer = ({cerrarFormulario, abrirModalVer, itemToSee}) =>{
             </ModalHeader>
             <ModalBody>
               <form className="form-group" >
-                <input className="form-control" type="number" name="id" readOnly defaultValue={itemToSee ? itemToSee.id : ""}  />
+                
                 <label htmlFor="modelo">Modelo:</label>
                 <input className="form-control" type="text" name="modelo" readOnly defaultValue={itemToSee ? itemToSee.model : ""}  />
                 <br />
                 <label htmlFor="url">Url:</label>
                 <input className="form-control" type="text" name="url" readOnly defaultValue={itemToSee ? itemToSee.url : ""}  />
                 <br />
-                <label htmlFor="brnad_id">Brand_id:</label>
-                <input className="form-control" type="number" readOnly  defaultValue={itemToSee ? itemToSee.brand_id : ""} ></input>
-                <br />
-                <label htmlFor="brnad_id">Creado el:</label>
-                <input className="form-control" type="text" readOnly  defaultValue={itemToSee ? new Date(itemToSee.created_at).toLocaleString() : ""} ></input>
-                <br />
-                <label htmlFor="brnad_id">Subido el:</label>
-                <input className="form-control" type="text" readOnly  defaultValue={itemToSee ? new Date(itemToSee.updated_at).toLocaleString() : ""} ></input>
+                <label htmlFor="brnad_id">Marca:</label>
+                <input className="form-control" type="text" readOnly  defaultValue={itemToSee ? itemToSee.brand_id : ""} ></input>
                 <br />
                 <div className="contenedor-boton-modal-dentro">
                 </div>
@@ -60,10 +52,13 @@ const ModalVer = ({cerrarFormulario, abrirModalVer, itemToSee}) =>{
               <form className="form-group" >
                 <input className="form-control" type="number" name="id" readOnly defaultValue={itemToSee ? itemToSee.id : ""}  />
                 <label htmlFor="modelo">Marca:</label>
-                <input className="form-control" type="text" name="modelo" readOnly defaultValue={itemToSee ? itemToSee.marca : ""}  />
+                <input className="form-control" type="text" name="modelo" readOnly defaultValue={itemToSee ? itemToSee.title : ""}  />
                 <br />
                 <label htmlFor="url">Url:</label>
                 <input className="form-control" type="text" name="url" readOnly defaultValue={itemToSee ? itemToSee.url : ""}  />
+                <br />
+                <label htmlFor="url">Descripcion:</label>
+                <input className="form-control" type="text" name="description" readOnly defaultValue={itemToSee ? itemToSee.description : ""}  />
                 <br />
                 <div className="contenedor-boton-modal-dentro">
                 </div>

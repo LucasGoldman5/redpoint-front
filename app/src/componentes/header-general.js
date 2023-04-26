@@ -29,7 +29,14 @@ const HeaderGeneral = ( ) =>{
     setDesplegable(false)
     window.location.assign('/Login')
   }
- 
+   
+  const recargar = () =>{
+
+    setTimeout(()=>{
+       window.location.reload()
+    },100)
+   
+  }
 
     return(
 
@@ -44,9 +51,9 @@ const HeaderGeneral = ( ) =>{
           <Nav >
             <button className="boton-tablas" onClick={linksDesplegables}>Tablas</button>
               <div className={menuLinksDesplegables ?"contenedor-links none" :"contenedor-links"}>
-                <li className='nav-li-link'><Link onClick={window.location.reload} to={`/Tabla/?txt=${"brands"}`}>Marcas</Link></li>
-                <li className='nav-li-link'><Link onClick={window.location.reload} to={`/Tabla/?txt=${"cellphones"}`}>celulares</Link></li> 
-                <li className='nav-li-link'><Link onClick={window.location.reload} to={`/Tabla/?txt=${"services"}`}>servicios</Link></li> 
+                <li className='nav-li-link'><Link onClick={()=> recargar() } to={`/Tabla/?txt=${"brands"}`}>Marcas</Link></li>
+                <li className='nav-li-link'><Link onClick={()=> recargar()} to={`/Tabla/?txt=${"cellphones"}`}>Celulares</Link></li> 
+                <li className='nav-li-link'><Link onClick={()=> recargar()} to={`/Tabla/?txt=${"services"}`}>Servicios</Link></li> 
               </div>
           </Nav>
           </div>

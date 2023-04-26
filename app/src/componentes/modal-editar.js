@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import './modales.css'
 
 
-const ModalEditar = ({abrirModalEditar, itemToEdit, editar, cerrarFormulario,onsubmit}) => {
+const ModalEditar = ({abrirModalEditar, itemToEdit, editar, cerrarFormulario,onsubmit, dataBrands}) => {
 
   const location = window.location.href
 const allDate = new Date()
@@ -16,7 +16,7 @@ const minutes = allDate.getMinutes()
 const date= `${Day}/${month}/${year}  Hora: ${hours}:${minutes}`;
 
 
-const { register, handleSubmit} = useForm ();
+const { register,formState: { errors }, handleSubmit} = useForm ();
 
 if(location ==="http://localhost:3000/Tabla/?txt=brands" ){
 
@@ -66,7 +66,7 @@ if(location ==="http://localhost:3000/Tabla/?txt=brands" ){
         </ModalHeader>
         <ModalBody>
           <form className="form-group" onSubmit={handleSubmit(onsubmit)}>
-            <input className="form-control" type="text" n id="modelo" readOnly defaultValue={itemToEdit ? itemToEdit.id : ''} {...register('id',{ shouldUnregister: true,})} />
+            <input className="form-control" type="text"  id="modelo" readOnly defaultValue={itemToEdit ? itemToEdit.id : ''} {...register('id',{ shouldUnregister: true,})} />
             <br/>
             <label htmlFor="marca">Modelo</label>
             <input className="form-control" type="text" name="modelo" id="modelo"  defaultValue={itemToEdit ? itemToEdit.model : ''} {...register('model',{ shouldUnregister: true,})} />
@@ -74,7 +74,16 @@ if(location ==="http://localhost:3000/Tabla/?txt=brands" ){
             <label htmlFor="url">Url</label>
             <input className="form-control" type="text" name="url" id="url"  defaultValue={itemToEdit ? itemToEdit.url : ''}{...register('url',{ shouldUnregister: true,})} />
             <br />
-            <input className="form-control" type="text" name="modelo" id="modelo" readOnly defaultValue={itemToEdit ? itemToEdit.brand_id : ''} {...register('brand_id',{ shouldUnregister: true,})} />
+            <label htmlFor="url">Marca</label>
+            <select className="form-select" name="select" required {...register('brand_id',{
+                  required:true
+                })}>
+                  {dataBrands.map((brand)=>{
+                    return <option key={brand.id} value={brand.id} >{brand.title}</option>
+                  })}
+                </select>
+                {errors.brand_id?.type === 'required' && <p className="p-errores">Seleccione una marca</p>}
+                <br/>
             <div className="contenedor-boton-modal-dentro">
                 <button className="btn btn-success" type="submit" onClick={editar}>
                 Editar

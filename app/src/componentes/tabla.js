@@ -9,7 +9,7 @@ import ModalAgregar from './modal-agregar';
 import ModalEditar from './modal-editar';
 import ModalVer from './modal-ver';
 import HelperBuildRequest from "../helpers/buildRequest";
-import { Await, useLocation } from 'react-router-dom';
+import {  useLocation } from 'react-router-dom';
 
 
 
@@ -17,6 +17,7 @@ import { Await, useLocation } from 'react-router-dom';
 const Tabla = () =>{
 
     const [dataApi, setDataApi] = useState([]);
+    const [dataBrands, setDataBrands] = useState([])
     const [superAdmin, setSuperAdmin] = useState(null)
     const [abrirModalAgregar, setAbrirModalAgregar] = useState(false);
     const [abrirModalEditar, setAbrirModalEditar] = useState(false);
@@ -24,6 +25,7 @@ const Tabla = () =>{
     const [itemToEdit, setItemToEdit] = useState(null);
     const [itemToSee, setItemToSee] = useState(null)
     const [cadena,setCadena] = useState("");
+    const [errores, setErrores] = useState([]);
 
 
     const location = useLocation();
@@ -53,56 +55,108 @@ const Tabla = () =>{
       console.log(txt);
       const config = HelperBuildRequest('GET', null, 'dataTable');
       await fetch(`http://localhost:8000/api/${txt}`, config)
-      .then(res => res.json())
-      .then(datos =>{
+      .then( res  => res.json())
+      .then( datos =>{
         console.log(datos);
         setDataApi(datos)
       })
     }
 
-  const abrirModal = () =>{
-    setAbrirModalAgregar(true)
-  }
 
-  const cerrarFormulario=()=>{
-    setAbrirModalAgregar(false); 
-    setAbrirModalEditar(false)
-    setAbrirModalVer(false)
-    setItemToEdit(null)
-  }
+    const abrirModal =  async () =>{
+      setAbrirModalAgregar(true)
 
-  const agregar= async (data)=>{
+        try {
+                    
+          const config = HelperBuildRequest("GET",null, "dataTable");
+          const request = await fetch(`http://localhost:8000/api/brands`, config);
 
-      if(data ){
-            try {
-                const queryParams = new URLSearchParams(location.search)
-                const txt = queryParams.get("txt")
-                const config = HelperBuildRequest("POST", data, "dataTablePost");
-                const request = await fetch(`http://localhost:8000/api/${txt}`, config);
+            if(request.status === 200){
+                const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                      
+                    setDataBrands(response.data);
+                }  
+            }
+        }catch(error){
+          console.log(error)
+        }    
 
-                  if(request.status === 200){
-                      const response = await request.json();
-                      if(response.error){
-                          setTimeout(()=>{
-                            console.log(response.error);
-                          },1000);
-                      }else{                      
-                          const nuevaData = {columns:dataApi.columns,data:dataApi.data.concat([response.data]),links:dataApi.links}
-                          setDataApi(nuevaData);
-                          window.location.reload()
-                      }  
-                  }
-           }catch(error){
-            console.log(error)
-           }    
-       }
-       setAbrirModalAgregar(false)
     }
 
 
-    const AbrirModalEditar = (element) =>{
+
+    const cerrarFormulario=()=>{
+      setAbrirModalAgregar(false); 
+      setAbrirModalEditar(false)
+      setAbrirModalVer(false)
+      setItemToEdit(null)
+    }
+
+
+    const agregar= async (data)=>{
+    console.log(data);
+        if(data ){
+              try {
+                  const queryParams = new URLSearchParams(location.search)
+                  const txt = queryParams.get("txt")
+                  const config = HelperBuildRequest("POST", data, "dataTablePost");
+                  const request = await fetch(`http://localhost:8000/api/${txt}`, config);
+
+                    if(request.status === 200){
+                        const response = await request.json();
+                        if(response.error){
+                            setTimeout(()=>{
+                              console.log(response.error);
+                            },1000);
+                        }else{                      
+                            const nuevaData = {columns:dataApi.columns,data:dataApi.data.concat([response.data]),links:dataApi.links}
+                            setDataApi(nuevaData);
+                            setAbrirModalAgregar(false)
+                            window.location.reload()
+                        }  
+                    }
+                   if(request.status === 422){
+                    const response = await request.json()
+                    console.log(response);
+                    if(response.errors){
+                      console.log(response.errors);
+                      setErrores(response.errors)
+                    }
+                   }
+            }catch(error){
+              console.log(error)
+            }    
+        }
+        
+      }
+
+
+    const AbrirModalEditar = async(element) =>{
             setItemToEdit(element)
             setAbrirModalEditar(true)
+            
+            try {
+                
+              const config = HelperBuildRequest("GET",null, "dataTable");
+              const request = await fetch(`http://localhost:8000/api/brands`, config);
+        
+                if(request.status === 200){
+                    const response = await request.json();
+                    if(response.error){
+                        setTimeout(()=>{
+                          console.log(response.error);
+                        },1000);
+                    }else{                      
+                        setDataBrands(response.data);
+                    }  
+                }
+            }catch(error){
+              console.log(error)
+            }    
           }   
   
       
@@ -171,12 +225,12 @@ const Tabla = () =>{
                   }else{                      
                       const nuevaData = {columns:dataApi.columns,data:dataApi.data.filter(item => item.id !== i.id)};
                       setDataApi(nuevaData);
-                      
+                      window.location.reload()
                   }  
               }
-       }catch(error){
-        console.log(error)
-       }  
+          }catch(error){
+            console.log(error)
+          }  
 
           
         }
@@ -192,6 +246,14 @@ const Tabla = () =>{
 
 
     if(dataApi.length != 0){
+
+     const dato = dataApi.columns.filter((dato)=>{
+                 const listaDeColumnas = ['title', 'model', 'name', 'description', 'id','phone_number','email']
+                 if(listaDeColumnas.includes(dato)){
+                  return dato
+                 } 
+              });
+
       return(  
         <>
         
@@ -199,11 +261,10 @@ const Tabla = () =>{
         <div className='contenedor-barra-botonagregar'>
             <BotonAgregar abrirModal={abrirModal}> </BotonAgregar>
             <div className='contenedor-barra'>
-              <input type='text' placeholder='buscar...' className='barra-busqueda' onChange={(e) => setCadena(e.target.value.toLocaleLowerCase())}/>
-            </div>
-      
+               <input type='text' placeholder={`buscar por... ${dato}`} className='barra-busqueda' onChange={(e) => setCadena(e.target.value.toLocaleLowerCase())}/>
+             </div>      
         </div>
-      
+        
         <div className="contenedor-tabla">
             <table className='tabla'>
               <thead className='thead'>
@@ -217,7 +278,7 @@ const Tabla = () =>{
               <tbody className='tbody'>
                 {
                 dataApi.data.filter((dato) =>{ 
-                  const controlList = ['title', 'model', 'name', 'description', 'id','phone_number' ];
+                  const controlList = ['title', 'model', 'name', 'description', 'id','phone_number','email'];
                   const keys = controlList;
                   for(let property in dato ){
                     if(keys.includes(property)){
@@ -277,6 +338,7 @@ const Tabla = () =>{
             itemToEdit={itemToEdit}
             onsubmit={editar}
             cerrarFormulario={cerrarFormulario}
+            dataBrands={dataBrands}
           ></ModalEditar>
 
           <ModalAgregar
@@ -284,6 +346,8 @@ const Tabla = () =>{
             dataApi={dataApi}
             cerrarFormulario={cerrarFormulario}
             onSubmit={agregar}
+            dataBrands={dataBrands}
+            errores={errores}
           ></ModalAgregar>
 
           <ModalVer
@@ -297,7 +361,7 @@ const Tabla = () =>{
     </>
 
     )
-    }
+  }
 
    
 }

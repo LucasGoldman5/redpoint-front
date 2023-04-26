@@ -9,3 +9,6 @@
     width: 100%;
     justify-content: flex-end;
 }
+.p-errores{
+    color: red;
+}

@@ -26,6 +26,7 @@ export default function  HelperBuildRequest(method, data = {}, type = null) {
             },
         };
     }
+    
     if(type === 'dataTablePost'){
         return{
             method: method,
