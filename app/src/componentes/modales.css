@@ -1,14 +1,52 @@
+.form-group{
+    width: 80%;
+}
+.contenedor-modal-body{
+   display: flex;   
+   align-items: end;
+}
+
 .contenedor-boton-modal-dentro{
     display: flex;
     justify-content: space-between;
-    width: 100%;
+    width: 50%;
+    margin-top: 15px;
 }
 .contenedor-boton-modal-fuera{
+    height: 40px;
     display: flex;
-    justify-content: space-between;
-    width: 100%;
     justify-content: flex-end;
 }
 .p-errores{
     color: red;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+.option-modal{
+    cursor: pointer;
+}
+.option-modal-crear{
+    height: 35px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-size: 22px;
+    border: 1px solid grey;
+    border-radius: 10%;
+    margin-bottom: 55px;
+    cursor: pointer;
+    color: green;
+}
+.option-modal-crear-errores{
+    height: 35px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-size: 22px;
+    border: 1px solid grey;
+    border-radius: 10%;
+    margin-bottom: 78px;
+    cursor: pointer;
+    color: green;
 }

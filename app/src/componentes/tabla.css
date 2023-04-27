@@ -1,12 +1,21 @@
 body{
     background-image: url('../img/claroooo.png');
+    
 }
+
+.titulo-tabla h1{
+    text-align: center;
+    margin-top: 20px;
+ }
+
 .contenedor-body{
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 50px;
+    margin-top: 20px;
+    height: 500px;
 }
+
 .contenedor-tabla{
     width: 95%;
     display: flex;
@@ -14,14 +23,13 @@ body{
     height: max-content;
     max-height: 500px;
     overflow: scroll;
-   
 }
 .contenedor-barra{
     width: 50%;
     display: flex;
     justify-content: flex-end;
-
 }
+
 .barra-busqueda{
     width: 70%;
     align-self: center;
@@ -34,6 +42,7 @@ body{
 .tabla{
     width: 100%;
    background: gray;
+
 }
 
 .thead{
@@ -53,16 +62,14 @@ body{
 
 
 .tbody{
-    
     background: rgb(163, 163, 163);
     text-align: center;
     font-size: 16px;
     color: white;
-    overflow: scroll;
 }
 
 .tr-data{
-    border: 1px solid black;
+    border-bottom: 1px solid black;
 }
 .tr-data:nth-child(10n + 1){
     background-color: rgb(51, 51, 51);

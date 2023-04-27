@@ -1,9 +1,13 @@
 
+.header{
+    z-index: 1;
+}
 .contenedor-nav-general{
     width: 100%;
     height: 40px;
     display: flex;
     justify-content: space-between;
+    z-index: 1;
 
 } 
 .contenedor-titulo{
@@ -20,13 +24,14 @@
     width: 90%;
     justify-content: space-around;
     margin: 0;
+    
 }
 .contenedor-contenedor-links{
     width: 50%;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    z-index: 1000;
+    z-index: 1;
 }
 .boton-tablas{
     background: none;
@@ -38,7 +43,6 @@
 }
 .boton-tablas:hover{
    color: grey;
-   font-size: 17px;
 }
 
 .contenedor-links{
@@ -50,7 +54,7 @@
     margin-top: 33px;
     position: absolute;
     transition: all 1s;
-    z-index: 1;
+    z-index: 0;
 }
 .contenedor-links.none{
     display: flex;
@@ -59,7 +63,7 @@
     align-items: flex-start;
     background: rgb(151, 0, 0);
     margin-top: -200px; 
-    z-index: 1;
+    z-index: 0;
 }
 .nav-li-link{
    margin-top: 5px;

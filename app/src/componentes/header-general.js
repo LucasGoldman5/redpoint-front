@@ -24,6 +24,10 @@ const HeaderGeneral = ( ) =>{
     setDesplegable(!desplegable)
   }
 
+  const miInformacion = () =>{
+    window.location.assign('/InformacionPersonal')
+  }
+
   const cerrarSesion = ( ) =>{
     localStorage.removeItem('Usuario');
     setDesplegable(false)
@@ -63,7 +67,7 @@ const HeaderGeneral = ( ) =>{
                   <h2 className="letra-micuenta">{(usuario) ?usuario.name.charAt(0).toUpperCase(): 'Mi'}</h2>
                 </div>
                 <div className={desplegable ? "micuenta-desplegable none" : "micuenta-desplegable"}>
-                    <li className="li-micuenta">Mi cuenta</li>
+                    <li className="li-micuenta"><Link onClick={miInformacion} to={'/InformacionPersonal'}>Mi cuenta</Link></li>
                     <li  className="li-micuenta"><Link onClick={cerrarSesion} to={"*" }>Cerrar Sesion</Link> </li>
                 </div>
            </div>

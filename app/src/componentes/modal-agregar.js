@@ -6,7 +6,7 @@ import './modales.css'
 
 
 
-const ModalAgregar =({agregar,abrirModalAgregar,dataApi,cerrarFormulario,onSubmit,dataBrands,errores}) =>{
+const ModalAgregar =({agregar,cambiarModal,abrirModalAgregar,abrirModalAgregarMarca,dataApi,cerrarFormulario,onSubmit,onSubmitMarca,dataBrands,errores,agregarMarcaEnCellphones, clasesErrores}) =>{
 
 
 const location = window.location.href
@@ -31,63 +31,59 @@ if(location === "http://localhost:3000/Tabla/?txt=cellphones"){
   
   return(
 
-        <Modal isOpen={abrirModalAgregar}>
+       <>
+          <Modal isOpen={abrirModalAgregar}>
             <ModalHeader style={{display: 'block'}}>
                 <div>
                     <h5  style={{float: 'center', color: 'red'}} >Crear celular</h5> 
                 </div>
             </ModalHeader>
-            <ModalBody>
+            <ModalBody className="contenedor-modal-body">
               <form className="form-group" onSubmit={handleSubmit(onSubmit)}>
                 <label htmlFor="id">Numero de Marca</label>
                 <input className="form-control" type="number" name="id" readOnly value={`${dataApi.data.length+1}`}  />
                 <br/>
                 <label htmlFor="modelo">Modelo</label>
                 <input className="form-control" type="text" name="modelo" {...register('model',{
-                  required:true
+                  value:null
                 })} />
-                {errors.model?.type === 'required' && <p className="p-errores">El campo Modelo debe ser completado</p>}
+                {errores.model? <p className="p-errores">El campo Modelo debe ser completado</p> : ""}
                 <br />
                 <label htmlFor="url">Url</label>
-                <input className="form-control" type="text" name="url" {...register('url')} />
+                <input className="form-control" type="text" name="url" {...register('url',{
+                  value:null
+                })} />
                 <br/>
                 <label htmlFor="brnad_id">Marca</label>
-                <select className="form-select" name="select" required {...register('brand_id',{
-                  required:true
+                <select className="form-select" name="select"  {...register('brand_id',{
+                  value:null
                 })}>
                   {dataBrands.map((brand)=>{
-                    return <option key={brand.id} value={brand.id} >{brand.title}</option>
+                    return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option>
                   })}
                 </select>
-                {errors.brand_id?.type === 'required' && <p className="p-errores">Seleccione una marca</p>}
-                <br/>
+                {errores.brand_id? <p className="p-errores">Haga click en una marca</p> : ""}
                 <div className="contenedor-boton-modal-dentro">
                     <button type="submit" className="btn btn-success" onClick={agregar} >
                     Crear
                   </button>
                 </div>
               </form>
+              <button className={clasesErrores ? "option-modal-crear-errores" :"option-modal-crear"} onClick={cambiarModal}>+</button>
               <div className="contenedor-boton-modal-fuera">
                  <button className="btn btn-danger" onClick={cerrarFormulario}>Cancelar</button>
               </div>
             </ModalBody>
       </Modal>
 
-
-    )
-}else if(location==="http://localhost:3000/Tabla/?txt=brands"){
-  return(
-
-    <Modal isOpen={abrirModalAgregar}>
+      <Modal isOpen={abrirModalAgregarMarca}>
         <ModalHeader style={{display: 'block'}}>
             <div>
                 <h5  style={{float: 'center', color: 'red'}} >Crear Marca</h5> 
             </div>
         </ModalHeader>
         <ModalBody>
-          <form className="form-group" onSubmit={handleSubmit(onSubmit)}>
-                <label htmlFor="id">Numero de orden</label>
-                <input className="form-control" type="number" name="id" id="id" readOnly value={dataApi.data.length + 1} ></input>
+          <form className="form-group" onSubmit={handleSubmit(onSubmitMarca)}>
                 <br />
                 <label htmlFor="marca">Marca</label>
                 <input className="form-control" type="text" name="marca"  {...register('title')} />
@@ -102,13 +98,59 @@ if(location === "http://localhost:3000/Tabla/?txt=cellphones"){
                   value:null
                 })} />
                 <br/>
-                <div className="contenedor-botones-modal">
+                <div className="contenedor-boton-modal-dentro">
+                    <button type="submit" className="btn btn-success" onClick={agregarMarcaEnCellphones} >
+                    Crear
+                  </button>
+                </div>  
+          </form>
+          <div className="contenedor-boton-modal-fuera">
+            <button className="btn btn-danger" onClick={cerrarFormulario}>Cancelar</button>
+          </div>
+        </ModalBody>
+      </Modal>
+
+       </>
+
+       
+    )
+}else if(location==="http://localhost:3000/Tabla/?txt=brands" ){
+  return(
+
+    <Modal isOpen={abrirModalAgregar}>
+        <ModalHeader style={{display: 'block'}}>
+            <div>
+                <h5  style={{float: 'center', color: 'red'}} >Crear Marca</h5> 
+            </div>
+        </ModalHeader>
+        <ModalBody>
+          <form className="form-group" onSubmit={handleSubmit(onSubmit)}>
+                <label htmlFor="id">Cantidad de marcas actuales</label>
+                <input className="form-control" type="number" name="id" id="id" readOnly value={dataApi.data.length} ></input>
+                <br />
+                <label htmlFor="marca">Marca</label>
+                <input className="form-control" type="text" name="marca"  {...register('title')} />
+                {errores.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
+                <br />
+                <label htmlFor="url">Descripcion</label>
+                <input className="form-control" type="text" name="url" {...register('description',{
+                  value:null
+                })} />
+                <br/>
+                <label htmlFor="url">Url</label>
+                <input className="form-control" type="text" name="url"  {...register('url',{
+                  value:null
+                })} />
+                <br/>
+                <div className="contenedor-boton-modal-dentro">
                     <button type="submit" className="btn btn-success" onClick={agregar} >
                     Crear
                   </button>
-                  <button className="btn btn-danger" onClick={cerrarFormulario}>Cancelar</button>
-                </div>
+                </div>  
           </form>
+          <div className="contenedor-boton-modal-fuera">
+            <button className="btn btn-danger" onClick={cerrarFormulario}>Cancelar</button>
+          </div>
         </ModalBody>
   </Modal>
 
@@ -128,19 +170,26 @@ if(location === "http://localhost:3000/Tabla/?txt=cellphones"){
                 <br />
                 <label htmlFor="marca">Descripcion</label>
                 <input className="form-control" type="text" name="marca"  {...register('description',{
-                  required:true
+                  value:null
                 })} />
-                {errors.description?.type === 'required' && <p className="p-errores">El campo Descripcion debe ser completado</p>} 
+                {errores.description? <p className="p-errores">El campo Descripcion debe ser completado</p> : ""} 
                 <br />
                 <label htmlFor="url">Numero de Telefono</label>
-                <input className="form-control" type="text" name="numero de telefono" {...register('phone_number')} />
+                <input className="form-control" type="text" name="numero de telefono" {...register('phone_number',{
+                  value:null
+                })} />
                 <br />
                 <label htmlFor="url">Direccion</label>
-                <input className="form-control" type="text" name="direccion" {...register('address')} />
+                <input className="form-control" type="text" name="direccion" {...register('address',{
+                  value:null
+                })} />
                 <br />
                 <label htmlFor="url">Email</label>
-                <input className="form-control" type="text" name="email" {...register('email')} />
+                <input className="form-control" type="text" name="email" {...register('email',{
+                  value:null
+                })} />
                 <br />
+                <hr />
                 <div className="contenedor-botones-modal">
                     <button type="submit" className="btn btn-success" onClick={agregar} >
                     Crear
