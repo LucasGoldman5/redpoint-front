@@ -3,52 +3,51 @@ import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 
 
 
-const ModalVer = ({cerrarFormulario, abrirModalVer, itemToSee}) =>{
+const ModalVer = ({ cerrarFormulario, abrirModalVer, itemToSee }) =>{
 
-    const location = window.location.href
+  const location = window.location.href;
     
-    if(location === "http://localhost:3000/Tabla/?txt=cellphones"){
-
-  return(
-
-        <Modal isOpen={abrirModalVer}>
-            <ModalHeader style={{display: 'block'}}>
-                <div>
-                    <h5  style={{float: 'center', color: 'red'}} >Datos Del Celular</h5> 
-                </div>
-            </ModalHeader>
-            <ModalBody>
-              <form className="form-group" >
-                
-                <label htmlFor="modelo">Modelo:</label>
-                <input className="form-control" type="text" name="modelo" readOnly defaultValue={itemToSee ? itemToSee.model : ""}  />
-                <br />
-                <label htmlFor="url">Url:</label>
-                <input className="form-control" type="text" name="url" readOnly defaultValue={itemToSee ? itemToSee.url : ""}  />
-                <br />
-                <label htmlFor="brnad_id">Marca:</label>
-                <input className="form-control" type="text" readOnly  defaultValue={itemToSee ? itemToSee.brand_id : ""} ></input>
-                <br />
-                <div className="contenedor-boton-modal-dentro">
-                </div>
-              </form>
-              <div className="contenedor-boton-modal-fuera">
-                 <button className="btn btn-danger" onClick={cerrarFormulario}>Salir</button>
-              </div>
-            </ModalBody>
-      </Modal>
-    )
- }else if(location ==="http://localhost:3000/Tabla/?txt=brands"){
+  if(location === "http://localhost:3000/Tabla/?txt=cellphones"){
 
     return(
 
-        <Modal isOpen={abrirModalVer}>
-            <ModalHeader style={{display: 'block'}}>
-                <div>
-                    <h5  style={{float: 'center', color: 'red'}} >Datos De la Marca</h5> 
-                </div>
-            </ModalHeader>
-            <ModalBody>
+      <Modal isOpen={abrirModalVer}>
+          <ModalHeader style={{display: 'block'}}>
+              <div>
+                 <h5  style={{float: 'center', color: 'red'}} >Datos Del Celular</h5> 
+              </div>
+          </ModalHeader>
+          <ModalBody>
+            <form className="form-group" >
+              <label htmlFor="modelo">Modelo:</label>
+              <input className="form-control" type="text" name="modelo" readOnly defaultValue={itemToSee ? itemToSee.model : ""}  />
+              <br />
+              <label htmlFor="url">Url:</label>
+              <input className="form-control" type="text" name="url" readOnly defaultValue={itemToSee ? itemToSee.url : ""}  />
+              <br />
+              <label htmlFor="brnad_id">Marca:</label>
+              <input className="form-control" type="text" readOnly  defaultValue={itemToSee ? itemToSee.brand_id : ""} ></input>
+              <br />
+              <div className="contenedor-boton-modal-dentro">
+              </div>
+            </form>
+            <div className="contenedor-boton-modal-fuera">
+              <button className="btn btn-danger" onClick={cerrarFormulario}>Salir</button>
+            </div>
+          </ModalBody>
+      </Modal>
+    )
+  }else if(location === "http://localhost:3000/Tabla/?txt=brands"){
+
+    return(
+
+      <Modal isOpen={abrirModalVer}>
+          <ModalHeader style={{display: 'block'}}>
+              <div>
+                <h5  style={{float: 'center', color: 'red'}} >Datos De la Marca</h5> 
+              </div>
+          </ModalHeader>
+          <ModalBody>
               <form className="form-group" >
                 <input className="form-control" type="number" name="id" readOnly defaultValue={itemToSee ? itemToSee.id : ""}  />
                 <label htmlFor="modelo">Marca:</label>
@@ -64,14 +63,14 @@ const ModalVer = ({cerrarFormulario, abrirModalVer, itemToSee}) =>{
                 </div>
               </form>
               <div className="contenedor-boton-modal-fuera">
-                 <button className="btn btn-danger" onClick={cerrarFormulario}>Salir</button>
+                <button className="btn btn-danger" onClick={cerrarFormulario}>Salir</button>
               </div>
-            </ModalBody>
+          </ModalBody>
       </Modal>
-
-
     )
- }else if(location === "http://localhost:3000/Tabla/?txt=services"){
+
+  }else if(location === "http://localhost:3000/Tabla/?txt=services"){
+
     return(
 
         <Modal isOpen={abrirModalVer}>
@@ -110,7 +109,45 @@ const ModalVer = ({cerrarFormulario, abrirModalVer, itemToSee}) =>{
             </ModalBody>
       </Modal>
     )
- }
-}
+ }else if(location === "http://localhost:3000/Tabla/?txt=customers"){
+    
+    return(
+
+        <Modal isOpen={abrirModalVer}>
+            <ModalHeader style={{display: 'block'}}>
+                <div>
+                    <h5  style={{float: 'center', color: 'red'}} >Datos Del Cliente</h5> 
+                </div>
+            </ModalHeader>
+            <ModalBody>
+              <form className="form-group" >
+                <label>Numero de Cliente</label>
+                <input className="form-control" type="number" name="id" readOnly defaultValue={itemToSee ? itemToSee.id : ""}  />
+                <label htmlFor="nombre">Nombre:</label>
+                <input className="form-control" type="text" name="name" readOnly defaultValue={itemToSee ? itemToSee.name : ""}  />
+                <br />
+                <label htmlFor="brnad_id">Email:</label>
+                <input className="form-control" type="text" readOnly  defaultValue={itemToSee ? itemToSee.email : ""} ></input>
+                <br />
+                <label htmlFor="url">Numero de Celular:</label>
+                <input className="form-control" type="text" name="phone" readOnly defaultValue={itemToSee ? itemToSee.phone_number : ""}  />
+                <br />
+                <label htmlFor="brnad_id">Numero de celular 2:</label>
+                <input className="form-control" type="text" readOnly  defaultValue={itemToSee ? itemToSee.phhone_number_2 : ""} ></input>
+                <br />
+                <label htmlFor="brnad_id">Rol:</label>
+                <input className="form-control" type="text" readOnly  defaultValue={itemToSee ? itemToSee.rol : ""} ></input>
+                <br />
+                <div className="contenedor-boton-modal-dentro">
+                </div>
+              </form>
+              <div className="contenedor-boton-modal-fuera">
+                 <button className="btn btn-danger" onClick={cerrarFormulario}>Salir</button>
+              </div>
+            </ModalBody>
+      </Modal>
+    );
+  };
+};
 
 export default ModalVer;

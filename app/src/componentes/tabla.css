@@ -1,11 +1,11 @@
 body{
-    background-image: url('../img/claroooo.png');
-    
+    background-image: url('../img/claroooo.png');  
 }
 
 .titulo-tabla h1{
     text-align: center;
-    margin-top: 20px;
+    height: 30px;
+    margin: 0;
  }
 
 .contenedor-body{
@@ -39,10 +39,12 @@ body{
     display: flex;
     width: 95%;
 }
-.tabla{
-    width: 100%;
-   background: gray;
 
+/*Styles for Table*/
+
+.tabla{
+   width: 100%;
+   background: gray;
 }
 
 .thead{
@@ -53,13 +55,12 @@ body{
 }
 
 .th-columnas{
-    border: 1px solid rgb(255, 255, 255);
-    
+    border: 1px solid rgb(255, 255, 255);  
 }
+
 .ultima.columna{
     width: max-content;
 }
-
 
 .tbody{
     background: rgb(163, 163, 163);
@@ -68,9 +69,12 @@ body{
     color: white;
 }
 
+/*Table row style*/
+
 .tr-data{
     border-bottom: 1px solid black;
 }
+
 .tr-data:nth-child(10n + 1){
     background-color: rgb(51, 51, 51);
 }
@@ -102,11 +106,14 @@ body{
     background-color: rgb(41, 41, 41);
 }
 
+/*Table cell style*/
+
 .td{
     width: max-content;
     padding-right: 5px;
     padding-left: 5px;
 }
+
 .td:first-child{
     border-right: 1px solid white;
 }
@@ -120,6 +127,7 @@ body{
     white-space: nowrap;
     text-decoration: none;
 }
+
 .td-a a:hover{
     color: red;
 }
@@ -135,6 +143,8 @@ body{
     max-width: 120px;
 }
 
+/*Table buttons style*/
+
 .boton-eliminar{
    background: red;
    justify-content: center;
@@ -144,6 +154,7 @@ body{
    cursor: pointer;
    margin-left: 2px;
 }
+
 .boton-eliminar:hover{
     background: rgb(124, 0, 0);
 }
@@ -171,96 +182,7 @@ body{
     margin-top: 4px;
     margin-left: 4px;
 }
+
 .boton-ver:hover{
     background: rgb(0, 0, 119);
 }
-
-.form-eliminar-marca{
-    display: flex;
-    position: fixed;
-    flex-direction: column;
-    width: 40%;
-    margin-top: 250px;
-    background: rgb(207, 206, 206);
-}
-.form-eliminar-marca.borrado{
-    display: none;
-}
-
-.botones-form-eliminar-marca{
-    display: flex;
-    justify-content: flex-end;
-    align-content: flex-end;
-}
-
-
-
-
-
-
-
-/*FORULARIO CSS*/
-
-
-
-.contenedor-formulario{
-    position: fixed;
- }
- .contenedor-formulario.completado{
-     display: none;
- }
- .input{
-     display: flex;
-     flex-direction: column;
-     text-align: center;
-     margin-bottom: 15px;
-     margin-top: 15px;
-     color: white;
- }
- .boton-formulario{
-     width: 40%;
-     margin-top: 50px;
- }
- .encabezado-formulario{
-     display: flex;
-     flex-direction: row;
-     width: 100%;
-     justify-content: space-between;
- }
- .titulo-formulario{
-   margin-left: 5px;
- }
- .boton-cerrar-formulario{
-     max-height: 20px;
-     align-self: center;
-     margin-right: 5px;
-     border: none;
-     background: green;
-     cursor: pointer;
-     font-weight: 500;
-     font-size: 17px;
- }
- .boton-cerrar-formulario:hover{
-     font-size: 23px;
- }
- 
- 
- 
- 
- 
- 
- 
- .contenedor-botones{
-     width: 30%;
-     display: flex;
-     min-height: 70px;
-     margin-top: 10px;
- }
- .contenedor-boton-editar-eliminar{
-     width: 45%;
-     height: 100px;
-     display: flex;
-     justify-content: flex-start;
-     margin-top: 10px;
- }
- 

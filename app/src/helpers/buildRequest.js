@@ -1,16 +1,18 @@
 /* global HelperBuildRequest */
-export default function  HelperBuildRequest(method, data = {}, type = null) {
+export default function  HelperBuildRequest( method, data = {}, type = null ) {
+
     const headers = new Headers().append('Accept', 'application/json');
 
     
     if(type === 'login')
+
         return {
             method: method,
             headers:{
                 'Accept':'application/json',
                 'Content-Type':'application/json',
             },
-            body: JSON.stringify(data) 
+            body: JSON.stringify(data)
         };
         
     const userData = JSON.parse( localStorage.getItem('Usuario') );
@@ -36,8 +38,9 @@ export default function  HelperBuildRequest(method, data = {}, type = null) {
             'Authorization': tokenType + ' ' + userData.access_token
         },
         body: JSON.stringify(data) 
-        }
-    }
+        };
+    };
+
     if(type === 'dataTablePut'){
         return{
             method: method,
@@ -47,8 +50,9 @@ export default function  HelperBuildRequest(method, data = {}, type = null) {
             'Authorization': tokenType + ' ' + userData.access_token
         },
         body: JSON.stringify(data)
-        }
-    }    
+        };
+    };
+      
     return {
         method: method,
         headers:{
