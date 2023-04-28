@@ -1,6 +1,7 @@
 .form-group{
     width: 80%;
 }
+
 .contenedor-modal-body{
    display: flex;   
    align-items: end;
@@ -12,11 +13,13 @@
     width: 50%;
     margin-top: 15px;
 }
+
 .contenedor-boton-modal-fuera{
     height: 40px;
     display: flex;
     justify-content: flex-end;
 }
+
 .p-errores{
     color: red;
     margin-bottom: 0px;
@@ -26,6 +29,7 @@
 .option-modal{
     cursor: pointer;
 }
+
 .option-modal-crear{
     height: 35px;
     display: flex;
@@ -38,6 +42,7 @@
     cursor: pointer;
     color: green;
 }
+
 .option-modal-crear-errores{
     height: 35px;
     display: flex;
