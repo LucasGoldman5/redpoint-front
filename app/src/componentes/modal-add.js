@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import './modales.css'
 
 
-const ModalAgregar =({ agregar,cambiarModal,abrirModalAgregar,abrirModalAgregarMarca,dataApi,cerrarFormulario,onSubmit,onSubmitMarca,dataBrands,errores,agregarMarcaEnCellphones, clasesErrores }) =>{
+const ModalAdd =({ add,changeModal,openModalAdd,openModalAddBrand,dataApi,closeForm,onSubmit,onSubmitBrand,dataBrands,errors,addBrandInCellphones, classesErrors }) =>{
 
 
   const [cadenaMarca, setCadenaMarca] = useState ();
@@ -21,12 +21,12 @@ const ModalAgregar =({ agregar,cambiarModal,abrirModalAgregar,abrirModalAgregarM
   const { register, handleSubmit} = useForm ();
 
 
-  if(location === "http://localhost:3000/Tabla/?txt=cellphones"){
+  if(location === "http://localhost:3000/Table/?txt=cellphones"){
 
     return(
 
        <>
-          <Modal isOpen={abrirModalAgregar}>
+          <Modal isOpen={openModalAdd}>
             <ModalHeader style={{display: 'block'}}>
               <div>
                 <h5  style={{float: 'center', color: 'red'}} >Crear celular</h5> 
@@ -41,7 +41,7 @@ const ModalAgregar =({ agregar,cambiarModal,abrirModalAgregar,abrirModalAgregarM
                 <input className="form-control" type="text" name="modelo" {...register('model',{
                   value:null
                   })}/>
-                  {errores.model? <p className="p-errores">El campo Modelo debe ser completado</p> : ""}
+                  {errors.model? <p className="p-errores">El campo Modelo debe ser completado</p> : ""}
                 <br />
                 <label htmlFor="url">Url</label>
                 <input className="form-control" type="text" name="url" {...register('url',{
@@ -59,30 +59,30 @@ const ModalAgregar =({ agregar,cambiarModal,abrirModalAgregar,abrirModalAgregarM
                     }
                   })}
                 </select>
-                  {errores.brand_id? <p className="p-errores">Haga click en una marca</p> : ""}
+                  {errors.brand_id? <p className="p-errores">Haga click en una marca</p> : ""}
                 <div className="contenedor-boton-modal-dentro">
-                  <button type="submit" className="btn btn-success" onClick={agregar} >Crear</button>
+                  <button type="submit" className="btn btn-success" onClick={add} >Crear</button>
                 </div>
               </form>
-              <button className={clasesErrores ? "option-modal-crear-errores" :"option-modal-crear"} onClick={cambiarModal}>+</button>
+              <button className={classesErrors ? "option-modal-crear-errores" :"option-modal-crear"} onClick={changeModal}>+</button>
               <div className="contenedor-boton-modal-fuera">
-                <button className="btn btn-danger" onClick={cerrarFormulario}>Cancelar</button>
+                <button className="btn btn-danger" onClick={closeForm}>Cancelar</button>
               </div>
             </ModalBody>
           </Modal>
 
-          <Modal isOpen={abrirModalAgregarMarca}>
+          <Modal isOpen={openModalAddBrand}>
             <ModalHeader style={{display: 'block'}}>
               <div>
                 <h5  style={{float: 'center', color: 'red'}} >Crear Marca</h5> 
               </div>
             </ModalHeader>
             <ModalBody>
-              <form className="form-group" onSubmit={handleSubmit(onSubmitMarca)}>
+              <form className="form-group" onSubmit={handleSubmit(onSubmitBrand)}>
                 <br />
                 <label htmlFor="marca">Marca</label>
                 <input className="form-control" type="text" name="marca"  {...register('title')} />
-                  {errores.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
+                  {errors.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
                 <br />
                 <label htmlFor="url">Descripcion</label>
                 <input className="form-control" type="text" name="url" {...register('description',{
@@ -95,22 +95,22 @@ const ModalAgregar =({ agregar,cambiarModal,abrirModalAgregar,abrirModalAgregarM
                   })} />
                 <br/>
                 <div className="contenedor-boton-modal-dentro">
-                  <button type="submit" className="btn btn-success" onClick={agregarMarcaEnCellphones} >Crear</button>
+                  <button type="submit" className="btn btn-success" onClick={addBrandInCellphones} >Crear</button>
                 </div>  
               </form>
               <div className="contenedor-boton-modal-fuera">
-                <button className="btn btn-danger" onClick={cerrarFormulario}>Cancelar</button>
+                <button className="btn btn-danger" onClick={closeForm}>Cancelar</button>
               </div>
             </ModalBody>
           </Modal>
 
         </>  
     )
-  }else if(location === "http://localhost:3000/Tabla/?txt=brands" ){
+  }else if(location === "http://localhost:3000/Table/?txt=brands" ){
 
     return(
 
-      <Modal isOpen={abrirModalAgregar}>
+      <Modal isOpen={openModalAdd}>
         <ModalHeader style={{display: 'block'}}>
           <div>
             <h5  style={{float: 'center', color: 'red'}} >Crear Marca</h5> 
@@ -123,7 +123,7 @@ const ModalAgregar =({ agregar,cambiarModal,abrirModalAgregar,abrirModalAgregarM
             <br />
             <label htmlFor="marca">Marca</label>
             <input className="form-control" type="text" name="marca"  {...register('title')} />
-              {errores.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
+              {errors.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
             <br />
             <label htmlFor="url">Descripcion</label>
             <input className="form-control" type="text" name="url" {...register('description',{
@@ -136,20 +136,20 @@ const ModalAgregar =({ agregar,cambiarModal,abrirModalAgregar,abrirModalAgregarM
               })} />
             <br/>
             <div className="contenedor-boton-modal-dentro">
-                <button type="submit" className="btn btn-success" onClick={agregar} >Crear</button>
+                <button type="submit" className="btn btn-success" onClick={add} >Crear</button>
             </div>  
             </form>
             <div className="contenedor-boton-modal-fuera">
-              <button className="btn btn-danger" onClick={cerrarFormulario}>Cancelar</button>
+              <button className="btn btn-danger" onClick={closeForm}>Cancelar</button>
             </div>
         </ModalBody>
       </Modal>
 
     )
-  }else if(location === "http://localhost:3000/Tabla/?txt=services"){
+  }else if(location === "http://localhost:3000/Table/?txt=services"){
 
     return(
-      <Modal isOpen={abrirModalAgregar}>
+      <Modal isOpen={openModalAdd}>
         <ModalHeader style={{display: 'block'}}>
           <div>
             <h5  style={{float: 'center', color: 'red'}} >Crear Servicio</h5> 
@@ -164,7 +164,7 @@ const ModalAgregar =({ agregar,cambiarModal,abrirModalAgregar,abrirModalAgregarM
             <input className="form-control" type="text" name="marca"  {...register('description',{
               value:null
               })} />
-              {errores.description? <p className="p-errores">El campo Descripcion debe ser completado</p> : ""} 
+              {errors.description? <p className="p-errores">El campo Descripcion debe ser completado</p> : ""} 
             <br />
             <label htmlFor="url">Numero de Telefono</label>
             <input className="form-control" type="text" name="numero de telefono" {...register('phone_number',{
@@ -183,17 +183,17 @@ const ModalAgregar =({ agregar,cambiarModal,abrirModalAgregar,abrirModalAgregarM
             <br />
             <hr />
             <div className="contenedor-botones-modal">
-              <button type="submit" className="btn btn-success" onClick={agregar} >Crear</button>
-              <button className="btn btn-danger" onClick={cerrarFormulario}>Cancelar</button>
+              <button type="submit" className="btn btn-success" onClick={add} >Crear</button>
+              <button className="btn btn-danger" onClick={closeForm}>Cancelar</button>
             </div>
           </form>
         </ModalBody>
       </Modal>
     );
-  }else if(location === "http://localhost:3000/Tabla/?txt=customers"){
+  }else if(location === "http://localhost:3000/Table/?txt=customers"){
 
     return(
-      <Modal isOpen={abrirModalAgregar}>
+      <Modal isOpen={openModalAdd}>
         <ModalHeader style={{display: 'block'}}>
           <div>
             <h5  style={{float: 'center', color: 'red'}} >Crear Servicio</h5> 
@@ -205,19 +205,19 @@ const ModalAgregar =({ agregar,cambiarModal,abrirModalAgregar,abrirModalAgregarM
             <input className="form-control" type="text" name="name"  {...register('name',{
               value:null
               })} />
-              {errores.name? <p className="p-errores">{errores.name}</p> : ""} 
+              {errors.name? <p className="p-errores">{errors.name}</p> : ""} 
             <br />
             <label htmlFor="url">Email</label>
             <input className="form-control" type="text" name="email" {...register('email',{
               value:null
               })} />
-              {errores.email? <p className="p-errores">{errores.email}</p> : ""}
+              {errors.email? <p className="p-errores">{errors.email}</p> : ""}
             <br />
             <label htmlFor="url">Numero de Telefono</label>
             <input className="form-control" type="text" name="phone" {...register('phone_number',{
               value:null
               })} />
-              {errores.phone_number? <p className="p-errores">{errores.phone_number}</p> : ""}
+              {errors.phone_number? <p className="p-errores">{errors.phone_number}</p> : ""}
             <br />
             <label htmlFor="url">Numero de telefono 2</label>
             <input className="form-control" type="text" name="phone_2" {...register('phhone_number_2',{
@@ -226,8 +226,8 @@ const ModalAgregar =({ agregar,cambiarModal,abrirModalAgregar,abrirModalAgregarM
             <br />
             <hr />
             <div className="contenedor-botones-modal">
-              <button type="submit" className="btn btn-success" onClick={agregar} >Crear</button>
-              <button className="btn btn-danger" onClick={cerrarFormulario}>Cancelar</button>
+              <button type="submit" className="btn btn-success" onClick={add} >Crear</button>
+              <button className="btn btn-danger" onClick={closeForm}>Cancelar</button>
             </div>
           </form>
         </ModalBody>
@@ -237,5 +237,5 @@ const ModalAgregar =({ agregar,cambiarModal,abrirModalAgregar,abrirModalAgregarM
 };
 
 
-export default ModalAgregar;
+export default ModalAdd;
 

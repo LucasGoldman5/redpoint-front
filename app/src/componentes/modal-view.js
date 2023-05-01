@@ -3,15 +3,15 @@ import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 
 
 
-const ModalVer = ({ cerrarFormulario, abrirModalVer, itemToSee }) =>{
+const ModalView = ({ closeForm, openModalView, itemToSee }) =>{
 
   const location = window.location.href;
     
-  if(location === "http://localhost:3000/Tabla/?txt=cellphones"){
+  if(location === "http://localhost:3000/Table/?txt=cellphones"){
 
     return(
 
-      <Modal isOpen={abrirModalVer}>
+      <Modal isOpen={openModalView}>
           <ModalHeader style={{display: 'block'}}>
               <div>
                  <h5  style={{float: 'center', color: 'red'}} >Datos Del Celular</h5> 
@@ -32,16 +32,16 @@ const ModalVer = ({ cerrarFormulario, abrirModalVer, itemToSee }) =>{
               </div>
             </form>
             <div className="contenedor-boton-modal-fuera">
-              <button className="btn btn-danger" onClick={cerrarFormulario}>Salir</button>
+              <button className="btn btn-danger" onClick={closeForm}>Salir</button>
             </div>
           </ModalBody>
       </Modal>
     )
-  }else if(location === "http://localhost:3000/Tabla/?txt=brands"){
+  }else if(location === "http://localhost:3000/Table/?txt=brands"){
 
     return(
 
-      <Modal isOpen={abrirModalVer}>
+      <Modal isOpen={openModalView}>
           <ModalHeader style={{display: 'block'}}>
               <div>
                 <h5  style={{float: 'center', color: 'red'}} >Datos De la Marca</h5> 
@@ -63,17 +63,17 @@ const ModalVer = ({ cerrarFormulario, abrirModalVer, itemToSee }) =>{
                 </div>
               </form>
               <div className="contenedor-boton-modal-fuera">
-                <button className="btn btn-danger" onClick={cerrarFormulario}>Salir</button>
+                <button className="btn btn-danger" onClick={closeForm}>Salir</button>
               </div>
           </ModalBody>
       </Modal>
     )
 
-  }else if(location === "http://localhost:3000/Tabla/?txt=services"){
+  }else if(location === "http://localhost:3000/Table/?txt=services"){
 
     return(
 
-        <Modal isOpen={abrirModalVer}>
+        <Modal isOpen={openModalView}>
             <ModalHeader style={{display: 'block'}}>
                 <div>
                     <h5  style={{float: 'center', color: 'red'}} >Datos Del Servicio</h5> 
@@ -104,16 +104,16 @@ const ModalVer = ({ cerrarFormulario, abrirModalVer, itemToSee }) =>{
                 </div>
               </form>
               <div className="contenedor-boton-modal-fuera">
-                 <button className="btn btn-danger" onClick={cerrarFormulario}>Salir</button>
+                 <button className="btn btn-danger" onClick={closeForm}>Salir</button>
               </div>
             </ModalBody>
       </Modal>
     )
- }else if(location === "http://localhost:3000/Tabla/?txt=customers"){
+ }else if(location === "http://localhost:3000/Table/?txt=customers"){
     
     return(
 
-        <Modal isOpen={abrirModalVer}>
+        <Modal isOpen={openModalView}>
             <ModalHeader style={{display: 'block'}}>
                 <div>
                     <h5  style={{float: 'center', color: 'red'}} >Datos Del Cliente</h5> 
@@ -142,7 +142,7 @@ const ModalVer = ({ cerrarFormulario, abrirModalVer, itemToSee }) =>{
                 </div>
               </form>
               <div className="contenedor-boton-modal-fuera">
-                 <button className="btn btn-danger" onClick={cerrarFormulario}>Salir</button>
+                 <button className="btn btn-danger" onClick={closeForm}>Salir</button>
               </div>
             </ModalBody>
       </Modal>
@@ -150,4 +150,4 @@ const ModalVer = ({ cerrarFormulario, abrirModalVer, itemToSee }) =>{
   };
 };
 
-export default ModalVer;
+export default ModalView;

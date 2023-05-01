@@ -7,20 +7,20 @@ import { PulseLoader } from "react-spinners";
 import HelperBuildRequest from "../helpers/buildRequest";
 
 
-const Login = ({ingresarAplicacion}) =>{
+const Login = ({enterAplication}) =>{
 
 
-  const [verContraseña, setVerContraseña] = useState(false);       
+  const [viewPassword, setViewPassword] = useState(false);       
   const [loading, setLoading] = useState(false);
-  const [respuesta, setRespuesta] = useState(null);
-  const [errores, setErrores] = useState(false);
-  const [txtErrores, setTxtErrores] = useState("");
+  const [response, setResponse] = useState(null);
+  const [error, setError] = useState(false);
+  const [txtError, setTxtError] = useState("");
 
 
 
   const onSubmit = async (data) =>{
 
-    limpiarFormulario();
+    cleanForm();
       if(data){
         
         setLoading(true) 
@@ -34,22 +34,22 @@ const Login = ({ingresarAplicacion}) =>{
                   if(response.error){
                     setTimeout(()=>{
                         setLoading(false)
-                        setRespuesta(false)
-                        setErrores(true)
-                        setTxtErrores(`${response.error}`)
+                        setResponse(false)
+                        setError(true)
+                        setTxtError(`${response.error}`)
                     },1000);
                   }else{
                     setTimeout( () => {
                         setLoading(false)
-                        setRespuesta(true)
-                        localStorage.setItem("Usuario",JSON.stringify(response))
+                        setResponse(true)
+                        localStorage.setItem("user",JSON.stringify(response))
                     }, 2000);  
                   }  
             }else{
                 setLoading(false)
-                setRespuesta(false)
-                setErrores(true)
-                setTxtErrores(`El usuario ingresado no es valido`);
+                setResponse(false)
+                setError(true)
+                setTxtError(`El usuario ingresado no es valido`);
             }
 
         }catch(error){
@@ -59,22 +59,22 @@ const Login = ({ingresarAplicacion}) =>{
   };
 
 
-  const limpiarFormulario = () =>{
+  const cleanForm = () =>{
     document.getElementById("formularioLogin").reset();
   };
 
-  const verContraseñaClick = () =>{
-    setVerContraseña(!verContraseña)
+  const viewPasswordClick = () =>{
+    setViewPassword(!viewPassword)
   }
 
-  const volverLogin = () =>{
+  const returnLogin = () =>{
     window.location.reload()
   }
         
   const { register, formState: { errors }, handleSubmit} = useForm ();
   
   
-    if(loading ===false && respuesta === null && errores === false){
+    if(loading ===false && response === null && error === false){
 
         return(
           <>
@@ -96,7 +96,7 @@ const Login = ({ingresarAplicacion}) =>{
                         </div>
                         <div className="inputs contraseña">
                             <label>Contraseña</label>
-                            <input className="input" type={(verContraseña === false)? 'password' : 'text'}  {...register('password', {
+                            <input className="input" type={(viewPassword === false)? 'password' : 'text'}  {...register('password', {
                                 required: true,
                                 pattern: /^\S{4,16}$/
                                 })}>                                    
@@ -105,7 +105,7 @@ const Login = ({ingresarAplicacion}) =>{
                                 {errors.password?.type === 'required' && <p className="p-validacion">El campo contraseña debe completarse.</p>}
                             <div className="iconos">
                                 {
-                                (verContraseña === false) ? <AiFillEyeInvisible  onClick={verContraseñaClick}/> : <AiFillEye onClick={verContraseñaClick}/>
+                                (viewPassword === false) ? <AiFillEyeInvisible  onClick={viewPasswordClick}/> : <AiFillEye onClick={viewPasswordClick}/>
                                 }
                             </div>
                         </div>
@@ -133,7 +133,7 @@ const Login = ({ingresarAplicacion}) =>{
             
           </>
         )
-    }else if(loading === true && respuesta === null && errores === false){
+    }else if(loading === true && response === null && error === false){
 
         return(
           <>
@@ -147,7 +147,7 @@ const Login = ({ingresarAplicacion}) =>{
           </>
         )
 
-    }else if(loading === false && respuesta === true && errores === false){
+    }else if(loading === false && response === true && error === false){
 
         return(
           <>
@@ -157,23 +157,23 @@ const Login = ({ingresarAplicacion}) =>{
                     <h3 className="h3-encontrado">Usuario Encontrado!</h3>
                     <p>Para iniciar la aplicacion haga click en el siguiente boton:</p>
                     <div>
-                        <button onClick={ingresarAplicacion}>Ingresar</button>
+                        <button onClick={enterAplication}>Ingresar</button>
                     </div>  
                 </div>
             </div>
           </>
         )
 
-    }else if(loading === false && respuesta === false && errores === true){
+    }else if(loading === false && response === false && error === true){
 
         return(
           <>
             
            <div className="contenedor-body-login">
                 <div className="contenedor-form-registrarse-loading">
-                    <h3 className="h3-error">{txtErrores}</h3>
+                    <h3 className="h3-error">{txtError}</h3>
                     <p>Presione el siguiente boton para volver a intentarlo</p>
-                    <button onClick={volverLogin}>volver</button>
+                    <button onClick={returnLogin}>volver</button>
                 </div>
            </div>
           </>

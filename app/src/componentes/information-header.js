@@ -2,19 +2,19 @@ import React from "react";
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
-import './header-informacion.css';
+import './information-header.css';
 import {  Link } from 'react-router-dom';
 
 
-const HeaderInformacion = () =>{
+const InformationHeader = () =>{
 
     
-  const volver = () =>{
-    window.location.assign(`/Tabla/?txt=${"cellphones"}`);
+  const comeBack = () =>{
+    window.location.assign(`/Table/?txt=${"cellphones"}`);
   }
 
   const home = () =>{
-    window.location.assign(`/Tabla/?txt=${"cellphones"}`);
+    window.location.assign(`/Table/?txt=${"cellphones"}`);
   }
 
     return(
@@ -24,7 +24,7 @@ const HeaderInformacion = () =>{
                     <Container className="contenedor">
                     <Navbar.Brand className="titulo-nav-informacion" onClick={home} href="#home">ClaroApp</Navbar.Brand>
                     <Nav  >
-                        <li><Link className='nav-li-link-inicio' onClick={volver} to={`/Tabla/?txt=${"cellphones"}`}>Volver</Link></li>
+                        <li><Link className='nav-li-link-inicio' onClick={comeBack} to={`/Tabla/?txt=${"cellphones"}`}>Volver</Link></li>
                     </Nav>
                     </Container>
                 </Navbar>
@@ -33,4 +33,4 @@ const HeaderInformacion = () =>{
     );
 };
 
-export default HeaderInformacion;
+export default InformationHeader;

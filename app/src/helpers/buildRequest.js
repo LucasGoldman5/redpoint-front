@@ -15,7 +15,7 @@ export default function  HelperBuildRequest( method, data = {}, type = null ) {
             body: JSON.stringify(data)
         };
         
-    const userData = JSON.parse( localStorage.getItem('Usuario') );
+    const userData = JSON.parse( localStorage.getItem('user') );
     const tokenType = userData.token_type[0].toUpperCase() + userData.token_type.slice(1, userData.token_type.length );
 
     if(type === 'dataTable'){
@@ -52,7 +52,7 @@ export default function  HelperBuildRequest( method, data = {}, type = null ) {
         body: JSON.stringify(data)
         };
     };
-      
+
     return {
         method: method,
         headers:{

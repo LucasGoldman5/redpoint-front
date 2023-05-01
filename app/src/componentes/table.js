@@ -1,38 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import swal from 'sweetalert';
-import './tabla.css';
+import './table.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt, faEye } from '@fortawesome/free-solid-svg-icons';
-import BotonAgregar from './boton-agregar';
+import AddButton from './add-button';
 import 'bootstrap/dist/css/bootstrap.css';
-import ModalAgregar from './modal-agregar';
-import ModalEditar from './modal-editar';
-import ModalVer from './modal-ver';
+import ModalAdd from './modal-add';
+import ModalEdit from './modal-edit';
+import ModalView from './modal-view';
 import HelperBuildRequest from "../helpers/buildRequest";
 import {  useLocation } from 'react-router-dom';
 
 
-const Tabla = () =>{
+
+const Table = () =>{
 
     const [dataApi, setDataApi] = useState([]);
     const [dataBrands, setDataBrands] = useState([]);
     const [superAdmin, setSuperAdmin] = useState(null);
-    const [abrirModalAgregar, setAbrirModalAgregar] = useState(false);
-    const [abrirModalAgregarMarca, setAbrirModalAgregarMarca] = useState(false);
-    const [abrirModalEditar, setAbrirModalEditar] = useState(false);
-    const [abrirModalVer, setAbrirModalVer] = useState(false);
+    const [openModalAdd, setOpenModalAdd] = useState(false);
+    const [openModalAddBrand, setOpenModalAddBrand] = useState(false);
+    const [openModalEdit, setOpenModalEdit] = useState(false);
+    const [openModalView, setOpenModalView] = useState(false);
     const [itemToEdit, setItemToEdit] = useState(null);
     const [itemToSee, setItemToSee] = useState(null);
-    const [cadena,setCadena] = useState("");
-    const [errores, setErrores] = useState([]);
-    const [clasesErrores, setClasesErrores] = useState(false);
+    const [chain,setChain] = useState("");
+    const [errors, setErrors] = useState([]);
+    const [classesErrors, setClassesErrors] = useState(false);
 
 
     const location = useLocation();
 
-    const traerUsuario = localStorage.getItem("Usuario");
+    const getUser = localStorage.getItem("user");
 
-    const tablas = [
+    const tables = [
       {
         "brands":"Marcas",
         "cellphones":"Celulares",
@@ -43,7 +44,7 @@ const Tabla = () =>{
     ];
 
     const admin = () =>{
-      let usuario = JSON.parse(traerUsuario);
+      let usuario = JSON.parse(getUser);
         if(usuario.user.roles === "admin"){
           setSuperAdmin(true)
 
@@ -75,8 +76,8 @@ const Tabla = () =>{
     };
 
 
-    const abrirModal =  async () =>{
-      setAbrirModalAgregar(true)
+    const openModal =  async () =>{
+      setOpenModalAdd(true)
       
         try{
                     
@@ -99,12 +100,12 @@ const Tabla = () =>{
         };  
     };
 
-    const cambiarModal = () =>{
-      setAbrirModalAgregar(false);
-      setAbrirModalAgregarMarca(true);
+    const changeModal = () =>{
+      setOpenModalAdd(false);
+      setOpenModalAddBrand(true);
     }
 
-    const agregarMarcaEnCellphones = async (data) =>{
+    const addBrandInCellphones = async (data) =>{
 
       if(data){
 
@@ -129,7 +130,7 @@ const Tabla = () =>{
               console.log(response);
                 if(response.errors){
                   console.log(response.errors);
-                  setErrores(response.errors)
+                  setErrors(response.errors)
                 };
             };
         }catch(error){
@@ -139,18 +140,18 @@ const Tabla = () =>{
 
     };
 
-    const cerrarFormulario = () =>{
+    const closeForm = () =>{
 
-      setAbrirModalAgregar(false); 
-      setAbrirModalAgregarMarca(false);
-      setAbrirModalEditar(false);
-      setAbrirModalVer(false);
+      setOpenModalAdd(false); 
+      setOpenModalAddBrand(false);
+      setOpenModalEdit(false);
+      setOpenModalView(false);
       setItemToEdit(null);
 
     }
 
 
-    const agregar = async (data) =>{
+    const add = async (data) =>{
 
         if(data){
             try {
@@ -167,7 +168,7 @@ const Tabla = () =>{
                         console.log(response.error);
                       },1000);
                     }else{                      
-                      setAbrirModalAgregar(false);
+                      setOpenModalAdd(false);
                       window.location.reload();
                     };  
                 };
@@ -175,8 +176,8 @@ const Tabla = () =>{
                 if(request.status === 422){
                   const response = await request.json();
                     if(response.errors){
-                      setErrores(response.errors);
-                      setClasesErrores(true);
+                      setErrors(response.errors);
+                      setClassesErrors(true);
                     };
                 };
             }catch(error){
@@ -187,10 +188,10 @@ const Tabla = () =>{
     };
 
 
-    const AbrirModalEditar = async (element) =>{
-
+    const OpenModalEdit = async (element) =>{
+        console.log(element);
         setItemToEdit(element);
-        setAbrirModalEditar(true);
+        setOpenModalEdit(true);
             
           try{
                 
@@ -216,7 +217,7 @@ const Tabla = () =>{
   
       
           
-    const editar =  async (data) =>{
+    const edit =  async (data) =>{
 
       let id = data["id"];
     
@@ -236,7 +237,7 @@ const Tabla = () =>{
                       console.log(response.error);
                     },1000);
                   }else{                      
-                    setAbrirModalEditar(false);
+                    setOpenModalEdit(false);
                     window.location.reload();
                   }  
               }
@@ -246,7 +247,7 @@ const Tabla = () =>{
                 console.log(response);
                   if(response.errors){
                     console.log(response.errors);
-                    setErrores(response.errors);
+                    setErrors(response.errors);
                   };
               };
 
@@ -261,7 +262,7 @@ const Tabla = () =>{
     }; 
 
 
-    const eliminar= async (i)=>{
+    const eliminate= async (i)=>{
 
       const controlList = ['title', 'model', 'name'  ];
       const keys = Object.keys(i);
@@ -272,9 +273,9 @@ const Tabla = () =>{
           title:"Eliminar",
           text:`¿Seguro que desea eliminar a ${i[include]}`,
           buttons: ["No","Si"]
-        }).then(async respuesta =>{
+        }).then(async response0 =>{
 
-          if(respuesta){
+          if(response0){
           
             try{
 
@@ -290,8 +291,6 @@ const Tabla = () =>{
                         console.log(response.error);
                       },1000);
                     }else{                      
-                      const nuevaData = {columns:dataApi.columns,data:dataApi.data.filter(item => item.id !== i.id)};
-                      setDataApi(nuevaData);
                       window.location.reload()
                     };
                 };
@@ -306,20 +305,20 @@ const Tabla = () =>{
     };
 
 
-    const AbrirModalVer = (element) => {
+    const OpenModalView = (element) => {
 
       setItemToSee(element);
-      setAbrirModalVer(true); 
+      setOpenModalView(true); 
 
     };
 
 
     if(dataApi.length != 0){
 
-      const dato = Object.values(dataApi.columns).filter((dato) =>{       
+      const fact = Object.values(dataApi.columns).filter((fact) =>{       
         const listaDeColumnas = ['Marca', 'Modelo', 'Nombre', 'id','Numero de Telefono','Email'];
-          if(listaDeColumnas.includes(dato)){
-            return dato;
+          if(listaDeColumnas.includes(fact)){
+            return fact;
           } ;
       });
 
@@ -328,7 +327,7 @@ const Tabla = () =>{
         <>
           
           <div className='titulo-tabla'>
-            {tablas.map((titulo)=>{
+            {tables.map((titulo)=>{
               const queryParams = new URLSearchParams(location.search)
               const txt = queryParams.get("txt")
                 if(Object.keys(titulo).includes(txt)){
@@ -340,9 +339,9 @@ const Tabla = () =>{
           <div className='contenedor-body'>
 
             <div className='contenedor-barra-botonagregar'>
-              <BotonAgregar abrirModal={abrirModal}></BotonAgregar>
+              <AddButton openModal={openModal}></AddButton>
                 <div className='contenedor-barra'>
-                  <input type='text' placeholder={`buscar por... ${dato}`} className='barra-busqueda' onChange={(e) => setCadena(e.target.value.toLocaleLowerCase())}/>
+                  <input type='text' placeholder={`buscar por... ${fact}`} className='barra-busqueda' onChange={(e) => setChain(e.target.value.toLocaleLowerCase())}/>
                 </div>      
             </div>
           
@@ -357,18 +356,18 @@ const Tabla = () =>{
                   </tr>
                 </thead>
                 <tbody className='tbody'>
-                  {dataApi.data.filter((dato) =>{
+                  {dataApi.data.filter((fact) =>{
 
                     const controlList = ['title', 'model', 'name', 'description', 'id','phone_number','email'];
                     const keys = controlList;
-                      for(let property in dato ){
+                      for(let property in fact ){
                         if(keys.includes(property)){
-                          const value = dato[property];
+                          const value = fact[property];
                           if(value && typeof value == 'string'){
-                            if(value.toLocaleLowerCase().includes(cadena))
+                            if(value.toLocaleLowerCase().includes(chain))
                               return value
                           }if(value && typeof value == 'number'){
-                            if(value.toString().includes(cadena))
+                            if(value.toString().includes(chain))
                               return value
                           };
                         };
@@ -397,13 +396,13 @@ const Tabla = () =>{
                             (superAdmin)
                             ?
                             <div>
-                              <button className='boton-ver' onClick={() => AbrirModalVer(element)}><FontAwesomeIcon icon={faEye} /></button>
+                              <button className='boton-ver' onClick={() => OpenModalView(element)}><FontAwesomeIcon icon={faEye} /></button>
                             </div>
                             :
                             <div>
-                              <button className='boton-editar' onClick={() => AbrirModalEditar(element)}><FontAwesomeIcon icon={faEdit} /></button>
-                              <button className='boton-eliminar' onClick={() => eliminar(element)}><FontAwesomeIcon icon={faTrashAlt} /></button> 
-                              <button className='boton-ver' onClick={() => AbrirModalVer(element)}><FontAwesomeIcon icon={faEye} /></button>
+                              <button className='boton-editar' onClick={() => OpenModalEdit(element)}><FontAwesomeIcon icon={faEdit} /></button>
+                              <button className='boton-eliminar' onClick={() => eliminate(element)}><FontAwesomeIcon icon={faTrashAlt} /></button> 
+                              <button className='boton-ver' onClick={() => OpenModalView(element)}><FontAwesomeIcon icon={faEye} /></button>
                             </div>
                           }
                         </td>
@@ -413,34 +412,34 @@ const Tabla = () =>{
               </table>
             </div>
               
-            <ModalEditar
-              abrirModalEditar={abrirModalEditar}
+            <ModalEdit
+              openModalEdit={openModalEdit}
               itemToEdit={itemToEdit}
-              onsubmit={editar}
-              cerrarFormulario={cerrarFormulario}
+              onsubmit={edit}
+              closeForm={closeForm}
               dataBrands={dataBrands}
-              errores={errores}>
-            </ModalEditar>
+              errors={errors}>
+            </ModalEdit>
 
-            <ModalAgregar
-              abrirModalAgregar={abrirModalAgregar}
-              abrirModalAgregarMarca={abrirModalAgregarMarca}
-              cambiarModal={cambiarModal}
+            <ModalAdd
+              openModalAdd={openModalAdd}
+              openModalAddBrand={openModalAddBrand}
+              changeModal={changeModal}
               dataApi={dataApi}
-              cerrarFormulario={cerrarFormulario}
-              onSubmit={agregar}
-              onSubmitMarca={agregarMarcaEnCellphones}
+              closeForm={closeForm}
+              onSubmit={add}
+              onSubmitMarca={addBrandInCellphones}
               dataBrands={dataBrands}
-              errores={errores}
-              agregarMarcaEnCellphones={agregarMarcaEnCellphones}
-              clasesErrores={clasesErrores}>
-            </ModalAgregar>
+              errors={errors}
+              addBrandInCellphones={addBrandInCellphones}
+              classesErrors={classesErrors}>
+            </ModalAdd>
 
-            <ModalVer
-              abrirModalVer={abrirModalVer}
-              cerrarFormulario={cerrarFormulario}
+            <ModalView
+              openModalView={openModalView}
+              closeForm={closeForm}
               itemToSee={itemToSee}>
-            </ModalVer>
+            </ModalView>
 
           </div>
 
@@ -452,4 +451,4 @@ const Tabla = () =>{
    
 };
 
-export default Tabla
+export default Table;

@@ -2,11 +2,11 @@ import React from "react";
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
-import './header-inicio.css'
+import './start-header.css'
 import {  Link } from 'react-router-dom';
 
 
-const HeaderInicio = ({registrado}) =>{
+const StartHeader = ({register}) =>{
 
   const home = () =>{
     window.location.reload()
@@ -14,7 +14,7 @@ const HeaderInicio = ({registrado}) =>{
 
   return(
     <>
-      <header className={registrado ? 'header-none' : 'header-inicio' }>
+      <header className={register ? 'header-none' : 'header-inicio' }>
         <Navbar className="contenedor-nav-inicio" bg="dark" variant="dark">
           <Container className="contenedor">
             <Navbar.Brand className="titulo-nav-inicio" onClick={home} href="#home">ClaroApp</Navbar.Brand>
@@ -28,4 +28,4 @@ const HeaderInicio = ({registrado}) =>{
   );
 };
 
-export default HeaderInicio;
+export default StartHeader;

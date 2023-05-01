@@ -1,8 +1,8 @@
-import HeaderInicio from './componentes/header-inicio';
-import HeaderGeneral from './componentes/header-general';
-import HeaderInformacion from './componentes/header-informacion';
-import Tabla from './componentes/tabla';
-import InformacionPersonal from './componentes/informacionpersonal';
+import StartHeader from './componentes/start-header';
+import GeneralHeader from './componentes/general-header';
+import InformationHeader from './componentes/information-header';
+import Table from './componentes/table';
+import PersonalInformation from './componentes/personal-information';
 import Login from './componentes/login';
 import {  Route, Routes } from 'react-router-dom';
 import {  useState } from 'react';
@@ -12,47 +12,48 @@ import GetUserData from './helpers/getUserData';
 
 
 
+
 function App() {
 
   
-  const [ usuario, setUsuario ] = useState(GetUserData());
+  const [ user, setUser ] = useState(GetUserData());
 
 
 
 
-  const ingresarAplicacion = () =>{
+  const enterAplication = () =>{
 
-    window.location.assign(`/Tabla/?txt=${"cellphones"}`);
+    window.location.assign(`/Table/?txt=${"cellphones"}`);
 
   } 
 
 
 
-  if( usuario && window.location.href != "http://localhost:3000/InformacionPersonal" ){
+  if( user && window.location.href != "http://localhost:3000/InformacionPersonal" ){
 
     return(
       <>
         <div className="App">
-          <HeaderGeneral></HeaderGeneral>
+          <GeneralHeader></GeneralHeader>
             <Routes>
-                <Route path='/Tabla' element={<Tabla/>}></Route>
-                <Route path= '/Login'  element={<Login ingresarAplicacion={ingresarAplicacion}  />}  ></Route> 
-                <Route path='/InformacionPersonal' element={<InformacionPersonal />}></Route>  
+                <Route path='/Table' element={<Table/>}></Route>
+                <Route path= '/Login'  element={<Login enterAplication={enterAplication}  />}  ></Route> 
+                <Route path='/personal-information' element={<PersonalInformation />}></Route>  
             </Routes>
         </div>
       </>
-      
+
     );
 
-  }else if( usuario && window.location.href === "http://localhost:3000/InformacionPersonal" ){
+  }else if( user && window.location.href === "http://localhost:3000/InformacionPersonal" ){
  
     return(
       <>
         <div className="App">
-          <HeaderInformacion></HeaderInformacion>
+          <InformationHeader></InformationHeader>
             <Routes>
-                <Route path={`/InformacionPersonal`} element={<InformacionPersonal></InformacionPersonal>}></Route>
-                <Route path={`*`} element={<Tabla />}></Route>
+                <Route path={`/personal-information`} element={<PersonalInformation></PersonalInformation>}></Route>
+                <Route path={`*`} element={<Table />}></Route>
             </Routes>
         </div>
       </>
@@ -63,9 +64,9 @@ function App() {
     return(
       <>
         <div className="App">
-          <HeaderInicio></HeaderInicio>
+          <StartHeader></StartHeader>
             <Routes>
-                <Route path= '*'  element={<Login ingresarAplicacion={ingresarAplicacion} />}></Route>   
+                <Route path= '*'  element={<Login enterAplication={enterAplication} />}></Route>   
             </Routes>
         </div>
       </>
