@@ -18,7 +18,7 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit, dataBr
 
   const { register, handleSubmit} = useForm ();
 
-  if(location === "http://localhost:3000/Table/?txt=brands" ){
+  if(location === "http://localhost:3000/Table/brands" ){
 
     return(
 
@@ -51,7 +51,7 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit, dataBr
       </Modal>
     )
 
-  }else if(location === "http://localhost:3000/Table/?txt=cellphones"){
+  }else if(location === "http://localhost:3000/Table/cellphones"){
 
     return(
 
@@ -90,7 +90,7 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit, dataBr
         </ModalBody>
       </Modal>
     )
-  }else if(location === "http://localhost:3000/Table/?txt=services"){
+  }else if(location === "http://localhost:3000/Table/services"){
 
     return(
       <Modal isOpen={openModalEdit}>
@@ -127,7 +127,7 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit, dataBr
         </ModalBody> 
       </Modal>
     );
-  }else if(location === "http://localhost:3000/Table/?txt=customers"){
+  }else if(location === "http://localhost:3000/Table/customers"){
 
     return(
       <Modal isOpen={openModalEdit}>

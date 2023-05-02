@@ -17,7 +17,7 @@ body{
 }
 
 .contenedor-tabla{
-    width: 95%;
+    max-width: 1320px;
     display: flex;
     flex-direction: column;
     height: max-content;
@@ -55,7 +55,8 @@ body{
 }
 
 .th-columnas{
-    border: 1px solid rgb(255, 255, 255);  
+    border: 1px solid rgb(255, 255, 255);
+    
 }
 
 .ultima.columna{

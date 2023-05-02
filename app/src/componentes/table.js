@@ -30,7 +30,6 @@ const Table = () =>{
 
 
     const location = useLocation();
-
     const getUser = localStorage.getItem("user");
 
     const tables = [
@@ -63,16 +62,25 @@ const Table = () =>{
 
 
     const getData = async () => {
-      const queryParams = new URLSearchParams(location.search);
-      const txt = queryParams.get("txt");
-      const config = HelperBuildRequest('GET', null, 'dataTable');
+      const identityApi = ["brands","cellphones","customers","reparations","services"]
+      const currentUrl = window.location.href;
+      
+      const findEntity = identityApi.find( (entity) =>  currentUrl.includes(entity));
 
-      await fetch(`http://localhost:8000/api/${txt}`, config)
-        .then( res  => res.json())
-        .then( datos =>{
-          console.log(datos);
-          setDataApi(datos)
-        });
+      if( typeof findEntity != 'string') {
+        //no se encontro la pagina
+      } else {
+        //se encontro 
+        const config = HelperBuildRequest('GET', null, 'dataTable');
+
+        await fetch(`http://localhost:8000/api/${findEntity}`, config)
+          .then( res  => res.json())
+          .then( datos =>{
+            console.log(datos);
+            setDataApi(datos);
+          });  
+      }
+       
     };
 
 
@@ -148,7 +156,7 @@ const Table = () =>{
       setOpenModalView(false);
       setItemToEdit(null);
 
-    }
+    };
 
 
     const add = async (data) =>{
@@ -225,36 +233,42 @@ const Table = () =>{
 
           try {
 
-            const queryParams = new URLSearchParams(location.search);
-            const txt = queryParams.get("txt");
-            const config = HelperBuildRequest("PUT", data, "dataTablePut");
-            const request = await fetch(`http://localhost:8000/api/${txt}/${id}`, config);
+            const identityApi = ["brands","cellphones","customers","reparations","services"]
+            const currentUrl = window.location.href;
 
-              if(request.status === 200){
-                const response = await request.json();
-                  if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                  }else{                      
-                    setOpenModalEdit(false);
-                    window.location.reload();
-                  }  
-              }
+            for(let i = 0; i<identityApi.length; i++){
+              if(currentUrl.includes(identityApi[i])){
+                const config = HelperBuildRequest("PUT", data, "dataTablePut");
+                const request = await fetch(`http://localhost:8000/api/${identityApi[i]}/${id}`, config);
 
-              if(request.status === 422){
-                const response = await request.json();
-                console.log(response);
-                  if(response.errors){
-                    console.log(response.errors);
-                    setErrors(response.errors);
-                  };
+                if(request.status === 200){
+                  const response = await request.json();
+                    if(response.error){
+                      setTimeout(()=>{
+                        console.log(response.error);
+                      },1000);
+                    }else{                      
+                      setOpenModalEdit(false);
+                      window.location.reload();
+                    }  
+                }
+
+                if(request.status === 422){
+                  const response = await request.json();
+                  console.log(response);
+                    if(response.errors){
+                      console.log(response.errors);
+                      setErrors(response.errors);
+                    };
+                };
+
+                if(request.status === 400){
+                
+                };
+
               };
-
-              if(request.status === 400){
-              
-              }
-
+            };
+            
           }catch(error){
             console.log(error);
           };          
@@ -264,7 +278,7 @@ const Table = () =>{
 
     const eliminate= async (i)=>{
 
-      const controlList = ['title', 'model', 'name'  ];
+      const controlList = ['title', 'model', 'name'];
       const keys = Object.keys(i);
       const include = keys.filter( (key) => controlList.includes(key) ).sort( (a,b) => a.localeCompare(b));
       const id = i.id;
@@ -279,29 +293,33 @@ const Table = () =>{
           
             try{
 
-              const queryParams = new URLSearchParams(location.search);
-              const txt = queryParams.get("txt");
-              const config = HelperBuildRequest("DELETE", "dataTable");
-              const request = await fetch(`http://localhost:8000/api/${txt}/${id}`, config);
-
-                if(request.status === 200){
-                  const response = await request.json();
-                    if(response.error){
-                      setTimeout(()=>{
-                        console.log(response.error);
-                      },1000);
-                    }else{                      
-                      window.location.reload()
-                    };
+              const identityApi = ["brands","cellphones","customers","reparations","services"]
+              const currentUrl = window.location.href;
+  
+              for(let i = 0; i<identityApi.length; i++){
+                if(currentUrl.includes(identityApi[i])){
+                  const config = HelperBuildRequest("DELETE", "dataTable");
+                  const request = await fetch(`http://localhost:8000/api/${identityApi[i]}/${id}`, config);
+  
+                  if(request.status === 200){
+                    const response = await request.json();
+                      if(response.error){
+                        setTimeout(()=>{
+                          console.log(response.error);
+                        },1000);
+                      }else{                      
+                        window.location.reload()
+                      };
+                  };
+  
                 };
-
+              };
+              
             }catch(error){
               console.log(error)
             };
-
           };
         });
-
     };
 
 

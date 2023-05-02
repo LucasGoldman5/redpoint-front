@@ -23,20 +23,24 @@ function App() {
 
   const enterAplication = () =>{
 
-    window.location.assign(`/Table/?txt=${"cellphones"}`);
+    window.location.assign("http://localhost:3000/Table/cellphones");
 
-  } 
+  };
 
 
 
-  if( user && window.location.href != "http://localhost:3000/InformacionPersonal" ){
+  if( user && window.location.href != "http://localhost:3000/personal-information" ){
 
     return(
       <>
         <div className="App">
           <GeneralHeader></GeneralHeader>
             <Routes>
-                <Route path='/Table' element={<Table/>}></Route>
+                <Route path='/Table/cellphones' element={<Table/>}></Route>
+                <Route path='/Table/brands' element={<Table/>}></Route>
+                <Route path='/Table/services' element={<Table/>}></Route>
+                <Route path='/Table/customers' element={<Table/>}></Route>
+                <Route path='/Table/reparations' element={<Table/>}></Route>
                 <Route path= '/Login'  element={<Login enterAplication={enterAplication}  />}  ></Route> 
                 <Route path='/personal-information' element={<PersonalInformation />}></Route>  
             </Routes>
@@ -45,7 +49,7 @@ function App() {
 
     );
 
-  }else if( user && window.location.href === "http://localhost:3000/InformacionPersonal" ){
+  }else if( user && window.location.href === "http://localhost:3000/personal-information" ){
  
     return(
       <>
@@ -73,8 +77,8 @@ function App() {
 
     );
 
-  }
+  };
  
-}
+};
 
 export default App;

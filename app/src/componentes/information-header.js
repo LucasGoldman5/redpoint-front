@@ -10,11 +10,11 @@ const InformationHeader = () =>{
 
     
   const comeBack = () =>{
-    window.location.assign(`/Table/?txt=${"cellphones"}`);
+    window.location.assign(`/Table`);
   }
 
   const home = () =>{
-    window.location.assign(`/Table/?txt=${"cellphones"}`);
+    window.location.assign(`/Table`);
   }
 
     return(

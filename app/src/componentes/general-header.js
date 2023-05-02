@@ -25,7 +25,7 @@ const GeneralHeader = ( ) =>{
   };
 
   const myInformation = () =>{
-    window.location.assign('/PersonalInformation');
+    window.location.assign('/personal-information');
   };
 
   const signOff = ( ) =>{
@@ -48,16 +48,17 @@ const GeneralHeader = ( ) =>{
         <Navbar className="contenedor-nav-general" bg="dark" variant="dark">
           <div className="contenedor-general">
             <div className="contenedor-titulo">
-              <Navbar.Brand className="titulo-nav"  href="http://localhost:3000/Tabla/?txt=cellphones">ClaroApp</Navbar.Brand>
+              <Navbar.Brand className="titulo-nav"  href="http://localhost:3000/Table/cellphones">ClaroApp</Navbar.Brand>
             </div>
             <div className="contenedor-contenedor-links">
               <Nav >
                 <button className="boton-tablas" onClick={linksDropdowns}>Tablas</button>
                 <div className={dropdownLinksMenu ?"contenedor-links none" :"contenedor-links"}>
-                  <li className='nav-li-link'><Link onClick={()=> reload() } to={`/Table/?txt=${"brands"}`}>Marcas</Link></li>
-                  <li className='nav-li-link'><Link onClick={()=> reload()} to={`/Table/?txt=${"cellphones"}`}>Celulares</Link></li> 
-                  <li className='nav-li-link'><Link onClick={()=> reload()} to={`/Table/?txt=${"services"}`}>Servicios</Link></li>
-                  <li className='nav-li-link'><Link onClick={()=> reload()} to={`/Table/?txt=${"customers"}`}>Clientes</Link></li> 
+                  <li className='nav-li-link'><Link onClick={()=> reload() } to={`/Table/brands`}>Marcas</Link></li>
+                  <li className='nav-li-link'><Link onClick={()=> reload()} to={`/Table/cellphones`}>Celulares</Link></li> 
+                  <li className='nav-li-link'><Link onClick={()=> reload()} to={`/Table/services`}>Servicios</Link></li>
+                  <li className='nav-li-link'><Link onClick={()=> reload()} to={`/Table/customers`}>Clientes</Link></li>
+                  <li className='nav-li-link'><Link onClick={()=> reload()} to={`/Table/reparations`}>Reparaciones</Link></li>  
                 </div>
               </Nav>
             </div>
@@ -67,7 +68,7 @@ const GeneralHeader = ( ) =>{
               <h2 className="letra-micuenta">{(user) ?user.name.charAt(0).toUpperCase(): 'Mi'}</h2>
             </div>
             <div className={dropdown ? "micuenta-desplegable none" : "micuenta-desplegable"}>
-              <li className="li-micuenta"><Link onClick={myInformation} to={'/InformacionPersonal'}>Mi cuenta</Link></li>
+              <li className="li-micuenta"><Link onClick={myInformation} to={'/personal-information'}>Mi cuenta</Link></li>
               <li  className="li-micuenta"><Link onClick={signOff} to={"*" }>Cerrar Sesion</Link> </li>
             </div>
           </div>

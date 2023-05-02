@@ -7,7 +7,7 @@ const ModalView = ({ closeForm, openModalView, itemToSee }) =>{
 
   const location = window.location.href;
     
-  if(location === "http://localhost:3000/Table/?txt=cellphones"){
+  if(location === "http://localhost:3000/Table/cellphones"){
 
     return(
 
@@ -37,7 +37,7 @@ const ModalView = ({ closeForm, openModalView, itemToSee }) =>{
           </ModalBody>
       </Modal>
     )
-  }else if(location === "http://localhost:3000/Table/?txt=brands"){
+  }else if(location === "http://localhost:3000/Table/brands"){
 
     return(
 
@@ -69,7 +69,7 @@ const ModalView = ({ closeForm, openModalView, itemToSee }) =>{
       </Modal>
     )
 
-  }else if(location === "http://localhost:3000/Table/?txt=services"){
+  }else if(location === "http://localhost:3000/Table/services"){
 
     return(
 
@@ -109,7 +109,7 @@ const ModalView = ({ closeForm, openModalView, itemToSee }) =>{
             </ModalBody>
       </Modal>
     )
- }else if(location === "http://localhost:3000/Table/?txt=customers"){
+ }else if(location === "http://localhost:3000/Table/customers"){
     
     return(
 
