@@ -75,6 +75,7 @@
    width: 100%;
 }
 .nav-li-link a{
+    display: flex;
     color: rgb(255, 255, 255);
     list-style: none;
     text-decoration: none;

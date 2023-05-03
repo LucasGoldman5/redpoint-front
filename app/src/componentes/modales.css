@@ -55,3 +55,7 @@
     cursor: pointer;
     color: green;
 }
+
+.div-container-select-button{
+    display: flex;
+}

@@ -17,16 +17,22 @@ const Table = () =>{
 
     const [dataApi, setDataApi] = useState([]);
     const [dataBrands, setDataBrands] = useState([]);
+    const [dataCustomers, setDataCustomers] = useState([]);
+    const [dataCellphones, setDataCellPhones] = useState([]);
+    const [dataServices, setDataServices] = useState([]);
     const [superAdmin, setSuperAdmin] = useState(null);
     const [openModalAdd, setOpenModalAdd] = useState(false);
     const [openModalAddBrand, setOpenModalAddBrand] = useState(false);
+    const [openModalAddCustomer, setOpenModalAddCustomer] = useState(false);
+    const [openModalAddCellphone, setOpenModalAddCellphone] = useState(false);
+    const [openModalAddService, setOpenModalAddService] = useState(false);
     const [openModalEdit, setOpenModalEdit] = useState(false);
     const [openModalView, setOpenModalView] = useState(false);
     const [itemToEdit, setItemToEdit] = useState(null);
     const [itemToSee, setItemToSee] = useState(null);
     const [chain,setChain] = useState("");
     const [errors, setErrors] = useState([]);
-    const [classesErrors, setClassesErrors] = useState(false);
+    
 
 
     const location = useLocation();
@@ -105,70 +111,84 @@ const Table = () =>{
 
         }catch(error){
           console.log(error)
-        };  
-    };
-
-    const changeModal = () =>{
-      setOpenModalAdd(false);
-      setOpenModalAddBrand(true);
-    }
-
-    const addBrandInCellphones = async (data) =>{
-
-      if(data){
-
+        }
+        
         try{
-
-          const config = HelperBuildRequest("POST", data, "dataTablePost");
-          const request = await fetch(`http://localhost:8000/api/brands`, config);
+                    
+          const config = HelperBuildRequest("GET",null, "dataTable");
+          const request = await fetch(`http://localhost:8000/api/customers`, config);
 
             if(request.status === 200){
                 const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                      
-                    window.location.reload()
-                };
+                  if(response.error){
+                      setTimeout(()=>{
+                        console.log(response.error);
+                      },1000);
+                  }else{                      
+                      setDataCustomers(response.data);
+                  }  
             };
 
-            if(request.status === 422){
-              const response = await request.json();
-              console.log(response);
-                if(response.errors){
-                  console.log(response.errors);
-                  setErrors(response.errors)
-                };
-            };
         }catch(error){
           console.log(error)
-        };    
-      };
+        }
+        
+        try{
+                    
+          const config = HelperBuildRequest("GET",null, "dataTable");
+          const request = await fetch(`http://localhost:8000/api/cellphones`, config);
 
+            if(request.status === 200){
+                const response = await request.json();
+                  if(response.error){
+                      setTimeout(()=>{
+                        console.log(response.error);
+                      },1000);
+                  }else{                      
+                      setDataCellPhones(response.data);
+                  }  
+            };
+
+        }catch(error){
+          console.log(error)
+        }
+        
+        try{
+                    
+          const config = HelperBuildRequest("GET",null, "dataTable");
+          const request = await fetch(`http://localhost:8000/api/services`, config);
+
+            if(request.status === 200){
+                const response = await request.json();
+                  if(response.error){
+                      setTimeout(()=>{
+                        console.log(response.error);
+                      },1000);
+                  }else{                      
+                      setDataServices(response.data);
+                  }  
+            };
+
+        }catch(error){
+          console.log(error)
+        }
     };
 
-    const closeForm = () =>{
 
-      setOpenModalAdd(false); 
-      setOpenModalAddBrand(false);
-      setOpenModalEdit(false);
-      setOpenModalView(false);
-      setItemToEdit(null);
-
-    };
-
-
-    const add = async (data) =>{
-
+    const create= async (data) =>{
+    
+      console.log(data);
         if(data){
+  
             try {
-
-              const queryParams = new URLSearchParams(location.search);
-              const txt = queryParams.get("txt");
+  
+              const identityApi = ["brands","cellphones","customers","reparations","services"]
+              const currentUrl = window.location.href;
+              const findEntity = identityApi.find( (entity) =>  currentUrl.includes(entity));
+  
               const config = HelperBuildRequest("POST", data, "dataTablePost");                    
-              const request = await fetch(`http://localhost:8000/api/${txt}`, config);
-
+              const request = await fetch(`http://localhost:8000/api/${findEntity}`, config);
+  
                 if(request.status === 200){
                   const response = await request.json();
                     if(response.error){
@@ -176,23 +196,52 @@ const Table = () =>{
                         console.log(response.error);
                       },1000);
                     }else{                      
-                      setOpenModalAdd(false);
                       window.location.reload();
                     };  
                 };
-
+  
                 if(request.status === 422){
                   const response = await request.json();
                     if(response.errors){
                       setErrors(response.errors);
-                      setClassesErrors(true);
+                      
                     };
                 };
             }catch(error){
                 console.log(error);
             };    
-        };
-        
+        };  
+    };
+
+
+    const changeModal = (fact) =>{
+      if(fact === "brand"){
+        setOpenModalAdd(false);
+        setOpenModalAddBrand(true);
+      }else if(fact === "customer"){
+        setOpenModalAdd(false);
+        setOpenModalAddCustomer(true)
+      }else if(fact === "cellphone"){
+        setOpenModalAdd(false);
+        setOpenModalAddCellphone(true);
+      }else if(fact === "service"){
+        setOpenModalAdd(false);
+        setOpenModalAddService(true);
+      }
+    }
+
+    
+    const closeForm = () =>{
+
+      setOpenModalAdd(false); 
+      setOpenModalAddBrand(false);
+      setOpenModalEdit(false);
+      setOpenModalView(false);
+      setItemToEdit(null);
+      setOpenModalAddCellphone(false);
+      setOpenModalAddCustomer(false);
+      setOpenModalAddService(false);
+
     };
 
 
@@ -334,7 +383,7 @@ const Table = () =>{
     if(dataApi.length != 0){
 
       const fact = Object.values(dataApi.columns).filter((fact) =>{       
-        const listaDeColumnas = ['Marca', 'Modelo', 'Nombre', 'id','Numero de Telefono','Email'];
+        const listaDeColumnas = ['Marca', 'Modelo', 'Nombre', 'id','Numero de Telefono','Email','recibido por'];
           if(listaDeColumnas.includes(fact)){
             return fact;
           } ;
@@ -376,7 +425,7 @@ const Table = () =>{
                 <tbody className='tbody'>
                   {dataApi.data.filter((fact) =>{
 
-                    const controlList = ['title', 'model', 'name', 'description', 'id','phone_number','email'];
+                    const controlList = ['title', 'model', 'name', 'description', 'id','phone_number','email','customer'];
                     const keys = controlList;
                       for(let property in fact ){
                         if(keys.includes(property)){
@@ -417,7 +466,7 @@ const Table = () =>{
                               <button className='boton-ver' onClick={() => OpenModalView(element)}><FontAwesomeIcon icon={faEye} /></button>
                             </div>
                             :
-                            <div>
+                            <div className='botones-acciones'>
                               <button className='boton-editar' onClick={() => OpenModalEdit(element)}><FontAwesomeIcon icon={faEdit} /></button>
                               <button className='boton-eliminar' onClick={() => eliminate(element)}><FontAwesomeIcon icon={faTrashAlt} /></button> 
                               <button className='boton-ver' onClick={() => OpenModalView(element)}><FontAwesomeIcon icon={faEye} /></button>
@@ -440,17 +489,19 @@ const Table = () =>{
             </ModalEdit>
 
             <ModalAdd
+              create={create}
               openModalAdd={openModalAdd}
               openModalAddBrand={openModalAddBrand}
+              openModalAddCustomer={openModalAddCustomer}
+              openModalAddCellphone={openModalAddCellphone}
+              openModalAddService={openModalAddService}
               changeModal={changeModal}
               dataApi={dataApi}
               closeForm={closeForm}
-              onSubmit={add}
-              onSubmitMarca={addBrandInCellphones}
               dataBrands={dataBrands}
-              errors={errors}
-              addBrandInCellphones={addBrandInCellphones}
-              classesErrors={classesErrors}>
+              dataCustomers={dataCustomers}
+              dataCellPhones={dataCellphones}
+              dataServices={dataServices}>
             </ModalAdd>
 
             <ModalView
