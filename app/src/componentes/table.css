@@ -115,6 +115,16 @@ body{
 .td{
     padding-right: 5px;
     padding-left: 5px;
+    white-space: nowrap;
+}
+
+.td p{
+    margin: 0;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .td:first-child{
@@ -122,6 +132,8 @@ body{
 }
 
 .td-a a{
+    padding-left: 5px;
+    padding-right: 5px;
     overflow: hidden;
     display: inline-block;
     color: rgb(129, 0, 0);

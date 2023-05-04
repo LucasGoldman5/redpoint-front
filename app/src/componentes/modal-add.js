@@ -6,11 +6,12 @@ import './modales.css'
 import HelperBuildRequest from "../helpers/buildRequest";
 
 
-const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAddCustomer,openModalAddCellphone,openModalAddService,dataApi,closeForm,dataBrands,dataCustomers,dataCellPhones,dataServices}) =>{
+const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAddCustomer,openModalAddCellphone,openModalAddService,dataApi,closeForm,dataBrands,dataCustomers,dataCellPhones,dataServices,errors}) =>{
   
   const [cadenaMarca, setCadenaMarca] = useState ();
+  const [newDate, setNewDate] = useState("");
   const [classesErrors, setClassesErrors] = useState(false);
-  const [errors, setErrors] = useState([]);
+  const [errorsApi, setErrorsApi] = useState([]);
   const [checkbox, setCheckBox] = useState(false);
   const location = window.location.href;
   const allDate = new Date();
@@ -19,16 +20,13 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
   const year = allDate.getFullYear();
   const hours = allDate.getHours();
   const minutes = allDate.getMinutes();
-  const date= `${Day}/${month}/${year}  Hora: ${hours}:${minutes}`;
+  const date= `${Day}/${month}/${year}${hours}:${minutes}`;
 
 
   const checkBoxTrue = () =>{
      setCheckBox(!checkbox);
   };
-
- 
-
-
+  
   const onSubmitBrand = async (data) =>{
 
     if(data){
@@ -54,7 +52,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
             console.log(response);
               if(response.errors){
                 console.log(response.errors);
-                setErrors(response.errors)
+                setErrorsApi(response.errors)
               };
           };
       }catch(error){
@@ -90,7 +88,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
             console.log(response);
               if(response.errors){
                 console.log(response.errors);
-                setErrors(response.errors)
+                setErrorsApi(response.errors)
               };
           };
       }catch(error){
@@ -125,7 +123,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
             console.log(response);
               if(response.errors){
                 console.log(response.errors);
-                setErrors(response.errors)
+                setErrorsApi(response.errors)
               };
           };
       }catch(error){
@@ -159,7 +157,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
             console.log(response);
               if(response.errors){
                 console.log(response.errors);
-                setErrors(response.errors)
+                setErrorsApi(response.errors)
               };
           };
       }catch(error){
@@ -209,7 +207,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                       return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option>
                   })}
                 </select>
-                  {errors.brand_id? <p className="p-errores">Haga click en una marca</p> : ""}
+                  {errorsApi.brand_id? <p className="p-errores">Haga click en una marca</p> : ""}
                 <div className="contenedor-boton-modal-dentro">
                   <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
                 </div>
@@ -232,7 +230,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                 <br />
                 <label htmlFor="marca">Marca</label>
                 <input className="form-control" type="text" name="marca"  {...register('title')} />
-                  {errors.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
+                  {errorsApi.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
                 <br />
                 <label htmlFor="url">Descripcion</label>
                 <input className="form-control" type="text" name="url" {...register('description',{
@@ -357,19 +355,19 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
             <input className="form-control" type="text" name="name"  {...register('name',{
               value:null
               })} />
-              {errors.name? <p className="p-errores">{errors.name}</p> : ""} 
+              {errors.name? <p className="p-errores">{errorsApi.name}</p> : ""} 
             <br />
             <label htmlFor="url">Email</label>
             <input className="form-control" type="text" name="email" {...register('email',{
               value:null
               })} />
-              {errors.email? <p className="p-errores">{errors.email}</p> : ""}
+              {errorsApi.email? <p className="p-errores">{errorsApi.email}</p> : ""}
             <br />
             <label htmlFor="url">Numero de Telefono</label>
             <input className="form-control" type="text" name="phone" {...register('phone_number',{
               value:null
               })} />
-              {errors.phone_number? <p className="p-errores">{errors.phone_number}</p> : ""}
+              {errors.phone_number? <p className="p-errores">{errorsApi.phone_number}</p> : ""}
             <br />
             <label htmlFor="url">Numero de telefono 2</label>
             <input className="form-control" type="text" name="phone_2" {...register('phhone_number_2',{
@@ -408,14 +406,14 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                           return <option className="option-modal" key={customer.id} value={customer.id} >{customer.name}</option>
                       })}
                   </select>
-                  <h1 onClick={()=>changeModal("customer")}>+</h1>
+                  <h1 className="h1-add" onClick={()=>changeModal("customer")}>+</h1>
                 </div> 
+                {errors.customer_id ? <p className="p-errores">Debe seleccionar un Cliente</p> : ""}
                 <br />
                 <label htmlFor="url">Email</label>
                 <input className="form-control" type="text" name="email" {...register('email',{
                   value:null
                   })} />
-                  {errors.email? <p className="p-errores">{errors.email}</p> : ""}
                 <br />
                 <label htmlFor="url">Celular</label>
                 <div className="div-container-select-button">
@@ -426,8 +424,9 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                           return <option className="option-modal" key={cellphone.id} value={cellphone.id} >{cellphone.model}</option>
                       })}
                   </select>
-                  <h1 onClick={()=>changeModal("cellphone")}>+</h1>
+                  <h1 className="h1-add" onClick={()=>changeModal("cellphone")}>+</h1>
                 </div>
+                {errors.cellphone_id ? <p className="p-errores">Debe seleccionar un celular</p> : ""}
                 <br />
                 <label htmlFor="url">Falla</label>
                 <textarea className="form-control"  name="phone_2" {...register('failure',{
@@ -448,8 +447,9 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                           return <option className="option-modal" key={service.id} value={service.id} >{service.description}</option>
                       })}
                   </select>
-                  <h1 onClick={()=>changeModal("service")}>+</h1>
+                  <h1 className="h1-add" onClick={()=>changeModal("service")}>+</h1>
                 </div>
+                {errors.service_id ? <p className="p-errores">Debe seleccionar un Servicio</p> : ""}
                 <br/>
                 <label htmlFor="url">Valor de la reparacion</label>
                 <input className="form-control" type="text" name="phone_2" {...register('cost',{
@@ -463,7 +463,23 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                 <br/>
                 <label htmlFor="url">Fecha de notificacion al cliente</label>
                 <input className="form-control" type="date" name="phone_2" {...register('notice_date',{
-                  
+                  value:  null,
+                  setValueAs : value =>{
+                    if(value != null){
+                      let dateInput = new Date(value)
+                    dateInput = dateInput.getUTCFullYear() + '-' +
+                    ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
+                    ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
+                    ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
+                    ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
+                    ('00' + dateInput.getUTCSeconds()).slice(-2);
+
+                    return dateInput
+                    }else{
+                      console.log(value);
+                      return value
+                    } 
+                  } 
                   })} />
                 <br/>
                 <label htmlFor="url">Cantidad de Notificaciones</label>
@@ -473,17 +489,62 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                 <br/>
                 <label htmlFor="url">Fecha de entrega</label>
                 <input className="form-control" type="date" name="phone_2" {...register('delivery_date',{
-                  value:null
+                  value:  null,
+                  setValueAs : v =>{
+                    if(v != null){
+                      let dateInput = new Date(v)
+                    dateInput = dateInput.getUTCFullYear() + '-' +
+                    ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
+                    ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
+                    ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
+                    ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
+                    ('00' + dateInput.getUTCSeconds()).slice(-2);
+
+                    return dateInput
+                    }else{
+                      return v
+                    } 
+                  } 
                   })} />
                 <br/>
                 <label htmlFor="url">Fecha de inicio del servicio</label>
                 <input className="form-control" type="date" name="phone_2" {...register('service_start_date',{
-                  value:null
+                  value:  null,
+                  setValueAs : v =>{
+                    if(v != null){
+                      let dateInput = new Date(v)
+                    dateInput = dateInput.getUTCFullYear() + '-' +
+                    ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
+                    ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
+                    ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
+                    ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
+                    ('00' + dateInput.getUTCSeconds()).slice(-2);
+
+                    return dateInput
+                    }else{
+                      return v
+                    } 
+                  } 
                   })} />
                 <br/>
                 <label htmlFor="url">Fecha de servicio terminado</label>
                 <input className="form-control" type="date" name="phone_2" {...register('service_end_date',{
-                  value:null
+                  value:  null,
+                  setValueAs : v =>{
+                    if(v != null){
+                      let dateInput = new Date(v)
+                    dateInput = dateInput.getUTCFullYear() + '-' +
+                    ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
+                    ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
+                    ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
+                    ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
+                    ('00' + dateInput.getUTCSeconds()).slice(-2);
+
+                    return dateInput
+                    }else{
+                      return v
+                    } 
+                  } 
                   })} />
                 <br/>
                 <label htmlFor="url">Imei</label>
@@ -537,19 +598,19 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                 <input className="form-control" type="text" name="name"  {...register('name',{
                   value:null
                   })} />
-                  {errors.name? <p className="p-errores">{errors.name}</p> : ""} 
+                  {errorsApi.name? <p className="p-errores">{errorsApi.name}</p> : ""} 
                 <br />
                 <label htmlFor="url">Email</label>
                 <input className="form-control" type="text" name="email" {...register('email',{
                   value:null
                   })} />
-                  {errors.email? <p className="p-errores">{errors.email}</p> : ""}
+                  {errorsApi.email? <p className="p-errores">{errorsApi.email}</p> : ""}
                 <br />
                 <label htmlFor="url">Numero de Telefono</label>
                 <input className="form-control" type="text" name="phone" {...register('phone_number',{
                   value:null
                   })} />
-                  {errors.phone_number? <p className="p-errores">{errors.phone_number}</p> : ""}
+                  {errorsApi.phone_number? <p className="p-errores">{errorsApi.phone_number}</p> : ""}
                 <br />
                 <label htmlFor="url">Numero de telefono 2</label>
                 <input className="form-control" type="text" name="phone_2" {...register('phhone_number_2',{
@@ -582,7 +643,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                 <input className="form-control" type="text" name="modelo" {...register('model',{
                   value:null
                   })}/>
-                  {errors.model? <p className="p-errores">El campo Modelo debe ser completado</p> : ""}
+                  {errorsApi.model? <p className="p-errores">El campo Modelo debe ser completado</p> : ""}
                 <br />
                 <label htmlFor="url">Url</label>
                 <input className="form-control" type="text" name="url" {...register('url',{
@@ -598,7 +659,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                       return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option>
                   })}
                 </select>
-                  {errors.brand_id? <p className="p-errores">Haga click en una marca</p> : ""}
+                  {errorsApi.brand_id? <p className="p-errores">Haga click en una marca</p> : ""}
                 <div className="contenedor-boton-modal-dentro">
                   <button type="submit" className="btn btn-success" onClick={addCellphoneInReparation} >Crear</button>
                 </div>
@@ -625,7 +686,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                 <input className="form-control" type="text" name="marca"  {...register('description',{
                   value:null
                   })} />
-                  {errors.description? <p className="p-errores">El campo Descripcion debe ser completado</p> : ""} 
+                  {errorsApi.description? <p className="p-errores">El campo Descripcion debe ser completado</p> : ""} 
                 <br />
                 <label htmlFor="url">Numero de Telefono</label>
                 <input className="form-control" type="text" name="numero de telefono" {...register('phone_number',{

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import './modales.css'
 
 
-const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit, dataBrands,errors }) => {
+const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit, dataBrands, dataCustomersEdit,errors }) => {
 
   const location = window.location.href;
   const allDate = new Date();
@@ -166,7 +166,50 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit, dataBr
         </ModalBody> 
       </Modal>
     );
-  };
+  } else if(location === "http://localhost:3000/Table/reparations"){
+    
+      return(
+        <Modal isOpen={openModalEdit}>
+          <ModalHeader style={{display: 'block'}}>
+            <div>
+              <h5  style={{float: 'center'}} >Editar Reparacion</h5> 
+            </div>
+          </ModalHeader>
+          <ModalBody>
+            <form className="form-group" onSubmit={handleSubmit(onsubmit)}>
+              <label>Cliente</label>
+              <select className="form-select"   name="select"  {...register('customer_id',{ shouldUnregister: true,})}>
+                {dataCustomersEdit.map((customer)=>{                 
+                    return <option className="option-modal" key={customer.id} defaultValue={customer.id} >{customer.name}</option>   
+                })}
+              </select>
+              <br/>
+              <label htmlFor="descripcion">Nombre</label>
+              <input className="form-control" type="text" name="name" id="name"  defaultValue={itemToEdit ? itemToEdit.name : ''} {...register('name',{ shouldUnregister: true,})} />
+                {errors.name? <p className="p-errores">{errors.name}</p>: ""}
+              <br />
+              <label htmlFor="number">Email</label>
+              <input className="form-control" type="text" name="email" id="email"  defaultValue={itemToEdit ? itemToEdit.email : ''}{...register('email',{ shouldUnregister: true,})} />
+                {errors.email? <p className="p-errores">{errors.email}</p> : ""}
+              <br />
+              <label htmlFor="direccion">Numero de Telefono</label>
+              <input className="form-control" type="text" name="phone" id="phone"  defaultValue={itemToEdit ? itemToEdit.phone_number : ''}{...register('phone_number',{ shouldUnregister: true,})} />
+              {errors.phone_number? <p className="p-errores">{errors.phone_number}</p> : ""}
+              <br />
+              <label htmlFor="Email">Numero de Telefono 2</label>
+              <input className="form-control" type="text" name="phone2" id="phone2"  defaultValue={itemToEdit ? itemToEdit.phhone_number_2 : ''}{...register('phone_number_2',{ shouldUnregister: true,})} />
+              <br />
+              <div className="contenedor-boton-modal-dentro">
+                <button className="btn btn-success" type="submit" onClick={edit}>Editar</button> 
+              </div>
+            </form>
+            <div className="contenedor-boton-modal-fuera">
+              <button className="btn btn-danger boton-cancelar" onClick={closeForm}>Cancelar</button>
+            </div>
+          </ModalBody> 
+        </Modal>
+      );
+    };
 };
 
 

@@ -20,6 +20,9 @@ const Table = () =>{
     const [dataCustomers, setDataCustomers] = useState([]);
     const [dataCellphones, setDataCellPhones] = useState([]);
     const [dataServices, setDataServices] = useState([]);
+    const [dataCustomersEdit, setDataCustomersEdit] = useState([]);
+    const [dataCellphonesEdit, setDataCellPhonesEdit] = useState([]);
+    const [dataServicesEdit, setDataServicesEdit] = useState([])
     const [superAdmin, setSuperAdmin] = useState(null);
     const [openModalAdd, setOpenModalAdd] = useState(false);
     const [openModalAddBrand, setOpenModalAddBrand] = useState(false);
@@ -269,7 +272,67 @@ const Table = () =>{
 
           }catch(error){
               console.log(error);
-           };   
+           }
+           
+           try{
+                    
+            const config = HelperBuildRequest("GET",null, "dataTable");
+            const request = await fetch(`http://localhost:8000/api/customers`, config);
+  
+              if(request.status === 200){
+                  const response = await request.json();
+                    if(response.error){
+                        setTimeout(()=>{
+                          console.log(response.error);
+                        },1000);
+                    }else{                      
+                        setDataCustomersEdit(response.data);
+                    }  
+              };
+  
+          }catch(error){
+            console.log(error)
+          }
+          
+          try{
+                      
+            const config = HelperBuildRequest("GET",null, "dataTable");
+            const request = await fetch(`http://localhost:8000/api/cellphones`, config);
+  
+              if(request.status === 200){
+                  const response = await request.json();
+                    if(response.error){
+                        setTimeout(()=>{
+                          console.log(response.error);
+                        },1000);
+                    }else{                      
+                        setDataCellPhonesEdit(response.data);
+                    }  
+              };
+  
+          }catch(error){
+            console.log(error)
+          }
+          
+          try{
+                      
+            const config = HelperBuildRequest("GET",null, "dataTable");
+            const request = await fetch(`http://localhost:8000/api/services`, config);
+  
+              if(request.status === 200){
+                  const response = await request.json();
+                    if(response.error){
+                        setTimeout(()=>{
+                          console.log(response.error);
+                        },1000);
+                    }else{                      
+                        setDataServicesEdit(response.data);
+                    }  
+              };
+  
+          }catch(error){
+            console.log(error)
+          } 
     };   
   
       
@@ -406,7 +469,7 @@ const Table = () =>{
           <div className='contenedor-body'>
 
             <div className='contenedor-barra-botonagregar'>
-              <AddButton openModal={openModal}></AddButton>
+              <AddButton openModal={()=>openModal()}></AddButton>
                 <div className='contenedor-barra'>
                   <input type='text' placeholder={`buscar por... ${fact}`} className='barra-busqueda' onChange={(e) => setChain(e.target.value.toLocaleLowerCase())}/>
                 </div>      
@@ -453,7 +516,7 @@ const Table = () =>{
                               if(Object.keys(element)[i] === column && column === "email"){
                                 return <td className='td-a' key={i}><a href={""} >{Object.values(element)[i]}</a></td>
                               }
-                                return <td className='td' key={i}>{Object.values(element)[i]}</td>
+                                return <td className='td' key={i}><p>{Object.values(element)[i]}</p></td>
                             }
                           }
                         })}
@@ -485,6 +548,9 @@ const Table = () =>{
               onsubmit={edit}
               closeForm={closeForm}
               dataBrands={dataBrands}
+              dataCustomersEdit={dataCustomersEdit}
+              dataCellphonesEdit={dataCellphonesEdit}
+              dataServicesEdit={dataServicesEdit}
               errors={errors}>
             </ModalEdit>
 
@@ -501,7 +567,8 @@ const Table = () =>{
               dataBrands={dataBrands}
               dataCustomers={dataCustomers}
               dataCellPhones={dataCellphones}
-              dataServices={dataServices}>
+              dataServices={dataServices}
+              errors={errors}>
             </ModalAdd>
 
             <ModalView

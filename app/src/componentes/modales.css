@@ -59,3 +59,11 @@
 .div-container-select-button{
     display: flex;
 }
+
+.h1-add{
+    cursor: pointer;
+    color: blue;
+}
+.h1-add:hover{
+    color: green;
+}
