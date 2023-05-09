@@ -8,7 +8,7 @@ import HelperBuildRequest from "../helpers/buildRequest";
 
 const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAddCustomer,openModalAddCellphone,openModalAddService,dataApi,closeForm,dataBrands,dataCustomers,dataCellPhones,dataServices,errors}) =>{
   
-  const [cadenaMarca, setCadenaMarca] = useState ();
+  const [chainBrand, setChainBrand] = useState ("");
   const [newDate, setNewDate] = useState("");
   const [classesErrors, setClassesErrors] = useState(false);
   const [errorsApi, setErrorsApi] = useState([]);
@@ -199,14 +199,18 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                   })} />
                 <br/>
                 <label htmlFor="brnad_id">Marca</label>
-                <input type="text" placeholder="buscar marca.." onChange={(e) => setCadenaMarca(e.target.value.charAt().toUpperCase())}></input>
-                <select className="form-select" name="select"  {...register('brand_id',{
+                <div>
+                <input className="input-select" type="text" placeholder="buscar marca.." onChange={(e) => setChainBrand(e.target.value.charAt().toUpperCase())}></input>
+                <select className="form-select brand" name="select"  {...register('brand_id',{
                   value:null
                   })}>
                   {dataBrands.map((brand)=>{
-                      return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option>
+                      if(brand.title.includes(chainBrand)){
+                        return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option>
+                      }
                   })}
                 </select>
+                </div>
                   {errorsApi.brand_id? <p className="p-errores">Haga click en una marca</p> : ""}
                 <div className="contenedor-boton-modal-dentro">
                   <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
@@ -389,19 +393,20 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
 
     return(
         <>
-          <Modal isOpen={openModalAdd}>
+          <Modal isOpen={openModalAdd} className="modal-reparations">
             <ModalHeader style={{display: 'block'}}>
               <div>
-                <h5  style={{float: 'center', color: 'red'}} >Crear Reparacion</h5> 
+                <h5  style={{float: 'center', color: 'green'}} >Crear Reparacion</h5> 
               </div>
             </ModalHeader>
-            <ModalBody>
-              <form className="form-group" onSubmit={handleSubmit(create)}>
+            <ModalBody className="modal-body reparations">
+              <form className="form-group reparations" onSubmit={handleSubmit(create)}>
                 <label htmlFor="marca">Cliente</label>
                 <div className="div-container-select-button">
                   <select className="form-select" name="select"  {...register('customer_id',{
                       value:null
                       })}>
+                        <option selected value={null}>Seleccione un cliente..</option>
                       {dataCustomers.map((customer)=>{
                           return <option className="option-modal" key={customer.id} value={customer.id} >{customer.name}</option>
                       })}
@@ -409,6 +414,11 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                   <h1 className="h1-add" onClick={()=>changeModal("customer")}>+</h1>
                 </div> 
                 {errors.customer_id ? <p className="p-errores">Debe seleccionar un Cliente</p> : ""}
+                <br />
+                <label htmlFor="url">Numero de contacto</label>
+                <input className="form-control" type="text" name="contact-number" {...register('number',{
+                  value:null
+                  })} />
                 <br />
                 <label htmlFor="url">Email</label>
                 <input className="form-control" type="text" name="email" {...register('email',{
@@ -420,6 +430,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                   <select className="form-select" name="select"  {...register('cellphone_id',{
                       value:null
                       })}>
+                        <option selected value={null}>Seleccione un celular..</option>
                       {dataCellPhones.map((cellphone)=>{
                           return <option className="option-modal" key={cellphone.id} value={cellphone.id} >{cellphone.model}</option>
                       })}
@@ -438,11 +449,19 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                   value:null
                   })} />
                 <br/>
+                <label htmlFor="url">Estado de la reparacion</label>
+                <select className="form-select" type="text" name="phone_2" {...register('state_id',{
+                  value:null
+                  })}>
+                   <option value={1}>Recibido</option> 
+                </select>
+                <br/>
                 <label htmlFor="url">Servicio</label>
                 <div className="div-container-select-button">
                   <select className="form-select" name="select"  {...register('service_id',{
                       value:null
                       })}>
+                        <option selected value={null}>Seleccione un servicio..</option>
                       {dataServices.map((service)=>{
                           return <option className="option-modal" key={service.id} value={service.id} >{service.description}</option>
                       })}
@@ -476,7 +495,6 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
 
                     return dateInput
                     }else{
-                      console.log(value);
                       return value
                     } 
                   } 
@@ -554,7 +572,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                 <br/>
                 <label htmlFor="check">Tiene seguridad</label>
                 <input onClick={checkBoxTrue} type="checkbox" name="phone_2" {...register('has_security',{
-                  value:false
+                  value:0
                   })} />
                 <br/>
                 {
@@ -589,7 +607,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
           <Modal isOpen={openModalAddCustomer}>
             <ModalHeader style={{display: 'block'}}>
               <div>
-                <h5  style={{float: 'center', color: 'red'}} >Crear Cliente</h5> 
+                <h5  style={{float: 'center', color: 'green'}} >Crear Cliente</h5> 
               </div>
             </ModalHeader>
             <ModalBody>
@@ -631,7 +649,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
           <Modal isOpen={openModalAddCellphone}>
             <ModalHeader style={{display: 'block'}}>
               <div>
-                <h5  style={{float: 'center', color: 'red'}} >Crear celular</h5> 
+                <h5  style={{float: 'center', color: 'green'}} >Crear celular</h5> 
               </div>
             </ModalHeader>
             <ModalBody className="contenedor-modal-body">
@@ -651,14 +669,16 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                   })} />
                 <br/>
                 <label htmlFor="brnad_id">Marca</label>
-                <input type="text" placeholder="buscar marca.." onChange={(e) => setCadenaMarca(e.target.value.charAt().toUpperCase())}></input>
-                <select className="form-select" name="select"  {...register('brand_id',{
+                <div>
+                <input className="" type="text" placeholder="buscar marca.." onChange={(e) => setChainBrand(e.target.value.charAt().toUpperCase())}></input>
+                <select className="form-select brand" name="select"  {...register('brand_id',{
                   value:null
                   })}>
                   {dataBrands.map((brand)=>{
                       return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option>
                   })}
                 </select>
+                </div>
                   {errorsApi.brand_id? <p className="p-errores">Haga click en una marca</p> : ""}
                 <div className="contenedor-boton-modal-dentro">
                   <button type="submit" className="btn btn-success" onClick={addCellphoneInReparation} >Crear</button>
@@ -674,7 +694,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
           <Modal isOpen={openModalAddService}>
             <ModalHeader style={{display: 'block'}}>
               <div>
-                <h5  style={{float: 'center', color: 'red'}} >Crear Servicio</h5> 
+                <h5  style={{float: 'center', color: 'green'}} >Crear Servicio</h5> 
               </div>
             </ModalHeader>
             <ModalBody>

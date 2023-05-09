@@ -1,6 +1,23 @@
+
+
 .form-group{
     width: 80%;
 }
+.form-group.reparations{
+    
+}
+
+.form-select.brand{
+    position: relative;
+}
+.input-select{
+    position: absolute;
+    z-index: 1000;
+    border: none;
+    width: 60%;
+    height: 38px;
+}
+
 
 .contenedor-modal-body{
    display: flex;   

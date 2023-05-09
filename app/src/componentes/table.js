@@ -36,19 +36,20 @@ const Table = () =>{
     const [chain,setChain] = useState("");
     const [errors, setErrors] = useState([]);
     
+    
 
 
     const location = useLocation();
     const getUser = localStorage.getItem("user");
 
     const tables = [
-      {
-        "brands":"Marcas",
-        "cellphones":"Celulares",
-        "services":"Servicios",
-        "customers":"Clientes",
-        "reparations":"Reparaciones"
-     }
+      
+        {"brands":"Marcas"},
+        {"cellphones":"Celulares"},
+        {"services":"Servicios"},
+        {"customers":"Clientes"},
+        {"reparations":"Reparaciones"}
+     
     ];
 
     const admin = () =>{
@@ -206,6 +207,7 @@ const Table = () =>{
                 if(request.status === 422){
                   const response = await request.json();
                     if(response.errors){
+                      alert("Debe completar o corregir el formulario")
                       setErrors(response.errors);
                       
                     };
@@ -335,9 +337,9 @@ const Table = () =>{
           } 
     };   
   
-      
-          
+               
     const edit =  async (data) =>{
+      console.log(data);
 
       let id = data["id"];
     
@@ -367,9 +369,8 @@ const Table = () =>{
 
                 if(request.status === 422){
                   const response = await request.json();
-                  console.log(response);
                     if(response.errors){
-                      console.log(response.errors);
+                      alert("Debe completar o corregir el formulario")
                       setErrors(response.errors);
                     };
                 };
@@ -383,6 +384,7 @@ const Table = () =>{
             
           }catch(error){
             console.log(error);
+            
           };          
         };  
     }; 
@@ -446,24 +448,69 @@ const Table = () =>{
     if(dataApi.length != 0){
 
       const fact = Object.values(dataApi.columns).filter((fact) =>{       
-        const listaDeColumnas = ['Marca', 'Modelo', 'Nombre', 'id','Numero de Telefono','Email','recibido por'];
+        const listaDeColumnas = ['Marca', 'Modelo', 'Nombre', 'id','Numero de Telefono','recibido por'];
           if(listaDeColumnas.includes(fact)){
             return fact;
           } ;
       });
+
+
+      const dataFilter = (e) => {
+        let filteredData = dataApi.data;
+      
+        if (e) {
+          setChain(e.target.value.toLocaleLowerCase());
+        }
+      
+        if (chain.length >= 1) {
+          filteredData = filteredData.filter((fact) => {
+            const controlList = [
+              'title',
+              'model',
+              'name',
+              'description',
+              'id',
+              'phone_number',
+              'customer'
+            ];
+      
+            const keys = controlList;
+                    
+            for (let property in fact) {
+              if (keys.includes(property)) {
+                const value = fact[property];
+                if (value && typeof value == 'string') {
+                  if (value.toLocaleLowerCase().includes(chain)) {
+                    return true;
+                  }
+                }
+                if (value && typeof value == 'number') {
+                  if (value.toString().includes(chain)) {
+                    return true;
+                  }
+                }
+              }
+            }
+      
+            return false;
+          });
+        }
+      
+        return filteredData;
+      };
+
 
       return(  
 
         <>
           
           <div className='titulo-tabla'>
-            {tables.map((titulo)=>{
-              const queryParams = new URLSearchParams(location.search)
-              const txt = queryParams.get("txt")
-                if(Object.keys(titulo).includes(txt)){
-                return <h1 key={txt}>Datos de {titulo[txt]}</h1>
-                }
-            })};
+             <h1>Datos de {tables.map((titulo)=>{
+              if(window.location.href.toString().includes(Object.keys(titulo))){
+                return Object.values(titulo)
+              }
+             })}
+             </h1>
           </div>
           
           <div className='contenedor-body'>
@@ -471,7 +518,7 @@ const Table = () =>{
             <div className='contenedor-barra-botonagregar'>
               <AddButton openModal={()=>openModal()}></AddButton>
                 <div className='contenedor-barra'>
-                  <input type='text' placeholder={`buscar por... ${fact}`} className='barra-busqueda' onChange={(e) => setChain(e.target.value.toLocaleLowerCase())}/>
+                  <input type='text' placeholder={`buscar por... ${fact}`} className='barra-busqueda' onChange={(e) => dataFilter(e)}/>
                 </div>      
             </div>
           
@@ -486,27 +533,16 @@ const Table = () =>{
                   </tr>
                 </thead>
                 <tbody className='tbody'>
-                  {dataApi.data.filter((fact) =>{
-
-                    const controlList = ['title', 'model', 'name', 'description', 'id','phone_number','email','customer'];
-                    const keys = controlList;
-                      for(let property in fact ){
-                        if(keys.includes(property)){
-                          const value = fact[property];
-                          if(value && typeof value == 'string'){
-                            if(value.toLocaleLowerCase().includes(chain))
-                              return value
-                          }if(value && typeof value == 'number'){
-                            if(value.toString().includes(chain))
-                              return value
-                          };
-                        };
-                      };
-                    return false
-
-                  }).map((element) =>
+                  {
+                  
+                  (dataFilter().length > 0)
+                  ?
+                  dataFilter().map((element) =>{
                       
-                      <tr className='tr-data' key={element["id"]}>
+                      return (
+                        <>
+                        
+                        <tr className='tr-data' key={element["id"]}>
                         {Object.keys(dataApi.columns).map((column)=>{
                           for(let i = 0 ; i < Object.keys(element).length ; i++){
                             if(Object.keys(element)[i] === column){
@@ -515,6 +551,13 @@ const Table = () =>{
                               }
                               if(Object.keys(element)[i] === column && column === "email"){
                                 return <td className='td-a' key={i}><a href={""} >{Object.values(element)[i]}</a></td>
+                              }
+                              if(Object.keys(element)[i] === column && column === "has_security"){
+                                if(Object.values(element)[i] === 1){
+                                  return <td className='td' key={i}><p>Si</p></td>
+                                }else{
+                                  return <td className='td' key={i}><p>No</p></td>
+                                }
                               }
                                 return <td className='td' key={i}><p>{Object.values(element)[i]}</p></td>
                             }
@@ -536,8 +579,14 @@ const Table = () =>{
                             </div>
                           }
                         </td>
-                      </tr>  
-                  )}
+                      </tr> 
+                        </>
+                      )
+                   })
+                  :
+                  <h1 className='h1-no-coincidens'>No hay nada</h1>
+                  }
+                  
                 </tbody>
               </table>
             </div>
