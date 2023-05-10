@@ -10,7 +10,7 @@ import ModalEdit from './modal-edit';
 import ModalView from './modal-view';
 import HelperBuildRequest from "../helpers/buildRequest";
 import {  useLocation } from 'react-router-dom';
-
+import { v4 as uuidv4 } from 'uuid';
 
 
 const Table = () =>{
@@ -48,7 +48,8 @@ const Table = () =>{
         {"cellphones":"Celulares"},
         {"services":"Servicios"},
         {"customers":"Clientes"},
-        {"reparations":"Reparaciones"}
+        {"reparations":"Reparaciones"},
+        {"pending":" pendientes"}
      
     ];
 
@@ -72,13 +73,19 @@ const Table = () =>{
 
 
     const getData = async () => {
-      const identityApi = ["brands","cellphones","customers","reparations","services"]
+      const identityApi = ["brands","cellphones","customers","reparations","services","report/reparations-pending"]
       const currentUrl = window.location.href;
       
-      const findEntity = identityApi.find( (entity) =>  currentUrl.includes(entity));
+      const findEntity = identityApi.find( (entity) =>{
+        if(currentUrl === `http://localhost:3000/Table/${entity}`){
+          return entity
+        }
+      } );
 
       if( typeof findEntity != 'string') {
-        //no se encontro la pagina
+        return(
+          <h1>no se econtro la pagina</h1>
+        )
       } else {
         //se encontro 
         const config = HelperBuildRequest('GET', null, 'dataTable');
@@ -445,7 +452,7 @@ const Table = () =>{
     };
 
 
-    if(dataApi.length != 0){
+    if(dataApi.length != 0 && dataApi.columns){
 
       const fact = Object.values(dataApi.columns).filter((fact) =>{       
         const listaDeColumnas = ['Marca', 'Modelo', 'Nombre', 'id','Numero de Telefono','recibido por'];
@@ -500,6 +507,21 @@ const Table = () =>{
       };
 
 
+    const uniqueKeys = {
+      contenedorTabla: uuidv4(),
+      tabla: uuidv4(),
+      thead: uuidv4(),
+      trColumn: uuidv4(),
+      thColumn: uuidv4(),
+      thColumnActions: uuidv4(),
+      tbody: uuidv4(),
+      trBody: uuidv4(),
+      tdBody : uuidv4(),
+      trBodyNd:uuidv4(),
+      tdBodyNd: uuidv4(),
+      // ... y así sucesivamente para los demás elementos
+    };
+
       return(  
 
         <>
@@ -522,57 +544,54 @@ const Table = () =>{
                 </div>      
             </div>
           
-            <div className="contenedor-tabla">
-              <table className='tabla'>
-                <thead className='thead'>
-                  <tr className='tr-column'>
-                    {Object.values(dataApi.columns).map((column)=>(
-                      <th key={column} className='th-columnas'>{column}</th>
+            <div className="contenedor-tabla" key={uniqueKeys.contenedorTabla} >
+              <table className='tabla' key={uniqueKeys.tabla}>
+                <thead className='thead' key={uniqueKeys.thead}>
+                  <tr className='tr-column' key={uniqueKeys.trColumn}>
+                    {Object.values(dataApi.columns).map((column,index)=>(
+                      <th key={`${uniqueKeys.thColumn}-${index}`} className='th-columnas'>{column}</th>
                     ))}
-                    <th className='ultima-columna'>Acciones</th>
+                    <th className='ultima-columna' key={uniqueKeys.thColumnActions} >Acciones</th>
                   </tr>
                 </thead>
-                <tbody className='tbody'>
+                <tbody className='tbody' key={uniqueKeys.tbody}>
                   {
                   
                   (dataFilter().length > 0)
                   ?
-                  dataFilter().map((element) =>{
+                  dataFilter().map((element,index) =>
                       
-                      return (
-                        <>
-                        
-                        <tr className='tr-data' key={element["id"]}>
+                        <tr className='tr-data' key={`${uniqueKeys.trBody}-${index}`}>
                         {Object.keys(dataApi.columns).map((column)=>{
                           for(let i = 0 ; i < Object.keys(element).length ; i++){
                             if(Object.keys(element)[i] === column){
                               if(Object.keys(element)[i] === column && column === "url"){
-                                return <td className='td-a' key={i}><a href={Object.values(element)[i]} >{Object.values(element)[i]}</a></td>
+                                return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={Object.values(element)[i]} >{Object.values(element)[i]}</a></td>
                               }
                               if(Object.keys(element)[i] === column && column === "email"){
-                                return <td className='td-a' key={i}><a href={""} >{Object.values(element)[i]}</a></td>
+                                return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={""} >{Object.values(element)[i]}</a></td>
                               }
                               if(Object.keys(element)[i] === column && column === "has_security"){
                                 if(Object.values(element)[i] === 1){
-                                  return <td className='td' key={i}><p>Si</p></td>
+                                  return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>Si</p></td>
                                 }else{
-                                  return <td className='td' key={i}><p>No</p></td>
+                                  return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>No</p></td>
                                 }
                               }
-                                return <td className='td' key={i}><p>{Object.values(element)[i]}</p></td>
+                                return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>{Object.values(element)[i]}</p></td>
                             }
                           }
                         })}
                             
-                        <td className='ultima-celda'>
+                        <td className='ultima-celda' key={uniqueKeys.tdBody}>
                           {
                             (superAdmin)
                             ?
-                            <div>
+                            <div >
                               <button className='boton-ver' onClick={() => OpenModalView(element)}><FontAwesomeIcon icon={faEye} /></button>
                             </div>
                             :
-                            <div className='botones-acciones'>
+                            <div className='botones-acciones' >
                               <button className='boton-editar' onClick={() => OpenModalEdit(element)}><FontAwesomeIcon icon={faEdit} /></button>
                               <button className='boton-eliminar' onClick={() => eliminate(element)}><FontAwesomeIcon icon={faTrashAlt} /></button> 
                               <button className='boton-ver' onClick={() => OpenModalView(element)}><FontAwesomeIcon icon={faEye} /></button>
@@ -580,11 +599,9 @@ const Table = () =>{
                           }
                         </td>
                       </tr> 
-                        </>
-                      )
-                   })
+                   )
                   :
-                  <h1 className='h1-no-coincidens'>No hay nada</h1>
+                  <tr className='tr-coincidence' key={uniqueKeys.trBodyNd} ><td className='td-coincidence'key={uniqueKeys.tdBodyNd}>No hay coincidencias</td></tr>
                   }
                   
                 </tbody>

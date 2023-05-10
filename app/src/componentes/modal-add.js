@@ -403,10 +403,10 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
               <form className="form-group reparations" onSubmit={handleSubmit(create)}>
                 <label htmlFor="marca">Cliente</label>
                 <div className="div-container-select-button">
-                  <select className="form-select" name="select"  {...register('customer_id',{
+                  <select className="form-select" name="select"  defaultValue={null}{...register('customer_id',{
                       value:null
                       })}>
-                        <option selected value={null}>Seleccione un cliente..</option>
+                        <option  value={null}>Seleccione un cliente..</option>
                       {dataCustomers.map((customer)=>{
                           return <option className="option-modal" key={customer.id} value={customer.id} >{customer.name}</option>
                       })}
@@ -427,10 +427,9 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                 <br />
                 <label htmlFor="url">Celular</label>
                 <div className="div-container-select-button">
-                  <select className="form-select" name="select"  {...register('cellphone_id',{
-                      value:null
+                  <select className="form-select" name="select"  defaultValue={null}{...register('cellphone_id',{
                       })}>
-                        <option selected value={null}>Seleccione un celular..</option>
+                        <option  value={null}>Seleccione un celular..</option>
                       {dataCellPhones.map((cellphone)=>{
                           return <option className="option-modal" key={cellphone.id} value={cellphone.id} >{cellphone.model}</option>
                       })}
@@ -450,18 +449,16 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                   })} />
                 <br/>
                 <label htmlFor="url">Estado de la reparacion</label>
-                <select className="form-select" type="text" name="phone_2" {...register('state_id',{
-                  value:null
+                <select className="form-select" type="text" name="phone_2" {...register('state_id',{   
                   })}>
                    <option value={1}>Recibido</option> 
                 </select>
                 <br/>
                 <label htmlFor="url">Servicio</label>
                 <div className="div-container-select-button">
-                  <select className="form-select" name="select"  {...register('service_id',{
-                      value:null
+                  <select className="form-select" name="select"  defaultValue={null}{...register('service_id',{
                       })}>
-                        <option selected value={null}>Seleccione un servicio..</option>
+                        <option  value={null}>Seleccione un servicio..</option>
                       {dataServices.map((service)=>{
                           return <option className="option-modal" key={service.id} value={service.id} >{service.description}</option>
                       })}

@@ -186,8 +186,8 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit, dataBr
               <input className="form-control" type="text" name="name" id="name" readOnly  defaultValue={itemToEdit ? itemToEdit.id : ''} {...register('id',{ shouldUnregister: true,})} />
               <br />
               <label>Cliente</label>              
-              <select className="form-select"   name="select"  {...register('customer_id',{ shouldUnregister: true,})}>
-                <option  selected value={null}>{itemToEdit ? itemToEdit.customer : null}</option>
+              <select className="form-select"   name="select"  defaultValue={null}{...register('customer_id',{ shouldUnregister: true,})}>
+                <option className="option-selected"  value={null}>{itemToEdit ? itemToEdit.customer : null}</option>
                 {dataCustomersEdit.map((customer)=>{                 
                     return <option className="option-modal" key={customer.id} value={customer.id} >{customer.name}</option>   
                 })}
@@ -202,8 +202,8 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit, dataBr
                 {errors.email? <><p className="p-errores">El campo Email no cumple con el formato</p><p className="p-errores">Ejemplo:xxxxx@xxx.com</p></>: ""}
               <br />
               <label htmlFor="cellphone">Celular</label>
-              <select className="form-select" type="text" name="email" id="email"  {...register('cellphone_id',{ shouldUnregister: true,})}>
-              <option  selected value={null}>{itemToEdit ? itemToEdit.cellphone : null}</option>
+              <select className="form-select" type="text" name="email" id="email"  defaultValue={null}{...register('cellphone_id',{ shouldUnregister: true,})}>
+              <option   value={null}>{itemToEdit ? itemToEdit.cellphone : null}</option>
                 {dataCellphonesEdit.map((cellphone)=>{                 
                     return <option className="option-modal" key={cellphone.id} value={cellphone.id} >{cellphone.model}</option>   
                 })}
@@ -217,19 +217,19 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit, dataBr
               <textarea className="form-control" type="text" name="observation" id="observation"  defaultValue={itemToEdit ? itemToEdit.observation : ''}{...register('observation',{ shouldUnregister: true,})} />
               <br />
               <label>Estado de la reparacion</label>
-              <select className="form-select" {...register("state_id",{
+              <select className="form-select" defaultValue={null}{...register("state_id",{
                 value:1,
                 shouldUnregister:true
               })}>
-                <option selected value={null}>{itemToEdit ? itemToEdit.state_id : null}</option>
+                <option  value={null}>{itemToEdit ? itemToEdit.state_id : null}</option>
                 <option value={1}>Recibido</option>
                 <option value={2}>En reparacion</option>
                 <option value={3}>Entregado</option>
               </select>
               <br/>
               <label htmlFor="service">Servicio</label>
-              <select className="form-select" type="text" name="service" id="service"  {...register('service_id',{ shouldUnregister: true,})}>
-              <option  selected value={null}>{itemToEdit ? itemToEdit.service : null}</option>
+              <select className="form-select" type="text" name="service" id="service"  defaultValue={null}{...register('service_id',{ shouldUnregister: true,})}>
+              <option   value={null}>{itemToEdit ? itemToEdit.service : null}</option>
                 {dataServicesEdit.map((service)=>{                 
                     return <option className="option-modal" key={service.id} value={service.id} >{service.description}</option>   
                 })}

@@ -4,87 +4,77 @@
 }
 .contenedor-nav-general{
     width: 100%;
-    height: 40px;
+    height: 45px;
     display: flex;
     justify-content: space-between;
     z-index: 1;
 
 } 
 .contenedor-titulo{
-    width: 50%;
+    width: 20%;
+    margin-left: 20px;
 }
 
 .titulo-nav{
     display: flex;
     flex-direction: flex-start;
-    margin-left: 15px;
+    
 }
 .contenedor-general{
     display: flex;
     width: 90%;
-    justify-content: space-around;
+    justify-content: flex-start;
     margin: 0;
     
 }
 .contenedor-contenedor-links{
-    width: 50%;
+    width: 65%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    z-index: 1;
+    justify-content: space-around;
+    height: 40px;
 }
-.boton-tablas{
-    background: none;
-    color: white;
-    width: 70px;
-    border: none;
-    text-align: start;
-    transition: all 0.5s;
-}
-.boton-tablas:hover{
-   color: grey;
+.navbar-nav{
+    height: 40px;
+    align-items: center;
 }
 
-.contenedor-links{
-    display: flex;
-    width: 20%;
-    flex-direction: column;
-    align-items: flex-start;
-    background: rgb(151, 0, 0);
-    margin-top: 33px;
-    position: absolute;
-    transition: all 1s;
-    z-index: 0;
+.icon{
+   color: red;
 }
-.contenedor-links.none{
-    display: flex;
-    width: 20%;
-    flex-direction: column;
-    align-items: flex-start;
-    background: rgb(151, 0, 0);
-    margin-top: -300px; 
-    z-index: 0;
+.icon-none{
+   
 }
+
 .nav-li-link{
-   margin-top: 5px;
-   margin-bottom: 5px;
    display: flex;
    justify-content: center;
-   padding-top: 5px;
-   padding-bottom: 5px; 
    width: 100%;
 }
 .nav-li-link a{
     display: flex;
+    flex-direction: column;
     color: rgb(255, 255, 255);
     list-style: none;
     text-decoration: none;
     cursor: pointer;
     transition: all 0.2s;
+    height: 20px;
 }
+.p-entity{
+    font-size: 15px;
+    color: rgb(128, 0, 0);
+    margin: 0;
+}
+.p-entity-none{
+    font-size: 0;
+    margin: 0;
+}
+
+
 .nav-li-link a:hover{
-    width: 35%;
-    color: rgb(68, 0, 0);
+    height: 35px;
+    color: rgb(128, 0, 0);
 }
 
 

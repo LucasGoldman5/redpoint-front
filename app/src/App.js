@@ -29,7 +29,7 @@ function App() {
 
 
 
-  if( user && window.location.href != "http://localhost:3000/personal-information" ){
+  if( user && window.location.href != "http://localhost:3000/personal-information" && window.location.href.includes("report") === false ){
 
     return(
       <>
@@ -41,6 +41,7 @@ function App() {
                 <Route path='/Table/services' element={<Table/>}></Route>
                 <Route path='/Table/customers' element={<Table/>}></Route>
                 <Route path='/Table/reparations' element={<Table/>}></Route>
+                <Route path='/Table/report/reparations-pending' element={<Table />}></Route>
                 <Route path= '/Login'  element={<Login enterAplication={enterAplication}  />}  ></Route> 
                 <Route path='/personal-information' element={<PersonalInformation />}></Route>  
             </Routes>
@@ -49,7 +50,13 @@ function App() {
 
     );
 
-  }else if( user && window.location.href === "http://localhost:3000/personal-information" ){
+  }else if(user && window.location.href.includes("report")){
+
+    return(
+      <h1>No lo incluye pedazo</h1>
+    )
+
+  } else if( user && window.location.href === "http://localhost:3000/personal-information" ){
  
     return(
       <>
