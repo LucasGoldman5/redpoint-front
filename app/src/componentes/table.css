@@ -1,5 +1,6 @@
 body{
     background-image: url('../img/claroooo.png');  
+    z-index: 1;
 }
 
 .titulo-tabla h1{
@@ -20,10 +21,12 @@ body{
 .contenedor-tabla{
     width: 95%;
     display: flex;
+    border-radius: 10px;
     flex-direction: column;
     height: max-content;
     max-height: 500px;
-    overflow: scroll;
+    overflow-x: scroll;
+    box-shadow: 5px 5px 5px 5px grey;
 }
 .contenedor-barra{
     width: 50%;
@@ -43,18 +46,13 @@ body{
 
 /*Styles for Table*/
 
-.contenedor-tabla{
-    
-   box-shadow: 10px 10px 10px 10px lightcoral; 
-}
 
 .tabla{
    width: 100%;
-   
 }
 
 .thead{
-    background: rgb(204, 0, 0);
+    background: rgb(46, 46, 46);
     color: white;
     font-size: 100%;
     text-align: center;
@@ -66,7 +64,7 @@ body{
     padding-right: 5px;
     padding-left: 5px;
     white-space: nowrap;
-    font-weight: 300;
+    font-weight: 500;
 }
 
 .ultima.columna{
@@ -90,7 +88,10 @@ body{
 
 .tr-data{
     border-bottom: 1px solid black;
-  
+    background: rgb(255, 190, 212);
+}
+.tr-data:hover{
+    background: rgb(204, 151, 169);
 }
 
 .no-match{
@@ -126,7 +127,7 @@ body{
     padding-right: 5px;
     overflow: hidden;
     display: inline-block;
-    color: rgb(129, 0, 0);
+    color: red;
     text-overflow: ellipsis;
     white-space: nowrap;
     text-decoration: none;
@@ -134,7 +135,8 @@ body{
 }
 
 .td-a a:hover{
-    color: red;
+    color: rgb(90, 1, 1);
+    font-weight: 400;
 }
 
 

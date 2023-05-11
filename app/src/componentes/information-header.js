@@ -10,11 +10,11 @@ const InformationHeader = () =>{
 
     
   const comeBack = () =>{
-    window.location.assign(`/Table`);
+    window.location.assign(`http://localhost:3000/Table/cellphones`);
   }
 
   const home = () =>{
-    window.location.assign(`/Table`);
+    window.location.assign(`http://localhost:3000/Table/cellphones`);
   }
 
     return(

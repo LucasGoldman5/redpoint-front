@@ -1,10 +1,12 @@
 import StartHeader from './componentes/start-header';
+import getFilterReparations from './helpers/getFilterReparations';
 import GeneralHeader from './componentes/general-header';
+import ReportHeader from './componentes/report-header';
 import InformationHeader from './componentes/information-header';
 import Table from './componentes/table';
 import PersonalInformation from './componentes/personal-information';
 import Login from './componentes/login';
-import {  Route, Routes } from 'react-router-dom';
+import {  Route, Routes, useSearchParams } from 'react-router-dom';
 import {  useState } from 'react';
 import './App.css';
 import GetUserData from './helpers/getUserData';
@@ -17,6 +19,10 @@ function App() {
 
   
   const [ user, setUser ] = useState(GetUserData());
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  
+
 
 
 
@@ -53,7 +59,19 @@ function App() {
   }else if(user && window.location.href.includes("report")){
 
     return(
-      <h1>No lo incluye pedazo</h1>
+      <>
+        <div className='App'>
+          <ReportHeader  />
+          <Routes>
+            <Route path='/Table/report/reparations-pending' element={<Table />} />
+            <Route path='/Table/report/reparations-success' element={<Table />} />
+            <Route path='/Table/report/reparations-by-brand/:id' element={<Table />} />
+            <Route path='/Table/report/reparations-by-customer/:id' element={<Table />} />
+            <Route path='/Table/report/reparations-by-cellphone/:id' element={<Table />} />
+            <Route path='/Table/report/reparations-by-service/:id' element={<Table />} />
+          </Routes>
+        </div>
+      </>
     )
 
   } else if( user && window.location.href === "http://localhost:3000/personal-information" ){

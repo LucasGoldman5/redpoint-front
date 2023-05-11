@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
 import './table.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -35,6 +36,7 @@ const Table = () =>{
     const [itemToSee, setItemToSee] = useState(null);
     const [chain,setChain] = useState("");
     const [errors, setErrors] = useState([]);
+    const { id } = useParams();
     
     
 
@@ -73,9 +75,21 @@ const Table = () =>{
 
 
     const getData = async () => {
-      const identityApi = ["brands","cellphones","customers","reparations","services","report/reparations-pending"]
+      const identityApi = [
+        "brands",
+        "cellphones",
+        "customers",
+        "reparations",
+        "services",
+        "report/reparations-pending",
+        "report/reparations-success",
+        `report/reparations-by-brand/${id}`,
+        `report/reparations-by-customer/${id}`,
+        `report/reparations-by-service/${id}`,
+        `report/reparations-by-cellphone/${id}`
+      ]
+
       const currentUrl = window.location.href;
-      
       const findEntity = identityApi.find( (entity) =>{
         if(currentUrl === `http://localhost:3000/Table/${entity}`){
           return entity
@@ -525,126 +539,144 @@ const Table = () =>{
       return(  
 
         <>
-          
-          <div className='titulo-tabla'>
-             <h1>Datos de {tables.map((titulo)=>{
-              if(window.location.href.toString().includes(Object.keys(titulo))){
-                return Object.values(titulo)
-              }
-             })}
-             </h1>
-          </div>
-          
-          <div className='contenedor-body'>
 
-            <div className='contenedor-barra-botonagregar'>
-              <AddButton openModal={()=>openModal()}></AddButton>
-                <div className='contenedor-barra'>
-                  <input type='text' placeholder={`buscar por... ${fact}`} className='barra-busqueda' onChange={(e) => dataFilter(e)}/>
-                </div>      
-            </div>
-          
-            <div className="contenedor-tabla" key={uniqueKeys.contenedorTabla} >
-              <table className='tabla' key={uniqueKeys.tabla}>
-                <thead className='thead' key={uniqueKeys.thead}>
-                  <tr className='tr-column' key={uniqueKeys.trColumn}>
-                    {Object.values(dataApi.columns).map((column,index)=>(
-                      <th key={`${uniqueKeys.thColumn}-${index}`} className='th-columnas'>{column}</th>
-                    ))}
-                    <th className='ultima-columna' key={uniqueKeys.thColumnActions} >Acciones</th>
-                  </tr>
-                </thead>
-                <tbody className='tbody' key={uniqueKeys.tbody}>
-                  {
-                  
-                  (dataFilter().length > 0)
+          {
+            (dataApi.data.length >= 1)
+            ?
+            
+            <>
+              <div className='titulo-tabla'>
+                <h1>Datos de {tables.map((titulo)=>{
+                  if(window.location.href.toString().includes(Object.keys(titulo))){
+                    return Object.values(titulo)
+                  }
+                })}
+                </h1>
+              </div>
+              
+              <div className='contenedor-body'>
+
+                <div className='contenedor-barra-botonagregar'>
+                  <AddButton openModal={()=>openModal()}></AddButton>
+                    <div className='contenedor-barra'>
+                      <input type='text' placeholder={`buscar por... ${fact}`} className='barra-busqueda' onChange={(e) => dataFilter(e)}/>
+                    </div>      
+                </div>
+                {
+                  (dataApi.columns)
                   ?
-                  dataFilter().map((element,index) =>
+                  <div className="contenedor-tabla" key={uniqueKeys.contenedorTabla} >
+                  <table className='tabla' key={uniqueKeys.tabla}>
+                    <thead className='thead' key={uniqueKeys.thead}>
+                      <tr className='tr-column' key={uniqueKeys.trColumn}>
+                        {Object.values(dataApi.columns).map((column,index)=>(
+                          <th key={`${uniqueKeys.thColumn}-${index}`} className='th-columnas'>{column}</th>
+                        ))}
+                        <th className='ultima-columna' key={uniqueKeys.thColumnActions} >Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody className='tbody' key={uniqueKeys.tbody}>
+                      {
                       
-                        <tr className='tr-data' key={`${uniqueKeys.trBody}-${index}`}>
-                        {Object.keys(dataApi.columns).map((column)=>{
-                          for(let i = 0 ; i < Object.keys(element).length ; i++){
-                            if(Object.keys(element)[i] === column){
-                              if(Object.keys(element)[i] === column && column === "url"){
-                                return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={Object.values(element)[i]} >{Object.values(element)[i]}</a></td>
-                              }
-                              if(Object.keys(element)[i] === column && column === "email"){
-                                return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={""} >{Object.values(element)[i]}</a></td>
-                              }
-                              if(Object.keys(element)[i] === column && column === "has_security"){
-                                if(Object.values(element)[i] === 1){
-                                  return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>Si</p></td>
-                                }else{
-                                  return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>No</p></td>
+                      (dataFilter().length > 0)
+                      ?
+                      dataFilter().map((element,index) =>
+                          
+                            <tr className='tr-data' key={`${uniqueKeys.trBody}-${index}`}>
+                            {Object.keys(dataApi.columns).map((column)=>{
+                              for(let i = 0 ; i < Object.keys(element).length ; i++){
+                                if(Object.keys(element)[i] === column){
+                                  if(Object.keys(element)[i] === column && column === "url"){
+                                    return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={Object.values(element)[i]} >{Object.values(element)[i]}</a></td>
+                                  }
+                                  if(Object.keys(element)[i] === column && column === "email"){
+                                    return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={""} >{Object.values(element)[i]}</a></td>
+                                  }
+                                  if(Object.keys(element)[i] === column && column === "has_security"){
+                                    if(Object.values(element)[i] === 1){
+                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>Si</p></td>
+                                    }else{
+                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>No</p></td>
+                                    }
+                                  }
+                                    return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>{Object.values(element)[i]}</p></td>
                                 }
                               }
-                                return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>{Object.values(element)[i]}</p></td>
-                            }
-                          }
-                        })}
-                            
-                        <td className='ultima-celda' key={uniqueKeys.tdBody}>
-                          {
-                            (superAdmin)
-                            ?
-                            <div >
-                              <button className='boton-ver' onClick={() => OpenModalView(element)}><FontAwesomeIcon icon={faEye} /></button>
-                            </div>
-                            :
-                            <div className='botones-acciones' >
-                              <button className='boton-editar' onClick={() => OpenModalEdit(element)}><FontAwesomeIcon icon={faEdit} /></button>
-                              <button className='boton-eliminar' onClick={() => eliminate(element)}><FontAwesomeIcon icon={faTrashAlt} /></button> 
-                              <button className='boton-ver' onClick={() => OpenModalView(element)}><FontAwesomeIcon icon={faEye} /></button>
-                            </div>
-                          }
-                        </td>
-                      </tr> 
-                   )
-                  :
-                  <tr className='tr-coincidence' key={uniqueKeys.trBodyNd} ><td className='td-coincidence'key={uniqueKeys.tdBodyNd}>No hay coincidencias</td></tr>
-                  }
+                            })}
+                                
+                            <td className='ultima-celda' key={uniqueKeys.tdBody}>
+                              {
+                                (superAdmin)
+                                ?
+                                <div >
+                                  <button className='boton-ver' onClick={() => OpenModalView(element)}><FontAwesomeIcon icon={faEye} /></button>
+                                </div>
+                                :
+                                <div className='botones-acciones' >
+                                  <button className='boton-editar' onClick={() => OpenModalEdit(element)}><FontAwesomeIcon icon={faEdit} /></button>
+                                  <button className='boton-eliminar' onClick={() => eliminate(element)}><FontAwesomeIcon icon={faTrashAlt} /></button> 
+                                  <button className='boton-ver' onClick={() => OpenModalView(element)}><FontAwesomeIcon icon={faEye} /></button>
+                                </div>
+                              }
+                            </td>
+                          </tr> 
+                      )
+                      :
+                      <tr className='tr-coincidence' key={uniqueKeys.trBodyNd} ><td className='td-coincidence'key={uniqueKeys.tdBodyNd}>No hay coincidencias</td></tr>
+                      }
+                      
+                    </tbody>
+                  </table>
+                </div>
+                :
+                ""
+                }
+                
                   
-                </tbody>
-              </table>
-            </div>
-              
-            <ModalEdit
-              openModalEdit={openModalEdit}
-              itemToEdit={itemToEdit}
-              onsubmit={edit}
-              closeForm={closeForm}
-              dataBrands={dataBrands}
-              dataCustomersEdit={dataCustomersEdit}
-              dataCellphonesEdit={dataCellphonesEdit}
-              dataServicesEdit={dataServicesEdit}
-              errors={errors}>
-            </ModalEdit>
+                <ModalEdit
+                  openModalEdit={openModalEdit}
+                  itemToEdit={itemToEdit}
+                  onsubmit={edit}
+                  closeForm={closeForm}
+                  dataBrands={dataBrands}
+                  dataCustomersEdit={dataCustomersEdit}
+                  dataCellphonesEdit={dataCellphonesEdit}
+                  dataServicesEdit={dataServicesEdit}
+                  errors={errors}>
+                </ModalEdit>
 
-            <ModalAdd
-              create={create}
-              openModalAdd={openModalAdd}
-              openModalAddBrand={openModalAddBrand}
-              openModalAddCustomer={openModalAddCustomer}
-              openModalAddCellphone={openModalAddCellphone}
-              openModalAddService={openModalAddService}
-              changeModal={changeModal}
-              dataApi={dataApi}
-              closeForm={closeForm}
-              dataBrands={dataBrands}
-              dataCustomers={dataCustomers}
-              dataCellPhones={dataCellphones}
-              dataServices={dataServices}
-              errors={errors}>
-            </ModalAdd>
+                <ModalAdd
+                  create={create}
+                  openModalAdd={openModalAdd}
+                  openModalAddBrand={openModalAddBrand}
+                  openModalAddCustomer={openModalAddCustomer}
+                  openModalAddCellphone={openModalAddCellphone}
+                  openModalAddService={openModalAddService}
+                  changeModal={changeModal}
+                  dataApi={dataApi}
+                  closeForm={closeForm}
+                  dataBrands={dataBrands}
+                  dataCustomers={dataCustomers}
+                  dataCellPhones={dataCellphones}
+                  dataServices={dataServices}
+                  errors={errors}>
+                </ModalAdd>
 
-            <ModalView
-              openModalView={openModalView}
-              closeForm={closeForm}
-              itemToSee={itemToSee}>
-            </ModalView>
+                <ModalView
+                  openModalView={openModalView}
+                  closeForm={closeForm}
+                  itemToSee={itemToSee}>
+                </ModalView>
 
-          </div>
-
+              </div>
+              </>
+              :
+              <>
+              <div>
+                <h1>No hay datos de</h1>
+              </div>
+              </>
+          }
         </>
 
       );
