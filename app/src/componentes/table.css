@@ -1,5 +1,5 @@
 body{
-    background-image: url('../img/claroooo.png');  
+    background-image: url('../img/logo192.png');  
     z-index: 1;
 }
 
@@ -16,6 +16,7 @@ body{
     margin-top: 20px;
     height: 500px;
     width: 100%;
+    
 }
 
 .contenedor-tabla{
@@ -26,7 +27,9 @@ body{
     height: max-content;
     max-height: 500px;
     overflow-x: scroll;
-    box-shadow: 5px 5px 5px 5px grey;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    box-shadow: 4px 4px 4px 4px rgb(41, 41, 41);
 }
 .contenedor-barra{
     width: 50%;
@@ -35,7 +38,9 @@ body{
 }
 
 .barra-busqueda{
-    width: 70%;
+    width: 100%;
+    border-radius: 10px;
+    outline: none;
     align-self: center;
     margin-top: 10px;
 }
@@ -56,19 +61,19 @@ body{
     color: white;
     font-size: 100%;
     text-align: center;
-   
 }
 
 .th-columnas{
     border: 1px solid rgb(255, 255, 255);
+    width: max-content;
     padding-right: 5px;
     padding-left: 5px;
     white-space: nowrap;
     font-weight: 500;
 }
 
-.ultima.columna{
-    width: max-content;
+.ultima-columna{
+    width: 100px;
 }
 
 .tbody{
@@ -76,22 +81,30 @@ body{
     font-size: 16px;
     color: black;
     height: 30px;
+    
 }
 
 .td-coincidence{
    position: absolute;
-   width: 100%;
+   width: 94.9%;
    font-size: 20px;
+   background:rgb(255, 190, 212) ;
 }
 
 /*Table row style*/
 
 .tr-data{
     border-bottom: 1px solid black;
+    
+}
+.tr-data:nth-child(odd){
     background: rgb(255, 190, 212);
 }
+.tr-data:nth-child(even){
+    background: rgb(221, 165, 184);
+}
 .tr-data:hover{
-    background: rgb(204, 151, 169);
+    background: rgb(161, 119, 133);
 }
 
 .no-match{
@@ -110,7 +123,8 @@ body{
 }
 
 .td p{
-    margin: 0;
+    margin: auto;
+    text-align: center;
     max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -118,9 +132,7 @@ body{
     padding-right: 5px;
 }
 
-.td:first-child{
-    border-right: 1px solid white;
-}
+
 
 .td-a a{
     padding-left: 5px;
@@ -139,6 +151,16 @@ body{
     font-weight: 400;
 }
 
+.td-cost{
+    padding-left: 5px;
+    padding-right: 5px;
+    color: red;
+}
+.td-amount{
+    padding-left: 5px;
+    padding-right: 5px;
+    color: green;
+}
 
 .ultima-celda{
     background: rgb(46, 46, 46);
@@ -146,6 +168,7 @@ body{
     align-items: center;
     border-left: 1px solid white;
     width: max-content;
+    padding: 6px;
 }
 
 .botones-acciones{

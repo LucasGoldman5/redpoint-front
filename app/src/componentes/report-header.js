@@ -29,6 +29,10 @@ const ReportHeader = () =>{
   const [arrowCellphone, setArrowCellphone] = useState(true);
   const [arrowCustomer, setArrowCustomer] = useState(true);
   const [arrowService, setArrowService] = useState(true);
+  const [chainBrands, setChainBrands] = useState("");
+  const [chainCellphones, setChainCellphones] = useState("");
+  const [chainCustomers, setChainCustomers] = useState("");
+  const [chainServices, setChainServices] = useState("");
  
 
   const menuDropdown = () =>{
@@ -212,6 +216,75 @@ const ReportHeader = () =>{
     };
   };
 
+
+  const dataBrandsFilter = (e) => {
+    let filteredDataBrands = dataBrands;
+  
+    if (e) {
+      setChainBrands(e.target.value.toUpperCase());
+    }
+  
+    if (chainBrands.length >= 1) {
+      filteredDataBrands = filteredDataBrands.filter((brand) =>
+        brand.title.toUpperCase().includes(chainBrands)
+      );
+    }
+  
+    return filteredDataBrands;
+  };
+
+
+  const dataCellphonesFilter = (e) => {
+    let filteredDataCellphone = dataCellphones;
+  
+    if (e) {
+      setChainCellphones(e.target.value.toUpperCase());
+    }
+  
+    if (chainCellphones.length >= 1) {
+      filteredDataCellphone = filteredDataCellphone.filter((cellphone) =>
+        cellphone.model.toUpperCase().includes(chainCellphones)
+      );
+    }
+  
+    return filteredDataCellphone;
+  };
+
+
+  const dataCustomersFilter = (e) => {
+    let filteredDataCustomers = dataCustomers;
+  
+    if (e) {
+      setChainCustomers(e.target.value.toUpperCase());
+    }
+  
+    if (chainCustomers.length >= 1) {
+      filteredDataCustomers = filteredDataCustomers.filter((customer) =>
+        customer.name.toUpperCase().includes(chainCustomers)
+      );
+    }
+  
+    return filteredDataCustomers;
+  };
+
+
+  const dataServicesFilter = (e) => {
+    let filteredDataServices = dataServices;
+  
+    if (e) {
+      setChainServices(e.target.value.toUpperCase());
+    }
+  
+    if (chainServices.length >= 1) {
+      filteredDataServices = filteredDataServices.filter((service) =>
+        service.description.toUpperCase().includes(chainServices)
+      );
+    }
+  
+    return filteredDataServices;
+  };
+  
+
   return(
 
     <>
@@ -237,12 +310,18 @@ const ReportHeader = () =>{
                              <li onMouseEnter={() => mouseOverLi("brand")}  className="li-nav-report">Marca <FontAwesomeIcon icon={arrowBrand ? faCaretDown : faCaretUp} /></li>
                             </div>
                             <div className={liBrandHover ? "container-reparations-filter" : "container-reparations-filter-none"}>
-                                <div className="div-x">
-                                    <FontAwesomeIcon onClick={() => closeGridFilter("brand")} icon={faCircleXmark}/>
+                            <div className="header-nav-reparations">
+                                    <div className="div-input-search">
+                                      <input className="search-reparations-input" type="search" placeholder="buscar..." onChange={(e) => dataBrandsFilter(e)}></input>
+                                    </div>
+                                    <div className="div-x">
+                                      <FontAwesomeIcon onClick={() => closeGridFilter("brand")} icon={faCircleXmark}/>
+                                    </div>
                                 </div>
                                 <div className="div-container-map-filter">
                                     {
-                                       (dataBrands.length > 0) ?  dataBrands.map((brand)=>{
+                                        
+                                       (dataBrandsFilter().length > 0) ?  dataBrandsFilter().map((brand)=>{
                                         return(
                                          <p className="p-entity-filter" key={brand.id} onClick={() => getFilterReparations(brand.id,"brands")}>{brand.title}</p>
                                         )
@@ -256,12 +335,17 @@ const ReportHeader = () =>{
                              <li onMouseEnter={() => mouseOverLi("cellphone")} className="li-nav-report">Celular <FontAwesomeIcon icon={arrowCellphone ? faCaretDown : faCaretUp} /></li>
                             </div>
                             <div className={liCellphoneHover ? "container-reparations-filter" : "container-reparations-filter-none"}>
-                                <div className="div-x">
-                                    <FontAwesomeIcon onClick={() => closeGridFilter("cellphone")} icon={faCircleXmark}/>
+                                <div className="header-nav-reparations">
+                                    <div className="div-input-search">
+                                      <input className="search-reparations-input" type="search" placeholder="buscar..." onChange={(e) => dataCellphonesFilter(e)}></input>
+                                    </div>
+                                    <div className="div-x">
+                                      <FontAwesomeIcon onClick={() => closeGridFilter("cellphone")} icon={faCircleXmark}/>
+                                    </div>
                                 </div>
                                 <div className="div-container-map-filter">
                                     {
-                                        (dataCellphones.length > 0) ? dataCellphones.map((cellphone)=>{
+                                        (dataCellphonesFilter().length > 0) ? dataCellphonesFilter().map((cellphone)=>{
                                             return(
                                              <p className="p-entity-filter" key={cellphone.id} onClick={() => getFilterReparations(cellphone.id,"cellphones")}>{cellphone.model}</p>
                                             )
@@ -275,12 +359,17 @@ const ReportHeader = () =>{
                              <li onMouseEnter={() => mouseOverLi("customer")} className="li-nav-report">Cliente <FontAwesomeIcon icon={arrowCustomer ? faCaretDown : faCaretUp} /></li>
                             </div>
                             <div className={liCustomerHover ? "container-reparations-filter" : "container-reparations-filter-none"}>
-                                <div className="div-x">
-                                    <FontAwesomeIcon onClick={() => closeGridFilter("customer")} icon={faCircleXmark}/>
+                            <div className="header-nav-reparations">
+                                    <div className="div-input-search">
+                                      <input className="search-reparations-input" type="search" placeholder="buscar..." onChange={(e) => dataCustomersFilter(e)}></input>
+                                    </div>
+                                    <div className="div-x">
+                                      <FontAwesomeIcon onClick={() => closeGridFilter("customer")} icon={faCircleXmark}/>
+                                    </div>
                                 </div>
                                 <div className="div-container-map-filter">
                                     {
-                                        (dataCustomers.length > 0) ? dataCustomers.map((customer)=>{
+                                        (dataCustomersFilter().length > 0) ? dataCustomersFilter().map((customer)=>{
                                             return(
                                              <p className="p-entity-filter" key={customer.id} onClick={() => getFilterReparations(customer.id,"customers")}>{customer.name}</p>
                                             )
@@ -294,12 +383,17 @@ const ReportHeader = () =>{
                              <li onMouseEnter={() => mouseOverLi("service")} className="li-nav-report">Servicio <FontAwesomeIcon icon={arrowService ? faCaretDown : faCaretUp} /></li>
                             </div>
                             <div className={liServiceHover ? "container-reparations-filter" : "container-reparations-filter-none"}>
-                                <div className="div-x">
-                                    <FontAwesomeIcon onClick={() => closeGridFilter("service")} icon={faCircleXmark}/>
+                            <div className="header-nav-reparations">
+                                    <div className="div-input-search">
+                                      <input className="search-reparations-input" type="search" placeholder="buscar..." onChange={(e) => dataServicesFilter(e)}></input>
+                                    </div>
+                                    <div className="div-x">
+                                      <FontAwesomeIcon onClick={() => closeGridFilter("service")} icon={faCircleXmark}/>
+                                    </div>
                                 </div>
                                 <div className="div-container-map-filter">
                                     {
-                                        (dataServices.length > 0) ? dataServices.map((service)=>{
+                                        (dataServicesFilter().length > 0) ? dataServicesFilter().map((service)=>{
                                             return(
                                              <p className="p-entity-filter" key={service.id} onClick={() => getFilterReparations(service.id,"services")}>{service.description}</p>
                                             )

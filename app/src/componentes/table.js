@@ -546,7 +546,7 @@ const Table = () =>{
             
             <>
               <div className='titulo-tabla'>
-                <h1>Datos de {tables.map((titulo)=>{
+                <h1>{tables.map((titulo)=>{
                   if(window.location.href.toString().includes(Object.keys(titulo))){
                     return Object.values(titulo)
                   }
@@ -588,6 +588,40 @@ const Table = () =>{
                                 if(Object.keys(element)[i] === column){
                                   if(Object.keys(element)[i] === column && column === "url"){
                                     return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={Object.values(element)[i]} >{Object.values(element)[i]}</a></td>
+                                  }
+                                  if(Object.keys(element)[i] === column && column === "cost"){
+                                    return <td className='td-cost' key={`${uniqueKeys.tbody}-${i}`}>${Object.values(element)[i]}</td>
+                                  }
+                                  if(Object.keys(element)[i] === column && column === "amount"){
+                                    return <td className='td-amount' key={`${uniqueKeys.tbody}-${i}`}>${Object.values(element)[i]}</td>
+                                  }
+                                  if(Object.keys(element)[i] === column && column === "notice_date"){
+                                    if(Object.values(element)[i] === null){
+                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
+                                    }else{
+                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(Object.values(element)[i]).getDate()+"/"+(new Date(Object.values(element)[i]).getMonth()+1)+"/"+new Date(Object.values(element)[i]).getFullYear()}</td>
+                                    }
+                                  }
+                                  if(Object.keys(element)[i] === column && column === "delivery_date"){
+                                    if(Object.values(element)[i] === null){
+                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
+                                    }else{
+                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(Object.values(element)[i]).getDate()+"/"+(new Date(Object.values(element)[i]).getMonth()+1)+"/"+new Date(Object.values(element)[i]).getFullYear()}</td>
+                                    }
+                                  }
+                                  if(Object.keys(element)[i] === column && column === "service_start_date"){
+                                    if(Object.values(element)[i] === null){
+                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
+                                    }else{
+                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(Object.values(element)[i]).getDate()+"/"+(new Date(Object.values(element)[i]).getMonth()+1)+"/"+new Date(Object.values(element)[i]).getFullYear()}</td>
+                                    }
+                                  }
+                                  if(Object.keys(element)[i] === column && column === "service_end_date"){
+                                    if(Object.values(element)[i] === null){
+                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
+                                    }else{
+                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(Object.values(element)[i]).getDate()+"/"+(new Date(Object.values(element)[i]).getMonth()+1)+"/"+new Date(Object.values(element)[i]).getFullYear()}</td>
+                                    }
                                   }
                                   if(Object.keys(element)[i] === column && column === "email"){
                                     return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={""} >{Object.values(element)[i]}</a></td>

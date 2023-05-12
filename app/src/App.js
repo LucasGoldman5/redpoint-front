@@ -1,12 +1,11 @@
 import StartHeader from './componentes/start-header';
-import getFilterReparations from './helpers/getFilterReparations';
 import GeneralHeader from './componentes/general-header';
 import ReportHeader from './componentes/report-header';
 import InformationHeader from './componentes/information-header';
 import Table from './componentes/table';
 import PersonalInformation from './componentes/personal-information';
 import Login from './componentes/login';
-import {  Route, Routes, useSearchParams } from 'react-router-dom';
+import {  Route, Routes} from 'react-router-dom';
 import {  useState } from 'react';
 import './App.css';
 import GetUserData from './helpers/getUserData';
@@ -19,14 +18,8 @@ function App() {
 
   
   const [ user, setUser ] = useState(GetUserData());
-  const [searchParams, setSearchParams] = useSearchParams();
+
   
-  
-
-
-
-
-
   const enterAplication = () =>{
 
     window.location.assign("http://localhost:3000/Table/cellphones");
