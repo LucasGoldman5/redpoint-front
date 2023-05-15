@@ -33,7 +33,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
 
       try{
 
-        const config = HelperBuildRequest("POST", data, "dataTablePost");
+        const config = await HelperBuildRequest("POST", data, "dataTablePost");
         const request = await fetch(`http://localhost:8000/api/brands`, config);
 
           if(request.status === 200){
@@ -69,7 +69,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
 
       try{
 
-        const config = HelperBuildRequest("POST", data, "dataTablePost");
+        const config = await HelperBuildRequest("POST", data, "dataTablePost");
         const request = await fetch(`http://localhost:8000/api/customers`, config);
 
           if(request.status === 200){
@@ -104,7 +104,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
 
       try{
 
-        const config = HelperBuildRequest("POST", data, "dataTablePost");
+        const config = await HelperBuildRequest("POST", data, "dataTablePost");
         const request = await fetch(`http://localhost:8000/api/services`, config);
 
           if(request.status === 200){
@@ -138,7 +138,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
 
       try{
 
-        const config = HelperBuildRequest("POST", data, "dataTablePost");
+        const config = await HelperBuildRequest("POST", data, "dataTablePost");
         const request = await fetch(`http://localhost:8000/api/cellphones`, config);
 
           if(request.status === 200){
