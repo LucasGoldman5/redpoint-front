@@ -26,7 +26,7 @@ const Login = ({enterAplication}) =>{
         setLoading(true) 
         try{
 
-            const config = HelperBuildRequest("POST", data, 'login');
+            const config = await HelperBuildRequest("POST", data, 'login');
             const request = await fetch("http://localhost:8000/api/login", config);
 
             if(request.status === 200){

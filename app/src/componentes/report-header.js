@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import HelperBuildRequest from "../helpers/buildRequest";
 import getFilterReparations from "../helpers/getFilterReparations";
-import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import './report-header.css';
 import { Link } from 'react-router-dom';
@@ -69,7 +68,7 @@ const ReportHeader = () =>{
      if(seeNavReport === false){
         try{
                     
-            const config = HelperBuildRequest("GET",null, "dataTable");
+            const config = await HelperBuildRequest("GET",null, "dataTable");
             const request = await fetch(`http://localhost:8000/api/brands`, config);
     
               if(request.status === 200){
@@ -89,7 +88,7 @@ const ReportHeader = () =>{
           
           try{
                       
-            const config = HelperBuildRequest("GET",null, "dataTable");
+            const config = await HelperBuildRequest("GET",null, "dataTable");
             const request = await fetch(`http://localhost:8000/api/customers`, config);
     
               if(request.status === 200){
@@ -110,7 +109,7 @@ const ReportHeader = () =>{
           
           try{
                       
-            const config = HelperBuildRequest("GET",null, "dataTable");
+            const config = await HelperBuildRequest("GET",null, "dataTable");
             const request = await fetch(`http://localhost:8000/api/cellphones`, config);
     
               if(request.status === 200){
@@ -131,7 +130,7 @@ const ReportHeader = () =>{
           
           try{
                       
-            const config = HelperBuildRequest("GET",null, "dataTable");
+            const config = await HelperBuildRequest("GET",null, "dataTable");
             const request = await fetch(`http://localhost:8000/api/services`, config);
     
               if(request.status === 200){

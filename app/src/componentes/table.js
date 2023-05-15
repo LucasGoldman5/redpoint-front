@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import ModalAdd from './modal-add';
 import ModalEdit from './modal-edit';
 import ModalView from './modal-view';
+import Paginator from './paginator';
 import HelperBuildRequest from "../helpers/buildRequest";
 import {  useLocation } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -102,7 +103,7 @@ const Table = () =>{
         )
       } else {
         //se encontro 
-        const config = HelperBuildRequest('GET', null, 'dataTable');
+        const config = await HelperBuildRequest('GET', null, 'dataTable');
 
         await fetch(`http://localhost:8000/api/${findEntity}`, config)
           .then( res  => res.json())
@@ -120,7 +121,7 @@ const Table = () =>{
       
         try{
                     
-          const config = HelperBuildRequest("GET",null, "dataTable");
+          const config = await HelperBuildRequest("GET",null, "dataTable");
           const request = await fetch(`http://localhost:8000/api/brands`, config);
 
             if(request.status === 200){
@@ -140,7 +141,7 @@ const Table = () =>{
         
         try{
                     
-          const config = HelperBuildRequest("GET",null, "dataTable");
+          const config = await HelperBuildRequest("GET",null, "dataTable");
           const request = await fetch(`http://localhost:8000/api/customers`, config);
 
             if(request.status === 200){
@@ -160,7 +161,7 @@ const Table = () =>{
         
         try{
                     
-          const config = HelperBuildRequest("GET",null, "dataTable");
+          const config = await HelperBuildRequest("GET",null, "dataTable");
           const request = await fetch(`http://localhost:8000/api/cellphones`, config);
 
             if(request.status === 200){
@@ -180,7 +181,7 @@ const Table = () =>{
         
         try{
                     
-          const config = HelperBuildRequest("GET",null, "dataTable");
+          const config = await HelperBuildRequest("GET",null, "dataTable");
           const request = await fetch(`http://localhost:8000/api/services`, config);
 
             if(request.status === 200){
@@ -211,7 +212,7 @@ const Table = () =>{
               const currentUrl = window.location.href;
               const findEntity = identityApi.find( (entity) =>  currentUrl.includes(entity));
   
-              const config = HelperBuildRequest("POST", data, "dataTablePost");                    
+              const config = await HelperBuildRequest("POST", data, "dataTablePost");                    
               const request = await fetch(`http://localhost:8000/api/${findEntity}`, config);
   
                 if(request.status === 200){
@@ -278,7 +279,7 @@ const Table = () =>{
             
           try{
                 
-            const config = HelperBuildRequest("GET",null, "dataTable");
+            const config = await HelperBuildRequest("GET",null, "dataTable");
             const request = await fetch(`http://localhost:8000/api/brands`, config);
         
               if(request.status === 200){
@@ -299,7 +300,7 @@ const Table = () =>{
            
            try{
                     
-            const config = HelperBuildRequest("GET",null, "dataTable");
+            const config = await HelperBuildRequest("GET",null, "dataTable");
             const request = await fetch(`http://localhost:8000/api/customers`, config);
   
               if(request.status === 200){
@@ -319,7 +320,7 @@ const Table = () =>{
           
           try{
                       
-            const config = HelperBuildRequest("GET",null, "dataTable");
+            const config =await HelperBuildRequest("GET",null, "dataTable");
             const request = await fetch(`http://localhost:8000/api/cellphones`, config);
   
               if(request.status === 200){
@@ -339,7 +340,7 @@ const Table = () =>{
           
           try{
                       
-            const config = HelperBuildRequest("GET",null, "dataTable");
+            const config =await HelperBuildRequest("GET",null, "dataTable");
             const request = await fetch(`http://localhost:8000/api/services`, config);
   
               if(request.status === 200){
@@ -373,7 +374,7 @@ const Table = () =>{
 
             for(let i = 0; i<identityApi.length; i++){
               if(currentUrl.includes(identityApi[i])){
-                const config = HelperBuildRequest("PUT", data, "dataTablePut");
+                const config =await HelperBuildRequest("PUT", data, "dataTablePut");
                 const request = await fetch(`http://localhost:8000/api/${identityApi[i]}/${id}`, config);
 
                 if(request.status === 200){
@@ -433,7 +434,7 @@ const Table = () =>{
   
               for(let i = 0; i<identityApi.length; i++){
                 if(currentUrl.includes(identityApi[i])){
-                  const config = HelperBuildRequest("DELETE", "dataTable");
+                  const config = await HelperBuildRequest("DELETE", "dataTable");
                   const request = await fetch(`http://localhost:8000/api/${identityApi[i]}/${id}`, config);
   
                   if(request.status === 200){
@@ -463,6 +464,75 @@ const Table = () =>{
       setItemToSee(element);
       setOpenModalView(true); 
 
+    };
+
+    const nextPage = async (url) =>{
+      console.log(url);
+      const config = await HelperBuildRequest('GET', null, 'dataTable');
+
+        if(url){
+          await fetch(`${url}`, config)
+          .then( res  => res.json())
+          .then( datos =>{
+            console.log(datos);
+            setDataApi(datos);
+          });  
+        }else{
+          alert("Se encuentra en la ultima Pagina")
+        };
+    };
+
+
+    const previousPage = async (url) =>{
+      console.log(url);
+      const config = await HelperBuildRequest('GET', null, 'dataTable');
+
+        if(url){
+          await fetch(`${url}`, config)
+          .then( res  => res.json())
+          .then( datos =>{
+            console.log(datos);
+            setDataApi(datos);
+          });  
+        }else{
+          alert("Se encuentra en la primer Pagina")
+        };
+    };
+
+    const specifyPage = async (i) =>{
+
+      const identityApi = [
+        "brands",
+        "cellphones",
+        "customers",
+        "reparations",
+        "services",
+        "report/reparations-pending",
+        "report/reparations-success",
+        `report/reparations-by-brand/${id}`,
+        `report/reparations-by-customer/${id}`,
+        `report/reparations-by-service/${id}`,
+        `report/reparations-by-cellphone/${id}`
+      ]
+
+      const currentUrl = window.location.href;
+      const findEntity = identityApi.find( (entity) =>{
+        if(currentUrl === `http://localhost:3000/Table/${entity}`){
+          return entity
+        }
+      } );
+      const config = await HelperBuildRequest('GET', null, 'dataTable');
+
+        if(i){
+          await fetch(`http://localhost:8000/api/${findEntity}?page=${i}`, config)
+          .then( res  => res.json())
+          .then( datos =>{
+            console.log(datos);
+            setDataApi(datos);
+          });  
+        }else{
+          alert("kk")
+        };
     };
 
 
@@ -565,105 +635,115 @@ const Table = () =>{
                 {
                   (dataApi.columns)
                   ?
-                  <div className="contenedor-tabla" key={uniqueKeys.contenedorTabla} >
-                  <table className='tabla' key={uniqueKeys.tabla}>
-                    <thead className='thead' key={uniqueKeys.thead}>
-                      <tr className='tr-column' key={uniqueKeys.trColumn}>
-                        {Object.values(dataApi.columns).map((column,index)=>(
-                          <th key={`${uniqueKeys.thColumn}-${index}`} className='th-columnas'>{column}</th>
-                        ))}
-                        <th className='ultima-columna' key={uniqueKeys.thColumnActions} >Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody className='tbody' key={uniqueKeys.tbody}>
-                      {
-                      
-                      (dataFilter().length > 0)
-                      ?
-                      dataFilter().map((element,index) =>
-                          
-                            <tr className='tr-data' key={`${uniqueKeys.trBody}-${index}`}>
-                            {Object.keys(dataApi.columns).map((column)=>{
-                              for(let i = 0 ; i < Object.keys(element).length ; i++){
-                                if(Object.keys(element)[i] === column){
-                                  if(Object.keys(element)[i] === column && column === "url"){
-                                    return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={Object.values(element)[i]} >{Object.values(element)[i]}</a></td>
-                                  }
-                                  if(Object.keys(element)[i] === column && column === "cost"){
-                                    return <td className='td-cost' key={`${uniqueKeys.tbody}-${i}`}>${Object.values(element)[i]}</td>
-                                  }
-                                  if(Object.keys(element)[i] === column && column === "amount"){
-                                    return <td className='td-amount' key={`${uniqueKeys.tbody}-${i}`}>${Object.values(element)[i]}</td>
-                                  }
-                                  if(Object.keys(element)[i] === column && column === "notice_date"){
-                                    if(Object.values(element)[i] === null){
-                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
-                                    }else{
-                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(Object.values(element)[i]).getDate()+"/"+(new Date(Object.values(element)[i]).getMonth()+1)+"/"+new Date(Object.values(element)[i]).getFullYear()}</td>
-                                    }
-                                  }
-                                  if(Object.keys(element)[i] === column && column === "delivery_date"){
-                                    if(Object.values(element)[i] === null){
-                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
-                                    }else{
-                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(Object.values(element)[i]).getDate()+"/"+(new Date(Object.values(element)[i]).getMonth()+1)+"/"+new Date(Object.values(element)[i]).getFullYear()}</td>
-                                    }
-                                  }
-                                  if(Object.keys(element)[i] === column && column === "service_start_date"){
-                                    if(Object.values(element)[i] === null){
-                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
-                                    }else{
-                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(Object.values(element)[i]).getDate()+"/"+(new Date(Object.values(element)[i]).getMonth()+1)+"/"+new Date(Object.values(element)[i]).getFullYear()}</td>
-                                    }
-                                  }
-                                  if(Object.keys(element)[i] === column && column === "service_end_date"){
-                                    if(Object.values(element)[i] === null){
-                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
-                                    }else{
-                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(Object.values(element)[i]).getDate()+"/"+(new Date(Object.values(element)[i]).getMonth()+1)+"/"+new Date(Object.values(element)[i]).getFullYear()}</td>
-                                    }
-                                  }
-                                  if(Object.keys(element)[i] === column && column === "email"){
-                                    return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={""} >{Object.values(element)[i]}</a></td>
-                                  }
-                                  if(Object.keys(element)[i] === column && column === "has_security"){
-                                    if(Object.values(element)[i] === 1){
-                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>Si</p></td>
-                                    }else{
-                                      return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>No</p></td>
-                                    }
-                                  }
-                                    return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>{Object.values(element)[i]}</p></td>
-                                }
-                              }
-                            })}
+                  <>
+                    <div className='general-container-table'>
+                      <div className="contenedor-tabla" key={uniqueKeys.contenedorTabla} >
+                        <table className='tabla' key={uniqueKeys.tabla}>
+                          <thead className='thead' key={uniqueKeys.thead}>
+                            <tr className='tr-column' key={uniqueKeys.trColumn}>
+                              {Object.values(dataApi.columns).map((column,index)=>(
+                                <th key={`${uniqueKeys.thColumn}-${index}`} className='th-columnas'>{column}</th>
+                              ))}
+                              <th className='ultima-columna' key={uniqueKeys.thColumnActions} >Acciones</th>
+                            </tr>
+                          </thead>
+                          <tbody className='tbody' key={uniqueKeys.tbody}>
+                            {
+                            
+                            (dataFilter().length > 0)
+                            ?
+                            dataFilter().map((element,index) =>
                                 
-                            <td className='ultima-celda' key={uniqueKeys.tdBody}>
-                              {
-                                (superAdmin)
-                                ?
-                                <div >
-                                  <button className='boton-ver' onClick={() => OpenModalView(element)}><FontAwesomeIcon icon={faEye} /></button>
-                                </div>
-                                :
-                                <div className='botones-acciones' >
-                                  <button className='boton-editar' onClick={() => OpenModalEdit(element)}><FontAwesomeIcon icon={faEdit} /></button>
-                                  <button className='boton-eliminar' onClick={() => eliminate(element)}><FontAwesomeIcon icon={faTrashAlt} /></button> 
-                                  <button className='boton-ver' onClick={() => OpenModalView(element)}><FontAwesomeIcon icon={faEye} /></button>
-                                </div>
-                              }
-                            </td>
-                          </tr> 
-                      )
-                      :
-                      <tr className='tr-coincidence' key={uniqueKeys.trBodyNd} ><td className='td-coincidence'key={uniqueKeys.tdBodyNd}>No hay coincidencias</td></tr>
-                      }
-                      
-                    </tbody>
-                  </table>
-                </div>
-                :
-                ""
+                                  <tr className='tr-data' key={`${uniqueKeys.trBody}-${index}`}>
+                                  {Object.keys(dataApi.columns).map((column)=>{
+                                    for(let i = 0 ; i < Object.keys(element).length ; i++){
+                                      if(Object.keys(element)[i] === column){
+                                        if(Object.keys(element)[i] === column && column === "url"){
+                                          return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={Object.values(element)[i]} >{Object.values(element)[i]}</a></td>
+                                        }
+                                        if(Object.keys(element)[i] === column && column === "cost"){
+                                          return <td className='td-cost' key={`${uniqueKeys.tbody}-${i}`}>${Object.values(element)[i]}</td>
+                                        }
+                                        if(Object.keys(element)[i] === column && column === "amount"){
+                                          return <td className='td-amount' key={`${uniqueKeys.tbody}-${i}`}>${Object.values(element)[i]}</td>
+                                        }
+                                        if(Object.keys(element)[i] === column && column === "notice_date"){
+                                          if(Object.values(element)[i] === null){
+                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
+                                          }else{
+                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(Object.values(element)[i]).getDate()+"/"+(new Date(Object.values(element)[i]).getMonth()+1)+"/"+new Date(Object.values(element)[i]).getFullYear()}</td>
+                                          }
+                                        }
+                                        if(Object.keys(element)[i] === column && column === "delivery_date"){
+                                          if(Object.values(element)[i] === null){
+                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
+                                          }else{
+                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(Object.values(element)[i]).getDate()+"/"+(new Date(Object.values(element)[i]).getMonth()+1)+"/"+new Date(Object.values(element)[i]).getFullYear()}</td>
+                                          }
+                                        }
+                                        if(Object.keys(element)[i] === column && column === "service_start_date"){
+                                          if(Object.values(element)[i] === null){
+                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
+                                          }else{
+                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(Object.values(element)[i]).getDate()+"/"+(new Date(Object.values(element)[i]).getMonth()+1)+"/"+new Date(Object.values(element)[i]).getFullYear()}</td>
+                                          }
+                                        }
+                                        if(Object.keys(element)[i] === column && column === "service_end_date"){
+                                          if(Object.values(element)[i] === null){
+                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
+                                          }else{
+                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(Object.values(element)[i]).getDate()+"/"+(new Date(Object.values(element)[i]).getMonth()+1)+"/"+new Date(Object.values(element)[i]).getFullYear()}</td>
+                                          }
+                                        }
+                                        if(Object.keys(element)[i] === column && column === "email"){
+                                          return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={""} >{Object.values(element)[i]}</a></td>
+                                        }
+                                        if(Object.keys(element)[i] === column && column === "has_security"){
+                                          if(Object.values(element)[i] === 1){
+                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>Si</p></td>
+                                          }else{
+                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>No</p></td>
+                                          }
+                                        }
+                                          return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>{Object.values(element)[i]}</p></td>
+                                      }
+                                    }
+                                  })}
+                                      
+                                  <td className='ultima-celda' key={uniqueKeys.tdBody}>
+                                    {
+                                      (superAdmin)
+                                      ?
+                                      <div >
+                                        <button className='boton-ver' onClick={() => OpenModalView(element)}><FontAwesomeIcon icon={faEye} /></button>
+                                      </div>
+                                      :
+                                      <div className='botones-acciones' >
+                                        <button className='boton-editar' onClick={() => OpenModalEdit(element)}><FontAwesomeIcon icon={faEdit} /></button>
+                                        <button className='boton-eliminar' onClick={() => eliminate(element)}><FontAwesomeIcon icon={faTrashAlt} /></button> 
+                                        <button className='boton-ver' onClick={() => OpenModalView(element)}><FontAwesomeIcon icon={faEye} /></button>
+                                      </div>
+                                    }
+                                  </td>
+                                </tr> 
+                            )
+                            :
+                            <tr className='tr-coincidence' key={uniqueKeys.trBodyNd} ><td className='td-coincidence'key={uniqueKeys.tdBodyNd}>No hay coincidencias</td></tr>
+                            }
+                            
+                          </tbody>
+                        </table>
+                      </div>
+                      <Paginator
+                      dataApi={dataApi}
+                      nextPage={nextPage}
+                      previousPage={previousPage}
+                      specifyPage={specifyPage}
+                      ></Paginator>
+                    </div>
+                  </>
+                  :
+                  ""
                 }
                 
                   

@@ -19,8 +19,19 @@ body{
     
 }
 
-.contenedor-tabla{
+.general-container-table{
     width: 95%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgb(255, 190, 212);
+    box-shadow: 4px 4px 4px 4px rgb(41, 41, 41);
+    border-radius: 15px;
+    padding-bottom: 10px;
+}
+
+.contenedor-tabla{
+    width: 100%;
     display: flex;
     border-radius: 10px;
     flex-direction: column;
@@ -29,7 +40,7 @@ body{
     overflow-x: scroll;
     border-left: 1px solid gray;
     border-right: 1px solid gray;
-    box-shadow: 4px 4px 4px 4px rgb(41, 41, 41);
+    border-radius: 15px;
 }
 .contenedor-barra{
     width: 50%;

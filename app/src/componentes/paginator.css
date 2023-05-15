@@ -1,0 +1,35 @@
+.paginator-container{
+    display: flex;
+    margin-top: 20px;
+    align-items: center;
+    width: 50%;
+    justify-content: center;
+}
+.paginator-container svg:hover{
+    cursor: pointer;
+    color: red;
+}
+.arrow-left-paginator{
+   margin-right: 10px;
+   font-size: 25px;
+}
+.arrow-raigth-paginator{
+    margin-left: 10px;
+    font-size: 25px;
+}
+.buttons-paginator{
+    border: none;
+    background: none;
+    margin-right: 2px;
+    color: black;
+    font-weight: 600;
+}
+.buttons-paginator:hover{
+    color: red;
+}
+.p-paginator{
+    margin: 0;
+    font-weight: 700;
+    width: 20%;
+    text-align: start;
+}
