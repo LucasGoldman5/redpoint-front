@@ -322,7 +322,7 @@ const ReportHeader = () =>{
                                         
                                        (dataBrandsFilter().length > 0) ?  dataBrandsFilter().map((brand)=>{
                                         return(
-                                         <p className="p-entity-filter" key={brand.id} onClick={() => getFilterReparations(brand.id,"brands")}>{brand.title}</p>
+                                         <p className="p-entity-filter" key={brand.id} onClick={() => getFilterReparations(brand.id,"brands",brand.title)}>{brand.title}</p>
                                         )
                                      })
                                      :
@@ -346,7 +346,7 @@ const ReportHeader = () =>{
                                     {
                                         (dataCellphonesFilter().length > 0) ? dataCellphonesFilter().map((cellphone)=>{
                                             return(
-                                             <p className="p-entity-filter" key={cellphone.id} onClick={() => getFilterReparations(cellphone.id,"cellphones")}>{cellphone.model}</p>
+                                             <p className="p-entity-filter" key={cellphone.id} onClick={() => getFilterReparations(cellphone.id,"cellphones",cellphone.model)}>{cellphone.model}</p>
                                             )
                                          })
                                          :
@@ -370,7 +370,7 @@ const ReportHeader = () =>{
                                     {
                                         (dataCustomersFilter().length > 0) ? dataCustomersFilter().map((customer)=>{
                                             return(
-                                             <p className="p-entity-filter" key={customer.id} onClick={() => getFilterReparations(customer.id,"customers")}>{customer.name}</p>
+                                             <p className="p-entity-filter" key={customer.id} onClick={() => getFilterReparations(customer.id,"customers",customer.name)}>{customer.name}</p>
                                             )
                                          })
                                          :

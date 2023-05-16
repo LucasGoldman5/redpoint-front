@@ -37,6 +37,7 @@ const GeneralHeader = ( ) =>{
 
   const signOff = ( ) =>{
     localStorage.removeItem('user');
+    localStorage.removeItem('column');
     setDropdown(false);
     window.location.assign('/Login');
   };

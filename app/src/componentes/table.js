@@ -13,11 +13,13 @@ import Paginator from './paginator';
 import HelperBuildRequest from "../helpers/buildRequest";
 import {  useLocation } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import getManualColumns from '../helpers/getManualColumns';
 
 
 const Table = () =>{
 
     const [dataApi, setDataApi] = useState([]);
+    const [dataColumns, setDataColumns] = useState([]);
     const [dataBrands, setDataBrands] = useState([]);
     const [dataCustomers, setDataCustomers] = useState([]);
     const [dataCellphones, setDataCellPhones] = useState([]);
@@ -38,13 +40,14 @@ const Table = () =>{
     const [chain,setChain] = useState("");
     const [errors, setErrors] = useState([]);
     const { id } = useParams();
+    const { title } = useParams();
     
     
 
 
     const location = useLocation();
     const getUser = localStorage.getItem("user");
-
+  
     const tables = [
       
         {"brands":"Marcas"},
@@ -52,7 +55,12 @@ const Table = () =>{
         {"services":"Servicios"},
         {"customers":"Clientes"},
         {"reparations":"Reparaciones"},
-        {"pending":" pendientes"}
+        {"report/reparations-pending":"Reparaciones Pendientes"},
+        {"report/reparations-success":"Reparaciones Entregadas"},
+        {[`report/reparations-by-brand/${id}`] : [`Reparaciones por ${window.location.href.split("=")[1]}`]},
+        {[`report/reparations-by-service/${id}`] : [`Reparaciones por Servicio`]},
+        {[`report/reparations-by-cellphone/${id}`] : [`Reparaciones por ${window.location.href.split("=")[1]}`]},
+        {[`report/reparations-by-customer/${id}`] : [`Reparaciones por ${window.location.href.split("=")[1]}`]}
      
     ];
 
@@ -76,6 +84,8 @@ const Table = () =>{
 
 
     const getData = async () => {
+      getManualColumns(window.location.href);
+      setDataColumns(JSON.parse(localStorage.getItem('column')));
       const identityApi = [
         "brands",
         "cellphones",
@@ -103,6 +113,7 @@ const Table = () =>{
         )
       } else {
         //se encontro 
+        
         const config = await HelperBuildRequest('GET', null, 'dataTable');
 
         await fetch(`http://localhost:8000/api/${findEntity}`, config)
@@ -111,6 +122,7 @@ const Table = () =>{
             console.log(datos);
             setDataApi(datos);
           });  
+
       }
        
     };
@@ -536,14 +548,14 @@ const Table = () =>{
     };
 
 
-    if(dataApi.length != 0 && dataApi.columns){
+    if(dataApi.length != 0 && dataColumns){
 
-      const fact = Object.values(dataApi.columns).filter((fact) =>{       
+      /*const fact = Object.values(dataApi.columns).filter((fact) =>{       
         const listaDeColumnas = ['Marca', 'Modelo', 'Nombre', 'id','Numero de Telefono','recibido por'];
           if(listaDeColumnas.includes(fact)){
             return fact;
           } ;
-      });
+      });*/
 
 
       const dataFilter = (e) => {
@@ -555,20 +567,9 @@ const Table = () =>{
       
         if (chain.length >= 1) {
           filteredData = filteredData.filter((fact) => {
-            const controlList = [
-              'title',
-              'model',
-              'name',
-              'description',
-              'id',
-              'phone_number',
-              'customer'
-            ];
       
-            const keys = controlList;
                     
             for (let property in fact) {
-              if (keys.includes(property)) {
                 const value = fact[property];
                 if (value && typeof value == 'string') {
                   if (value.toLocaleLowerCase().includes(chain)) {
@@ -580,7 +581,6 @@ const Table = () =>{
                     return true;
                   }
                 }
-              }
             }
       
             return false;
@@ -617,7 +617,7 @@ const Table = () =>{
             <>
               <div className='titulo-tabla'>
                 <h1>{tables.map((titulo)=>{
-                  if(window.location.href.toString().includes(Object.keys(titulo))){
+                  if(window.location.href === `http://localhost:3000/Table/${Object.keys(titulo)}` /*.includes(Object.keys(titulo))*/){
                     return Object.values(titulo)
                   }
                 })}
@@ -629,7 +629,7 @@ const Table = () =>{
                 <div className='contenedor-barra-botonagregar'>
                   <AddButton openModal={()=>openModal()}></AddButton>
                     <div className='contenedor-barra'>
-                      <input type='text' placeholder={`buscar por... ${fact}`} className='barra-busqueda' onChange={(e) => dataFilter(e)}/>
+                      <input type='text' placeholder={`buscar...`} className='barra-busqueda' onChange={(e) => dataFilter(e)}/>
                     </div>      
                 </div>
                 {
@@ -641,10 +641,10 @@ const Table = () =>{
                         <table className='tabla' key={uniqueKeys.tabla}>
                           <thead className='thead' key={uniqueKeys.thead}>
                             <tr className='tr-column' key={uniqueKeys.trColumn}>
-                              {Object.values(dataApi.columns).map((column,index)=>(
+                              {Object.values(dataColumns).map((column,index)=>(
                                 <th key={`${uniqueKeys.thColumn}-${index}`} className='th-columnas'>{column}</th>
                               ))}
-                              <th className='ultima-columna' key={uniqueKeys.thColumnActions} >Acciones</th>
+                              <th className='ultima-columna' key={uniqueKeys.thColumnActions} >Eliminar</th>
                             </tr>
                           </thead>
                           <tbody className='tbody' key={uniqueKeys.tbody}>
@@ -654,58 +654,62 @@ const Table = () =>{
                             ?
                             dataFilter().map((element,index) =>
                                 
-                                  <tr className='tr-data' key={`${uniqueKeys.trBody}-${index}`}>
-                                  {Object.keys(dataApi.columns).map((column)=>{
+                                  <tr onClick={() => OpenModalEdit(element)} className='tr-data' key={`${uniqueKeys.trBody}-${index}`}>
+                                  {Object.keys(dataColumns).map((column)=>{
                                     for(let i = 0 ; i < Object.keys(element).length ; i++){
                                       if(Object.keys(element)[i] === column){
-                                        if(Object.keys(element)[i] === column && column === "url"){
-                                          return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={Object.values(element)[i]} >{Object.values(element)[i]}</a></td>
+                                        let item = Object.values(element)[i];
+                                        if(column === "url"){
+                                          return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={item} >{item}</a></td>
                                         }
-                                        if(Object.keys(element)[i] === column && column === "cost"){
-                                          return <td className='td-cost' key={`${uniqueKeys.tbody}-${i}`}>${Object.values(element)[i]}</td>
+                                        if(column === "cost"){
+                                          return <td className='td-cost' key={`${uniqueKeys.tbody}-${i}`}>${item}</td>
                                         }
-                                        if(Object.keys(element)[i] === column && column === "amount"){
-                                          return <td className='td-amount' key={`${uniqueKeys.tbody}-${i}`}>${Object.values(element)[i]}</td>
+                                        if(column === "phone_number"){
+                                          return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{item} / {element.phhone_number_2}</td>
                                         }
-                                        if(Object.keys(element)[i] === column && column === "notice_date"){
+                                        if(column === "amount"){
+                                          return <td className='td-amount' key={`${uniqueKeys.tbody}-${i}`}>${item}</td>
+                                        }
+                                        if(column === "notice_date"){
                                           if(Object.values(element)[i] === null){
                                             return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
                                           }else{
-                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(Object.values(element)[i]).getDate()+"/"+(new Date(Object.values(element)[i]).getMonth()+1)+"/"+new Date(Object.values(element)[i]).getFullYear()}</td>
+                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
                                           }
                                         }
-                                        if(Object.keys(element)[i] === column && column === "delivery_date"){
+                                        if(column === "delivery_date"){
                                           if(Object.values(element)[i] === null){
                                             return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
                                           }else{
-                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(Object.values(element)[i]).getDate()+"/"+(new Date(Object.values(element)[i]).getMonth()+1)+"/"+new Date(Object.values(element)[i]).getFullYear()}</td>
+                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
                                           }
                                         }
-                                        if(Object.keys(element)[i] === column && column === "service_start_date"){
+                                        if(column === "service_start_date"){
                                           if(Object.values(element)[i] === null){
                                             return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
                                           }else{
-                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(Object.values(element)[i]).getDate()+"/"+(new Date(Object.values(element)[i]).getMonth()+1)+"/"+new Date(Object.values(element)[i]).getFullYear()}</td>
+                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
                                           }
                                         }
-                                        if(Object.keys(element)[i] === column && column === "service_end_date"){
+                                        if(column === "service_end_date"){
                                           if(Object.values(element)[i] === null){
                                             return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
                                           }else{
-                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(Object.values(element)[i]).getDate()+"/"+(new Date(Object.values(element)[i]).getMonth()+1)+"/"+new Date(Object.values(element)[i]).getFullYear()}</td>
+                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
                                           }
                                         }
-                                        if(Object.keys(element)[i] === column && column === "email"){
-                                          return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={""} >{Object.values(element)[i]}</a></td>
+                                        if(column === "email"){
+                                          return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={""} >{item}</a></td>
                                         }
-                                        if(Object.keys(element)[i] === column && column === "has_security"){
+                                        if(column === "has_security"){
                                           if(Object.values(element)[i] === 1){
                                             return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>Si</p></td>
                                           }else{
                                             return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>No</p></td>
                                           }
                                         }
-                                          return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>{Object.values(element)[i]}</p></td>
+                                          return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>{item}</p></td>
                                       }
                                     }
                                   })}
@@ -718,10 +722,8 @@ const Table = () =>{
                                         <button className='boton-ver' onClick={() => OpenModalView(element)}><FontAwesomeIcon icon={faEye} /></button>
                                       </div>
                                       :
-                                      <div className='botones-acciones' >
-                                        <button className='boton-editar' onClick={() => OpenModalEdit(element)}><FontAwesomeIcon icon={faEdit} /></button>
+                                      <div className='botones-acciones' >                                        
                                         <button className='boton-eliminar' onClick={() => eliminate(element)}><FontAwesomeIcon icon={faTrashAlt} /></button> 
-                                        <button className='boton-ver' onClick={() => OpenModalView(element)}><FontAwesomeIcon icon={faEye} /></button>
                                       </div>
                                     }
                                   </td>
@@ -787,7 +789,7 @@ const Table = () =>{
               :
               <>
               <div>
-                <h1>No hay datos de</h1>
+                <h1>No hay Resultados</h1>
               </div>
               </>
           }

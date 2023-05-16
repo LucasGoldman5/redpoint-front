@@ -233,6 +233,93 @@ const ModalView = ({ closeForm, openModalView, itemToSee }) =>{
               </div>
             </ModalBody>
       </Modal>
+    );
+  }else if(window.location.href.includes("report")){
+    return(
+      <>
+       <Modal isOpen={openModalView}>
+            <ModalHeader style={{display: 'block'}}>
+                <div>
+                    <h5  style={{float: 'center', color: 'Blue'}} >Datos De la Reparacion</h5> 
+                </div>
+            </ModalHeader>
+            <ModalBody>
+              <form className="form-group" >
+                <label>Numero de Reparacion</label>
+                <input className="form-control" type="number" name="id" readOnly defaultValue={itemToSee ? itemToSee.id : ""}  />
+                <br/>
+                <label htmlFor="modelo">Servicio:</label>
+                <input className="form-control" type="text" name="modelo" readOnly defaultValue={itemToSee ? itemToSee.service : ""}  />
+                <br />
+                <label htmlFor="url">Celular:</label>
+                <input className="form-control" type="text" name="url" readOnly defaultValue={itemToSee ? itemToSee.cellphone : ""}  />
+                <br />
+                <label htmlFor="brnad_id">Recibido por:</label>
+                <input className="form-control" type="text" readOnly  defaultValue={itemToSee ? itemToSee.customer : ""} ></input>
+                <br />
+                <label htmlFor="brnad_id">Numero de contacto:</label>
+                <input className="form-control" type="text" readOnly  defaultValue={itemToSee ? itemToSee.number : ""} ></input>
+                <br />
+                <label htmlFor="brnad_id">Email:</label>
+                <input className="form-control" type="text" readOnly  defaultValue={itemToSee ? itemToSee.email : ""}></input>
+                <br/>
+                <label htmlFor="brnad_id">Recibido el:</label>
+                <input className="form-control" type="text" readOnly  defaultValue={itemToSee ? itemToSee.notice_date ? itemToSee.notice_date : "No hay fecha": ""  } ></input>
+                <br />
+                <label htmlFor="brnad_id">Notificaciones al Cliente:</label>
+                <input className="form-control" type="text" readOnly  defaultValue={itemToSee ? itemToSee.notice_quantity : ""} ></input>
+                <br />
+                <label htmlFor="brnad_id">Fecha de entrega:</label>
+                <input className="form-control" type="text" readOnly  defaultValue={itemToSee ? itemToSee.delivery_date ? itemToSee.delivery_date : "No hay fecha": ""  } ></input>
+                <br />
+                <label htmlFor="brnad_id">Costo de Reparacion:</label>
+                <input className="form-control" type="text" readOnly  defaultValue={itemToSee ? "$"+itemToSee.cost : ""} ></input>
+                <br />
+                <label htmlFor="brnad_id">Precio a cobrar:</label>
+                <input className="form-control" type="text" readOnly  defaultValue={itemToSee ? "$"+itemToSee.amount : ""} ></input>
+                <br />
+                <label htmlFor="brnad_id">Falla:</label>
+                <textarea className="form-control" type="text" readOnly  defaultValue={itemToSee ? itemToSee.failure : ""} ></textarea>
+                <br />
+                <label htmlFor="brnad_id">Observacion:</label>
+                <textarea className="form-control" type="text" readOnly  defaultValue={itemToSee ? itemToSee.observation : ""} ></textarea>
+                <br />
+                <label htmlFor="brnad_id">Inicio del servicio:</label>
+                <input className="form-control" type="text" readOnly  defaultValue={itemToSee ? itemToSee.service_start_date ? itemToSee.service_start_date : "No hay fecha": "" } ></input>
+                <br />
+                <label htmlFor="brnad_id">Finalizacion del servicio:</label>
+                <input className="form-control" type="text" readOnly  defaultValue={itemToSee ? itemToSee.service_end_date ? itemToSee.service_end_date : "No hay fecha": "" } ></input>
+                <br />
+                <label htmlFor="brnad_id">Seguridad:</label>
+                <input className="form-control" type="text" readOnly  defaultValue={itemToSee ? itemToSee.has_security === 1 ? "Si": "No" : "No"} ></input>
+                <br />
+                {
+                  (itemToSee)
+                  ?
+                  (itemToSee.has_security ===1)
+                  ?
+                  <>
+                  <label>Pin:</label>
+                  <input className="form-control" type="text" readOnly  defaultValue={itemToSee.pin} ></input>
+                  <br />
+                  <label>Patron:</label>
+                  <input className="form-control" type="text" readOnly  defaultValue={itemToSee.pattern} ></input>
+                  <br />
+                  </>
+                  :
+                  ""
+                  :
+                  ""
+                }
+                <div className="contenedor-boton-modal-dentro">
+                </div>
+              </form>
+              <div className="contenedor-boton-modal-fuera">
+                 <button className="btn btn-danger" onClick={closeForm}>Salir</button>
+              </div>
+            </ModalBody>
+      </Modal>
+      </>
     )
   }
 };

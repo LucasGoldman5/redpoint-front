@@ -5,9 +5,7 @@
 }
 
 
-.form-select.brand{
-    position: relative;
-}
+
 .input-select{
     position: absolute;
     z-index: 1000;
@@ -73,6 +71,7 @@
 
 .div-container-select-button{
     display: flex;
+    height: 45px;
 }
 
 .h1-add{

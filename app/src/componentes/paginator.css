@@ -2,8 +2,14 @@
     display: flex;
     margin-top: 20px;
     align-items: center;
-    width: 50%;
+    width: 100%;
     justify-content: center;
+}
+.paginator-container-arrows{
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 25px;
 }
 .paginator-container svg:hover{
     cursor: pointer;
@@ -13,7 +19,7 @@
    margin-right: 10px;
    font-size: 25px;
 }
-.arrow-raigth-paginator{
+.arrow-right-paginator{
     margin-left: 10px;
     font-size: 25px;
 }
@@ -22,6 +28,12 @@
     background: none;
     margin-right: 2px;
     color: black;
+    font-weight: 400;
+}
+.buttons-paginator-on{
+    color: red;
+    background: none;
+    border: none;
     font-weight: 600;
 }
 .buttons-paginator:hover{
@@ -29,7 +41,8 @@
 }
 .p-paginator{
     margin: 0;
+    margin-left: 25px;
     font-weight: 700;
-    width: 20%;
+    width: 50%;
     text-align: start;
 }
