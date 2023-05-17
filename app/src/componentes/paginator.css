@@ -8,8 +8,13 @@
 .paginator-container-arrows{
     width: 50%;
     display: flex;
+    align-items: center;
     justify-content: flex-end;
     margin-right: 25px;
+}
+.paginator-container-arrows p{
+    margin: 0;
+    font-weight: 700;
 }
 .paginator-container svg:hover{
     cursor: pointer;

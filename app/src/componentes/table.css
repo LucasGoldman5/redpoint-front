@@ -133,19 +133,83 @@ body{
     padding-right: 5px;
     padding-left: 5px;
     white-space: nowrap;
+    text-align: start;
 }
 
 .td p{
-    margin: auto;
-    text-align: center;
-    max-width: 200px;
+    margin: 0;
+    text-align: start;
+    max-width: 150px;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding-left: 5px;
     padding-right: 5px;
 }
 
+.td-service  p{
+    margin: 0;
+    white-space: nowrap;
+    text-align: start;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 5px;
+}
+.tooltip {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .tooltiptext-service {
+    visibility: hidden;
+    width: max-content;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
 
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .td-service:hover .tooltiptext-service {
+    visibility: visible;
+    opacity: 1;
+    z-index: 1;
+  }
+
+  .tooltiptext-failure {
+    visibility: hidden;
+    width: max-content;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    right: 18%;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .td-service:hover .tooltiptext-failure {
+    visibility: visible;
+    opacity: 1;
+    z-index: 1;
+  }
+
+.td-failure p{
+    margin: auto;
+    white-space: nowrap;
+    text-align: start;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 5px;
+}
 
 .td-a a{
     padding-left: 5px;
@@ -187,6 +251,15 @@ body{
 .botones-acciones{
     display: flex;
     justify-content: center;
+}
+
+.div-service-complete-none{
+    display: none;
+    
+}
+.div-service-complete{
+    position: absolute;
+    z-index: 999;
 }
 
 /*Table buttons style*/

@@ -21,6 +21,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
   const date= `${Day}/${month}/${year}${hours}:${minutes}`;
 
 
+
   const checkBoxTrue = () =>{
      setCheckBox(!checkbox);
   };
@@ -212,13 +213,11 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                 </div>
                   {errorsApi.brand_id? <p className="p-errores">Haga click en una marca</p> : ""}
                   <br/>
-                <div className="contenedor-boton-modal-dentro">
+                  <div className="contenedor-boton-modal-dentro-reparations">
                   <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
+                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
                 </div>
               </form>
-              <div className="contenedor-boton-modal-fuera">
-                <button className="btn btn-danger" onClick={closeForm}>Cancelar</button>
-              </div>
             </ModalBody>
           </Modal>
 
@@ -245,13 +244,11 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                   value:null
                   })} />
                 <br/>
-                <div className="contenedor-boton-modal-dentro">
-                  <button type="submit" className="btn btn-success" onClick={onSubmitBrand} >Crear</button>
-                </div>  
+                <div className="contenedor-boton-modal-dentro-reparations">
+                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
+                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
+                </div>
               </form>
-              <div className="contenedor-boton-modal-fuera">
-                <button className="btn btn-danger" onClick={closeForm}>Cancelar</button>
-              </div>
             </ModalBody>
           </Modal>
 
@@ -286,13 +283,11 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
               value:null
               })} />
             <br/>
-            <div className="contenedor-boton-modal-dentro">
-                <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
-            </div>  
-            </form>
-            <div className="contenedor-boton-modal-fuera">
-              <button className="btn btn-danger" onClick={closeForm}>Cancelar</button>
-            </div>
+            <div className="contenedor-boton-modal-dentro-reparations">
+                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
+                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
+                </div>
+              </form>
         </ModalBody>
       </Modal>
 
@@ -332,13 +327,11 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
               value:null
               })} />
             <br />
-            <div className="contenedor-botones-modal">
-              <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
-            </div>
-          </form>
-          <div className="contenedor-boton-modal-fuera">
-            <button className="btn btn-danger" onClick={closeForm}>Cancelar</button>
-          </div>
+            <div className="contenedor-boton-modal-dentro-reparations">
+                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
+                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
+                </div>
+              </form>
         </ModalBody>
       </Modal>
     );
@@ -376,13 +369,11 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
               value:null
               })} />
             <br />
-            <div className="contenedor-botones-modal">
-              <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
-            </div>            
-          </form>
-          <div className="contenedor-boton-modal-fuera">
-            <button className="btn btn-danger" onClick={closeForm}>Cancelar</button>
-          </div>
+            <div className="contenedor-boton-modal-dentro-reparations">
+                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
+                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
+                </div>
+              </form>
         </ModalBody>
       </Modal>
     );
@@ -398,203 +389,234 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
             </ModalHeader>
             <ModalBody className="contenedor-modal-body">
               <form className="form-group reparations" onSubmit={handleSubmit(create)}>
-                <label htmlFor="marca">Cliente</label>
-                <div className="div-container-select-button">
-                  <select className="form-select" name="select"  defaultValue={null}{...register('customer_id',{
-                      value:null
-                      })}>
-                        <option  value={null}>Seleccione un cliente..</option>
-                      {dataCustomers.map((customer)=>{
-                          return <option className="option-modal" key={customer.id} value={customer.id} >{customer.name}</option>
-                      })}
-                  </select>
-                  <h1 className="h1-add" onClick={()=>changeModal("customer")}>+</h1>
-                </div> 
-                {errors.customer_id ? <p className="p-errores">Debe seleccionar un Cliente</p> : ""}
-                <br />
-                <label htmlFor="url">Numero de contacto</label>
-                <input className="form-control" type="text" name="contact-number" {...register('number',{
-                  value:null
-                  })} />
-                <br />
-                <label htmlFor="url">Email</label>
-                <input className="form-control" type="text" name="email" {...register('email',{
-                  value:null
-                  })} />
-                <br />
-                <label htmlFor="url">Celular</label>
-                <div className="div-container-select-button">
-                  <select className="form-select" name="select"  defaultValue={null}{...register('cellphone_id',{
-                      })}>
-                        <option  value={null}>Seleccione un celular..</option>
-                      {dataCellPhones.map((cellphone)=>{
-                          return <option className="option-modal" key={cellphone.id} value={cellphone.id} >{cellphone.model}</option>
-                      })}
-                  </select>
-                  <h1 className="h1-add" onClick={()=>changeModal("cellphone")}>+</h1>
+                <div className="div-inputs">
+                  <label htmlFor="marca">Cliente</label>
+                  <div className="div-container-select-button">
+                    <select className="form-select" name="select"  defaultValue={null}{...register('customer_id',{
+                        value:null
+                        })}>
+                          <option  value={null}>Seleccione un cliente..</option>
+                        {dataCustomers.map((customer)=>{
+                            return <option className="option-modal" key={customer.id} value={customer.id} >{customer.name}</option>
+                        })}
+                    </select>
+                    <h1 className="h1-add" onClick={()=>changeModal("customer")}>+</h1>
+                  </div> 
+                  {errors.customer_id ? <p className="p-errores">Debe seleccionar un Cliente</p> : ""}
                 </div>
-                {errors.cellphone_id ? <p className="p-errores">Debe seleccionar un celular</p> : ""}
                 <br />
-                <label htmlFor="url">Falla</label>
-                <textarea className="form-control"  name="phone_2" {...register('failure',{
-                  value:null
-                  })} />
-                <br />
-                <label htmlFor="url">Observacion</label>
-                <textarea className="form-control" type="text" name="phone_2" {...register('observation',{
-                  value:null
-                  })} />
-                <br/>
-                <label htmlFor="url">Estado de la reparacion</label>
-                <select className="form-select" type="text" name="phone_2" {...register('state_id',{   
-                  })}>
-                   <option value={1}>Recibido</option> 
-                </select>
-                <br/>
-                <label htmlFor="url">Servicio</label>
-                <div className="div-container-select-button">
-                  <select className="form-select" name="select"  defaultValue={null}{...register('service_id',{
-                      })}>
-                        <option  value={null}>Seleccione un servicio..</option>
-                      {dataServices.map((service)=>{
-                          return <option className="option-modal" key={service.id} value={service.id} >{service.description}</option>
-                      })}
-                  </select>
-                  <h1 className="h1-add" onClick={()=>changeModal("service")}>+</h1>
+                <div className="div-inputs">
+                  <label htmlFor="url">Numero de contacto</label>
+                  <input className="form-control" type="text" name="contact-number" {...register('number',{
+                    value:null
+                    })} />
                 </div>
-                {errors.service_id ? <p className="p-errores">Debe seleccionar un Servicio</p> : ""}
-                <br/>
-                <label htmlFor="url">Valor de la reparacion</label>
-                <input className="form-control" type="text" name="phone_2" {...register('cost',{
-                  value:null
-                  })} />
-                <br/>
-                <label htmlFor="url">Precio a cobrar<span>*</span> </label>
-                <input className="form-control" type="text" name="phone_2" {...register('amount',{
-                  value:null
-                  })} />
-                <br/>
-                <label htmlFor="url">Fecha de notificacion al cliente</label>
-                <input className="form-control" type="date" name="phone_2" {...register('notice_date',{
-                  value:  null,
-                  setValueAs : value =>{
-                    if(value != null){
-                      let dateInput = new Date(value)
-                    dateInput = dateInput.getUTCFullYear() + '-' +
-                    ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
-                    ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
-                    ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
-                    ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
-                    ('00' + dateInput.getUTCSeconds()).slice(-2);
-
-                    return dateInput
-                    }else{
-                      return value
-                    } 
-                  } 
-                  })} />
-                <br/>
-                <label htmlFor="url">Cantidad de Notificaciones</label>
-                <input className="form-control" type="text" name="phone_2" {...register('notice_quantity',{
-                  value:0
-                  })} />
-                <br/>
-                <label htmlFor="url">Fecha de entrega</label>
-                <input className="form-control" type="date" name="phone_2" {...register('delivery_date',{
-                  value:  null,
-                  setValueAs : v =>{
-                    if(v != null){
-                      let dateInput = new Date(v)
-                    dateInput = dateInput.getUTCFullYear() + '-' +
-                    ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
-                    ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
-                    ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
-                    ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
-                    ('00' + dateInput.getUTCSeconds()).slice(-2);
-
-                    return dateInput
-                    }else{
-                      return v
-                    } 
-                  } 
-                  })} />
-                <br/>
-                <label htmlFor="url">Fecha de inicio del servicio</label>
-                <input className="form-control" type="date" name="phone_2" {...register('service_start_date',{
-                  value:  null,
-                  setValueAs : v =>{
-                    if(v != null){
-                      let dateInput = new Date(v)
-                    dateInput = dateInput.getUTCFullYear() + '-' +
-                    ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
-                    ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
-                    ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
-                    ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
-                    ('00' + dateInput.getUTCSeconds()).slice(-2);
-
-                    return dateInput
-                    }else{
-                      return v
-                    } 
-                  } 
-                  })} />
-                <br/>
-                <label htmlFor="url">Fecha de servicio terminado</label>
-                <input className="form-control" type="date" name="phone_2" {...register('service_end_date',{
-                  value:  null,
-                  setValueAs : v =>{
-                    if(v != null){
-                      let dateInput = new Date(v)
-                    dateInput = dateInput.getUTCFullYear() + '-' +
-                    ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
-                    ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
-                    ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
-                    ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
-                    ('00' + dateInput.getUTCSeconds()).slice(-2);
-
-                    return dateInput
-                    }else{
-                      return v
-                    } 
-                  } 
-                  })} />
-                <br/>
-                <label htmlFor="url">Imei</label>
-                <input className="form-control" type="text" name="phone_2" {...register('imei',{
-                  value:null
-                  })} />
-                <br/>
-                <label htmlFor="check">Tiene seguridad</label>
-                <input onClick={checkBoxTrue} type="checkbox" name="phone_2" {...register('has_security',{
-                  value:0
-                  })} />
-                <br/>
-                {
-                  (checkbox)
-                  ?
-                  <div>
-                    <br/>
-                    <label>Patron</label>
-                    <input className="form-control" type="text" name="phone_2" {...register('pattern',{
-                      value:null
-                      })} />
-                    <br/>
-                    <label>Pin</label>
-                    <input className="form-control" type="text" name="phone_2" {...register('pin',{
-                      value:null
-                      })} />  
+                <br />
+                <div className="div-inputs">
+                  <label htmlFor="url">Email</label>
+                  <input className="form-control" type="text" name="email" {...register('email',{
+                    value:null
+                    })} />
+                </div>
+                <br />
+                <div className="div-inputs">
+                  <label htmlFor="url">Celular</label>
+                  <div className="div-container-select-button">
+                    <select className="form-select" name="select"  defaultValue={null}{...register('cellphone_id',{
+                        })}>
+                          <option  value={null}>Seleccione un celular..</option>
+                        {dataCellPhones.map((cellphone)=>{
+                            return <option className="option-modal" key={cellphone.id} value={cellphone.id} >{cellphone.model}</option>
+                        })}
+                    </select>
+                    <h1 className="h1-add" onClick={()=>changeModal("cellphone")}>+</h1>
                   </div>
-                  :
-                  ""
-                }                                      
+                  {errors.cellphone_id ? <p className="p-errores">Debe seleccionar un celular</p> : ""}
+                </div>
+                <br />
+                <div className="div-inputs">
+                  <label htmlFor="url">Falla</label>
+                  <textarea className="form-control"  name="phone_2" {...register('failure',{
+                    value:null
+                    })} />
+                </div>
+                <br />
+                <div className="div-inputs">
+                  <label htmlFor="url">Observacion</label>
+                  <textarea className="form-control" type="text" name="phone_2" {...register('observation',{
+                    value:null
+                    })} />
+                </div>
+                <br/>
+                <div className="div-inputs">
+                  <label htmlFor="url">Estado de la reparacion</label>
+                  <select className="form-select" type="text" name="phone_2" {...register('state_id',{
+                    value:1   
+                    })}>
+                    <option value={1}>Recibido</option>
+                  </select>
+                </div>
+                <br/>
+                <div className="div-inputs">
+                  <label htmlFor="url">Servicio</label>
+                  <div className="div-container-select-button">
+                    <select className="form-select" name="select"  defaultValue={null}{...register('service_id',{
+                        })}>
+                          <option  value={null}>Seleccione un servicio..</option>
+                        {dataServices.map((service)=>{
+                            return <option className="option-modal" key={service.id} value={service.id} >{service.description}</option>
+                        })}
+                    </select>
+                    <h1 className="h1-add" onClick={()=>changeModal("service")}>+</h1>
+                  </div>
+                  {errors.service_id ? <p className="p-errores">Debe seleccionar un Servicio</p> : ""}
+                </div>
+                <br/>
+                <div className="div-inputs">
+                  <label htmlFor="url">Valor de la reparacion</label>
+                  <input className="form-control" type="text" name="phone_2" {...register('cost',{
+                    value:null
+                    })} />
+                </div>
+                <br/>
+                <div className="div-inputs">
+                  <label htmlFor="url">Precio a cobrar<span>*</span> </label>
+                  <input className="form-control" type="text" name="phone_2" {...register('amount',{
+                    value:null
+                    })} />
+                </div>
+                <br/>
+                <div className="div-inputs">
+                  <label htmlFor="url">Fecha de notificacion al cliente</label>
+                  <input className="form-control" type="date" name="phone_2" {...register('notice_date',{
+                    value:  null,
+                    setValueAs : value =>{
+                      if(value != null){
+                        let dateInput = new Date(value)
+                      dateInput = dateInput.getUTCFullYear() + '-' +
+                      ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
+                      ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
+                      ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
+                      ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
+                      ('00' + dateInput.getUTCSeconds()).slice(-2);
+
+                      return dateInput
+                      }else{
+                        return value
+                      } 
+                    } 
+                    })} />
+                </div>
+                <br/>
+                <div className="div-inputs">
+                  <label htmlFor="url">Cantidad de Notificaciones</label>
+                  <input className="form-control" type="text" name="phone_2" {...register('notice_quantity',{
+                    value:0
+                    })} />
+                  <br/>
+                  <label htmlFor="url">Fecha de entrega</label>
+                  <input className="form-control" type="date" name="phone_2" {...register('delivery_date',{
+                    value:  null,
+                    setValueAs : v =>{
+                      if(v != null){
+                        let dateInput = new Date(v)
+                      dateInput = dateInput.getUTCFullYear() + '-' +
+                      ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
+                      ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
+                      ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
+                      ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
+                      ('00' + dateInput.getUTCSeconds()).slice(-2);
+
+                      return dateInput
+                      }else{
+                        return v
+                      } 
+                    } 
+                    })} />
+                </div>
+                <br/>
+                <div className="div-inputs">
+                  <label htmlFor="url">Fecha de inicio del servicio</label>
+                  <input className="form-control" type="date" name="phone_2" {...register('service_start_date',{
+                    value:  null,
+                    setValueAs : v =>{
+                      if(v != null){
+                        let dateInput = new Date(v)
+                      dateInput = dateInput.getUTCFullYear() + '-' +
+                      ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
+                      ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
+                      ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
+                      ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
+                      ('00' + dateInput.getUTCSeconds()).slice(-2);
+
+                      return dateInput
+                      }else{
+                        return v
+                      } 
+                    } 
+                    })} />
+                </div>
+                <br/>
+                <div className="div-inputs">
+                  <label htmlFor="url">Fecha de servicio terminado</label>
+                  <input className="form-control" type="date" name="phone_2" {...register('service_end_date',{
+                    value:  null,
+                    setValueAs : v =>{
+                      if(v != null){
+                        let dateInput = new Date(v)
+                      dateInput = dateInput.getUTCFullYear() + '-' +
+                      ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
+                      ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
+                      ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
+                      ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
+                      ('00' + dateInput.getUTCSeconds()).slice(-2);
+
+                      return dateInput
+                      }else{
+                        return v
+                      } 
+                    } 
+                    })} />
+                </div>
+                <br/>
+                <div className="div-inputs">
+                  <label htmlFor="url">Imei</label>
+                  <input className="form-control" type="text" name="phone_2" {...register('imei',{
+                    value:null
+                    })} />
+                </div>
+                <br/>
+                <div className="div-inputs">
+                  <label htmlFor="check">Tiene seguridad</label>
+                  <input onClick={checkBoxTrue} type="checkbox" name="phone_2" {...register('has_security',{
+                    value:0
+                    })} />
+                  <br/>
+                  {
+                    (checkbox)
+                    ?
+                    <div>
+                      <br/>
+                      <label>Patron</label>
+                      <input className="form-control" type="text" name="phone_2" {...register('pattern',{
+                        value:null
+                        })} />
+                      <br/>
+                      <label>Pin</label>
+                      <input className="form-control" type="text" name="phone_2" {...register('pin',{
+                        value:null
+                        })} />  
+                    </div>
+                    :
+                    ""
+                  }  
+                </div>                                    
                 <hr />
-                <div className="contenedor-botones-modal">
+                <div className="contenedor-boton-modal-dentro-reparations">
                   <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
+                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
                 </div>
               </form>
-              <div className="contenedor-boton-modal-fuera">
-                <button className="btn btn-danger" onClick={closeForm}>Cancelar</button>
-              </div>
             </ModalBody>
           </Modal>  
 
@@ -630,13 +652,11 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                   })} />
                 <br />
                 <hr />
-                <div className="contenedor-botones-modal">
-                  <button type="submit" className="btn btn-success" onClick={addCustomerInReparation} >Crear</button>
-                </div>            
+                <div className="contenedor-boton-modal-dentro-reparations">
+                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
+                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
+                </div>
               </form>
-              <div className="contenedor-boton-modal-fuera">
-                <button className="btn btn-danger" onClick={closeForm}>Cancelar</button>
-              </div>
             </ModalBody>
           </Modal>
 
@@ -674,13 +694,12 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                 <h1 className="h1-add" onClick={()=>changeModal("brand")}>+</h1>
                 </div>
                   {errorsApi.brand_id? <p className="p-errores">Haga click en una marca</p> : ""}
-                <div className="contenedor-boton-modal-dentro">
-                  <button type="submit" className="btn btn-success" onClick={addCellphoneInReparation} >Crear</button>
+                <br/>  
+                <div className="contenedor-boton-modal-dentro-reparations">
+                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
+                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
                 </div>
               </form>
-              <div className="contenedor-boton-modal-fuera">
-                <button className="btn btn-danger" onClick={closeForm}>Cancelar</button>
-              </div>
             </ModalBody>
           </Modal>
 
@@ -717,13 +736,11 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                   })} />
                 <br />
                 <hr />
-                <div className="contenedor-botones-modal">
-                  <button type="submit" className="btn btn-success" onClick={addServiceInReparation} >Crear</button>
+                <div className="contenedor-boton-modal-dentro-reparations">
+                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
+                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
                 </div>
               </form>
-              <div className="contenedor-boton-modal-fuera">
-                <button className="btn btn-danger" onClick={closeForm}>Cancelar</button>
-              </div>
             </ModalBody>
           </Modal>
 
@@ -750,13 +767,11 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                   value:null
                   })} />
                 <br/>
-                <div className="contenedor-boton-modal-dentro">
-                  <button type="submit" className="btn btn-success" onClick={onSubmitBrand} >Crear</button>
-                </div>  
+                <div className="contenedor-boton-modal-dentro-reparations">
+                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
+                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
+                </div>
               </form>
-              <div className="contenedor-boton-modal-fuera">
-                <button className="btn btn-danger" onClick={closeForm}>Cancelar</button>
-              </div>
             </ModalBody>
           </Modal>
         </>

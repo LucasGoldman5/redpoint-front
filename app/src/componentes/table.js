@@ -14,12 +14,14 @@ import HelperBuildRequest from "../helpers/buildRequest";
 import {  useLocation } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import getManualColumns from '../helpers/getManualColumns';
+import { Tooltip } from 'reactstrap';
 
 
 const Table = () =>{
 
     const [dataApi, setDataApi] = useState([]);
     const [dataColumns, setDataColumns] = useState([]);
+    const [dataStatesEdit, setDataStatesEdit] = useState([]);
     const [dataBrands, setDataBrands] = useState([]);
     const [dataCustomers, setDataCustomers] = useState([]);
     const [dataCellphones, setDataCellPhones] = useState([]);
@@ -39,12 +41,12 @@ const Table = () =>{
     const [itemToSee, setItemToSee] = useState(null);
     const [chain,setChain] = useState("");
     const [errors, setErrors] = useState([]);
+    const [over, setOver] = useState(false);
     const { id } = useParams();
     const { title } = useParams();
     
     
-
-
+    
     const location = useLocation();
     const getUser = localStorage.getItem("user");
   
@@ -115,6 +117,7 @@ const Table = () =>{
         //se encontro 
         
         const config = await HelperBuildRequest('GET', null, 'dataTable');
+       // let url = enviroment.apiURL + enviroment.entities[entity] + '/';
 
         await fetch(`http://localhost:8000/api/${findEntity}`, config)
           .then( res  => res.json())
@@ -134,7 +137,7 @@ const Table = () =>{
         try{
                     
           const config = await HelperBuildRequest("GET",null, "dataTable");
-          const request = await fetch(`http://localhost:8000/api/brands`, config);
+          const request = await fetch(`http://localhost:8000/api/select-box/brand`, config);
 
             if(request.status === 200){
                 const response = await request.json();
@@ -142,8 +145,8 @@ const Table = () =>{
                       setTimeout(()=>{
                         console.log(response.error);
                       },1000);
-                  }else{                      
-                      setDataBrands(response.data);
+                  }else{                    
+                      setDataBrands(response);
                   }  
             };
 
@@ -154,7 +157,7 @@ const Table = () =>{
         try{
                     
           const config = await HelperBuildRequest("GET",null, "dataTable");
-          const request = await fetch(`http://localhost:8000/api/customers`, config);
+          const request = await fetch(`http://localhost:8000/api/select-box/customer`, config);
 
             if(request.status === 200){
                 const response = await request.json();
@@ -162,7 +165,8 @@ const Table = () =>{
                       setTimeout(()=>{
                         console.log(response.error);
                       },1000);
-                  }else{                      
+                  }else{                    
+                    
                       setDataCustomers(response.data);
                   }  
             };
@@ -174,7 +178,7 @@ const Table = () =>{
         try{
                     
           const config = await HelperBuildRequest("GET",null, "dataTable");
-          const request = await fetch(`http://localhost:8000/api/cellphones`, config);
+          const request = await fetch(`http://localhost:8000/api/select-box/cellphone`, config);
 
             if(request.status === 200){
                 const response = await request.json();
@@ -183,7 +187,7 @@ const Table = () =>{
                         console.log(response.error);
                       },1000);
                   }else{                      
-                      setDataCellPhones(response.data);
+                      setDataCellPhones(response);
                   }  
             };
 
@@ -194,7 +198,7 @@ const Table = () =>{
         try{
                     
           const config = await HelperBuildRequest("GET",null, "dataTable");
-          const request = await fetch(`http://localhost:8000/api/services`, config);
+          const request = await fetch(`http://localhost:8000/api/select-box/service`, config);
 
             if(request.status === 200){
                 const response = await request.json();
@@ -203,13 +207,14 @@ const Table = () =>{
                         console.log(response.error);
                       },1000);
                   }else{                      
-                      setDataServices(response.data);
+                      setDataServices(response);
                   }  
             };
 
         }catch(error){
           console.log(error)
         }
+
     };
 
 
@@ -292,7 +297,7 @@ const Table = () =>{
           try{
                 
             const config = await HelperBuildRequest("GET",null, "dataTable");
-            const request = await fetch(`http://localhost:8000/api/brands`, config);
+            const request = await fetch(`http://localhost:8000/api/select-box/brand`, config);
         
               if(request.status === 200){
                 const response = await request.json();
@@ -302,7 +307,7 @@ const Table = () =>{
                         console.log(response.error);
                     },1000);
                   }else{                      
-                    setDataBrands(response.data);
+                    setDataBrands(response);
                   };  
               };
 
@@ -313,7 +318,7 @@ const Table = () =>{
            try{
                     
             const config = await HelperBuildRequest("GET",null, "dataTable");
-            const request = await fetch(`http://localhost:8000/api/customers`, config);
+            const request = await fetch(`http://localhost:8000/api/select-box/customer`, config);
   
               if(request.status === 200){
                   const response = await request.json();
@@ -333,7 +338,7 @@ const Table = () =>{
           try{
                       
             const config =await HelperBuildRequest("GET",null, "dataTable");
-            const request = await fetch(`http://localhost:8000/api/cellphones`, config);
+            const request = await fetch(`http://localhost:8000/api/select-box/cellphone`, config);
   
               if(request.status === 200){
                   const response = await request.json();
@@ -342,7 +347,7 @@ const Table = () =>{
                           console.log(response.error);
                         },1000);
                     }else{                      
-                        setDataCellPhonesEdit(response.data);
+                        setDataCellPhonesEdit(response);
                     }  
               };
   
@@ -353,7 +358,7 @@ const Table = () =>{
           try{
                       
             const config =await HelperBuildRequest("GET",null, "dataTable");
-            const request = await fetch(`http://localhost:8000/api/services`, config);
+            const request = await fetch(`http://localhost:8000/api/select-box/service`, config);
   
               if(request.status === 200){
                   const response = await request.json();
@@ -362,7 +367,27 @@ const Table = () =>{
                           console.log(response.error);
                         },1000);
                     }else{                      
-                        setDataServicesEdit(response.data);
+                        setDataServicesEdit(response);
+                    }  
+              };
+  
+          }catch(error){
+            console.log(error)
+          }
+          
+          try{
+                      
+            const config =await HelperBuildRequest("GET",null, "dataTable");
+            const request = await fetch(`http://localhost:8000/api/select-box/status`, config);
+  
+              if(request.status === 200){
+                  const response = await request.json();
+                    if(response.error){
+                        setTimeout(()=>{
+                          console.log(response.error);
+                        },1000);
+                    }else{                      
+                        setDataStatesEdit(response);
                     }  
               };
   
@@ -426,10 +451,11 @@ const Table = () =>{
 
     const eliminate= async (i)=>{
 
-      const controlList = ['title', 'model', 'name'];
+      const controlList = ['title', 'model', 'name', 'customer'];
       const keys = Object.keys(i);
       const include = keys.filter( (key) => controlList.includes(key) ).sort( (a,b) => a.localeCompare(b));
       const id = i.id;
+      
 
         swal({
           title:"Eliminar",
@@ -466,7 +492,9 @@ const Table = () =>{
             }catch(error){
               console.log(error)
             };
-          };
+          }else{
+            setOpenModalEdit(false);
+          }
         });
     };
 
@@ -603,8 +631,15 @@ const Table = () =>{
       tdBody : uuidv4(),
       trBodyNd:uuidv4(),
       tdBodyNd: uuidv4(),
+      tdBodyDiv: uuidv4(),
       // ... y así sucesivamente para los demás elementos
     };
+
+    const displayDivService = () =>{
+      
+        setOver(!over)
+      
+    }
 
       return(  
 
@@ -668,6 +703,18 @@ const Table = () =>{
                                         if(column === "phone_number"){
                                           return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{item} / {element.phhone_number_2}</td>
                                         }
+                                        if(column === "service"){
+                                          return <td className='td-service' onMouseEnter={()=>displayDivService()} key={`${uniqueKeys.tbody}-${i}`}>
+                                            <p>{item}</p>
+                                            <span className="tooltiptext-service">{item}</span>                                            
+                                             </td>
+                                        }
+                                        if(column === "failure"){
+                                          return <td className='td-service' key={`${uniqueKeys.tbody}-${i}`}>
+                                            <p>{item}</p>
+                                            <span className="tooltiptext-failure">{item}</span> 
+                                          </td>
+                                        }
                                         if(column === "amount"){
                                           return <td className='td-amount' key={`${uniqueKeys.tbody}-${i}`}>${item}</td>
                                         }
@@ -716,23 +763,17 @@ const Table = () =>{
                                       
                                   <td className='ultima-celda' key={uniqueKeys.tdBody}>
                                     {
-                                      (superAdmin)
-                                      ?
-                                      <div >
-                                        <button className='boton-ver' onClick={() => OpenModalView(element)}><FontAwesomeIcon icon={faEye} /></button>
-                                      </div>
-                                      :
+                                      
                                       <div className='botones-acciones' >                                        
                                         <button className='boton-eliminar' onClick={() => eliminate(element)}><FontAwesomeIcon icon={faTrashAlt} /></button> 
                                       </div>
                                     }
                                   </td>
-                                </tr> 
+                                </tr>
                             )
                             :
                             <tr className='tr-coincidence' key={uniqueKeys.trBodyNd} ><td className='td-coincidence'key={uniqueKeys.tdBodyNd}>No hay coincidencias</td></tr>
                             }
-                            
                           </tbody>
                         </table>
                       </div>
@@ -758,6 +799,7 @@ const Table = () =>{
                   dataCustomersEdit={dataCustomersEdit}
                   dataCellphonesEdit={dataCellphonesEdit}
                   dataServicesEdit={dataServicesEdit}
+                  dataStatesEdit={dataStatesEdit}
                   errors={errors}>
                 </ModalEdit>
 
