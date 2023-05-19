@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Await, Link } from "react-router-dom";
 import './signUp.css';
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 import { PulseLoader } from "react-spinners";
 import HelperBuildRequest from "../helpers/buildRequest";
+import getEnviroment from "../helpers/getEnviroment";
 
 
 const Login = ({enterAplication}) =>{
@@ -16,9 +17,12 @@ const Login = ({enterAplication}) =>{
   const [error, setError] = useState(false);
   const [txtError, setTxtError] = useState("");
 
-
+  
 
   const onSubmit = async (data) =>{
+
+    const url = await getEnviroment();
+    const apiURL = await url
 
     cleanForm();
       if(data){
@@ -27,7 +31,7 @@ const Login = ({enterAplication}) =>{
         try{
 
             const config = await HelperBuildRequest("POST", data, 'login');
-            const request = await fetch("http://localhost:8000/api/login", config);
+            const request = await fetch(`${apiURL.apiURL}login`, config);
 
             if(request.status === 200){
                 const response = await request.json();

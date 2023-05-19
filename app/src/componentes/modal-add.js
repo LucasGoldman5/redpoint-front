@@ -1,9 +1,10 @@
 
-import React, { useState } from "react"
+import React, { useState,useEffect } from "react"
 import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
 import { useForm } from "react-hook-form";
 import './modales.css'
 import HelperBuildRequest from "../helpers/buildRequest";
+import getEnviroment from "../helpers/getEnviroment";
 
 
 const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAddCustomer,openModalAddCellphone,openModalAddService,dataApi,closeForm,dataBrands,dataCustomers,dataCellPhones,dataServices,errors}) =>{
@@ -19,6 +20,16 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
   const hours = allDate.getHours();
   const minutes = allDate.getMinutes();
   const date= `${Day}/${month}/${year}${hours}:${minutes}`;
+  const [apiURLLocal, setApiURLLocal] = useState('');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const url = await getEnviroment();
+      setApiURLLocal(url.url);
+    };
+
+    fetchData();
+  }, []);
 
 
 
@@ -26,6 +37,16 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
      setCheckBox(!checkbox);
   };
   
+  const url = async () =>{
+    const enviroment = await getEnviroment()
+    return  enviroment.apiURL 
+  }
+
+  const urlLocal = async () =>{
+    const enviroment = await getEnviroment()
+    return enviroment.api 
+  }
+
   const onSubmitBrand = async (data) =>{
 
     if(data){
@@ -33,8 +54,9 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
       try{
 
         const config = await HelperBuildRequest("POST", data, "dataTablePost");
-        const request = await fetch(`http://localhost:8000/api/brands`, config);
-
+        const apiURL = await url()
+        const request = await fetch(`${apiURL}brands`, config);
+        
           if(request.status === 200){
               const response = await request.json();
               if(response.error){
@@ -69,7 +91,8 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
       try{
 
         const config = await HelperBuildRequest("POST", data, "dataTablePost");
-        const request = await fetch(`http://localhost:8000/api/customers`, config);
+        const apiURL = await url()
+        const request = await fetch(`${apiURL}customers`, config);
 
           if(request.status === 200){
               const response = await request.json();
@@ -104,7 +127,8 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
       try{
 
         const config = await HelperBuildRequest("POST", data, "dataTablePost");
-        const request = await fetch(`http://localhost:8000/api/services`, config);
+        const apiURL = await url()
+        const request = await fetch(`${apiURL}services`, config);
 
           if(request.status === 200){
               const response = await request.json();
@@ -138,7 +162,8 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
       try{
 
         const config = await HelperBuildRequest("POST", data, "dataTablePost");
-        const request = await fetch(`http://localhost:8000/api/cellphones`, config);
+        const apiURL = await url()
+        const request = await fetch(`${apiURL}cellphones`, config);
 
           if(request.status === 200){
               const response = await request.json();
@@ -165,12 +190,9 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
     };
   };
 
-  const fechaActual = new Date();
-  fechaActual.setDate( )
   const { register, handleSubmit} = useForm ();
 
-
-  if(location === "http://localhost:3000/Table/cellphones"){
+  if(location === `${apiURLLocal}Table/cellphones`){
 
     return(
 
@@ -178,7 +200,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
           <Modal isOpen={openModalAdd}>
             <ModalHeader style={{display: 'block'}}>
               <div>
-                <h5  style={{float: 'center', color: 'red'}} >Crear celular</h5> 
+                <h5  className="h5-modal-add" >Crear celular</h5> 
               </div>
             </ModalHeader>
             <ModalBody className="contenedor-modal-body">
@@ -224,7 +246,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
           <Modal isOpen={openModalAddBrand}>
             <ModalHeader style={{display: 'block'}}>
               <div>
-                <h5  style={{float: 'center', color: 'red'}} >Crear Marca</h5> 
+              <h5  className="h5-modal-add" >Crear Marca</h5> 
               </div>
             </ModalHeader>
             <ModalBody className="contenedor-modal-body">
@@ -254,14 +276,14 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
 
         </>  
     );
-  }else if(location === "http://localhost:3000/Table/brands" ){
+  }else if(location === `${apiURLLocal}Table/brands` ){
 
     return(
 
       <Modal isOpen={openModalAdd}>
         <ModalHeader style={{display: 'block'}}>
           <div>
-            <h5  style={{float: 'center', color: 'red'}} >Crear Marca</h5> 
+          <h5  className="h5-modal-add" >Crear Marca</h5> 
           </div>
         </ModalHeader>
         <ModalBody className="contenedor-modal-body">
@@ -292,13 +314,13 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
       </Modal>
 
     )
-  }else if(location === "http://localhost:3000/Table/services"){
+  }else if(location === `${apiURLLocal}Table/services`){
 
     return(
       <Modal isOpen={openModalAdd}>
         <ModalHeader style={{display: 'block'}}>
           <div>
-            <h5  style={{float: 'center', color: 'red'}} >Crear Servicio</h5> 
+          <h5  className="h5-modal-add" >Crear Servicio</h5> 
           </div>
         </ModalHeader>
         <ModalBody className="contenedor-modal-body">
@@ -335,13 +357,13 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
         </ModalBody>
       </Modal>
     );
-  }else if(location === "http://localhost:3000/Table/customers"){
+  }else if(location === `${apiURLLocal}Table/customers`){
 
     return(
       <Modal isOpen={openModalAdd}>
         <ModalHeader style={{display: 'block'}}>
           <div>
-            <h5  style={{float: 'center', color: 'red'}} >Crear Cliente</h5> 
+          <h5  className="h5-modal-add" >Crear Cliente</h5> 
           </div>
         </ModalHeader>
         <ModalBody className="contenedor-modal-body">
@@ -377,7 +399,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
         </ModalBody>
       </Modal>
     );
-  }else if(location === "http://localhost:3000/Table/reparations"){
+  }else if(location === `${apiURLLocal}Table/reparations`){
 
     return(
         <>
@@ -513,8 +535,10 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                   <input className="form-control" type="text" name="phone_2" {...register('notice_quantity',{
                     value:0
                     })} />
-                  <br/>
-                  <label htmlFor="url">Fecha de entrega</label>
+                </div>
+                <br/>
+                <div className="div-inputs">
+                <label htmlFor="url">Fecha de entrega</label>
                   <input className="form-control" type="date" name="phone_2" {...register('delivery_date',{
                     value:  null,
                     setValueAs : v =>{
@@ -534,7 +558,6 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                     } 
                     })} />
                 </div>
-                <br/>
                 <div className="div-inputs">
                   <label htmlFor="url">Fecha de inicio del servicio</label>
                   <input className="form-control" type="date" name="phone_2" {...register('service_start_date',{
@@ -747,7 +770,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
           <Modal isOpen={openModalAddBrand}>
             <ModalHeader style={{display: 'block'}}>
               <div>
-                <h5  style={{float: 'center', color: 'red'}} >Crear Marca</h5> 
+                <h5  style={{float: 'center', color: 'green'}} >Crear Marca</h5> 
               </div>
             </ModalHeader>
             <ModalBody>
@@ -1121,7 +1144,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
         <Modal isOpen={openModalAddBrand}>
             <ModalHeader style={{display: 'block'}}>
               <div>
-                <h5  style={{float: 'center', color: 'red'}} >Crear Marca</h5> 
+                <h5  style={{float: 'center', color: 'green'}} >Crear Marca</h5> 
               </div>
             </ModalHeader>
             <ModalBody>

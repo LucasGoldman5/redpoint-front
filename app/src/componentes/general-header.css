@@ -111,7 +111,7 @@
     margin-top: 32px;
     position: absolute;
     padding-top: 10px;
-    transition: all 1s;
+    transition: all 0.5s;
     padding-bottom: 10px;
 }
 .micuenta-desplegable.none{

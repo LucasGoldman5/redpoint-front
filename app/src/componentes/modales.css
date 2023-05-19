@@ -4,6 +4,10 @@
     max-width: 80%;
 }
 
+.h5-modal-add{
+    color: green;
+}
+
 .div-inputs{
     width: 40%;
     margin-bottom: 30px;
@@ -69,6 +73,10 @@
 
 .option-modal{
     cursor: pointer;
+}
+
+.option-selected{
+    color: rgb(192, 191, 191);
 }
 
 .option-modal-crear{

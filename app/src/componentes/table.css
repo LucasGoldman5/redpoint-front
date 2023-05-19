@@ -61,6 +61,12 @@ body{
     display: flex;
     width: 95%;
 }
+.contenedor-barra-botonagregar-report{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 5px;
+    width: 95%;
+}
 
 /*Styles for Table*/
 

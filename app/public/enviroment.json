@@ -1,0 +1,11 @@
+{
+    "apiURL": "http://localhost:8000/api/",
+    "entities": [
+         "cellphones",
+         "brands",
+         "customers",
+         "services",
+         "reparations"
+    ],
+    "url": "http://localhost:3000/"
+}

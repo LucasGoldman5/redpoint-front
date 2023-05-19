@@ -10,6 +10,7 @@ export default async function getManualColumns (url){
           "cellphone":"Celular",
           "number":"Numero",
           "email":"Email",
+          "state_id":"Estado",
           "failure":"Falla",
           "notice_date":"Recibido el",
         }
@@ -59,6 +60,7 @@ export default async function getManualColumns (url){
           "cellphone":"Celular",
           "number":"Numero",
           "email":"Email",
+          "state_id":"Estado",
           "failure":"Falla",
           "notice_date":"Recibido el",
         }

@@ -4,17 +4,25 @@ import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import './information-header.css';
 import {  Link } from 'react-router-dom';
+import getEnviroment from "../helpers/getEnviroment";
 
 
 const InformationHeader = () =>{
-
-    
-  const comeBack = () =>{
-    window.location.assign(`http://localhost:3000/Table/cellphones`);
+  
+  const url = async () =>{
+    const enviroment = await getEnviroment()
+     return  enviroment.url
   }
 
-  const home = () =>{
-    window.location.assign(`http://localhost:3000/Table/cellphones`);
+
+  const comeBack = async () =>{
+    const apiURL = await url();
+    window.location.assign(`${apiURL}Table/report/reparations-pending`);
+  }
+
+  const home = async () =>{
+    const apiURL = await url();
+    window.location.assign(`${apiURL}Table/report/reparations-pending`);
   }
 
     return(
@@ -24,7 +32,7 @@ const InformationHeader = () =>{
                     <Container className="contenedor">
                     <Navbar.Brand className="titulo-nav-informacion" onClick={home} href="#home">ClaroApp</Navbar.Brand>
                     <Nav  >
-                        <li><Link className='nav-li-link-inicio' onClick={comeBack} to={`/Tabla/?txt=${"cellphones"}`}>Volver</Link></li>
+                        <Link className='nav-li-link-inicio' onClick={comeBack} >Volver</Link>
                     </Nav>
                     </Container>
                 </Navbar>

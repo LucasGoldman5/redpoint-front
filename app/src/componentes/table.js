@@ -14,10 +14,10 @@ import HelperBuildRequest from "../helpers/buildRequest";
 import {  useLocation } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import getManualColumns from '../helpers/getManualColumns';
-import { Tooltip } from 'reactstrap';
+import getEnviroment from '../helpers/getEnviroment';
 
 
-const Table = () =>{
+function Table  ({urll}) {
 
     const [dataApi, setDataApi] = useState([]);
     const [dataColumns, setDataColumns] = useState([]);
@@ -42,9 +42,9 @@ const Table = () =>{
     const [chain,setChain] = useState("");
     const [errors, setErrors] = useState([]);
     const [over, setOver] = useState(false);
+    const [changePage,setChangePage] = useState(false);
     const { id } = useParams();
     const { title } = useParams();
-    
     
     
     const location = useLocation();
@@ -60,7 +60,7 @@ const Table = () =>{
         {"report/reparations-pending":"Reparaciones Pendientes"},
         {"report/reparations-success":"Reparaciones Entregadas"},
         {[`report/reparations-by-brand/${id}`] : [`Reparaciones por ${window.location.href.split("=")[1]}`]},
-        {[`report/reparations-by-service/${id}`] : [`Reparaciones por Servicio`]},
+        {[`report/reparations-by-service/${id}`] : [`Reparaciones por ${window.location.href.split("=")[1]}`]},
         {[`report/reparations-by-cellphone/${id}`] : [`Reparaciones por ${window.location.href.split("=")[1]}`]},
         {[`report/reparations-by-customer/${id}`] : [`Reparaciones por ${window.location.href.split("=")[1]}`]}
      
@@ -79,54 +79,57 @@ const Table = () =>{
 
     useEffect(() => {
       if(dataApi.length === 0){
+        url()
         getData();
         admin()
       }
     }, []);
 
+    const url = async () =>{
+
+      console.log(urll);
+      
+        const enviroment = await getEnviroment()
+        const identityApi = [
+          `report/reparations-by-brand/${id}`,
+          `report/reparations-by-customer/${id}`,
+          `report/reparations-by-service/${id}`,
+          `report/reparations-by-cellphone/${id}`,
+          `report/reparations-pending`,
+          `report/reparations-success`
+        ]
+
+        let entity = () =>{
+          console.log(window.location.href);
+          if(window.location.href.includes("-")){
+            return identityApi.find((entity) => {
+              if(window.location.href.includes(entity))
+              return entity
+            })
+          }else{
+            return enviroment.entities.find((entity) => {
+              if(window.location.href.includes(entity))
+              return entity
+            })
+          }; 
+        };
+        return  enviroment.apiURL + entity();
+      
+    }
 
     const getData = async () => {
+
       getManualColumns(window.location.href);
       setDataColumns(JSON.parse(localStorage.getItem('column')));
-      const identityApi = [
-        "brands",
-        "cellphones",
-        "customers",
-        "reparations",
-        "services",
-        "report/reparations-pending",
-        "report/reparations-success",
-        `report/reparations-by-brand/${id}`,
-        `report/reparations-by-customer/${id}`,
-        `report/reparations-by-service/${id}`,
-        `report/reparations-by-cellphone/${id}`
-      ]
 
-      const currentUrl = window.location.href;
-      const findEntity = identityApi.find( (entity) =>{
-        if(currentUrl === `http://localhost:3000/Table/${entity}`){
-          return entity
-        }
-      } );
-
-      if( typeof findEntity != 'string') {
-        return(
-          <h1>no se econtro la pagina</h1>
-        )
-      } else {
-        //se encontro 
-        
-        const config = await HelperBuildRequest('GET', null, 'dataTable');
-       // let url = enviroment.apiURL + enviroment.entities[entity] + '/';
-
-        await fetch(`http://localhost:8000/api/${findEntity}`, config)
+      const config = await HelperBuildRequest('GET', null, 'dataTable');
+      const apiURL = await url()
+        await fetch(apiURL, config)
           .then( res  => res.json())
           .then( datos =>{
             console.log(datos);
             setDataApi(datos);
-          });  
-
-      }
+          }); 
        
     };
 
@@ -224,13 +227,10 @@ const Table = () =>{
         if(data){
   
             try {
-  
-              const identityApi = ["brands","cellphones","customers","reparations","services"]
-              const currentUrl = window.location.href;
-              const findEntity = identityApi.find( (entity) =>  currentUrl.includes(entity));
-  
+
+              const apiURL = await url()
               const config = await HelperBuildRequest("POST", data, "dataTablePost");                    
-              const request = await fetch(`http://localhost:8000/api/${findEntity}`, config);
+              const request = await fetch(apiURL, config);
   
                 if(request.status === 200){
                   const response = await request.json();
@@ -366,7 +366,7 @@ const Table = () =>{
                         setTimeout(()=>{
                           console.log(response.error);
                         },1000);
-                    }else{                      
+                    }else{                                            
                         setDataServicesEdit(response);
                     }  
               };
@@ -399,6 +399,16 @@ const Table = () =>{
                
     const edit =  async (data) =>{
       console.log(data);
+      
+      const urlEdit = async () =>{
+
+        if(window.location.href.includes("report")){
+          const enviroment = await getEnviroment()
+          return enviroment.apiURL + "reparations"
+        }else{
+          return await url()
+        }
+      }
 
       let id = data["id"];
     
@@ -406,13 +416,9 @@ const Table = () =>{
 
           try {
 
-            const identityApi = ["brands","cellphones","customers","reparations","services"]
-            const currentUrl = window.location.href;
-
-            for(let i = 0; i<identityApi.length; i++){
-              if(currentUrl.includes(identityApi[i])){
                 const config =await HelperBuildRequest("PUT", data, "dataTablePut");
-                const request = await fetch(`http://localhost:8000/api/${identityApi[i]}/${id}`, config);
+                const apiURL = await urlEdit()
+                const request = await fetch(`${apiURL}/${id}`, config);
 
                 if(request.status === 200){
                   const response = await request.json();
@@ -429,18 +435,15 @@ const Table = () =>{
                 if(request.status === 422){
                   const response = await request.json();
                     if(response.errors){
-                      alert("Debe completar o corregir el formulario")
                       setErrors(response.errors);
+                      alert("Debe completar o corregir el formulario");
                     };
                 };
 
                 if(request.status === 400){
                 
-                };
-
-              };
-            };
-            
+                }
+             
           }catch(error){
             console.log(error);
             
@@ -456,7 +459,6 @@ const Table = () =>{
       const include = keys.filter( (key) => controlList.includes(key) ).sort( (a,b) => a.localeCompare(b));
       const id = i.id;
       
-
         swal({
           title:"Eliminar",
           text:`¿Seguro que desea eliminar a ${i[include]}`,
@@ -467,13 +469,18 @@ const Table = () =>{
           
             try{
 
-              const identityApi = ["brands","cellphones","customers","reparations","services"]
-              const currentUrl = window.location.href;
-  
-              for(let i = 0; i<identityApi.length; i++){
-                if(currentUrl.includes(identityApi[i])){
+                const urlDelete = async () =>{
+
+                  if(window.location.href.includes("report")){
+                    const enviroment = await getEnviroment()
+                    return enviroment.apiURL + "reparations"
+                  }else{
+                    return await url()
+                  }
+                }             
                   const config = await HelperBuildRequest("DELETE", "dataTable");
-                  const request = await fetch(`http://localhost:8000/api/${identityApi[i]}/${id}`, config);
+                  const apiURL = await urlDelete()
+                  const request = await fetch(`${apiURL}/${id}`, config);
   
                   if(request.status === 200){
                     const response = await request.json();
@@ -485,9 +492,6 @@ const Table = () =>{
                         window.location.reload()
                       };
                   };
-  
-                };
-              };
               
             }catch(error){
               console.log(error)
@@ -499,75 +503,70 @@ const Table = () =>{
     };
 
 
-    const OpenModalView = (element) => {
+    /*const OpenModalView = (element) => {
 
       setItemToSee(element);
       setOpenModalView(true); 
 
-    };
+    };*/
 
     const nextPage = async (url) =>{
-      console.log(url);
+
       const config = await HelperBuildRequest('GET', null, 'dataTable');
 
         if(url){
+
+          setChangePage(true)
           await fetch(`${url}`, config)
           .then( res  => res.json())
           .then( datos =>{
-            console.log(datos);
+            setTimeout(()=>{
+              setChangePage(false);
+             },500)
             setDataApi(datos);
           });  
         }else{
-          alert("Se encuentra en la ultima Pagina")
+          alert("Ya se encuentra en la ultima Pagina")
         };
     };
 
 
     const previousPage = async (url) =>{
-      console.log(url);
       const config = await HelperBuildRequest('GET', null, 'dataTable');
 
         if(url){
+
+          setChangePage(true);
           await fetch(`${url}`, config)
           .then( res  => res.json())
           .then( datos =>{
-            console.log(datos);
+            setTimeout(()=>{
+              setChangePage(false);
+             },500)
+            setDataApi(datos);
             setDataApi(datos);
           });  
         }else{
-          alert("Se encuentra en la primer Pagina")
+          alert("Ya se encuentra en la primer Pagina")
         };
     };
 
     const specifyPage = async (i) =>{
 
-      const identityApi = [
-        "brands",
-        "cellphones",
-        "customers",
-        "reparations",
-        "services",
-        "report/reparations-pending",
-        "report/reparations-success",
-        `report/reparations-by-brand/${id}`,
-        `report/reparations-by-customer/${id}`,
-        `report/reparations-by-service/${id}`,
-        `report/reparations-by-cellphone/${id}`
-      ]
-
-      const currentUrl = window.location.href;
-      const findEntity = identityApi.find( (entity) =>{
-        if(currentUrl === `http://localhost:3000/Table/${entity}`){
-          return entity
-        }
-      } );
+  
       const config = await HelperBuildRequest('GET', null, 'dataTable');
+      const apiURL = await url()
 
         if(i){
-          await fetch(`http://localhost:8000/api/${findEntity}?page=${i}`, config)
+
+          setChangePage(true);
+          await fetch(`${apiURL}?page=${i}`, config)
           .then( res  => res.json())
           .then( datos =>{
-            console.log(datos);
+            setTimeout(()=>{
+              setChangePage(false);
+             },500)
+            setDataApi(datos);
             setDataApi(datos);
           });  
         }else{
@@ -647,193 +646,210 @@ const Table = () =>{
 
           {
             (dataApi.data.length >= 1)
-            ?
-            
+            ?           
             <>
-              <div className='titulo-tabla'>
-                <h1>{tables.map((titulo)=>{
-                  if(window.location.href === `http://localhost:3000/Table/${Object.keys(titulo)}` /*.includes(Object.keys(titulo))*/){
-                    return Object.values(titulo)
-                  }
-                })}
-                </h1>
-              </div>
-              
-              <div className='contenedor-body'>
-
-                <div className='contenedor-barra-botonagregar'>
-                  <AddButton openModal={()=>openModal()}></AddButton>
-                    <div className='contenedor-barra'>
-                      <input type='text' placeholder={`buscar...`} className='barra-busqueda' onChange={(e) => dataFilter(e)}/>
-                    </div>      
+              <div id='rootTable'>
+                <div className='titulo-tabla'>
+                  <h1>{tables.map((titulo)=>{
+                    if(window.location.href === `http://localhost:3000/Table/${Object.keys(titulo)}` /*.includes(Object.keys(titulo))*/){
+                      return Object.values(titulo)
+                    }
+                  })}
+                  </h1>
                 </div>
-                {
-                  (dataApi.columns)
-                  ?
-                  <>
-                    <div className='general-container-table'>
-                      <div className="contenedor-tabla" key={uniqueKeys.contenedorTabla} >
-                        <table className='tabla' key={uniqueKeys.tabla}>
-                          <thead className='thead' key={uniqueKeys.thead}>
-                            <tr className='tr-column' key={uniqueKeys.trColumn}>
-                              {Object.values(dataColumns).map((column,index)=>(
-                                <th key={`${uniqueKeys.thColumn}-${index}`} className='th-columnas'>{column}</th>
-                              ))}
-                              <th className='ultima-columna' key={uniqueKeys.thColumnActions} >Eliminar</th>
-                            </tr>
-                          </thead>
-                          <tbody className='tbody' key={uniqueKeys.tbody}>
-                            {
-                            
-                            (dataFilter().length > 0)
-                            ?
-                            dataFilter().map((element,index) =>
-                                
-                                  <tr onClick={() => OpenModalEdit(element)} className='tr-data' key={`${uniqueKeys.trBody}-${index}`}>
-                                  {Object.keys(dataColumns).map((column)=>{
-                                    for(let i = 0 ; i < Object.keys(element).length ; i++){
-                                      if(Object.keys(element)[i] === column){
-                                        let item = Object.values(element)[i];
-                                        if(column === "url"){
-                                          return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={item} >{item}</a></td>
-                                        }
-                                        if(column === "cost"){
-                                          return <td className='td-cost' key={`${uniqueKeys.tbody}-${i}`}>${item}</td>
-                                        }
-                                        if(column === "phone_number"){
-                                          return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{item} / {element.phhone_number_2}</td>
-                                        }
-                                        if(column === "service"){
-                                          return <td className='td-service' onMouseEnter={()=>displayDivService()} key={`${uniqueKeys.tbody}-${i}`}>
-                                            <p>{item}</p>
-                                            <span className="tooltiptext-service">{item}</span>                                            
-                                             </td>
-                                        }
-                                        if(column === "failure"){
-                                          return <td className='td-service' key={`${uniqueKeys.tbody}-${i}`}>
-                                            <p>{item}</p>
-                                            <span className="tooltiptext-failure">{item}</span> 
-                                          </td>
-                                        }
-                                        if(column === "amount"){
-                                          return <td className='td-amount' key={`${uniqueKeys.tbody}-${i}`}>${item}</td>
-                                        }
-                                        if(column === "notice_date"){
-                                          if(Object.values(element)[i] === null){
-                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
-                                          }else{
-                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
-                                          }
-                                        }
-                                        if(column === "delivery_date"){
-                                          if(Object.values(element)[i] === null){
-                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
-                                          }else{
-                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
-                                          }
-                                        }
-                                        if(column === "service_start_date"){
-                                          if(Object.values(element)[i] === null){
-                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
-                                          }else{
-                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
-                                          }
-                                        }
-                                        if(column === "service_end_date"){
-                                          if(Object.values(element)[i] === null){
-                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
-                                          }else{
-                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
-                                          }
-                                        }
-                                        if(column === "email"){
-                                          return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={""} >{item}</a></td>
-                                        }
-                                        if(column === "has_security"){
-                                          if(Object.values(element)[i] === 1){
-                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>Si</p></td>
-                                          }else{
-                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>No</p></td>
-                                          }
-                                        }
-                                          return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>{item}</p></td>
-                                      }
-                                    }
-                                  })}
-                                      
-                                  <td className='ultima-celda' key={uniqueKeys.tdBody}>
-                                    {
-                                      
-                                      <div className='botones-acciones' >                                        
-                                        <button className='boton-eliminar' onClick={() => eliminate(element)}><FontAwesomeIcon icon={faTrashAlt} /></button> 
-                                      </div>
-                                    }
-                                  </td>
-                                </tr>
-                            )
-                            :
-                            <tr className='tr-coincidence' key={uniqueKeys.trBodyNd} ><td className='td-coincidence'key={uniqueKeys.tdBodyNd}>No hay coincidencias</td></tr>
-                            }
-                          </tbody>
-                        </table>
-                      </div>
-                      <Paginator
-                      dataApi={dataApi}
-                      nextPage={nextPage}
-                      previousPage={previousPage}
-                      specifyPage={specifyPage}
-                      ></Paginator>
-                    </div>
-                  </>
-                  :
-                  ""
-                }
                 
+                <div className='contenedor-body'>
+
+                  <div className={window.location.href.includes("report") ? 'contenedor-barra-botonagregar-report' : 'contenedor-barra-botonagregar'}>
+                    {
+                      (window.location.href.includes("report"))
+                      ?
+                      ""
+                      :
+                      <AddButton openModal={()=>openModal()}></AddButton>
+                    }
+                      <div className='contenedor-barra'>
+                        <input type='text' placeholder={`buscar...`} className='barra-busqueda' onChange={(e) => dataFilter(e)}/>
+                      </div>      
+                  </div>
+                  {
+                    (dataApi.columns)
+                    ?
+                    <>
+                      <div className='general-container-table'>
+                        <div className="contenedor-tabla" key={uniqueKeys.contenedorTabla} >
+                          <table className='tabla' key={uniqueKeys.tabla}>
+                            <thead className='thead' key={uniqueKeys.thead}>
+                              <tr className='tr-column' key={uniqueKeys.trColumn}>
+                                {Object.values(dataColumns).map((column,index)=>(
+                                  <th key={`${uniqueKeys.thColumn}-${index}`} className='th-columnas'>{column}</th>
+                                ))}
+                                <th className='ultima-columna' key={uniqueKeys.thColumnActions} >Eliminar</th>
+                              </tr>
+                            </thead>
+                            <tbody className='tbody' key={uniqueKeys.tbody}>
+                              {
+                              
+                              (dataFilter().length > 0)
+                              ?
+                              dataFilter().map((element,index) =>
+                                  
+                                    <tr onClick={() => OpenModalEdit(element)} className='tr-data' key={`${uniqueKeys.trBody}-${index}`}>
+                                    {Object.keys(dataColumns).map((column)=>{
+                                      for(let i = 0 ; i < Object.keys(element).length ; i++){
+                                        if(Object.keys(element)[i] === column){
+                                          let item = Object.values(element)[i];
+                                          if(column === "url"){
+                                            return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={item} >{item}</a></td>
+                                          }
+                                          if(column === "cost"){
+                                            return <td className='td-cost' key={`${uniqueKeys.tbody}-${i}`}>${item}</td>
+                                          }
+                                          if(column === "phone_number"){
+                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{item} / {element.phhone_number_2}</td>
+                                          }
+                                          if(column === "service"){
+                                            return <td className='td-service' onMouseEnter={()=>displayDivService()} key={`${uniqueKeys.tbody}-${i}`}>
+                                              <p>{item.service}</p>
+                                              <span className="tooltiptext-service">{item.service}</span>                                            
+                                              </td>
+                                          }
+                                          if(column === "state_id"){
+                                            return <td className='td'  key={`${uniqueKeys.tbody}-${i}`}><p>{item.description}</p></td>
+                                          }
+                                          if(column === "cellphone"){
+                                            return <td className='td'  key={`${uniqueKeys.tbody}-${i}`}><p>{item.model}</p></td>
+                                          }
+                                          if(column === "customer"){
+                                            return <td className='td'  key={`${uniqueKeys.tbody}-${i}`}><p>{item.customer}</p></td>
+                                          }
+                                          if(column === "failure"){
+                                            return <td className='td-service' key={`${uniqueKeys.tbody}-${i}`}>
+                                              <p>{item}</p>
+                                              <span className="tooltiptext-failure">{item}</span> 
+                                            </td>
+                                          }
+                                          if(column === "amount"){
+                                            return <td className='td-amount' key={`${uniqueKeys.tbody}-${i}`}>${item}</td>
+                                          }
+                                          if(column === "notice_date"){
+                                            if(Object.values(element)[i] === null){
+                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
+                                            }else{
+                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
+                                            }
+                                          }
+                                          if(column === "delivery_date"){
+                                            if(Object.values(element)[i] === null){
+                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
+                                            }else{
+                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
+                                            }
+                                          }
+                                          if(column === "service_start_date"){
+                                            if(Object.values(element)[i] === null){
+                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
+                                            }else{
+                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
+                                            }
+                                          }
+                                          if(column === "service_end_date"){
+                                            if(Object.values(element)[i] === null){
+                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
+                                            }else{
+                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
+                                            }
+                                          }
+                                          if(column === "email"){
+                                            return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={""} >{item}</a></td>
+                                          }
+                                          if(column === "has_security"){
+                                            if(Object.values(element)[i] === 1){
+                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>Si</p></td>
+                                            }else{
+                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>No</p></td>
+                                            }
+                                          }
+                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>{item}</p></td>
+                                        }
+                                      }
+                                    })}
+                                        
+                                    <td className='ultima-celda' key={uniqueKeys.tdBody}>
+                                      {
+                                        
+                                        <div className='botones-acciones' >                                        
+                                          <button className='boton-eliminar' onClick={() => eliminate(element)}><FontAwesomeIcon icon={faTrashAlt} /></button> 
+                                        </div>
+                                      }
+                                    </td>
+                                  </tr>
+                              )
+                              :
+                              <tr className='tr-coincidence' key={uniqueKeys.trBodyNd} ><td className='td-coincidence'key={uniqueKeys.tdBodyNd}>No hay coincidencias</td></tr>
+                              }
+                            </tbody>
+                          </table>
+                        </div>
+                        <Paginator
+                        dataApi={dataApi}
+                        nextPage={nextPage}
+                        previousPage={previousPage}
+                        specifyPage={specifyPage}
+                        changePage={changePage}
+                        ></Paginator>
+                      </div>
+                    </>
+                    :
+                    ""
+                  }
                   
-                <ModalEdit
-                  openModalEdit={openModalEdit}
-                  itemToEdit={itemToEdit}
-                  onsubmit={edit}
-                  closeForm={closeForm}
-                  dataBrands={dataBrands}
-                  dataCustomersEdit={dataCustomersEdit}
-                  dataCellphonesEdit={dataCellphonesEdit}
-                  dataServicesEdit={dataServicesEdit}
-                  dataStatesEdit={dataStatesEdit}
-                  errors={errors}>
-                </ModalEdit>
+                    
+                  <ModalEdit
+                    openModalEdit={openModalEdit}
+                    itemToEdit={itemToEdit}
+                    onsubmit={edit}
+                    closeForm={closeForm}
+                    dataBrands={dataBrands}
+                    dataCustomersEdit={dataCustomersEdit}
+                    dataCellphonesEdit={dataCellphonesEdit}
+                    dataServicesEdit={dataServicesEdit}
+                    dataStatesEdit={dataStatesEdit}
+                    errors={errors}>
+                  </ModalEdit>
 
-                <ModalAdd
-                  create={create}
-                  openModalAdd={openModalAdd}
-                  openModalAddBrand={openModalAddBrand}
-                  openModalAddCustomer={openModalAddCustomer}
-                  openModalAddCellphone={openModalAddCellphone}
-                  openModalAddService={openModalAddService}
-                  changeModal={changeModal}
-                  dataApi={dataApi}
-                  closeForm={closeForm}
-                  dataBrands={dataBrands}
-                  dataCustomers={dataCustomers}
-                  dataCellPhones={dataCellphones}
-                  dataServices={dataServices}
-                  errors={errors}>
-                </ModalAdd>
+                  <ModalAdd
+                    create={create}
+                    openModalAdd={openModalAdd}
+                    openModalAddBrand={openModalAddBrand}
+                    openModalAddCustomer={openModalAddCustomer}
+                    openModalAddCellphone={openModalAddCellphone}
+                    openModalAddService={openModalAddService}
+                    changeModal={changeModal}
+                    dataApi={dataApi}
+                    closeForm={closeForm}
+                    dataBrands={dataBrands}
+                    dataCustomers={dataCustomers}
+                    dataCellPhones={dataCellphones}
+                    dataServices={dataServices}
+                    errors={errors}>
+                  </ModalAdd>
 
-                <ModalView
-                  openModalView={openModalView}
-                  closeForm={closeForm}
-                  itemToSee={itemToSee}>
-                </ModalView>
+                  <ModalView
+                    openModalView={openModalView}
+                    closeForm={closeForm}
+                    itemToSee={itemToSee}>
+                  </ModalView>
 
+                </div>
               </div>
-              </>
+            </>
               :
-              <>
+            <>
               <div>
                 <h1>No hay Resultados</h1>
               </div>
-              </>
+            </>
           }
         </>
 
