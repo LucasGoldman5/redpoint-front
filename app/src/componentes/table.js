@@ -15,26 +15,16 @@ import {  useLocation } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import getManualColumns from '../helpers/getManualColumns';
 import getEnviroment from '../helpers/getEnviroment';
+import { PulseLoader } from "react-spinners";
 
 
-function Table  ({urll}) {
+function Table  ({urlTable}) {
+
 
     const [dataApi, setDataApi] = useState([]);
     const [dataColumns, setDataColumns] = useState([]);
-    const [dataStatesEdit, setDataStatesEdit] = useState([]);
-    const [dataBrands, setDataBrands] = useState([]);
-    const [dataCustomers, setDataCustomers] = useState([]);
-    const [dataCellphones, setDataCellPhones] = useState([]);
-    const [dataServices, setDataServices] = useState([]);
-    const [dataCustomersEdit, setDataCustomersEdit] = useState([]);
-    const [dataCellphonesEdit, setDataCellPhonesEdit] = useState([]);
-    const [dataServicesEdit, setDataServicesEdit] = useState([])
     const [superAdmin, setSuperAdmin] = useState(null);
-    const [openModalAdd, setOpenModalAdd] = useState(false);
-    const [openModalAddBrand, setOpenModalAddBrand] = useState(false);
-    const [openModalAddCustomer, setOpenModalAddCustomer] = useState(false);
-    const [openModalAddCellphone, setOpenModalAddCellphone] = useState(false);
-    const [openModalAddService, setOpenModalAddService] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
     const [openModalEdit, setOpenModalEdit] = useState(false);
     const [openModalView, setOpenModalView] = useState(false);
     const [itemToEdit, setItemToEdit] = useState(null);
@@ -43,6 +33,8 @@ function Table  ({urll}) {
     const [errors, setErrors] = useState([]);
     const [over, setOver] = useState(false);
     const [changePage,setChangePage] = useState(false);
+    const [spinnerLoadTable, setSpinnerLoadTable] = useState(false);
+    const [spinnerLoadPage, setSpinnerLoadPage] = useState(false);
     const { id } = useParams();
     const { title } = useParams();
     
@@ -58,12 +50,7 @@ function Table  ({urll}) {
         {"customers":"Clientes"},
         {"reparations":"Reparaciones"},
         {"report/reparations-pending":"Reparaciones Pendientes"},
-        {"report/reparations-success":"Reparaciones Entregadas"},
-        {[`report/reparations-by-brand/${id}`] : [`Reparaciones por ${window.location.href.split("=")[1]}`]},
-        {[`report/reparations-by-service/${id}`] : [`Reparaciones por ${window.location.href.split("=")[1]}`]},
-        {[`report/reparations-by-cellphone/${id}`] : [`Reparaciones por ${window.location.href.split("=")[1]}`]},
-        {[`report/reparations-by-customer/${id}`] : [`Reparaciones por ${window.location.href.split("=")[1]}`]}
-     
+        {"report/reparations-success":"Reparaciones Entregadas"}    
     ];
 
     const admin = () =>{
@@ -78,46 +65,22 @@ function Table  ({urll}) {
     
 
     useEffect(() => {
-      if(dataApi.length === 0){
-        url()
+        url();
         getData();
-        admin()
-      }
-    }, []);
+        admin();
+    }, [urlTable]);
 
     const url = async () =>{
 
-      console.log(urll);
-      
         const enviroment = await getEnviroment()
-        const identityApi = [
-          `report/reparations-by-brand/${id}`,
-          `report/reparations-by-customer/${id}`,
-          `report/reparations-by-service/${id}`,
-          `report/reparations-by-cellphone/${id}`,
-          `report/reparations-pending`,
-          `report/reparations-success`
-        ]
-
-        let entity = () =>{
-          console.log(window.location.href);
-          if(window.location.href.includes("-")){
-            return identityApi.find((entity) => {
-              if(window.location.href.includes(entity))
-              return entity
-            })
-          }else{
-            return enviroment.entities.find((entity) => {
-              if(window.location.href.includes(entity))
-              return entity
-            })
-          }; 
-        };
-        return  enviroment.apiURL + entity();
+        return  enviroment.apiURL + urlTable;
       
     }
 
     const getData = async () => {
+
+      setSpinnerLoadTable(true);
+      setSpinnerLoadPage(true);
 
       getManualColumns(window.location.href);
       setDataColumns(JSON.parse(localStorage.getItem('column')));
@@ -127,99 +90,22 @@ function Table  ({urll}) {
         await fetch(apiURL, config)
           .then( res  => res.json())
           .then( datos =>{
-            console.log(datos);
             setDataApi(datos);
-          }); 
-       
+            console.log(datos);
+          });
+
+          setTimeout(()=>{
+            setSpinnerLoadPage(false);
+          },200) 
+
+          setTimeout(()=>{
+            setSpinnerLoadTable(false);
+          },1000)   
     };
 
-
-    const openModal =  async () =>{
-      setOpenModalAdd(true)
-      
-        try{
-                    
-          const config = await HelperBuildRequest("GET",null, "dataTable");
-          const request = await fetch(`http://localhost:8000/api/select-box/brand`, config);
-
-            if(request.status === 200){
-                const response = await request.json();
-                  if(response.error){
-                      setTimeout(()=>{
-                        console.log(response.error);
-                      },1000);
-                  }else{                    
-                      setDataBrands(response);
-                  }  
-            };
-
-        }catch(error){
-          console.log(error)
-        }
-        
-        try{
-                    
-          const config = await HelperBuildRequest("GET",null, "dataTable");
-          const request = await fetch(`http://localhost:8000/api/select-box/customer`, config);
-
-            if(request.status === 200){
-                const response = await request.json();
-                  if(response.error){
-                      setTimeout(()=>{
-                        console.log(response.error);
-                      },1000);
-                  }else{                    
-                    
-                      setDataCustomers(response.data);
-                  }  
-            };
-
-        }catch(error){
-          console.log(error)
-        }
-        
-        try{
-                    
-          const config = await HelperBuildRequest("GET",null, "dataTable");
-          const request = await fetch(`http://localhost:8000/api/select-box/cellphone`, config);
-
-            if(request.status === 200){
-                const response = await request.json();
-                  if(response.error){
-                      setTimeout(()=>{
-                        console.log(response.error);
-                      },1000);
-                  }else{                      
-                      setDataCellPhones(response);
-                  }  
-            };
-
-        }catch(error){
-          console.log(error)
-        }
-        
-        try{
-                    
-          const config = await HelperBuildRequest("GET",null, "dataTable");
-          const request = await fetch(`http://localhost:8000/api/select-box/service`, config);
-
-            if(request.status === 200){
-                const response = await request.json();
-                  if(response.error){
-                      setTimeout(()=>{
-                        console.log(response.error);
-                      },1000);
-                  }else{                      
-                      setDataServices(response);
-                  }  
-            };
-
-        }catch(error){
-          console.log(error)
-        }
-
-    };
-
+    const openModalAdd = () =>{
+      setOpenModal(true);
+    }
 
     const create= async (data) =>{
     
@@ -238,8 +124,10 @@ function Table  ({urll}) {
                       setTimeout(()=>{
                         console.log(response.error);
                       },1000);
-                    }else{                      
-                      window.location.reload();
+                    }else{               
+                      setOpenModal(false);
+                      setErrors([]);    
+                      getData();
                     };  
                 };
   
@@ -254,37 +142,16 @@ function Table  ({urll}) {
             }catch(error){
                 console.log(error);
             };    
-        };  
+        }; 
     };
-
-
-    const changeModal = (fact) =>{
-      if(fact === "brand"){
-        setOpenModalAdd(false);
-        setOpenModalAddBrand(true);
-      }else if(fact === "customer"){
-        setOpenModalAdd(false);
-        setOpenModalAddCustomer(true)
-      }else if(fact === "cellphone"){
-        setOpenModalAdd(false);
-        setOpenModalAddCellphone(true);
-      }else if(fact === "service"){
-        setOpenModalAdd(false);
-        setOpenModalAddService(true);
-      }
-    }
-
     
     const closeForm = () =>{
-
-      setOpenModalAdd(false); 
-      setOpenModalAddBrand(false);
+       
+      setOpenModal(false);
+      setErrors([]);
       setOpenModalEdit(false);
       setOpenModalView(false);
       setItemToEdit(null);
-      setOpenModalAddCellphone(false);
-      setOpenModalAddCustomer(false);
-      setOpenModalAddService(false);
 
     };
 
@@ -294,106 +161,6 @@ function Table  ({urll}) {
         setItemToEdit(element);
         setOpenModalEdit(true);
             
-          try{
-                
-            const config = await HelperBuildRequest("GET",null, "dataTable");
-            const request = await fetch(`http://localhost:8000/api/select-box/brand`, config);
-        
-              if(request.status === 200){
-                const response = await request.json();
-
-                  if(response.error){
-                    setTimeout(()=>{
-                        console.log(response.error);
-                    },1000);
-                  }else{                      
-                    setDataBrands(response);
-                  };  
-              };
-
-          }catch(error){
-              console.log(error);
-           }
-           
-           try{
-                    
-            const config = await HelperBuildRequest("GET",null, "dataTable");
-            const request = await fetch(`http://localhost:8000/api/select-box/customer`, config);
-  
-              if(request.status === 200){
-                  const response = await request.json();
-                    if(response.error){
-                        setTimeout(()=>{
-                          console.log(response.error);
-                        },1000);
-                    }else{                      
-                        setDataCustomersEdit(response.data);
-                    }  
-              };
-  
-          }catch(error){
-            console.log(error)
-          }
-          
-          try{
-                      
-            const config =await HelperBuildRequest("GET",null, "dataTable");
-            const request = await fetch(`http://localhost:8000/api/select-box/cellphone`, config);
-  
-              if(request.status === 200){
-                  const response = await request.json();
-                    if(response.error){
-                        setTimeout(()=>{
-                          console.log(response.error);
-                        },1000);
-                    }else{                      
-                        setDataCellPhonesEdit(response);
-                    }  
-              };
-  
-          }catch(error){
-            console.log(error)
-          }
-          
-          try{
-                      
-            const config =await HelperBuildRequest("GET",null, "dataTable");
-            const request = await fetch(`http://localhost:8000/api/select-box/service`, config);
-  
-              if(request.status === 200){
-                  const response = await request.json();
-                    if(response.error){
-                        setTimeout(()=>{
-                          console.log(response.error);
-                        },1000);
-                    }else{                                            
-                        setDataServicesEdit(response);
-                    }  
-              };
-  
-          }catch(error){
-            console.log(error)
-          }
-          
-          try{
-                      
-            const config =await HelperBuildRequest("GET",null, "dataTable");
-            const request = await fetch(`http://localhost:8000/api/select-box/status`, config);
-  
-              if(request.status === 200){
-                  const response = await request.json();
-                    if(response.error){
-                        setTimeout(()=>{
-                          console.log(response.error);
-                        },1000);
-                    }else{                      
-                        setDataStatesEdit(response);
-                    }  
-              };
-  
-          }catch(error){
-            console.log(error)
-          } 
     };   
   
                
@@ -428,7 +195,8 @@ function Table  ({urll}) {
                       },1000);
                     }else{                      
                       setOpenModalEdit(false);
-                      window.location.reload();
+                      setErrors([]);
+                      getData();
                     }  
                 }
 
@@ -453,7 +221,10 @@ function Table  ({urll}) {
 
 
     const eliminate= async (i)=>{
-
+      
+      setTimeout(()=>{
+        setOpenModalEdit(false);
+      })
       const controlList = ['title', 'model', 'name', 'customer'];
       const keys = Object.keys(i);
       const include = keys.filter( (key) => controlList.includes(key) ).sort( (a,b) => a.localeCompare(b));
@@ -496,8 +267,6 @@ function Table  ({urll}) {
             }catch(error){
               console.log(error)
             };
-          }else{
-            setOpenModalEdit(false);
           }
         });
     };
@@ -635,26 +404,47 @@ function Table  ({urll}) {
     };
 
     const displayDivService = () =>{
-      
-        setOver(!over)
-      
+        setOver(!over) 
     }
 
       return(  
 
         <>
-
+      
           {
             (dataApi.data.length >= 1)
-            ?           
+            ?
+            (spinnerLoadPage === true)
+            ?
+            <div className='div-load-page'><PulseLoader color="#d41c1c" size={20}></PulseLoader></div>
+            :    
             <>
               <div id='rootTable'>
                 <div className='titulo-tabla'>
-                  <h1>{tables.map((titulo)=>{
-                    if(window.location.href === `http://localhost:3000/Table/${Object.keys(titulo)}` /*.includes(Object.keys(titulo))*/){
-                      return Object.values(titulo)
+                  <h1>
+                    {
+                    (window.location.href.includes("by-brand"))
+                    ?
+                    `Reparaciones por ${dataApi.data[0].cellphone.brand}`
+                    :
+                    (window.location.href.includes("by-customer"))
+                    ?
+                    `Reparaciones por ${dataApi.data[0].customer.customer}`
+                    :
+                    (window.location.href.includes("by-cellphone"))
+                    ?
+                    `Reparaciones por ${dataApi.data[0].cellphone.model}`
+                    :
+                    (window.location.href.includes("by-service"))
+                    ?
+                    `Reparaciones por ${dataApi.data[0].service.service}`
+                    :
+                    tables.map((titulo)=>{
+                      if(window.location.href === `http://localhost:3000/Table/${Object.keys(titulo)}`){
+                        return Object.values(titulo)
+                      }
+                    })
                     }
-                  })}
                   </h1>
                 </div>
                 
@@ -666,7 +456,7 @@ function Table  ({urll}) {
                       ?
                       ""
                       :
-                      <AddButton openModal={()=>openModal()}></AddButton>
+                      <AddButton onClick={openModalAdd}></AddButton>
                     }
                       <div className='contenedor-barra'>
                         <input type='text' placeholder={`buscar...`} className='barra-busqueda' onChange={(e) => dataFilter(e)}/>
@@ -690,8 +480,8 @@ function Table  ({urll}) {
                             <tbody className='tbody' key={uniqueKeys.tbody}>
                               {
                               
-                              (dataFilter().length > 0)
-                              ?
+                              (dataFilter().length > 0 && spinnerLoadTable === false)
+                              ?  
                               dataFilter().map((element,index) =>
                                   
                                     <tr onClick={() => OpenModalEdit(element)} className='tr-data' key={`${uniqueKeys.trBody}-${index}`}>
@@ -786,6 +576,10 @@ function Table  ({urll}) {
                                   </tr>
                               )
                               :
+                              (spinnerLoadTable === true)
+                              ?
+                              <tr className='tr-coincidence' key={uniqueKeys.trBodyNd}><td className='td-coincidence'key={uniqueKeys.tdBodyNd}><PulseLoader color="#d41c1c" size={20}></PulseLoader></td></tr>
+                              :
                               <tr className='tr-coincidence' key={uniqueKeys.trBodyNd} ><td className='td-coincidence'key={uniqueKeys.tdBodyNd}>No hay coincidencias</td></tr>
                               }
                             </tbody>
@@ -810,28 +604,14 @@ function Table  ({urll}) {
                     itemToEdit={itemToEdit}
                     onsubmit={edit}
                     closeForm={closeForm}
-                    dataBrands={dataBrands}
-                    dataCustomersEdit={dataCustomersEdit}
-                    dataCellphonesEdit={dataCellphonesEdit}
-                    dataServicesEdit={dataServicesEdit}
-                    dataStatesEdit={dataStatesEdit}
                     errors={errors}>
                   </ModalEdit>
 
                   <ModalAdd
                     create={create}
-                    openModalAdd={openModalAdd}
-                    openModalAddBrand={openModalAddBrand}
-                    openModalAddCustomer={openModalAddCustomer}
-                    openModalAddCellphone={openModalAddCellphone}
-                    openModalAddService={openModalAddService}
-                    changeModal={changeModal}
-                    dataApi={dataApi}
                     closeForm={closeForm}
-                    dataBrands={dataBrands}
-                    dataCustomers={dataCustomers}
-                    dataCellPhones={dataCellphones}
-                    dataServices={dataServices}
+                    dataApi={dataApi}
+                    openModalAdd={openModal}
                     errors={errors}>
                   </ModalAdd>
 
@@ -845,9 +625,13 @@ function Table  ({urll}) {
               </div>
             </>
               :
+              (spinnerLoadPage === true)
+              ?
+              <div className='div-load-page'><PulseLoader color="#d41c1c" size={20}></PulseLoader></div>
+              :
             <>
               <div>
-                <h1>No hay Resultados</h1>
+                <h1 className='h1-no-results'>No hay Resultados</h1>
               </div>
             </>
           }

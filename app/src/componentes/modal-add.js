@@ -7,20 +7,23 @@ import HelperBuildRequest from "../helpers/buildRequest";
 import getEnviroment from "../helpers/getEnviroment";
 
 
-const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAddCustomer,openModalAddCellphone,openModalAddService,dataApi,closeForm,dataBrands,dataCustomers,dataCellPhones,dataServices,errors}) =>{
+const ModalAdd =({create,dataApi,errors,openModalAdd,closeForm}) =>{
   
   const [chainBrand, setChainBrand] = useState ("");
   const [errorsApi, setErrorsApi] = useState([]);
   const [checkbox, setCheckBox] = useState(false);
-  const location = window.location.href;
-  const allDate = new Date();
-  const Day = allDate.getDay();
-  const month = allDate.getMonth();
-  const year = allDate.getFullYear();
-  const hours = allDate.getHours();
-  const minutes = allDate.getMinutes();
-  const date= `${Day}/${month}/${year}${hours}:${minutes}`;
+  const [dataBrands, setDataBrands] = useState([]);
+  const [dataCustomers, setDataCustomers] = useState([]);
+  const [dataCellPhones, setDataCellPhones] = useState([]);
+  const [dataServices, setDataServices] = useState([]);
+  const [openModalAddBrand, setOpenModalAddBrand] = useState(false);
+  const [openModalAddCustomer, setOpenModalAddCustomer] = useState(false);
+  const [openModalAddCellphone, setOpenModalAddCellphone] = useState(false);
+  const [openModalAddService, setOpenModalAddService] = useState(false);
+  const [childrenData, setChildrenData] = useState([]);
+  const [currentModal, setCurrentModal] = useState("");
   const [apiURLLocal, setApiURLLocal] = useState('');
+  const location = window.location.href;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,7 +34,118 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
     fetchData();
   }, []);
 
+  useEffect(() =>{
+    getDataModal()
+  },[])
 
+  /*console.log(current, childrenData);*/
+
+  const getDataModal =  async () =>{
+   
+      try{
+                  
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`http://localhost:8000/api/select-box/brand`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                    
+                    setDataBrands(response);
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+      
+      try{
+                  
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`http://localhost:8000/api/select-box/customer`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                    
+                    setDataCustomers(response);
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+      
+      try{
+                  
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`http://localhost:8000/api/select-box/cellphone`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                      
+                    setDataCellPhones(response);
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+      
+      try{
+                  
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`http://localhost:8000/api/select-box/service`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                      
+                    setDataServices(response);
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+
+  };
+
+  const changeModal = (fact) =>{
+    setCurrentModal(fact);
+
+    if(fact === "brand"){
+      setOpenModalAddBrand(true);
+    }else if(fact === "customer"){  
+      setOpenModalAddCustomer(true)
+    }else if(fact === "cellphone"){
+      setOpenModalAddCellphone(true);
+    }else if(fact === "service"){
+      setOpenModalAddService(true);
+    }
+  };
+
+  const closeFormAdd = () =>{
+
+    setOpenModalAddBrand(false);
+    setOpenModalAddCellphone(false);
+    setOpenModalAddCustomer(false);
+    setOpenModalAddService(false);
+
+  };
 
   const checkBoxTrue = () =>{
      setCheckBox(!checkbox);
@@ -64,7 +178,13 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                     console.log(response.error);
                   },1000);
               }else{                      
-                  window.location.reload()
+                if(dataBrands.length > 0){
+                  setDataBrands(dataBrands.concat(response.data))
+                  setOpenModalAddBrand(false);
+                }else{
+                  setDataBrands(response.data)
+                  setOpenModalAddBrand(false);
+                }
               };
           };
 
@@ -86,6 +206,8 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
 
   const addCustomerInReparation = async (data) => {
 
+    console.log(data);
+
     if(data){
 
       try{
@@ -101,7 +223,13 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                     console.log(response.error);
                   },1000);
               }else{                      
-                  window.location.reload()
+                  if(dataCustomers.length > 0){
+                    setDataCustomers(dataCustomers.concat(response.data))
+                    setOpenModalAddCustomer(false);
+                  }else{
+                    setDataCustomers(response.data)
+                    setOpenModalAddCustomer(false);
+                  }
               };
           };
 
@@ -137,7 +265,13 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                     console.log(response.error);
                   },1000);
               }else{                      
-                  window.location.reload()
+                if(dataServices.length > 0){
+                  setDataServices(dataServices.concat(response.data))
+                  setOpenModalAddService(false);
+                }else{
+                  setDataServices(response.data)
+                  setOpenModalAddService(false);
+                }
               };
           };
 
@@ -172,7 +306,13 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                     console.log(response.error);
                   },1000);
               }else{                      
-                  window.location.reload()
+                if(dataCellPhones.length > 0){
+                  setDataCellPhones(dataCellPhones.concat(response.data))
+                  setOpenModalAddCellphone(false);
+                }else{
+                  setDataCellPhones(response.data)
+                  setOpenModalAddCellphone(false);
+                }
               };
           };
 
@@ -190,7 +330,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
     };
   };
 
-  const { register, handleSubmit} = useForm ();
+  const { register, handleSubmit, getValues} = useForm ();
 
   if(location === `${apiURLLocal}Table/cellphones`){
 
@@ -233,7 +373,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                 </select>
                 <h1 className="h1-add" onClick={()=>changeModal("brand")}>+</h1>
                 </div>
-                  {errorsApi.brand_id? <p className="p-errores">Haga click en una marca</p> : ""}
+                  {errors.brand_id? <p className="p-errores">Haga click en una marca</p> : ""}
                   <br/>
                   <div className="contenedor-boton-modal-dentro-reparations">
                   <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
@@ -267,8 +407,8 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                   })} />
                 <br/>
                 <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
+                  <button type="button" className="btn btn-success" onClick={()=>onSubmitBrand(getValues())} >Crear</button>
+                  <h1 className="btn btn-cancelar" onClick={closeFormAdd}>Cancelar</h1>
                 </div>
               </form>
             </ModalBody>
@@ -328,7 +468,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
             <label htmlFor="id">Numero de Servicio</label>
             <input className="form-control" type="number" name="id" id="id" readOnly value={dataApi.data.length + 1} ></input>
             <br />
-            <label htmlFor="marca">Descripcion</label>
+            <label htmlFor="marca">Nombre del Servicio</label>
             <input className="form-control" type="text" name="marca"  {...register('description',{
               value:null
               })} />
@@ -415,13 +555,12 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                   <label htmlFor="marca">Cliente</label>
                   <div className="div-container-select-button">
                     <select className="form-select" name="select"  defaultValue={null}{...register('customer_id',{
-                        value:null
-                        })}>
-                          <option  value={null}>Seleccione un cliente..</option>
-                        {dataCustomers.map((customer)=>{
-                            return <option className="option-modal" key={customer.id} value={customer.id} >{customer.name}</option>
-                        })}
-                    </select>
+                          })}>
+                            <option  value={null}>Seleccione un Cliente..</option>
+                          {dataCustomers.map((customer)=>{
+                              return <option className="option-modal" key={customer.id} value={customer.id} >{customer.name}</option>
+                          })}
+                      </select>
                     <h1 className="h1-add" onClick={()=>changeModal("customer")}>+</h1>
                   </div> 
                   {errors.customer_id ? <p className="p-errores">Debe seleccionar un Cliente</p> : ""}
@@ -650,7 +789,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
               </div>
             </ModalHeader>
             <ModalBody className="contenedor-modal-body">
-              <form className="form-group" onSubmit={handleSubmit(addCustomerInReparation)}>
+              <form className="form-group" onSubmit={handleSubmit(addCustomerInReparation)} {...register('form')}>
                 <label htmlFor="marca">Nombre</label>
                 <input className="form-control" type="text" name="name"  {...register('name',{
                   value:null
@@ -676,8 +815,8 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                 <br />
                 <hr />
                 <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
+                  <button type="button" className="btn btn-success" onClick={()=>addCustomerInReparation(getValues())} >Crear</button>
+                  <h1 className="btn btn-cancelar" onClick={closeFormAdd}>Cancelar</h1>
                 </div>
               </form>
             </ModalBody>
@@ -691,8 +830,8 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
             </ModalHeader>
             <ModalBody className="contenedor-modal-body">
               <form className="form-group" onSubmit={handleSubmit(addCellphoneInReparation)}>
-                <label htmlFor="id">Numero de Marca</label>
-                <input className="form-control" type="number" name="id" readOnly value={`${dataApi.data.length+1}`}  />
+                <label htmlFor="id">Numero de Celular</label>
+                <input className="form-control" type="number" name="id" readOnly value={`${dataCellPhones.length+1}`}  />
                 <br/>
                 <label htmlFor="modelo">Modelo</label>
                 <input className="form-control" type="text" name="modelo" {...register('model',{
@@ -719,8 +858,8 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                   {errorsApi.brand_id? <p className="p-errores">Haga click en una marca</p> : ""}
                 <br/>  
                 <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
+                  <button type="button" className="btn btn-success" onClick={()=>addCellphoneInReparation(getValues())} >Crear</button>
+                  <h1 className="btn btn-cancelar" onClick={closeFormAdd}>Cancelar</h1>
                 </div>
               </form>
             </ModalBody>
@@ -735,7 +874,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
             <ModalBody className="contenedor-modal-body">
               <form className="form-group" onSubmit={handleSubmit(addServiceInReparation)}>
                 <label htmlFor="id">Numero de Servicio</label>
-                <input className="form-control" type="number" name="id" id="id" readOnly value={dataApi.data.length + 1} ></input>
+                <input className="form-control" type="number" name="id" id="id" readOnly value={dataServices.length + 1} ></input>
                 <br />
                 <label htmlFor="marca">Descripcion</label>
                 <input className="form-control" type="text" name="marca"  {...register('description',{
@@ -760,8 +899,8 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                 <br />
                 <hr />
                 <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
+                  <button type="button" className="btn btn-success" onClick={()=>addServiceInReparation(getValues())} >Crear</button>
+                  <h1 className="btn btn-cancelar" onClick={closeFormAdd}>Cancelar</h1>
                 </div>
               </form>
             </ModalBody>
@@ -791,8 +930,8 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                   })} />
                 <br/>
                 <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
+                  <button type="button" className="btn btn-success" onClick={()=>onSubmitBrand(getValues())} >Crear</button>
+                  <h1 className="btn btn-cancelar" onClick={closeFormAdd}>Cancelar</h1>
                 </div>
               </form>
             </ModalBody>
@@ -1048,7 +1187,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                 </div>            
               </form>
               <div className="contenedor-boton-modal-fuera">
-                <button className="btn btn-danger" onClick={closeForm}>Cancelar</button>
+                <button className="btn btn-danger" onClick={closeFormAdd}>Cancelar</button>
               </div>
             </ModalBody>
           </Modal>
@@ -1093,7 +1232,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                 </div>
               </form>
               <div className="contenedor-boton-modal-fuera">
-                <button className="btn btn-danger" onClick={closeForm}>Cancelar</button>
+                <button className="btn btn-danger" onClick={closeFormAdd}>Cancelar</button>
               </div>
             </ModalBody>
           </Modal>
@@ -1136,7 +1275,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                 </div>
               </form>
               <div className="contenedor-boton-modal-fuera">
-                <button className="btn btn-danger" onClick={closeForm}>Cancelar</button>
+                <button className="btn btn-danger" onClick={closeFormAdd}>Cancelar</button>
               </div>
             </ModalBody>
           </Modal>
@@ -1169,7 +1308,7 @@ const ModalAdd =({create,changeModal,openModalAdd,openModalAddBrand,openModalAdd
                 </div>  
               </form>
               <div className="contenedor-boton-modal-fuera">
-                <button className="btn btn-danger" onClick={closeForm}>Cancelar</button>
+                <button className="btn btn-danger" onClick={closeFormAdd}>Cancelar</button>
               </div>
             </ModalBody>
           </Modal>

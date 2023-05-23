@@ -5,58 +5,181 @@ import Table from './componentes/table';
 import PersonalInformation from './componentes/personal-information';
 import Login from './componentes/login';
 import {  BrowserRouter, Route, Routes} from 'react-router-dom';
-import {  useState } from 'react';
+import {  useEffect, useState } from 'react';
 import './App.css';
 import GetUserData from './helpers/getUserData';
+import HelperBuildRequest from './helpers/buildRequest';
+import getEnviroment from './helpers/getEnviroment';
 
 
 
 
 
 
-function App() {
+ function App() {
 
   
   const [ user, setUser ] = useState(GetUserData());
+  const [urlTable, setUrlTable] = useState(window.location.href.split("/").slice(4).join('/'));
+  const [dataBrands, setDataBrands] = useState([]);
+  const [dataCustomers, setDataCustomers] = useState([]);
+  const [dataCellphones, setDataCellPhones] = useState([]);
+  const [dataServices, setDataServices] = useState([]);
+  const [seeNavReport, setSeeNavReport] = useState(false);
+  const [arrowIcon, setArrowIcon] = useState(true);
 
+  const urlApi = async () =>{
+    const enviroment = await getEnviroment()
+    return  enviroment.apiURL 
+  }
+
+  const urlLocal = async () =>{
+    const enviroment = await getEnviroment()
+    return  enviroment.url
+  }
+
+
+  const openNavReports = async () =>{
+    setSeeNavReport(!seeNavReport);
+    setArrowIcon(!arrowIcon);
+
+     const apiURL = await urlApi()
+     
+    if(seeNavReport === false){
+       try{
+                   
+           const config = await HelperBuildRequest("GET",null, "dataTable");
+           const request = await fetch(`${apiURL}select-box/brand`, config);
+   
+             if(request.status === 200){
+                 const response = await request.json();
+                   if(response.error){
+                       setTimeout(()=>{
+                         console.log(response.error);
+                       },1000);
+                   }else{                      
+                       setDataBrands(response);
+                   }  
+             };
+   
+         }catch(error){
+           console.log(error)
+         }
+         
+         try{
+                     
+           const config = await HelperBuildRequest("GET",null, "dataTable");
+           const request = await fetch(`${apiURL}select-box/customer`, config);
+   
+             if(request.status === 200){
+                 const response = await request.json();
+                   if(response.error){
+                       setTimeout(()=>{
+                         console.log(response.error);
+                       },1000);
+                   }else{                      
+                       setDataCustomers(response);
+                       
+                   }  
+             };
+   
+         }catch(error){
+           console.log(error)
+         }
+         
+         try{
+                     
+           const config = await HelperBuildRequest("GET",null, "dataTable");
+           const request = await fetch(`${apiURL}select-box/cellphone`, config);
+   
+             if(request.status === 200){
+                 const response = await request.json();
+                   if(response.error){
+                       setTimeout(()=>{
+                         console.log(response.error);
+                       },1000);
+                   }else{                      
+                       setDataCellPhones(response);
+                       
+                   }  
+             };
+   
+         }catch(error){
+           console.log(error)
+         }
+         
+         try{
+                     
+           const config = await HelperBuildRequest("GET",null, "dataTable");
+           const request = await fetch(`${apiURL}select-box/service`, config);
+   
+             if(request.status === 200){
+                 const response = await request.json();
+                   if(response.error){
+                       setTimeout(()=>{
+                         console.log(response.error);
+                       },1000);
+                   }else{                      
+                       setDataServices(response);
+                   }  
+             };
+   
+         }catch(error){
+           console.log(error)
+         }
+    };
+ };
+
+
+  const changeUrl = (url,id) =>{
+    if(id){
+      setSeeNavReport(false)
+      return setUrlTable(url+`/${id}`)
+    }else{
+      setSeeNavReport(false)
+     return setUrlTable(url)
+    };
+  };
   
-  const enterAplication = () =>{
+  
 
-    window.location.assign("http://localhost:3000/Table/report/reparations-pending");
+  const enterAplication = async () =>{
+
+    const localUrl = await urlLocal();
+
+    window.location.assign(`${localUrl}Table/report/reparations-pending`);
 
   };
 
- 
-  if(user){
+
+  if(user && window.location.href != `http://localhost:3000/personal-information`){
 
     return(
       <>
         <div className='App' >
         <BrowserRouter>
-          <GeneralHeader></GeneralHeader>
-
-              <div>
+          <GeneralHeader
+           changeUrl={changeUrl}
+           arrowIcon={arrowIcon}
+           openNavReports={openNavReports}
+           seeNavReport={seeNavReport}
+           dataBrands={dataBrands}
+           dataCustomers={dataCustomers}
+           dataServices={dataServices}
+           dataCellphones={dataCellphones}>
+           </GeneralHeader>
+              
               <Routes>
-                  <Route path='/Table/cellphones' element={<Table urll={"pedrito"}/>}  ></Route>
-                  <Route path='/Table/brands' element={<Table/>}></Route>
-                  <Route path='/Table/services' element={<Table/>}></Route>
-                  <Route path='/Table/customers' element={<Table/>}></Route>
-                  <Route path='/Table/reparations' element={<Table/>}></Route>
+                  <Route path={`/Table/${urlTable}`} element={<Table urlTable={urlTable}/>}  ></Route>
                   <Route path= '/Login'  element={<Login enterAplication={enterAplication}  />}  ></Route> 
-                  <Route path='/personal-information' element={<PersonalInformation />}></Route>
-                  <Route path='/Table/report/reparations-pending' element={<Table />} />
-                  <Route path='/Table/report/reparations-success' element={<Table />} />
-                  <Route path='/Table/report/reparations-by-brand/:id' element={<Table />} />
-                  <Route path='/Table/report/reparations-by-customer/:id' element={<Table />} />
-                  <Route path='/Table/report/reparations-by-cellphone/:id' element={<Table />} />
-                  <Route path='/Table/report/reparations-by-service/:id' element={<Table />} />  
+                  <Route path='/personal-information' element={<PersonalInformation />}></Route> 
               </Routes>  
-              </div>
+              
           </BrowserRouter>       
         </div>
       </>
     )
-  }else if(user && window.location.href === "http://localhost:3000/personal-information"){
+  }else if(user && window.location.href === `http://localhost:3000/personal-information`){
 
       return(
         <>
@@ -78,7 +201,6 @@ function App() {
           <div className="App">
           <BrowserRouter>
             <StartHeader></StartHeader>
-              
                 <Routes>
                     <Route path= '*'  element={<Login enterAplication={enterAplication} />}></Route>   
                 </Routes>
@@ -87,6 +209,7 @@ function App() {
         </>
       );
   }
+  
 }
 
 export default App;

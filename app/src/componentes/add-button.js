@@ -1,10 +1,10 @@
 import './add-button.css';
 
-const AddButton=({openModal})=>{
+const AddButton=({onClick})=>{
 
     return(
         <div className='contenedor-boton-agregar'>
-            <button onClick={openModal} className="boton boton-agregar" >Crear</button>
+            <button  className="boton boton-agregar" onClick={onClick}>Crear</button>
         </div>
     );
 };

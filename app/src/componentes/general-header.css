@@ -1,17 +1,17 @@
 
 .header{
-    z-index: 1;
+    z-index: 100;
 }
 .contenedor-nav-general{
     width: 100%;
-    height: 45px;
+    height: 55px;
     display: flex;
     justify-content: space-between;
     z-index: 1;
 
 } 
 .contenedor-titulo{
-    width: 20%;
+    width: 15%;
     margin-left: 20px;
 }
 
@@ -28,7 +28,7 @@
     
 }
 .contenedor-contenedor-links{
-    width: 65%;
+    width: 75%;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -42,7 +42,6 @@
 .icon{
    color: red;
 }
-
 
 .nav-li-link{
    display: flex;
@@ -69,12 +68,150 @@
     margin: 0;
 }
 
-
 .nav-li-link a:hover{
     height: 35px;
     color: rgb(128, 0, 0);
 }
 
+.div-button-filter{
+    height: 40px;
+    display: flex;
+    white-space: nowrap;
+    flex-direction: column;
+    align-content: center;
+}
+
+.button-reparation-filter-none{
+    background: transparent;
+    word-wrap: inherit;
+    border: none;
+    color: white;
+    min-height: 40px;
+}
+
+.button-reparation-filter{
+    background: transparent;
+    word-wrap: inherit;
+    border: none;
+    color: red;
+    min-height: 40px; 
+}
+.button-reparation-filter svg{
+    margin-left: 5px;
+}
+
+.nav-reports{
+    display: flex;
+    justify-content: space-around;
+    position: absolute;
+    border-radius: 0 0 5px;
+    margin-top: 47px;
+    width: 100%;
+    height: 50px;
+    background: rgb(55, 62, 68);
+    padding-left: 5px;
+    padding-right: 5px;
+    
+}
+.nav-reports-none{
+    display: none;
+}
+
+.div-li-hover{
+    display: flex;
+    align-items: center;
+}
+
+.li-nav-report-none{
+    color: white;
+    list-style: none;
+    text-decoration: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.li-nav-report{
+    color: red;
+    list-style: none;
+    text-decoration: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.li-nav-report svg{
+    margin-left: 5px;
+}
+
+.li-nav-report-none:hover{
+  color: rgb(128, 0, 0);
+}
+
+.container-reparations-filter{
+    position: absolute;
+    overflow-y: scroll;
+    max-height: 185px;
+    margin-top: 50px;
+    border-radius: 7px;
+    display: flex;
+    box-shadow: 5px 5px 5px 5px rgb(119, 66, 66);
+    flex-direction: column;
+    background: rgb(206, 141, 141);
+    width: 90%;
+}
+.container-reparations-filter-none{
+    display: none;
+}
+.header-nav-reparations{
+    display: flex;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.div-input-search{
+    width: 50%;
+    display: flex;
+    justify-content: end;
+}
+.search-reparations-input{
+    height: 25px;
+    margin-left: 8px;
+    outline: none;
+    width: 100%;
+    border: none;
+    background: none;
+    border-bottom: 1px solid black;
+}
+.div-x{
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+}
+.div-x svg{
+  margin-top: 5px;
+  cursor: pointer;
+  font-size: 20px;
+  margin-right: 5px;
+}
+.div-x svg:hover{
+    color: red;
+}
+
+.div-container-map-filter{
+    display: grid;
+    text-align: center;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.p-entity-filter{
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-decoration: none;
+    color: rgb(55, 62, 68);
+}
+.p-entity-filter:hover{
+    color: red;
+}
 
 .contenedor-micuenta{
     width: 10%;
@@ -83,32 +220,25 @@
 }
 .icono-micuenta{
     background: rgb(156, 2, 2);
-    width: 20px;
-    height: 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 7px;
+    border-radius: 50%;
+    padding: 2px 12px;
     margin-right: 20px;
 }
 .icono-micuenta:hover{
     cursor: pointer;
     background-color: red;
-    width: 25px;
 }
 .letra-micuenta{
     color: white;
     font-size: 20px;
     width: 100%;
     height:20px ;
-    text-align: center;
-   
 }
 .micuenta-desplegable{
     background: rgb(156, 2, 2);
     z-index: 1000;
     width: 200px;
-    margin-top: 32px;
+    margin-top: 40px;
     position: absolute;
     padding-top: 10px;
     transition: all 0.5s;
