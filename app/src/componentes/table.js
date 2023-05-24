@@ -260,7 +260,7 @@ function Table  ({urlTable}) {
                           console.log(response.error);
                         },1000);
                       }else{                      
-                        window.location.reload()
+                       window.location.reload()
                       };
                   };
               
@@ -611,7 +611,7 @@ function Table  ({urlTable}) {
                     create={create}
                     closeForm={closeForm}
                     dataApi={dataApi}
-                    openModalAdd={openModal}
+                    openModal={openModal}
                     errors={errors}>
                   </ModalAdd>
 
