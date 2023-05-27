@@ -6,7 +6,7 @@ import HelperBuildRequest from "../helpers/buildRequest";
 import './modales.css'
 
 
-const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors }) => {
+const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,errorsInTable }) => {
 
   const location = window.location.href;
   const [dataStatesEdit, setDataStatesEdit] = useState([]);
@@ -14,11 +14,17 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
   const [dataCustomersEdit, setDataCustomersEdit] = useState([]);
   const [dataCellphonesEdit, setDataCellPhonesEdit] = useState([]);
   const [dataServicesEdit, setDataServicesEdit] = useState([]);
+  const [errors, setErrors] = useState([]);
   const [errorsApi, setErrorsApi] = useState([]);
+  const [openModalEdit, setOpenModalEdit] = useState(false);
   const [openModalAddBrandEdit, setOpenModalAddBrandEdit] = useState(false);
   const [openModalAddCustomerEdit, setOpenModalAddCustomerEdit] = useState(false);
   const [openModalAddCellphoneEdit, setOpenModalAddCellphoneEdit] = useState(false);
   const [openModalAddServiceEdit, setOpenModalAddServiceEdit] = useState(false);
+  const [newCustomerSelectedEdit, setNewCustomerSelectedEdit] = useState([]);
+  const [newCellphoneSelectedEdit, setNewCellphoneSelectedEdit] = useState([]);
+  const [newServiceSelectedEdit, setNewServiceSelectedEdit] = useState([]);
+  const [newBrandSelectedEdit, setNewBrandSelectedEdit] = useState([]);
   const [checkbox, setCheckBox] = useState(false);
   const [apiURLLocal, setApiURLLocal] = useState('');
 
@@ -34,6 +40,15 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
   useEffect(() =>{
     getDataSelectEdit()
   },[]);
+
+  useEffect(() =>{
+    setOpenModalEdit(getOpenModalEdit);
+  },[getOpenModalEdit]);
+
+  useEffect(() =>{
+    setErrors(errorsInTable);
+  },[errorsInTable]);
+
 
   const url = async () =>{
     const enviroment = await getEnviroment()
@@ -148,26 +163,72 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
 
     if(fact === "brand"){
       setOpenModalAddBrandEdit(true);
+      setValue("url","")
+      setOpenModalAddCellphoneEdit(false);
     }else if(fact === "customer"){  
       setOpenModalAddCustomerEdit(true)
+      setValue("email","")
+      setOpenModalEdit(false);
     }else if(fact === "cellphone"){
       setOpenModalAddCellphoneEdit(true);
+      setValue("brand_id",null)
+      setOpenModalEdit(false);
     }else if(fact === "service"){
       setOpenModalAddServiceEdit(true);
+      setValue("email","")
+      setOpenModalEdit(false);
     }
   };
 
-  const closeFormAdd = () =>{
+  const closeFormAdd = (entity,data) =>{
 
-    setOpenModalAddBrandEdit(false);
-    setOpenModalAddCellphoneEdit(false);
-    setOpenModalAddCustomerEdit(false);
-    setOpenModalAddServiceEdit(false);
+    const setEmail = () =>{
+      const id = data.customer_id        
+      if(newCustomerSelectedEdit.phone_number || newCustomerSelectedEdit.email){
+        setValue("email", newCustomerSelectedEdit.email);
+        setValue("number", newCustomerSelectedEdit.phone_number);
+      }else if(itemToEdit && newCustomerSelectedEdit.length < 1){
+        setValue("email",itemToEdit.email)
+        setValue("number",itemToEdit.number)
+      }else{
+        dataCustomersEdit.map((customer) =>{
+          if(customer.id == id){
+             setValue("email", customer.email);
+             setValue("number", customer.phone);
+      }}); 
+      }
+    }
 
+    if(entity === "customer"){
+      setOpenModalAddCustomerEdit(false);
+      setOpenModalEdit(true);
+      setValue("email", itemToEdit.email)
+    }else if(entity === "cellphone"){
+      setOpenModalAddCellphoneEdit(false);
+      setOpenModalEdit(true);
+      setEmail()
+    }else if(entity === "service"){
+      setOpenModalAddServiceEdit(false);
+      setOpenModalEdit(true);
+      setEmail()
+    }else if(entity === "brand"){
+      if(window.location.href.includes("reparations" || "report")){
+        setOpenModalAddBrandEdit(false);
+        setOpenModalAddCellphoneEdit(true);
+        setValue("brand_id",null)
+        setEmail()
+      }else{
+        setOpenModalAddBrandEdit(false);
+        setOpenModalAddCellphoneEdit(true);
+      }     
+    }
+  
   };
 
   const onSubmitBrand = async (data) =>{
 
+    const id = data.customer_id  
+    
     if(data){
 
       try{
@@ -182,7 +243,22 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                   setTimeout(()=>{
                     console.log(response.error);
                   },1000);
-              }else{                      
+              }else{
+                setNewBrandSelectedEdit(response.data)
+                if(newCustomerSelectedEdit.length < 1){
+                  dataCustomersEdit.map((customer) =>{
+                    if(customer.id == id){
+                       setValue("email", customer.email);
+                       setValue("number", customer.phone);
+                    }
+                  })
+                }else{
+                  setValue("email", newCustomerSelectedEdit.email)
+                } 
+                setValue("description","")
+                setValue("brand_id",newBrandSelectedEdit.id);
+                setValue("url","")
+
                 if(dataBrandsEdit.length > 0){
                   setDataBrandsEdit(dataBrandsEdit.concat(response.data))
                   setOpenModalAddBrandEdit(false);
@@ -209,6 +285,8 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
 
   const addCustomerInReparationEdit = async (data) =>{
 
+    console.log(data);
+
     if(data){
 
       try{
@@ -223,13 +301,19 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                   setTimeout(()=>{
                     console.log(response.error);
                   },1000);
-              }else{                      
+              }else{
+                setNewCustomerSelectedEdit(response.data)
+                setValue("customer_id",newCustomerSelectedEdit.id);
+                setValue("number", data.phone_number)
+
                 if(dataCustomersEdit.length > 0){
                   setDataCustomersEdit(dataCustomersEdit.concat(response.data))
                   setOpenModalAddCustomerEdit(false);
+                  setOpenModalEdit(true);
                 }else{
                   setDataCustomersEdit(response.data)
                   setOpenModalAddCustomerEdit(false);
+                  setOpenModalEdit(true);
                 }
               };
           };
@@ -249,8 +333,9 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
   };
 
   const addCellphoneInReparationEdit = async (data) =>{
-
-
+   
+    const id = data.customer_id  
+  
     if(data){
 
       try{
@@ -265,7 +350,23 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                   setTimeout(()=>{
                     console.log(response.error);
                   },1000);
-              }else{                      
+              }else{
+                setNewCellphoneSelectedEdit(response.data)
+                if(newCustomerSelectedEdit.length < 1){
+                  dataCustomersEdit.map((customer) =>{
+                    if(customer.id == id){
+                       setValue("email", customer.email);
+                       setValue("number", customer.phone);
+                    }
+                  })
+                }else{
+                  setValue("email", newCustomerSelectedEdit.email)
+                  setValue("number", newCustomerSelectedEdit.phone_number);
+                }  
+                setValue("url","")
+                setValue("cellphone_id",newCellphoneSelectedEdit.id);
+                setValue("brand_id",newBrandSelectedEdit.id);
+
                 if(dataCustomersEdit.length > 0){
                   setDataCellPhonesEdit(dataCellphonesEdit.concat(response.data))
                   setOpenModalAddCellphoneEdit(false);
@@ -292,6 +393,8 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
 
   const addServiceInReparationEdit = async (data) =>{
 
+    const id = data.customer_id    
+    
     if(data){
 
       try{
@@ -306,7 +409,21 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                   setTimeout(()=>{
                     console.log(response.error);
                   },1000);
-              }else{                      
+              }else{
+                setNewServiceSelectedEdit(response.data)
+                if(newCustomerSelectedEdit.length < 1){
+                  dataCustomersEdit.map((customer) =>{
+                    if(customer.id == id){
+                       setValue("email", customer.email);
+                       setValue("number", customer.phone);
+                    }
+                  })
+                }else{
+                  setValue("email", newCustomerSelectedEdit.email);
+                  setValue("number", newCustomerSelectedEdit.phone_number);
+                }                 
+                setValue("service_id",newServiceSelectedEdit.id);
+
                 if(dataCustomersEdit.length > 0){
                   setDataServicesEdit(dataServicesEdit.concat(response.data))
                   setOpenModalAddServiceEdit(false);
@@ -330,8 +447,85 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
     };
   };
 
+  const addEmail = (customerId,entity) =>{
+    dataCustomersEdit.map((customer) =>{
+      if(customer.id == customerId){
+         setValue("email", customer.email);
+         setValue("number", customer.phone);
+      }
+    })
+    if(entity === "customer"){
+      setErrors({customer_id:null, cellphone_id:errors.cellphone_id, service_id:errors.service_id})
+    };
+  };
+
+  const changeError = (entity,value) =>{
+
+    if(entity === "customer"){
+      setErrors({customer_id:null, cellphone_id:errors.cellphone_id, service_id:errors.service_id})
+    }
+    else if(entity === "cellphone"){
+      setErrors({customer_id:errors.customer_id, cellphone_id:null, service_id:errors.service_id})
+    }
+    else if(entity === "service"){
+      setErrors({customer_id:errors.customer_id, cellphone_id:errors.cellphone_id, service_id:null})
+    }
+    else if(entity === "brand"){
+      setErrors({brand_id:null, model:errors.model})
+    }
+    else if(entity === "model"){
+      setErrors({model:null, brand_id:errors.brand_id})
+    }
+    else if(entity === "title"){
+      setErrors({title:null})
+    }
+    else if(entity === "description"){
+      setErrors({description:null})
+    }
+    else if(entity === "name"){
+      setErrors({name:null, email:errors.email, phone_number:errors.phone_number})
+    }
+    else if(entity === "email"){
+      setErrors({name:errors.name, email:"El email requiere este formato : xxxx@xx.xx", phone_number:errors.phone_number})
+      if(value.includes("@" && ".")){
+        setErrors({name:errors.name, email:null, phone_number:errors.phone_number})
+      }
+    }
+    else if(entity === "phone_number"){
+      setErrors({name:errors.name, email:errors.email, phone_number:null})
+    }
+  };
+
+  const changeErrorApi = (entity,value) =>{
+
+    if(entity === "title"){
+      setErrorsApi({title:null})
+    }
+    else if(entity === "name"){
+      setErrorsApi({name:null, email:errorsApi.email, phone_number:errorsApi.phone_number})
+    }
+    else if(entity === "email"){
+      setErrorsApi({name:errorsApi.name, email:"El email requiere este formato : xxxx@xx.xx", phone_number:errorsApi.phone_number})
+      if(value.includes("@" && ".")){
+        setErrorsApi({name:errorsApi.name, email:null, phone_number:errorsApi.phone_number})
+      }
+    }
+    else if(entity === "phone_number"){
+      setErrorsApi({name:errorsApi.name, email:errorsApi.email, phone_number:null})
+    }
+    else if(entity === "model"){
+      setErrorsApi({model:null, brand_id:errorsApi.brand_id})
+    }
+    else if(entity === "brand_id"){
+      setErrorsApi({model:errorsApi.model, brand_id:null})
+    }
+    else if(entity === "description"){
+      setErrorsApi({description:null})
+    }
+  };
+
  
-  const { register, handleSubmit, getValues} = useForm ();
+  const { register, handleSubmit, getValues, setValue} = useForm ();
 
   if(location === `${apiURLLocal}Table/brands` ){
 
@@ -349,7 +543,10 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
             <input className="form-control" type="number" name="id" id="id" readOnly  defaultValue={itemToEdit ? itemToEdit.id : ''} {...register('id',{ shouldUnregister: true,})} />
             <br />
             <label htmlFor="marca">Marca</label>
-            <input className="form-control" type="text" name="marca" id="marca"  defaultValue={itemToEdit ? itemToEdit.title : ''}{...register('title',{ shouldUnregister: true,})}/>
+            <input className={errors.title ? "form-control error" : "form-control"} type="text" name="marca" id="marca"  defaultValue={itemToEdit ? itemToEdit.title : ''}{...register('title',{
+               shouldUnregister: true,
+               onChange: () => changeError("title"),
+               })}/>
               {errors.title? <p className="p-errores">El campo Marca debe ser definido</p> : ""}
             <br />
             <label htmlFor="url">Url</label>
@@ -380,7 +577,10 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
               <input className="form-control" type="text"  id="modelo" readOnly defaultValue={itemToEdit ? itemToEdit.id : ''} {...register('id',{ shouldUnregister: true,})} />
               <br/>
               <label htmlFor="marca">Modelo</label>
-              <input className="form-control" type="text" name="modelo" id="modelo"  defaultValue={itemToEdit ? itemToEdit.model : ''} {...register('model',{ shouldUnregister: true,})} />
+              <input className={errors.model ? "form-control error" : "form-control"} type="text" name="modelo" id="modelo"  defaultValue={itemToEdit ? itemToEdit.model : ''} {...register('model',{
+                 shouldUnregister: true,
+                 onChange: () => changeError("model"),
+                 })} />
                 {errors.model? <p className="p-errores">El campo Modelo debe ser definido</p> : ""}
               <br />
               <label htmlFor="url">Url</label>
@@ -388,8 +588,11 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
               <br />
               <label htmlFor="url">Marca</label>
               <div className="div-container-select-button">
-                <select className="form-select" name="select"  defaultValue={itemToEdit ? itemToEdit.brand_id.id : null} {...register('brand_id',{ shouldUnregister:true})}>
-                  <option className="option-selected" value={itemToEdit ? itemToEdit.brand_id.id : null}>{itemToEdit ? itemToEdit.brand_id.brand : null}</option>
+                <select className="form-select" name="select"  defaultValue={itemToEdit ? itemToEdit.brand_id.id : null} {...register('brand_id',{ 
+                  shouldUnregister:true,
+                  onChange: () => changeError("brand_id"),
+                  })}>
+                  <option className={errors.brand_id ? "option-selected error" : "option-selected"} value={itemToEdit ? itemToEdit.brand_id.id : null}>{itemToEdit ? itemToEdit.brand_id.brand : null}</option>
                   {dataBrandsEdit.map((brand)=>{
                       return <option  key={brand.id} value={brand.id} >{brand.title}</option>
                   })}
@@ -416,7 +619,10 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
               <form className="form-group" onSubmit={handleSubmit(onSubmitBrand)}>
                 <br />
                 <label htmlFor="marca">Marca</label>
-                <input className="form-control" type="text" name="marca"  {...register('title')} />
+                <input className={errorsApi.title ? "form-control error" : "form-control"} type="text" name="marca"  {...register('title',{
+                  shouldUnregister:true,
+                  onChange: () => changeErrorApi("title"),
+                })} />
                   {errorsApi.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
                 <br />
                 <label htmlFor="url">Descripcion</label>
@@ -431,7 +637,7 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                 <br/>
                 <div className="contenedor-boton-modal-dentro-reparations">
                   <button type="button" className="btn btn-success" onClick={()=>onSubmitBrand(getValues())} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeFormAdd}>Cancelar</h1>
+                  <h1 className="btn btn-cancelar" onClick={()=>closeFormAdd("brand",getValues())}>Cancelar</h1>
                 </div>
               </form>
             </ModalBody>
@@ -452,18 +658,28 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
             <input className="form-control" type="text" readOnly name="id" defaultValue={itemToEdit ? itemToEdit.id : ""} {...register('id',{ shouldUnregister: true,})} />
             <br/>
             <label htmlFor="descripcion">Nombre del Servicio</label>
-            <input className="form-control" type="text" name="modelo" id="modelo"  defaultValue={itemToEdit ? itemToEdit.description : ''} {...register('description',{ shouldUnregister: true,})} />
+            <input className={errors.description ? "form-control error" : "form-control"} type="text" name="modelo" id="modelo"  defaultValue={itemToEdit ? itemToEdit.description : ''} {...register('description',{
+               shouldUnregister: true,
+               onChange: () => changeError("description"),
+               })} />
               {errors.description? <p className="p-errores">{errors.description}</p>: ""}
             <br />
             <label htmlFor="number">Numero de Telefono</label>
-            <input className="form-control" type="text" name="number" id="number"  defaultValue={itemToEdit ? itemToEdit.phone_number : ''}{...register('phone_number',{ shouldUnregister: true,})} />
+            <input className={errors.phone_number ? "form-control error" : "form-control"} type="text" name="number" id="number"  defaultValue={itemToEdit ? itemToEdit.phone_number : ''}{...register('phone_number',{
+               shouldUnregister: true,
+               onChange: () => changeError("phone_number"),
+               })} />
               {errors.phone_number? <p className="p-errores">{errors.phone_number}</p> : ""}
             <br />
             <label htmlFor="direccion">Direccion</label>
             <input className="form-control" type="text" name="direccion" id="direccion"  defaultValue={itemToEdit ? itemToEdit.address : ''}{...register('address',{ shouldUnregister: true,})} />
             <br />
             <label htmlFor="Email">Email</label>
-            <input className="form-control" type="text" name="email" id="email"  defaultValue={itemToEdit ? itemToEdit.email : ''}{...register('email',{ shouldUnregister: true,})} />
+            <input className={errors.email ? "form-control error" : "form-control"} type="text" name="email" id="email"  defaultValue={itemToEdit ? itemToEdit.email : ''}{...register('email',{ 
+              shouldUnregister: true,
+              onChange: (e) => changeError("email",e.target.value),
+              })} />
+            {errors.email? <p className="p-errores">{errors.email}</p> : ""}
             <br />
             <div className="contenedor-boton-modal-dentro">
               <button className="btn btn-edit" type="submit" onClick={edit}>Editar</button>
@@ -488,15 +704,24 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
             <input className="form-control" type="text" readOnly name="id" defaultValue={itemToEdit ? itemToEdit.id : ""} {...register('id',{ shouldUnregister: true,})} />
             <br/>
             <label htmlFor="descripcion">Nombre</label>
-            <input className="form-control" type="text" name="name" id="name"  defaultValue={itemToEdit ? itemToEdit.name : ''} {...register('name',{ shouldUnregister: true,})} />
+            <input className={errors.name ? "form-control error" : "form-control"} type="text" name="name" id="name"  defaultValue={itemToEdit ? itemToEdit.name : ''} {...register('name',{
+               shouldUnregister: true,
+               onChange: () => changeError("name"),
+               })} />
               {errors.name? <p className="p-errores">{errors.name}</p>: ""}
             <br />
             <label htmlFor="number">Email</label>
-            <input className="form-control" type="text" name="email" id="email"  defaultValue={itemToEdit ? itemToEdit.email : ''}{...register('email',{ shouldUnregister: true,})} />
+            <input className={errors.email ? "form-control error" : "form-control"} type="text" name="email" id="email"  defaultValue={itemToEdit ? itemToEdit.email : ''}{...register('email',{
+               shouldUnregister: true,
+               onChange: (e) => changeError("email",e.target.value),
+               })} />
               {errors.email? <p className="p-errores">{errors.email}</p> : ""}
             <br />
             <label htmlFor="direccion">Numero de Telefono</label>
-            <input className="form-control" type="text" name="phone" id="phone"  defaultValue={itemToEdit ? itemToEdit.phone_number : ''}{...register('phone_number',{ shouldUnregister: true,})} />
+            <input className={errors.phone_number ? "form-control error" : "form-control"} type="text" name="phone" id="phone"  defaultValue={itemToEdit ? itemToEdit.phone_number : ''}{...register('phone_number',{ 
+              shouldUnregister: true,
+              onChange: () => changeError("phone_number"),
+              })} />
             {errors.phone_number? <p className="p-errores">{errors.phone_number}</p> : ""}
             <br />
             <label htmlFor="Email">Numero de Telefono 2</label>
@@ -530,13 +755,20 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                   <div className="div-inputs">
                     <label>Cliente</label>              
                     <div className="div-container-select-button">
-                      <select className="form-select" defaultValue={itemToEdit ? itemToEdit.customer.id : null}{...register('customer_id',{ shouldUnregister: true,})}>
-                        <option value="null">
-                          Por favor selecciona un cliente.
-                        </option>
+                      <select className={errors.customer_id ? "form-select error" : "form-select"} defaultValue={itemToEdit && newCustomerSelectedEdit.length < 1 ? itemToEdit.customer.id : newCustomerSelectedEdit.length > 0 ? newCustomerSelectedEdit.id : null}{...register('customer_id',{
+                         shouldUnregister: true,
+                         onChange: (e) => addEmail(e.target.value,"customer"),
+                         })}>
+                        {
+                          (newCustomerSelectedEdit.id)
+                          ?
+                           <option value={newCustomerSelectedEdit.id}>{newCustomerSelectedEdit.name}</option>
+                          :
+                          <option >Seleccione un cliente..</option>
+                        }
                         {dataCustomersEdit.map((customer)=>{   
                           const customerSelected = itemToEdit && itemToEdit.customer.id == customer.id ?  'selected' : '';   
-                            return <option className={itemToEdit && itemToEdit.customer.id == customer.id ? "option-selected" :"option-modal"} 
+                            return <option className={itemToEdit && newCustomerSelectedEdit.length < 1 ? itemToEdit.customer.id == customer.id ? "option-selected" :"option-modal" : newCustomerSelectedEdit.length > 0 ? newCustomerSelectedEdit.id == customer.id ? "option-selected" :"option-modal":"option-modal"} 
                                            key={customer.id} 
                                            value={customer.id} 
                                            >{customer.name}</option>   
@@ -561,8 +793,17 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                   <div className="div-inputs">
                     <label htmlFor="cellphone">Celular</label>
                     <div className="div-container-select-button">
-                      <select className="form-select" type="text" name="email" id="email"  defaultValue={itemToEdit ? itemToEdit.cellphone.id : null}{...register('cellphone_id',{ shouldUnregister: true,})}>
-                      <option value="null">Por favor selecciona un celular.</option>
+                      <select className={errors.cellphone_id ? "form-select error" : "form-select"} type="text" name="email" id="email"  defaultValue={itemToEdit && newCellphoneSelectedEdit.length < 1 ? itemToEdit.cellphone.id : newCellphoneSelectedEdit.length > 0 ? newCellphoneSelectedEdit.id : null}{...register('cellphone_id',{
+                         shouldUnregister: true,
+                         onChange: () => changeError("cellphone"),
+                         })}>
+                        {
+                          (newCellphoneSelectedEdit.id)
+                          ?
+                           <option value={newCellphoneSelectedEdit.id}>{newCellphoneSelectedEdit.model}</option>
+                          :
+                          <option >Seleccione un Celular..</option>
+                        }
                         {dataCellphonesEdit.map((cellphone)=>{
                           const cellphoneSelected = itemToEdit && itemToEdit.cellphone.id == cellphone.id ?  'selected' : "";                
                             return <option className={itemToEdit && itemToEdit.cellphone.id == cellphone.id ? "option-selected" :"option-modal"} 
@@ -602,8 +843,17 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                   <div className="div-inputs">
                     <label htmlFor="service">Servicio</label>
                     <div className="div-container-select-button">
-                      <select className="form-select" type="text" name="service" id="service"  defaultValue={itemToEdit ? itemToEdit.service.id : null}{...register('service_id',{ shouldUnregister: true,})}>
-                      <option value="null" >Por favor seleccione un Servicio</option>
+                      <select className={errors.service_id ? "form-select error" : "form-select"} type="text" name="service" id="service"  defaultValue={itemToEdit && newServiceSelectedEdit.length < 1 ? itemToEdit.service.id : newServiceSelectedEdit.length > 0 ? newServiceSelectedEdit.id : null}{...register('service_id',{
+                         shouldUnregister: true,
+                         onChange: () => changeError("service"),
+                         })}>
+                        {
+                          (newServiceSelectedEdit.id)
+                          ?
+                           <option value={newServiceSelectedEdit.id}>{newServiceSelectedEdit.description}</option>
+                          :
+                          <option >Seleccione un Servicio..</option>
+                        }
                         {dataServicesEdit.map((service)=>{                 
                             return <option className={itemToEdit && itemToEdit.service.id == service.id ? "option-selected" :"option-modal"}
                              key={service.id}
@@ -762,22 +1012,26 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
               </div>
             </ModalHeader>
             <ModalBody className="contenedor-modal-body">
-              <form className="form-group" onSubmit={handleSubmit(addCustomerInReparationEdit)} {...register('form')}>
+              <form className={errorsApi.name ? "form-control error" : "form-control"} onSubmit={handleSubmit(addCustomerInReparationEdit)} {...register('form')}>
                 <label htmlFor="marca">Nombre</label>
                 <input className="form-control" type="text" name="name"  {...register('name',{
-                  value:null
+                  value:null,
+                  onChange: () => changeErrorApi("name"),
                   })} />
                   {errorsApi.name? <p className="p-errores">{errorsApi.name}</p> : ""} 
                 <br />
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
                 <label htmlFor="url">Email</label>
-                <input className="form-control" type="text" name="email" {...register('email',{
-                  value:null
+                <input className={errorsApi.email ? "form-control error" : "form-control"} type="text" name="email" {...register('email',{
+                  value:null,
+                  onChange: (e) => changeErrorApi("email",e.target.value),
                   })} />
                   {errorsApi.email? <p className="p-errores">{errorsApi.email}</p> : ""}
                 <br />
                 <label htmlFor="url">Numero de Telefono</label>
-                <input className="form-control" type="text" name="phone" {...register('phone_number',{
-                  value:null
+                <input className={errorsApi.phone_number ? "form-control error" : "form-control"} type="text" name="phone" {...register('phone_number',{
+                  value:null,
+                  onChange: () => changeErrorApi("phone_number"),
                   })} />
                   {errorsApi.phone_number? <p className="p-errores">{errorsApi.phone_number}</p> : ""}
                 <br />
@@ -789,7 +1043,7 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                 <hr />
                 <div className="contenedor-boton-modal-dentro-reparations">
                   <button type="button" className="btn btn-success" onClick={()=>addCustomerInReparationEdit(getValues())} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeFormAdd}>Cancelar</h1>
+                  <h1 className="btn btn-cancelar" onClick={()=>closeFormAdd("customer",getValues())}>Cancelar</h1>
                 </div>
               </form>
             </ModalBody>
@@ -806,9 +1060,12 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                 <label htmlFor="id">Numero de Celular</label>
                 <input className="form-control" type="number" name="id" readOnly value={`${dataCellphonesEdit.length+1}`}  />
                 <br/>
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("email")}></input>
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
                 <label htmlFor="modelo">Modelo</label>
-                <input className="form-control" type="text" name="modelo" {...register('model',{
-                  value:null
+                <input className={errorsApi.model ? "form-control error" : "form-control"} type="text" name="modelo" {...register('model',{
+                  value:null,
+                  onChange: () => changeErrorApi("model"),
                   })}/>
                   {errorsApi.model? <p className="p-errores">El campo Modelo debe ser completado</p> : ""}
                 <br />
@@ -819,10 +1076,17 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                 <br/>
                 <label htmlFor="brnad_id">Marca</label>
                 <div className="div-container-select-button">
-                <select className="form-select brand" name="select" defaultValue={itemToEdit ? itemToEdit.cellphone.brand_id : null} {...register('brand_id',{
-                  shouldUnregister:true
-                  })}>
-                    <option className="option-selected" value={itemToEdit ? itemToEdit.cellphone.brand_id : null}>{itemToEdit ? itemToEdit.cellphone.brand : "Seleccione una Marca"}</option>
+                <select className={errorsApi.brand_id ? "form-select error" : "form-select"} name="select" defaultValue={itemToEdit && newBrandSelectedEdit.length < 1 ? itemToEdit.cellphone.brand_id : newBrandSelectedEdit.length > 0 ? newBrandSelectedEdit.id : null}{...register('brand_id',{
+                   shouldUnregister: true,
+                   onChange: () => changeErrorApi("brand_id"),
+                   })}>
+                        {
+                          (newBrandSelectedEdit.id)
+                          ?
+                           <option value={newBrandSelectedEdit.id}>{newBrandSelectedEdit.title}</option>
+                          :
+                          <option >Seleccione una Marca..</option>
+                        }
                   {dataBrandsEdit.map((brand)=>{
                       return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option>
                   })}
@@ -833,7 +1097,7 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                 <br/>  
                 <div className="contenedor-boton-modal-dentro-reparations">
                   <button type="button" className="btn btn-success" onClick={()=>addCellphoneInReparationEdit(getValues())} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeFormAdd}>Cancelar</h1>
+                  <h1 className="btn btn-cancelar" onClick={()=>closeFormAdd("cellphone",getValues())}>Cancelar</h1>
                 </div>
               </form>
             </ModalBody>
@@ -849,9 +1113,15 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
               <form className="form-group" onSubmit={handleSubmit(onSubmitBrand)}>
                 <br />
                 <label htmlFor="marca">Marca</label>
-                <input className="form-control" type="text" name="marca"  {...register('title')} />
+                <input className={errorsApi.title ? "form-control error" : "form-control"} type="text" name="marca"  {...register('title',{
+                  shouldUnregister:true,
+                  onChange: () => changeErrorApi("title"),
+                })} />
                   {errorsApi.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
                 <br />
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("email")}></input>
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("brand_id")}></input>
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
                 <label htmlFor="url">Descripcion</label>
                 <input className="form-control" type="text" name="url" {...register('description',{
                   value:null
@@ -864,7 +1134,7 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                 <br/>
                 <div className="contenedor-boton-modal-dentro-reparations">
                   <button type="button" className="btn btn-success" onClick={()=>onSubmitBrand(getValues())} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeFormAdd}>Cancelar</h1>
+                  <h1 className="btn btn-cancelar" onClick={()=>closeFormAdd("brand",getValues())}>Cancelar</h1>
                 </div>
               </form>
             </ModalBody>
@@ -881,16 +1151,20 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                 <label htmlFor="id">Numero de Servicio</label>
                 <input className="form-control" type="number" name="id" id="id" readOnly value={dataServicesEdit.length + 1} ></input>
                 <br />
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
                 <label htmlFor="marca">Descripcion</label>
-                <input className="form-control" type="text" name="marca"  {...register('description',{
-                  value:null
+                <input className={errorsApi.description ? "form-control error" : "form-control"} type="text" name="marca"  {...register('description',{
+                  value:null,
+                  onChange: () => changeErrorApi("description"),
                   })} />
                   {errorsApi.description? <p className="p-errores">El campo Descripcion debe ser completado</p> : ""} 
                 <br />
                 <label htmlFor="url">Numero de Telefono</label>
-                <input className="form-control" type="text" name="numero de telefono" {...register('phone_number',{
-                  value:null
+                <input className={errorsApi.phone_number ? "form-control error" : "form-control"} type="text" name="numero de telefono" {...register('phone_number',{
+                  value:null,
+                  onChange: () => changeErrorApi("phone_number"),
                   })} />
+                  {errorsApi.phone_number? <p className="p-errores">El campo Numero de telefono debe ser completado</p> : ""} 
                 <br />
                 <label htmlFor="url">Direccion</label>
                 <input className="form-control" type="text" name="direccion" {...register('address',{
@@ -898,14 +1172,16 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                   })} />
                 <br />
                 <label htmlFor="url">Email</label>
-                <input className="form-control" type="text" name="email" {...register('email',{
-                  value:null
+                <input className={errorsApi.email ? "form-control error" : "form-control"} type="text" name="email" {...register('email',{
+                  value:null,
+                  onChange: (e) => changeErrorApi("email",e.target.value),
                   })} />
+                  {errorsApi.email? <p className="p-errores">{errorsApi.email}</p> : ""} 
                 <br />
                 <hr />
                 <div className="contenedor-boton-modal-dentro-reparations">
                   <button type="button" className="btn btn-success" onClick={()=>addServiceInReparationEdit(getValues())} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeFormAdd}>Cancelar</h1>
+                  <h1 className="btn btn-cancelar" onClick={()=>closeFormAdd("service",getValues())}>Cancelar</h1>
                 </div>
               </form>
             </ModalBody>
@@ -931,10 +1207,17 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
               <div className="div-inputs">
               <label>Cliente</label>              
               <div className="div-container-select-button">
-                  <select className="form-select"   name="select"  defaultValue={itemToEdit ? itemToEdit.customer.id : null}{...register('customer_id',{ shouldUnregister: true,})}>
-                  <option value="null">
-                          Por favor selecciona un cliente.
-                        </option>
+                  <select className={errors.customer_id ? "form-select error" : "form-select"}  name="select"  defaultValue={itemToEdit && newCustomerSelectedEdit.length < 1 ? itemToEdit.customer.id : newCustomerSelectedEdit.length > 0 ? newCustomerSelectedEdit.id : null}{...register('customer_id',{
+                         shouldUnregister: true,
+                         onChange: (e) => addEmail(e.target.value,"customer"),
+                         })}>
+                        {
+                          (newCustomerSelectedEdit.id)
+                          ?
+                           <option value={newCustomerSelectedEdit.id}>{newCustomerSelectedEdit.name}</option>
+                          :
+                          <option >Seleccione un cliente..</option>
+                        }
                         {dataCustomersEdit.map((customer)=>{   
                           const customerSelected = itemToEdit && itemToEdit.customer.id == customer.id ?  'selected' : '';   
                             return <option className={itemToEdit && itemToEdit.customer.id == customer.id ? "option-selected" :"option-modal"} 
@@ -955,15 +1238,24 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
               <br />
               <div className="div-inputs">
                 <label htmlFor="descripcion">Email</label>
-                <input className="form-control" type="text" name="name" id="name"  defaultValue={itemToEdit ? itemToEdit.email : ''} {...register('email',{ shouldUnregister: true,})} />
+                <input className={errors.email ? "form-control error" : "form-control"} type="text" name="name" id="name"  defaultValue={itemToEdit ? itemToEdit.email : ''} {...register('email',{ shouldUnregister: true,})} />
                   {errors.email? <><p className="p-errores">El campo Email no cumple con el formato</p><p className="p-errores">Ejemplo:xxxxx@xxx.com</p></>: ""}
               </div>
               <br />
               <div className="div-inputs">
               <label htmlFor="cellphone">Celular</label>
               <div className="div-container-select-button">
-                  <select className="form-select" type="text" name="email" id="email"  defaultValue={itemToEdit ? itemToEdit.cellphone.id : null}{...register('cellphone_id',{ shouldUnregister: true,})}>
-                  <option value="null">Por favor selecciona un celular.</option>
+                  <select className={errors.cellphone_id ? "form-select error" : "form-select"} type="text" name="email" id="email"  defaultValue={itemToEdit && newCellphoneSelectedEdit.length < 1 ? itemToEdit.cellphone.id : newCellphoneSelectedEdit.length > 0 ? newCellphoneSelectedEdit.id : null}{...register('cellphone_id',{
+                         shouldUnregister: true,
+                         onChange: () => changeError("cellphone"),
+                         })}>
+                        {
+                          (newCellphoneSelectedEdit.id)
+                          ?
+                           <option value={newCellphoneSelectedEdit.id}>{newCellphoneSelectedEdit.model}</option>
+                          :
+                          <option >Seleccione un Celular..</option>
+                        }
                         {dataCellphonesEdit.map((cellphone)=>{
                           const cellphoneSelected = itemToEdit && itemToEdit.cellphone.id == cellphone.id ?  'selected' : "";                
                             return <option className={itemToEdit && itemToEdit.cellphone.id == cellphone.id ? "option-selected" :"option-modal"} 
@@ -1003,8 +1295,17 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
               <div className="div-inputs">
               <label htmlFor="service">Servicio</label>
               <div className="div-container-select-button">
-                  <select className="form-select" type="text" name="service" id="service"  defaultValue={itemToEdit ? itemToEdit.service.id : null}{...register('service_id',{ shouldUnregister: true,})}>
-                  <option value="null" >Por favor seleccione un Servicio</option>
+                  <select className={errors.service_id ? "form-select error" : "form-select"} type="text" name="service" id="service"  defaultValue={itemToEdit && newServiceSelectedEdit.length < 1 ? itemToEdit.service.id : newServiceSelectedEdit.length > 0 ? newServiceSelectedEdit.id : null}{...register('service_id',{
+                         shouldUnregister: true,
+                         onChange: () => changeError("service"),
+                         })}>
+                        {
+                          (newServiceSelectedEdit.id)
+                          ?
+                           <option value={newServiceSelectedEdit.id}>{newServiceSelectedEdit.description}</option>
+                          :
+                          <option >Seleccione un Servicio..</option>
+                        }
                         {dataServicesEdit.map((service)=>{                 
                             return <option className={itemToEdit && itemToEdit.service.id == service.id ? "option-selected" :"option-modal"}
                              key={service.id}
@@ -1165,20 +1466,24 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
             <ModalBody className="contenedor-modal-body">
               <form className="form-group" onSubmit={handleSubmit(addCustomerInReparationEdit)} {...register('form')}>
                 <label htmlFor="marca">Nombre</label>
-                <input className="form-control" type="text" name="name"  {...register('name',{
-                  value:null
+                <input className={errorsApi.name ? "form-control error" : "form-control"} type="text" name="name"  {...register('name',{
+                  value:null,
+                  onChange: () => changeErrorApi("name"),
                   })} />
                   {errorsApi.name? <p className="p-errores">{errorsApi.name}</p> : ""} 
                 <br />
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
                 <label htmlFor="url">Email</label>
-                <input className="form-control" type="text" name="email" {...register('email',{
-                  value:null
+                <input className={errorsApi.email ? "form-control error" : "form-control"} type="text" name="email" {...register('email',{
+                  value:null,
+                  onChange: (e) => changeErrorApi("email",e.target.value),
                   })} />
                   {errorsApi.email? <p className="p-errores">{errorsApi.email}</p> : ""}
                 <br />
                 <label htmlFor="url">Numero de Telefono</label>
-                <input className="form-control" type="text" name="phone" {...register('phone_number',{
-                  value:null
+                <input className={errorsApi.phone_number ? "form-control error" : "form-control"} type="text" name="phone" {...register('phone_number',{
+                  value:null,
+                  onChange: () => changeErrorApi("phone_number"),
                   })} />
                   {errorsApi.phone_number? <p className="p-errores">{errorsApi.phone_number}</p> : ""}
                 <br />
@@ -1190,7 +1495,7 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                 <hr />
                 <div className="contenedor-boton-modal-dentro-reparations">
                   <button type="button" className="btn btn-success" onClick={()=>addCustomerInReparationEdit(getValues())} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeFormAdd}>Cancelar</h1>
+                  <h1 className="btn btn-cancelar" onClick={()=>closeFormAdd("customer",getValues())}>Cancelar</h1>
                 </div>
               </form>
             </ModalBody>
@@ -1207,9 +1512,12 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                 <label htmlFor="id">Numero de Celular</label>
                 <input className="form-control" type="number" name="id" readOnly value={`${dataCellphonesEdit.length+1}`}  />
                 <br/>
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("email")}></input>
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
                 <label htmlFor="modelo">Modelo</label>
-                <input className="form-control" type="text" name="modelo" {...register('model',{
-                  value:null
+                <input className={errorsApi.model ? "form-control error" : "form-control"} type="text" name="modelo" {...register('model',{
+                  value:null,
+                  onChange: () => changeErrorApi("model"),
                   })}/>
                   {errorsApi.model? <p className="p-errores">El campo Modelo debe ser completado</p> : ""}
                 <br />
@@ -1220,10 +1528,17 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                 <br/>
                 <label htmlFor="brnad_id">Marca</label>
                 <div className="div-container-select-button">
-                <select className="form-select brand" name="select" defaultValue={itemToEdit ? itemToEdit.cellphone.brand_id : null}  {...register('brand_id',{
-                  shouldUnregister:true
-                  })}>
-                    <option className="option-selected" value={itemToEdit ? itemToEdit.cellphone.brand_id : null}>{itemToEdit ? itemToEdit.cellphone.brand : "Seleccione una Marca"}</option>
+                <select className={errorsApi.brand_id ? "form-select error" : "form-select"} name="select" defaultValue={itemToEdit && newBrandSelectedEdit.length < 1 ? itemToEdit.cellphone.brand_id : newBrandSelectedEdit.length > 0 ? newBrandSelectedEdit.id : null}{...register('brand_id',{
+                   shouldUnregister: true,
+                   onChange: () => changeErrorApi("brand_id"),
+                   })}>
+                        {
+                          (newBrandSelectedEdit.id)
+                          ?
+                           <option value={newBrandSelectedEdit.id}>{newBrandSelectedEdit.title}</option>
+                          :
+                          <option >Seleccione una Marca..</option>
+                        }
                   {dataBrandsEdit.map((brand)=>{
                       return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option>
                   })}
@@ -1234,7 +1549,7 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                 <br/>  
                 <div className="contenedor-boton-modal-dentro-reparations">
                   <button type="button" className="btn btn-success" onClick={()=>addCellphoneInReparationEdit(getValues())} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeFormAdd}>Cancelar</h1>
+                  <h1 className="btn btn-cancelar" onClick={()=>closeFormAdd("cellphone",getValues())}>Cancelar</h1>
                 </div>
               </form>
             </ModalBody>
@@ -1250,9 +1565,15 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
               <form className="form-group" onSubmit={handleSubmit(onSubmitBrand)}>
                 <br />
                 <label htmlFor="marca">Marca</label>
-                <input className="form-control" type="text" name="marca"  {...register('title')} />
+                <input className={errorsApi.title ? "form-control error" : "form-control"} type="text" name="marca"  {...register('title',{
+                  shouldUnregister:true,
+                  onChange: () => changeErrorApi("title"),
+                })} />
                   {errorsApi.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
                 <br />
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("email")}></input>
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("brand_id")}></input>
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
                 <label htmlFor="url">Descripcion</label>
                 <input className="form-control" type="text" name="url" {...register('description',{
                   value:null
@@ -1265,7 +1586,7 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                 <br/>
                 <div className="contenedor-boton-modal-dentro-reparations">
                   <button type="button" className="btn btn-success" onClick={()=>onSubmitBrand(getValues())} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeFormAdd}>Cancelar</h1>
+                  <h1 className="btn btn-cancelar" onClick={()=>closeFormAdd("brand",getValues())}>Cancelar</h1>
                 </div>
               </form>
             </ModalBody>
@@ -1280,18 +1601,22 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
             <ModalBody className="contenedor-modal-body">
               <form className="form-group" onSubmit={handleSubmit(addServiceInReparationEdit)}>
                 <label htmlFor="id">Numero de Servicio</label>
-                <input className="form-control" type="number" name="id" id="id" readOnly value={dataServicesEdit.length + 1} ></input>
+                <input className={errorsApi.description ? "form-control error" : "form-control"} type="number" name="id" id="id" readOnly value={dataServicesEdit.length + 1} ></input>
                 <br />
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
                 <label htmlFor="marca">Descripcion</label>
                 <input className="form-control" type="text" name="marca"  {...register('description',{
-                  value:null
+                  value:null,
+                  onChange: () => changeErrorApi("description"),
                   })} />
                   {errorsApi.description? <p className="p-errores">El campo Descripcion debe ser completado</p> : ""} 
                 <br />
                 <label htmlFor="url">Numero de Telefono</label>
-                <input className="form-control" type="text" name="numero de telefono" {...register('phone_number',{
-                  value:null
+                <input className={errorsApi.phone_number ? "form-control error" : "form-control"} type="text" name="numero de telefono" {...register('phone_number',{
+                  value:null,
+                  onChange: () => changeErrorApi("phone_number"),
                   })} />
+                  {errorsApi.phone_number? <p className="p-errores">El campo Numero de telefono debe ser completado</p> : ""} 
                 <br />
                 <label htmlFor="url">Direccion</label>
                 <input className="form-control" type="text" name="direccion" {...register('address',{
@@ -1299,14 +1624,16 @@ const ModalEdit = ({ openModalEdit, itemToEdit, edit, closeForm,onsubmit,errors 
                   })} />
                 <br />
                 <label htmlFor="url">Email</label>
-                <input className="form-control" type="text" name="email" {...register('email',{
-                  value:null
+                <input className={errorsApi.email ? "form-control error" : "form-control"} type="text" name="email" {...register('email',{
+                  value:null,
+                  onChange: (e) => changeErrorApi("email",e.target.value),
                   })} />
+                  {errorsApi.email? <p className="p-errores">{errorsApi.email}</p> : ""} 
                 <br />
                 <hr />
                 <div className="contenedor-boton-modal-dentro-reparations">
                   <button type="button" className="btn btn-success" onClick={()=>addServiceInReparationEdit(getValues())} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeFormAdd}>Cancelar</h1>
+                  <h1 className="btn btn-cancelar" onClick={()=>closeFormAdd("service",getValues())}>Cancelar</h1>
                 </div>
               </form>
             </ModalBody>

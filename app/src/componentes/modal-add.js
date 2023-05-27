@@ -7,10 +7,11 @@ import HelperBuildRequest from "../helpers/buildRequest";
 import getEnviroment from "../helpers/getEnviroment";
 
 
-const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
+const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
   
   const [chainBrand, setChainBrand] = useState ("");
   const [errorsApi, setErrorsApi] = useState([]);
+  const [errors, setErrors] = useState([]);
   const [checkbox, setCheckBox] = useState(false);
   const [openModalAdd, setOpenModalAdd] = useState (false);
   const [dataBrands, setDataBrands] = useState([]);
@@ -44,6 +45,10 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
   useEffect(() =>{
     setOpenModalAdd(openModal);
   },[openModal])
+
+  useEffect(() =>{
+    setErrors(errorsInTable);
+  },[errorsInTable])
 
   /*console.log(current, childrenData);*/
 
@@ -135,6 +140,7 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
 
     if(fact === "brand"){
       setOpenModalAddBrand(true);
+      setValue("url","")
       setOpenModalAddCellphone(false);
     }else if(fact === "customer"){  
       setOpenModalAddCustomer(true)
@@ -143,18 +149,51 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
       setOpenModalAddCellphone(true);
       setOpenModalAdd(false);
     }else if(fact === "service"){
+      setValue("email","");
       setOpenModalAddService(true);
       setOpenModalAdd(false);
     }
   };
 
-  const closeFormAdd = () =>{
 
-    setOpenModalAddBrand(false);
-    setOpenModalAddCellphone(false);
-    setOpenModalAddCustomer(false);
-    setOpenModalAddService(false);
+  const closeFormAdd = (entity,data) =>{
+   
+    const setEmail = () =>{
+      const id = data.customer_id        
+      if(newCustomerSelected.phone_number || newCustomerSelected.email){
+        setValue("email", newCustomerSelected.email);
+        setValue("number", newCustomerSelected.phone_number);
+      }else{
+        dataCustomers.map((customer) =>{
+          if(customer.id == id){
+             setValue("email", customer.email);
+             setValue("number", customer.phone);
+      }}); 
+      }
+    }
 
+    if(entity === "brand"){
+      if(window.location.href.includes("reparations")){
+        setOpenModalAddBrand(false);
+        setOpenModalAddCellphone(true);
+        setEmail()
+      }else{
+        setOpenModalAddBrand(false);
+        setOpenModalAddCellphone(true);
+      } 
+    }else if(entity === "customer"){
+      setOpenModalAddCustomer(false);
+      setOpenModalAdd(true);
+    }else if(entity === "cellphone"){
+      console.log(data);
+      setOpenModalAddCellphone(false);
+      setOpenModalAdd(true);
+       setEmail()
+    }else if(entity === "service"){
+      setOpenModalAddService(false);
+      setOpenModalAdd(true);
+      setEmail()
+    };
   };
 
   const checkBoxTrue = () =>{
@@ -172,7 +211,9 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
   }
 
   const onSubmitBrand = async (data) =>{
-
+  
+    const id = data.customer_id  
+  
     if(data){
 
       try{
@@ -189,14 +230,30 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
                   },1000);
               }else{
                 setNewBrandSelected(response.data);
+                if(newCustomerSelected.length < 1){
+                  dataCustomers.map((customer) =>{
+                    if(customer.id == id){
+                       setValue("email", customer.email);
+                       setValue("number", customer.phone);
+                    }
+                  })
+                }else{
+                  setValue("email", newCustomerSelected.email)
+                }
+                setValue("description","")
+                setValue("brand_id",newBrandSelected.id);
+                setValue("url","") 
+
                 if(dataBrands.length > 0){
                   setDataBrands(dataBrands.concat(response.data))
                   setOpenModalAddBrand(false);
                   setOpenModalAddCellphone(true);
+                  setErrorsApi({model:errorsApi.model, brand_id:null})
                 }else{
                   setDataBrands(response.data)
                   setOpenModalAddCellphone(true);
                   setOpenModalAddBrand(false);
+                  setErrorsApi({model:errorsApi.model, brand_id:null})
                 }
               };
           };
@@ -236,15 +293,32 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
                     console.log(response.error);
                   },1000);
               }else{
-                setNewCustomerSelected(response.data)                      
+                setNewCustomerSelected(response.data)
+                setValue("customer_id",newCustomerSelected.id);
+                setValue("number", data.phone_number)
+
                   if(dataCustomers.length > 0){
                     setDataCustomers(dataCustomers.concat(response.data))
                     setOpenModalAddCustomer(false);
-                    setOpenModalAdd(true)             
+                    setOpenModalAdd(true);
+                    setErrors(
+                      {
+                        customer_id:null,
+                        cellphone_id:errors.cellphone_id,
+                        service_id:errors.service_id
+                      }
+                    )              
                   }else{
                     setDataCustomers(response.data)
                     setOpenModalAddCustomer(false);
-                    setOpenModalAdd(true)                  
+                    setOpenModalAdd(true);
+                    setErrors(
+                      {
+                        customer_id:null,
+                        cellphone_id:errors.cellphone_id,
+                        service_id:errors.service_id
+                      }
+                    )                  
                   }
               };
           };
@@ -266,6 +340,8 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
 
   const addServiceInReparation = async (data) => {
 
+    const id = data.customer_id    
+
     if(data){
 
       try{
@@ -281,17 +357,42 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
                     console.log(response.error);
                   },1000);
               }else{
-                setNewServiceSelected(response.data)                      
+                setNewServiceSelected(response.data)
+                if(newCustomerSelected.length < 1){
+                  dataCustomers.map((customer) =>{
+                    if(customer.id == id){
+                       setValue("email", customer.email);
+                       setValue("number", customer.phone);
+                    }
+                  })
+                }else{
+                  setValue("email", newCustomerSelected.email);
+                  setValue("number", newCustomerSelected.phone_number);
+                }    
+                setValue("service_id",newServiceSelected.id);       
+
                 if(dataServices.length > 0){
                   setDataServices(dataServices.concat(response.data))
                   setOpenModalAddService(false);
                   setOpenModalAdd(true);
-                  
+                  setErrors(
+                    {
+                      customer_id:errors.customer_id,
+                      cellphone_id:errors.cellphone_id,
+                      service_id:null
+                    }
+                  ) 
                 }else{
                   setDataServices(response.data)
                   setOpenModalAddService(false);
                   setOpenModalAdd(true);
-                  
+                  setErrors(
+                    {
+                      customer_id:errors.customer_id,
+                      cellphone_id:errors.cellphone_id,
+                      service_id:null
+                    }
+                  ) 
                 }
               };
           };
@@ -312,6 +413,8 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
 
   const addCellphoneInReparation = async (data) => {
 
+    const id = data.customer_id  
+    
     if(data){
 
       try{
@@ -327,17 +430,44 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
                     console.log(response.error);
                   },1000);
               }else{
-                setNewCellphoneSelected(response.data)                      
+                setNewCellphoneSelected(response.data)
+                if(newCustomerSelected.length < 1){
+                  dataCustomers.map((customer) =>{
+                    if(customer.id == id){
+                       setValue("email", customer.email);
+                       setValue("number", customer.phone);
+                    }
+                  })
+                }else{
+                  setValue("email", newCustomerSelected.email)
+                  setValue("number", newCustomerSelected.phone_number);
+                }  
+                setValue("url","")
+                setValue("cellphone_id",newCellphoneSelected.id);
+                setValue("brand_id",newBrandSelected.id);
+
                 if(dataCellPhones.length > 0){
                   setDataCellPhones(dataCellPhones.concat(response.data))
                   setOpenModalAddCellphone(false);
                   setOpenModalAdd(true);
-                               
+                  setErrors(
+                    {
+                      customer_id:errors.customer_id,
+                      cellphone_id:null,
+                      service_id:errors.service_id
+                    }
+                  )                
                 }else{
                   setDataCellPhones(response.data)
                   setOpenModalAddCellphone(false);
                   setOpenModalAdd(true);
-                         
+                  setErrors(
+                    {
+                      customer_id:errors.customer_id,
+                      cellphone_id:null,
+                      service_id:errors.service_id
+                    }
+                  )        
                 }
               };
           };
@@ -356,7 +486,87 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
     };
   };
 
-  const { register, handleSubmit, getValues, reset} = useForm ();
+  const addEmail = (customerId,entity) =>{
+    dataCustomers.map((customer) =>{
+      if(customer.id == customerId){
+         setValue("email", customer.email);
+         setValue("number", customer.phone);
+      }
+    })
+
+    if(entity === "customer"){
+      setErrors({customer_id:null, cellphone_id:errors.cellphone_id, service_id:errors.service_id})
+    };
+  };
+
+  const changeError = (entity,value) =>{
+
+    if(entity === "customer"){
+      setErrors({customer_id:null, cellphone_id:errors.cellphone_id, service_id:errors.service_id})
+    }
+    else if(entity === "cellphone"){
+      setErrors({customer_id:errors.customer_id, cellphone_id:null, service_id:errors.service_id})
+    }
+    else if(entity === "service"){
+      setErrors({customer_id:errors.customer_id, cellphone_id:errors.cellphone_id, service_id:null})
+    }
+    else if(entity === "brand"){
+      setErrors({brand_id:null, model:errors.model})
+    }
+    else if(entity === "model"){
+      setErrors({model:null, brand_id:errors.brand_id})
+    }
+    else if(entity === "title"){
+      setErrors({title:null})
+    }
+    else if(entity === "description"){
+      setErrors({description:null})
+    }
+    else if(entity === "name"){
+      setErrors({name:null, email:errors.email, phone_number:errors.phone_number})
+    }
+    else if(entity === "email"){
+      setErrors({name:errors.name, email:"El email requiere este formato : xxxx@xx.xx", phone_number:errors.phone_number})
+      if(value.includes("@" && ".")){
+        setErrors({name:errors.name, email:null, phone_number:errors.phone_number})
+      }
+    }
+    else if(entity === "phone_number"){
+      setErrors({name:errors.name, email:errors.email, phone_number:null})
+    }
+  };
+
+  const changeErrorApi = (entity,value) =>{
+
+    if(entity === "title"){
+      setErrorsApi({title:null})
+    }
+    else if(entity === "name"){
+      setErrorsApi({name:null, email:errorsApi.email, phone_number:errorsApi.phone_number})
+    }
+    else if(entity === "email"){
+      setErrorsApi({name:errorsApi.name, email:"El email requiere este formato : xxxx@xx.xx", phone_number:errorsApi.phone_number})
+      if(value.includes("@" && ".")){
+        setErrorsApi({name:errorsApi.name, email:null, phone_number:errorsApi.phone_number})
+      }
+    }
+    else if(entity === "phone_number"){
+      setErrorsApi({name:errorsApi.name, email:errorsApi.email, phone_number:null})
+    }
+    else if(entity === "model"){
+      setErrorsApi({model:null, brand_id:errorsApi.brand_id})
+    }
+    else if(entity === "brand_id"){
+      setErrorsApi({model:errorsApi.model, brand_id:null})
+    }
+    else if(entity === "description"){
+      setErrorsApi({description:null})
+    }
+  };
+
+  
+  const { register, handleSubmit, getValues, setValue} = useForm ();
+
 
   if(location === `${apiURLLocal}Table/cellphones`){
 
@@ -375,7 +585,8 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
                 <input className="form-control" type="number" name="id" readOnly value={`${dataApi.data.length+1}`}  />
                 <br/>
                 <label htmlFor="modelo">Modelo</label>
-                <input className="form-control" type="text" name="modelo" {...register('model',{
+                <input className={errors.model ? "form-control error" : "form-control"} type="text" name="modelo" {...register('model',{
+                  onChange: () => changeError("model"),
                   value:null
                   })}/>
                   {errors.model? <p className="p-errores">El campo Modelo debe ser completado</p> : ""}
@@ -388,7 +599,8 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
                 <label htmlFor="brnad_id">Marca</label>
                 <div className="div-container-select-button">
                 <select className="form-select brand" name="select"  {...register('brand_id',{
-                  value:null
+                  value:null,
+                  onChange: () => changeError("brand"),
                   })}>
                     <option value={null}>Seleccione una Marca..</option>
                   {dataBrands.map((brand)=>{
@@ -419,7 +631,9 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
               <form className="form-group" onSubmit={handleSubmit(onSubmitBrand)}>
                 <br />
                 <label htmlFor="marca">Marca</label>
-                <input className="form-control" type="text" name="marca"  {...register('title')} />
+                <input className={errorsApi.title ? "form-control error" : "form-control"} type="text" name="marca"  {...register('title',{
+                  onChange: () => changeErrorApi("title")
+                })} />
                   {errorsApi.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
                 <br />
                 <label htmlFor="url">Descripcion</label>
@@ -434,7 +648,7 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
                 <br/>
                 <div className="contenedor-boton-modal-dentro-reparations">
                   <button type="button" className="btn btn-success" onClick={()=>onSubmitBrand(getValues())} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeFormAdd}>Cancelar</h1>
+                  <h1 className="btn btn-cancelar" onClick={()=>closeFormAdd("brand")}>Cancelar</h1>
                 </div>
               </form>
             </ModalBody>
@@ -458,7 +672,9 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
             <input className="form-control" type="number" name="id" id="id" readOnly value={dataApi.data.length} ></input>
             <br />
             <label htmlFor="marca">Marca</label>
-            <input className="form-control" type="text" name="marca"  {...register('title')} />
+            <input className={errors.title ? "form-control error" : "form-control"} type="text" name="marca"  {...register('title',{
+              onChange: () => changeError("title")
+            })} />
               {errors.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
             <br />
             <label htmlFor="url">Descripcion</label>
@@ -495,15 +711,17 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
             <input className="form-control" type="number" name="id" id="id" readOnly value={dataApi.data.length + 1} ></input>
             <br />
             <label htmlFor="marca">Nombre del Servicio</label>
-            <input className="form-control" type="text" name="marca"  {...register('description',{
-              value:null
+            <input className={errors.description ? "form-control error" : "form-control"} type="text" name="marca"  {...register('description',{
+              value:null,
+              onChange: () => changeError("description")
               })} />
               {errors.description? <p className="p-errores">El campo Descripcion debe ser completado</p> : ""} 
             <br />
             <label htmlFor="url">Numero de Telefono</label>
-            <input className="form-control" type="text" name="numero de telefono" {...register('phone_number',{
+            <input className={errors.phone_number ? "form-control error" : "form-control"} type="text" name="numero de telefono" {...register('phone_number',{
               value:null
               })} />
+              {errors.phone_number? <p className="p-errores">El campo Numero de telefono debe ser completado</p> : ""}
             <br />
             <label htmlFor="url">Direccion</label>
             <input className="form-control" type="text" name="direccion" {...register('address',{
@@ -535,19 +753,22 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
         <ModalBody className="contenedor-modal-body">
           <form className="form-group" onSubmit={handleSubmit(create)}>
             <label htmlFor="marca">Nombre</label>
-            <input className="form-control" type="text" name="name"  {...register('name',{
+            <input className={errors.name ? "form-control error" : "form-control"} type="text" name="name"  {...register('name',{
+              onChange: () => changeError("name"),
               value:null
               })} />
               {errors.name? <p className="p-errores">{errors.name}</p> : ""} 
             <br />
             <label htmlFor="url">Email</label>
-            <input className="form-control" type="text" name="email" {...register('email',{
+            <input className={errors.email ? "form-control error" : "form-control"} type="text" name="email" {...register('email',{
+              onChange: (e) => changeError("email",e.target.value),
               value:null
               })} />
               {errors.email? <p className="p-errores">{errors.email}</p> : ""}
             <br />
             <label htmlFor="url">Numero de Telefono</label>
-            <input className="form-control" type="text" name="phone" {...register('phone_number',{
+            <input className={errors.phone_number ? "form-control error" : "form-control"} type="text" name="phone" {...register('phone_number',{
+              onChange: () => changeError("phone_number"),
               value:null
               })} />
               {errors.phone_number? <p className="p-errores">{errors.phone_number}</p> : ""}
@@ -580,14 +801,15 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
                 <div className="div-inputs">
                   <label htmlFor="marca">Cliente</label>
                   <div className="div-container-select-button">
-                    <select className="form-select" name="select" defaultValue={null} {...register('customer_id',{
+                    <select className={errors.customer_id ? "form-select error" : "form-select"} name="select" defaultValue={newCustomerSelected.id ? newCustomerSelected.id : ""} {...register('customer_id',{
+                      onChange: (e) => addEmail(e.target.value,"customer"),
                           })}>
                           {
-                            (newCustomerSelected.name)
+                            (newCustomerSelected.id)
                             ?
-                             <option defaultValue={newCustomerSelected.id} {...register('customer_id')}>{newCustomerSelected.name}</option>
+                             <option value={newCustomerSelected.id}>{newCustomerSelected.name}</option>
                             :
-                            <option  value={null}>Seleccione un cliente..</option>
+                            <option >Seleccione un cliente..</option>
                           }
                           {dataCustomers.map((customer)=>{
                               return <option className="option-modal" key={customer.id} value={customer.id} >{customer.name}</option>                              
@@ -608,23 +830,23 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
                 <br />
                 <div className="div-inputs">
                   <label htmlFor="url">Email</label>
-                  <input className="form-control" type="text"  id="email1"{...register('email',{
+                  <input className="form-control" type="text" defaultValue={""}{...register('email',{
                     shouldUnregister:true,
-                    defaultValue:null
                     })} />
                 </div>
                 <br />
                 <div className="div-inputs">
                   <label htmlFor="url">Celular</label>
                   <div className="div-container-select-button">
-                    <select className="form-select" name="select"  defaultValue={null}{...register('cellphone_id',{
+                    <select className={errors.cellphone_id ? "form-select error" : "form-select"} name="select"  defaultValue={newCellphoneSelected.id ? newCellphoneSelected.id : ""} {...register('cellphone_id',{
+                      onChange: () => changeError("cellphone"),
                         })}>
                           {
-                          newCellphoneSelected.model
+                          newCellphoneSelected.id
                           ?
-                          <option value={newCellphoneSelected.id} {...register('cellphone_id')}>{newCellphoneSelected.model}</option>
+                          <option value={newCellphoneSelected.id}>{newCellphoneSelected.model}</option>
                           :
-                          <option  value={null}>Seleccione un celular..</option>
+                          <option >Seleccione un celular..</option>
                           }
                         {dataCellPhones.map((cellphone)=>{
                             return <option className="option-modal" key={cellphone.id} value={cellphone.id} >{cellphone.model}</option>
@@ -661,14 +883,15 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
                 <div className="div-inputs">
                   <label htmlFor="url">Servicio</label>
                   <div className="div-container-select-button">
-                    <select className="form-select" name="select"  defaultValue={null}{...register('service_id',{
+                    <select className={errors.service_id ? "form-select error" : "form-select"} name="select"  defaultValue={newServiceSelected.id ? newServiceSelected.id : ""} {...register('service_id',{
+                      onChange: () => changeError("service"),
                         })}>
                           {
-                          newServiceSelected.description
+                          newServiceSelected.id
                           ?
-                          <option value={newServiceSelected.id} {...register('service_id')}>{newServiceSelected.description}</option>
+                          <option value={newServiceSelected.id}>{newServiceSelected.description}</option>
                           :
-                          <option  value={null}>Seleccione un servicio..</option>
+                          <option>Seleccione un servicio..</option>
                           }
                         {dataServices.map((service)=>{
                             return <option className="option-modal" key={service.id} value={service.id} >{service.description}</option>
@@ -828,7 +1051,7 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
             </ModalBody>
           </Modal>  
 
-          <Modal isOpen={openModalAddCustomer} >
+          <Modal isOpen={openModalAddCustomer}  >
             <ModalHeader style={{display: 'block'}}>
               <div>
                 <h5  style={{float: 'center', color: 'green'}} >Crear Cliente</h5> 
@@ -837,20 +1060,24 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
             <ModalBody className="contenedor-modal-body">
               <form className="form-group" onSubmit={handleSubmit(addCustomerInReparation)} {...register('form')}>
                 <label htmlFor="marca">Nombre</label>
-                <input className="form-control" type="text" name="name"  {...register('name',{
+                <input className={errorsApi.name ? "form-control error" : "form-control"} type="text" name="name"  {...register('name',{
+                  onChange: () => changeErrorApi("name"),
                   value:null
                   })} />
                   {errorsApi.name? <p className="p-errores">{errorsApi.name}</p> : ""} 
                 <br />
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
                 <label htmlFor="url">Email</label>
-                <input className="form-control" type="text" id="email2"{...register('email',{
+                <input className={errorsApi.email ? "form-control error" : "form-control"} type="text" id="email2"{...register('email',{
+                  onChange: (e) => changeErrorApi("email",e.target.value),
                   shouldUnregister:true,
                   value:null
                   })} />
                   {errorsApi.email? <p className="p-errores">{errorsApi.email}</p> : ""}
                 <br />
                 <label htmlFor="url">Numero de Telefono</label>
-                <input className="form-control" type="text" name="phone" {...register('phone_number',{
+                <input className={errorsApi.phone_number ? "form-control error" : "form-control"} type="text" name="phone" {...register('phone_number',{
+                  onChange: () => changeErrorApi("phone_number"),
                   shouldUnregister:true,
                   value:null
                   })} />
@@ -865,7 +1092,7 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
                 <hr />
                 <div className="contenedor-boton-modal-dentro-reparations">
                   <button type="button" className="btn btn-success" onClick={()=>addCustomerInReparation(getValues())} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeFormAdd}>Cancelar</h1>
+                  <h1 className="btn btn-cancelar" onClick={()=>closeFormAdd("customer")}>Cancelar</h1>
                 </div>
               </form>
             </ModalBody>
@@ -882,8 +1109,11 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
                 <label htmlFor="id">Numero de Celular</label>
                 <input className="form-control" type="number" name="id" readOnly value={`${dataCellPhones.length+1}`}  />
                 <br/>
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("email")}></input>
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
                 <label htmlFor="modelo">Modelo</label>
-                <input className="form-control" type="text" name="modelo" {...register('model',{
+                <input className={errorsApi.model ? "form-control error" : "form-control"} type="text" name="modelo" {...register('model',{
+                  onChange: () => changeErrorApi("model"),
                   value:null
                   })}/>
                   {errorsApi.model? <p className="p-errores">El campo Modelo debe ser completado</p> : ""}
@@ -895,16 +1125,16 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
                 <br/>
                 <label htmlFor="brnad_id">Marca</label>
                 <div className="div-container-select-button">
-                <select className="form-select brand" name="select"  {...register('brand_id',{
+                <select className={errorsApi.brand_id ? "form-select error" : "form-select"} name="select" defaultValue={newBrandSelected.id ? newBrandSelected.id : ""}  {...register('brand_id',{
+                  onChange: () => changeErrorApi("brand_id"),
                   shouldUnregister:true,
-                  value:null
                   })}>
                     {
-                      newBrandSelected.title
+                      newBrandSelected.id
                       ?
-                      <option value={newBrandSelected.id} {...register('brand_id')}>{newBrandSelected.title}</option>
+                      <option value={newBrandSelected.id} >{newBrandSelected.title}</option>
                       :
-                      <option  value={null}>Seleccione una marca..</option>    
+                      <option>Seleccione una marca..</option>    
                     }
                   {dataBrands.map((brand)=>{
                       return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option>
@@ -916,7 +1146,7 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
                 <br/>  
                 <div className="contenedor-boton-modal-dentro-reparations">
                   <button type="button" className="btn btn-success" onClick={()=>addCellphoneInReparation(getValues())} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeFormAdd}>Cancelar</h1>
+                  <h1 className="btn btn-cancelar" onClick={()=>closeFormAdd("cellphone",getValues())}>Cancelar</h1>
                 </div>
               </form>
             </ModalBody>
@@ -933,8 +1163,10 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
                 <label htmlFor="id">Numero de Servicio</label>
                 <input className="form-control" type="number" name="id" id="id" readOnly value={dataServices.length + 1} ></input>
                 <br />
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
                 <label htmlFor="marca">Descripcion</label>
-                <input className="form-control" type="text" name="marca"  {...register('description',{
+                <input className={errorsApi.description ? "form-control error" : "form-control"} type="text" name="marca"  {...register('description',{
+                  onChange: () => changeErrorApi("description"),
                   value:null
                   })} />
                   {errorsApi.description? <p className="p-errores">El campo Descripcion debe ser completado</p> : ""} 
@@ -959,7 +1191,7 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
                 <hr />
                 <div className="contenedor-boton-modal-dentro-reparations">
                   <button type="button" className="btn btn-success" onClick={()=>addServiceInReparation(getValues())} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeFormAdd}>Cancelar</h1>
+                  <h1 className="btn btn-cancelar" onClick={()=>closeFormAdd("service",getValues())}>Cancelar</h1>
                 </div>
               </form>
             </ModalBody>
@@ -975,9 +1207,13 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
               <form className="form-group" onSubmit={handleSubmit(onSubmitBrand)}>
                 <br />
                 <label htmlFor="marca">Marca</label>
-                <input className="form-control" type="text" name="marca"  {...register('title')} />
+                <input className={errorsApi.title ? "form-control error" : "form-control"} type="text" name="marca"  {...register('title',{
+                  onChange: () => changeErrorApi("title"),
+                })} />
                   {errorsApi.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
                 <br />
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("email")}></input>
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
                 <label htmlFor="url">Descripcion</label>
                 <input className="form-control" type="text" name="url" {...register('description',{
                   value:null
@@ -990,7 +1226,7 @@ const ModalAdd =({create,dataApi,errors,openModal,closeForm}) =>{
                 <br/>
                 <div className="contenedor-boton-modal-dentro-reparations">
                   <button type="button" className="btn btn-success" onClick={()=>onSubmitBrand(getValues())} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeFormAdd}>Cancelar</h1>
+                  <h1 className="btn btn-cancelar" onClick={()=>closeFormAdd("brand",getValues())}>Cancelar</h1>
                 </div>
               </form>
             </ModalBody>

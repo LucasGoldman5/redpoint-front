@@ -107,9 +107,10 @@ function Table  ({urlTable}) {
       setOpenModal(true);
     }
 
-    const create= async (data) =>{
+    const create = async (data) =>{
     
       console.log(data);
+
         if(data){
   
             try {
@@ -147,8 +148,8 @@ function Table  ({urlTable}) {
     
     const closeForm = () =>{
        
-      setOpenModal(false);
       setErrors([]);
+      setOpenModal(false);
       setOpenModalEdit(false);
       setOpenModalView(false);
       setItemToEdit(null);
@@ -196,6 +197,7 @@ function Table  ({urlTable}) {
                     }else{                      
                       setOpenModalEdit(false);
                       setErrors([]);
+                      setItemToEdit(null)
                       getData();
                     }  
                 }
@@ -600,11 +602,11 @@ function Table  ({urlTable}) {
                   
                     
                   <ModalEdit
-                    openModalEdit={openModalEdit}
+                    getOpenModalEdit={openModalEdit}
                     itemToEdit={itemToEdit}
                     onsubmit={edit}
                     closeForm={closeForm}
-                    errors={errors}>
+                    errorsInTable={errors}>
                   </ModalEdit>
 
                   <ModalAdd
@@ -612,7 +614,7 @@ function Table  ({urlTable}) {
                     closeForm={closeForm}
                     dataApi={dataApi}
                     openModal={openModal}
-                    errors={errors}>
+                    errorsInTable={errors}>
                   </ModalAdd>
 
                   <ModalView

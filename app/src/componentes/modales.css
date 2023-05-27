@@ -27,7 +27,13 @@
     font-weight: 600;
 }
 
+.form-control.error{
+    border: 1px solid red;
+}
 
+.form-select.error{
+    border: 1px solid red;
+}
 
 .input-select{
     position: absolute;
