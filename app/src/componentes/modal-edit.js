@@ -3,6 +3,8 @@ import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import { useForm } from "react-hook-form";
 import getEnviroment from "../helpers/getEnviroment";
 import HelperBuildRequest from "../helpers/buildRequest";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
 import './modales.css'
 
 
@@ -25,6 +27,14 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
   const [newCellphoneSelectedEdit, setNewCellphoneSelectedEdit] = useState([]);
   const [newServiceSelectedEdit, setNewServiceSelectedEdit] = useState([]);
   const [newBrandSelectedEdit, setNewBrandSelectedEdit] = useState([]);
+  const [selectCustomerActive, setSelectCustomerActive] = useState(false);
+  const [selectCellphoneActive, setSelectCellphoneActive] = useState(false);
+  const [selectServiceActive, setSelectServiceActive] = useState(false);
+  const [selectBrandActive, setSelectBrandActive] = useState(false);
+  const [filterCustomerValue, setFilterCustomerValue] = useState('');
+  const [filterCellphoneValue, setFilterCellphoneValue] = useState('');
+  const [filterServiceValue, setFilterServiceValue] = useState('');
+  const [filterBrandValue, setFilterBrandValue] = useState('');
   const [checkbox, setCheckBox] = useState(false);
   const [apiURLLocal, setApiURLLocal] = useState('');
 
@@ -55,108 +65,117 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
     return  enviroment.apiURL 
   }
 
+  const urlLocal = async () =>{
+    const enviroment = await getEnviroment()
+    return enviroment.url 
+  }
+
   const getDataSelectEdit = async () =>{
 
-    try{
+    if(window.location.href.includes("reparations" || "report")){
+
+      try{
                 
-      const config = await HelperBuildRequest("GET",null, "dataTable");
-      const request = await fetch(`http://localhost:8000/api/select-box/brand`, config);
-  
-        if(request.status === 200){
-          const response = await request.json();
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${await url()}select-box/brand`, config);
 
-            if(response.error){
-              setTimeout(()=>{
-                  console.log(response.error);
-              },1000);
-            }else{                      
-              setDataBrandsEdit(response);
-            };  
-        };
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                    
+                    setDataBrandsEdit(response);
+                }  
+          };
 
-    }catch(error){
-        console.log(error);
-     }
-     
-     try{
-              
-      const config = await HelperBuildRequest("GET",null, "dataTable");
-      const request = await fetch(`http://localhost:8000/api/select-box/customer`, config);
+      }catch(error){
+        console.log(error)
+      }
+      
+      try{
+                  
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${await url()}select-box/customer`, config);
 
-        if(request.status === 200){
-            const response = await request.json();
-              if(response.error){
-                  setTimeout(()=>{
-                    console.log(response.error);
-                  },1000);
-              }else{                      
-                  setDataCustomersEdit(response);
-              }  
-        };
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                    
+                    setDataCustomersEdit(response);
+                }  
+          };
 
-    }catch(error){
-      console.log(error)
+      }catch(error){
+        console.log(error)
+      }
+      
+      try{
+                  
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${await url()}select-box/cellphone`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                      
+                    setDataCellPhonesEdit(response);
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+      
+      try{
+                  
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${await url()}select-box/service`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                      
+                    setDataServicesEdit(response);
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      };
+
+    }else if(window.location.href === `${await urlLocal()}Table/cellphones`){
+      
+      try{
+                
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${await url()}select-box/brand`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                    
+                    setDataBrandsEdit(response);
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
     }
-    
-    try{
-                
-      const config =await HelperBuildRequest("GET",null, "dataTable");
-      const request = await fetch(`http://localhost:8000/api/select-box/cellphone`, config);
-
-        if(request.status === 200){
-            const response = await request.json();
-              if(response.error){
-                  setTimeout(()=>{
-                    console.log(response.error);
-                  },1000);
-              }else{                      
-                  setDataCellPhonesEdit(response);
-              }  
-        };
-
-    }catch(error){
-      console.log(error)
-    }
-    
-    try{
-                
-      const config =await HelperBuildRequest("GET",null, "dataTable");
-      const request = await fetch(`http://localhost:8000/api/select-box/service`, config);
-
-        if(request.status === 200){
-            const response = await request.json();
-              if(response.error){
-                  setTimeout(()=>{
-                    console.log(response.error);
-                  },1000);
-              }else{                                            
-                  setDataServicesEdit(response);
-              }  
-        };
-
-    }catch(error){
-      console.log(error)
-    }
-    
-    try{
-                
-      const config =await HelperBuildRequest("GET",null, "dataTable");
-      const request = await fetch(`http://localhost:8000/api/select-box/status`, config);
-
-        if(request.status === 200){
-            const response = await request.json();
-              if(response.error){
-                  setTimeout(()=>{
-                    console.log(response.error);
-                  },1000);
-              }else{                      
-                  setDataStatesEdit(response);
-              }  
-        };
-
-    }catch(error){
-      console.log(error)
-    } 
   };
 
   const changeModal = (fact) =>{
@@ -164,14 +183,13 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
     if(fact === "brand"){
       setOpenModalAddBrandEdit(true);
       setValue("url","")
-      setOpenModalAddCellphoneEdit(false);
+      setOpenModalEdit(false);
     }else if(fact === "customer"){  
       setOpenModalAddCustomerEdit(true)
       setValue("email","")
       setOpenModalEdit(false);
     }else if(fact === "cellphone"){
       setOpenModalAddCellphoneEdit(true);
-      setValue("brand_id",null)
       setOpenModalEdit(false);
     }else if(fact === "service"){
       setOpenModalAddServiceEdit(true);
@@ -187,12 +205,14 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
       if(newCustomerSelectedEdit.phone_number || newCustomerSelectedEdit.email){
         setValue("email", newCustomerSelectedEdit.email);
         setValue("number", newCustomerSelectedEdit.phone_number);
-      }else if(itemToEdit && newCustomerSelectedEdit.length < 1){
+      }else if(itemToEdit.customer.id === id && newCustomerSelectedEdit.length < 1){
         setValue("email",itemToEdit.email)
         setValue("number",itemToEdit.number)
       }else{
         dataCustomersEdit.map((customer) =>{
           if(customer.id == id){
+            console.log(customer);
+             setValue("customer_id",customer.id)
              setValue("email", customer.email);
              setValue("number", customer.phone);
       }}); 
@@ -204,6 +224,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
       setOpenModalEdit(true);
       setValue("email", itemToEdit.email)
     }else if(entity === "cellphone"){
+      console.log(data);
       setOpenModalAddCellphoneEdit(false);
       setOpenModalEdit(true);
       setEmail()
@@ -219,7 +240,8 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
         setEmail()
       }else{
         setOpenModalAddBrandEdit(false);
-        setOpenModalAddCellphoneEdit(true);
+        setOpenModalEdit(true);
+        setValue("url",itemToEdit.url)
       }     
     }
   
@@ -262,9 +284,21 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                 if(dataBrandsEdit.length > 0){
                   setDataBrandsEdit(dataBrandsEdit.concat(response.data))
                   setOpenModalAddBrandEdit(false);
+                  if(window.location.href.includes("reparations" || "report")){
+                    setOpenModalAddCellphoneEdit(true);
+                  }else{
+                    setOpenModalEdit(true);
+                    setValue("model", '')
+                  }
                 }else{
                   setDataBrandsEdit(response.data)
                   setOpenModalAddBrandEdit(false);
+                  if(window.location.href.includes("reparations" || "report")){
+                    setOpenModalAddCellphoneEdit(true);
+                  }else{
+                    setOpenModalEdit(true);
+                    setValue("model", '')
+                  }
                 }
               };
           };
@@ -370,9 +404,11 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                 if(dataCustomersEdit.length > 0){
                   setDataCellPhonesEdit(dataCellphonesEdit.concat(response.data))
                   setOpenModalAddCellphoneEdit(false);
+                  setOpenModalEdit(true);
                 }else{
                   setDataCellPhonesEdit(response.data)
                   setOpenModalAddCellphoneEdit(false);
+                  setOpenModalEdit(true);
                 }
               };
           };
@@ -427,9 +463,11 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                 if(dataCustomersEdit.length > 0){
                   setDataServicesEdit(dataServicesEdit.concat(response.data))
                   setOpenModalAddServiceEdit(false);
+                  setOpenModalEdit(true);
                 }else{
                   setDataServicesEdit(response.data)
                   setOpenModalAddServiceEdit(false);
+                  setOpenModalEdit(true);
                 }
               };
           };
@@ -448,12 +486,17 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
   };
 
   const addEmail = (customerId,entity) =>{
+
+    setFilterCustomerValue('');
+    setSelectCustomerActive(false);
+
     dataCustomersEdit.map((customer) =>{
       if(customer.id == customerId){
          setValue("email", customer.email);
          setValue("number", customer.phone);
-      }
-    })
+      };
+    });
+
     if(entity === "customer"){
       setErrors({customer_id:null, cellphone_id:errors.cellphone_id, service_id:errors.service_id})
     };
@@ -465,12 +508,18 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
       setErrors({customer_id:null, cellphone_id:errors.cellphone_id, service_id:errors.service_id})
     }
     else if(entity === "cellphone"){
+      setFilterCellphoneValue('');
+      setSelectCellphoneActive(false);
       setErrors({customer_id:errors.customer_id, cellphone_id:null, service_id:errors.service_id})
     }
     else if(entity === "service"){
+      setFilterServiceValue('');
+      setSelectServiceActive(false);
       setErrors({customer_id:errors.customer_id, cellphone_id:errors.cellphone_id, service_id:null})
     }
     else if(entity === "brand"){
+      setFilterBrandValue('');
+      setSelectBrandActive(false);
       setErrors({brand_id:null, model:errors.model})
     }
     else if(entity === "model"){
@@ -517,12 +566,63 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
       setErrorsApi({model:null, brand_id:errorsApi.brand_id})
     }
     else if(entity === "brand_id"){
+      setFilterBrandValue('');
+      setSelectBrandActive(false);
       setErrorsApi({model:errorsApi.model, brand_id:null})
     }
     else if(entity === "description"){
       setErrorsApi({description:null})
     }
   };
+
+  const activeInputSearch = (data,entity) =>{
+
+    console.log(data);
+    
+    if(entity === "customer"){
+      setSelectCustomerActive(!selectCustomerActive);
+    }
+    else if(entity === "cellphone"){
+      setSelectCellphoneActive(!selectCellphoneActive);
+    }
+    else if(entity === "service"){
+      setSelectServiceActive(!selectServiceActive);
+    }
+    else if(entity === "brand"){
+      setSelectBrandActive(!selectBrandActive);
+    }
+  };
+
+  const handleInputChange = (e,entity) => {
+    if(entity === "customer"){
+      setFilterCustomerValue(e.target.value);
+    }
+    else if(entity === "cellphone"){
+      setFilterCellphoneValue(e.target.value)
+    }
+    else if(entity === "service"){
+      setFilterServiceValue(e.target.value)
+    }
+    else if(entity === "brand"){
+      setFilterBrandValue(e.target.value)
+    }
+  };
+
+  const filteredCustomers = dataCustomersEdit.filter((customer) =>
+    customer.name.toLowerCase().includes(filterCustomerValue.toLowerCase())
+  );
+
+  const filteredCellphones = dataCellphonesEdit.filter((cellphone) =>
+    cellphone.model.toLowerCase().includes(filterCellphoneValue.toLowerCase())
+  );
+
+  const filteredServices = dataServicesEdit.filter((service) =>
+    service.description.toLowerCase().includes(filterServiceValue.toLowerCase())
+  );
+
+  const filteredBrands = dataBrandsEdit.filter((brand) =>
+    brand.title.toLowerCase().includes(filterBrandValue.toLowerCase())
+  );
 
  
   const { register, handleSubmit, getValues, setValue} = useForm ();
@@ -539,8 +639,8 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
         </ModalHeader>
         <ModalBody>
           <form className="form-group" onSubmit={handleSubmit(onsubmit)}>
-            <label htmlFor="id">ID</label>
-            <input className="form-control" type="number" name="id" id="id" readOnly  defaultValue={itemToEdit ? itemToEdit.id : ''} {...register('id',{ shouldUnregister: true,})} />
+            <label htmlFor="id">Numero identificador</label>
+            <input className="form-control" type="number" name="id" id="id" readOnly  defaultValue={itemToEdit ? itemToEdit.id : ''} {...register('id',{ shouldUnregister: true})} />
             <br />
             <label htmlFor="marca">Marca</label>
             <input className={errors.title ? "form-control error" : "form-control"} type="text" name="marca" id="marca"  defaultValue={itemToEdit ? itemToEdit.title : ''}{...register('title',{
@@ -548,6 +648,9 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                onChange: () => changeError("title"),
                })}/>
               {errors.title? <p className="p-errores">El campo Marca debe ser definido</p> : ""}
+            <br />
+            <label htmlFor="descripcion">Descripcion</label>
+            <input className="form-control" type="text" name="descripcion" id="descripcion"  defaultValue={itemToEdit ? itemToEdit.description : ''}{...register('description',{shouldUnregister: true})}/>
             <br />
             <label htmlFor="url">Url</label>
             <input className="form-control" type="text" name="url" id="url"  defaultValue={itemToEdit ? itemToEdit.url : ''}{...register('url',{ shouldUnregister: true,})} />
@@ -588,12 +691,20 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
               <br />
               <label htmlFor="url">Marca</label>
               <div className="div-container-select-button">
-                <select className="form-select" name="select"  defaultValue={itemToEdit ? itemToEdit.brand_id.id : null} {...register('brand_id',{ 
+              <input type="search" onChange={(e)=>handleInputChange(e,"brand")} placeholder="buscar.." className={selectBrandActive ? "input-search brand" : "input-search-none"}></input>
+              <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"brand")} className="icon-search" icon={faMagnifyingGlass} />
+                <select  className="form-select" name="select"  defaultValue={itemToEdit && newBrandSelectedEdit.length < 1 ? itemToEdit.brand_id.id : newBrandSelectedEdit.length > 0 ? newBrandSelectedEdit.id : null} {...register('brand_id',{ 
                   shouldUnregister:true,
-                  onChange: () => changeError("brand_id"),
+                  onChange: () => changeError("brand"),
                   })}>
-                  <option className={errors.brand_id ? "option-selected error" : "option-selected"} value={itemToEdit ? itemToEdit.brand_id.id : null}>{itemToEdit ? itemToEdit.brand_id.brand : null}</option>
-                  {dataBrandsEdit.map((brand)=>{
+                  {
+                    newBrandSelectedEdit.id
+                    ?
+                    <option className={errors.brand_id ? "option-selected error" : "option-selected"} value={newBrandSelectedEdit.id}>{newBrandSelectedEdit.title}</option>
+                    :
+                    <option className={errors.brand_id ? "option-selected error" : "option-selected"} value={itemToEdit ? itemToEdit.brand_id.id : null}>{itemToEdit ? itemToEdit.brand_id.brand : null}</option>
+                  }
+                  {filteredBrands.map((brand)=>{
                       return <option  key={brand.id} value={brand.id} >{brand.title}</option>
                   })}
                 </select>
@@ -618,6 +729,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
             <ModalBody className="contenedor-modal-body">
               <form className="form-group" onSubmit={handleSubmit(onSubmitBrand)}>
                 <br />
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("model")}></input>
                 <label htmlFor="marca">Marca</label>
                 <input className={errorsApi.title ? "form-control error" : "form-control"} type="text" name="marca"  {...register('title',{
                   shouldUnregister:true,
@@ -755,7 +867,9 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                   <div className="div-inputs">
                     <label>Cliente</label>              
                     <div className="div-container-select-button">
-                      <select className={errors.customer_id ? "form-select error" : "form-select"} defaultValue={itemToEdit && newCustomerSelectedEdit.length < 1 ? itemToEdit.customer.id : newCustomerSelectedEdit.length > 0 ? newCustomerSelectedEdit.id : null}{...register('customer_id',{
+                    <input type="search" onChange={(e)=>handleInputChange(e,"customer")} placeholder="buscar.." className={selectCustomerActive ? "input-search" : "input-search-none"}></input>
+                    <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"customer")} className="icon-search" icon={faMagnifyingGlass} />
+                      <select  className={errors.customer_id ? "form-select error" : "form-select"} defaultValue={itemToEdit && newCustomerSelectedEdit.length < 1 ? itemToEdit.customer.id : newCustomerSelectedEdit.length > 0 ? newCustomerSelectedEdit.id : null}{...register('customer_id',{
                          shouldUnregister: true,
                          onChange: (e) => addEmail(e.target.value,"customer"),
                          })}>
@@ -764,9 +878,9 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                           ?
                            <option value={newCustomerSelectedEdit.id}>{newCustomerSelectedEdit.name}</option>
                           :
-                          <option >Seleccione un cliente..</option>
+                          <option >Seleccionar..</option>
                         }
-                        {dataCustomersEdit.map((customer)=>{   
+                        {filteredCustomers.map((customer)=>{   
                           const customerSelected = itemToEdit && itemToEdit.customer.id == customer.id ?  'selected' : '';   
                             return <option className={itemToEdit && newCustomerSelectedEdit.length < 1 ? itemToEdit.customer.id == customer.id ? "option-selected" :"option-modal" : newCustomerSelectedEdit.length > 0 ? newCustomerSelectedEdit.id == customer.id ? "option-selected" :"option-modal":"option-modal"} 
                                            key={customer.id} 
@@ -793,7 +907,9 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                   <div className="div-inputs">
                     <label htmlFor="cellphone">Celular</label>
                     <div className="div-container-select-button">
-                      <select className={errors.cellphone_id ? "form-select error" : "form-select"} type="text" name="email" id="email"  defaultValue={itemToEdit && newCellphoneSelectedEdit.length < 1 ? itemToEdit.cellphone.id : newCellphoneSelectedEdit.length > 0 ? newCellphoneSelectedEdit.id : null}{...register('cellphone_id',{
+                    <input type="search" onChange={(e)=>handleInputChange(e,"cellphone")} placeholder="buscar.." className={selectCellphoneActive ? "input-search" : "input-search-none"}></input>
+                    <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"cellphone")} className="icon-search" icon={faMagnifyingGlass} />
+                      <select  className={errors.cellphone_id ? "form-select error" : "form-select"} type="text" name="email" id="email"  defaultValue={itemToEdit && newCellphoneSelectedEdit.length < 1 ? itemToEdit.cellphone.id : newCellphoneSelectedEdit.length > 0 ? newCellphoneSelectedEdit.id : null}{...register('cellphone_id',{
                          shouldUnregister: true,
                          onChange: () => changeError("cellphone"),
                          })}>
@@ -802,9 +918,9 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                           ?
                            <option value={newCellphoneSelectedEdit.id}>{newCellphoneSelectedEdit.model}</option>
                           :
-                          <option >Seleccione un Celular..</option>
+                          <option >Seleccionar..</option>
                         }
-                        {dataCellphonesEdit.map((cellphone)=>{
+                        {filteredCellphones.map((cellphone)=>{
                           const cellphoneSelected = itemToEdit && itemToEdit.cellphone.id == cellphone.id ?  'selected' : "";                
                             return <option className={itemToEdit && itemToEdit.cellphone.id == cellphone.id ? "option-selected" :"option-modal"} 
                             key={cellphone.id} 
@@ -834,7 +950,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                       shouldUnregister:true
                     })}>
                       <option className="option-selected" value={itemToEdit ? itemToEdit.state_id.id : null}>{itemToEdit ? itemToEdit.state_id.description : null}</option>
-                      {dataStatesEdit.map((state) => {
+                      {filteredServices.map((state) => {
                         return <option value={state.id} key={state.id}>{state.description}</option>
                       })}
                     </select>
@@ -843,7 +959,9 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                   <div className="div-inputs">
                     <label htmlFor="service">Servicio</label>
                     <div className="div-container-select-button">
-                      <select className={errors.service_id ? "form-select error" : "form-select"} type="text" name="service" id="service"  defaultValue={itemToEdit && newServiceSelectedEdit.length < 1 ? itemToEdit.service.id : newServiceSelectedEdit.length > 0 ? newServiceSelectedEdit.id : null}{...register('service_id',{
+                    <input type="search" onChange={(e)=>handleInputChange(e,"service")} placeholder="buscar.." className={selectServiceActive ? "input-search" : "input-search-none"}></input>
+                    <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"service")} className="icon-search" icon={faMagnifyingGlass} />
+                      <select  className={errors.service_id ? "form-select error" : "form-select"} type="text" name="service" id="service"  defaultValue={itemToEdit && newServiceSelectedEdit.length < 1 ? itemToEdit.service.id : newServiceSelectedEdit.length > 0 ? newServiceSelectedEdit.id : null}{...register('service_id',{
                          shouldUnregister: true,
                          onChange: () => changeError("service"),
                          })}>
@@ -852,7 +970,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                           ?
                            <option value={newServiceSelectedEdit.id}>{newServiceSelectedEdit.description}</option>
                           :
-                          <option >Seleccione un Servicio..</option>
+                          <option >Seleccionar..</option>
                         }
                         {dataServicesEdit.map((service)=>{                 
                             return <option className={itemToEdit && itemToEdit.service.id == service.id ? "option-selected" :"option-modal"}
@@ -1061,6 +1179,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                 <input className="form-control" type="number" name="id" readOnly value={`${dataCellphonesEdit.length+1}`}  />
                 <br/>
                 <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("email")}></input>
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("customer_id")}></input>
                 <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
                 <label htmlFor="modelo">Modelo</label>
                 <input className={errorsApi.model ? "form-control error" : "form-control"} type="text" name="modelo" {...register('model',{
@@ -1076,7 +1195,9 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                 <br/>
                 <label htmlFor="brnad_id">Marca</label>
                 <div className="div-container-select-button">
-                <select className={errorsApi.brand_id ? "form-select error" : "form-select"} name="select" defaultValue={itemToEdit && newBrandSelectedEdit.length < 1 ? itemToEdit.cellphone.brand_id : newBrandSelectedEdit.length > 0 ? newBrandSelectedEdit.id : null}{...register('brand_id',{
+                <input type="search" onChange={(e)=>handleInputChange(e,"brand")} placeholder="buscar.." className={selectBrandActive ? "input-search brand" : "input-search-none"}></input>
+                <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"brand")} className="icon-search" icon={faMagnifyingGlass} />
+                <select className={errorsApi.brand_id ? "form-select error" : "form-select"} name="select" defaultValue={newBrandSelectedEdit.title ? newBrandSelectedEdit.id : null}{...register('brand_id',{
                    shouldUnregister: true,
                    onChange: () => changeErrorApi("brand_id"),
                    })}>
@@ -1085,9 +1206,9 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                           ?
                            <option value={newBrandSelectedEdit.id}>{newBrandSelectedEdit.title}</option>
                           :
-                          <option >Seleccione una Marca..</option>
+                          <option >Seleccionar..</option>
                         }
-                  {dataBrandsEdit.map((brand)=>{
+                  {filteredBrands.map((brand)=>{
                       return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option>
                   })}
                 </select>
@@ -1152,6 +1273,8 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                 <input className="form-control" type="number" name="id" id="id" readOnly value={dataServicesEdit.length + 1} ></input>
                 <br />
                 <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("customer_id")}></input>
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("cellphone_id")}></input>
                 <label htmlFor="marca">Descripcion</label>
                 <input className={errorsApi.description ? "form-control error" : "form-control"} type="text" name="marca"  {...register('description',{
                   value:null,
@@ -1207,7 +1330,9 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
               <div className="div-inputs">
               <label>Cliente</label>              
               <div className="div-container-select-button">
-                  <select className={errors.customer_id ? "form-select error" : "form-select"}  name="select"  defaultValue={itemToEdit && newCustomerSelectedEdit.length < 1 ? itemToEdit.customer.id : newCustomerSelectedEdit.length > 0 ? newCustomerSelectedEdit.id : null}{...register('customer_id',{
+              <input type="search" onChange={(e)=>handleInputChange(e,"customer")} placeholder="buscar.." className={selectCustomerActive ? "input-search" : "input-search-none"}></input>
+              <FontAwesomeIcon onClick={()=> activeInputSearch(getValues(),"customer")} className="icon-search" icon={faMagnifyingGlass} />
+                  <select  className={errors.customer_id ? "form-select error" : "form-select"}  name="select"  defaultValue={itemToEdit && newCustomerSelectedEdit.length < 1 ? itemToEdit.customer.id : newCustomerSelectedEdit.length > 0 ? newCustomerSelectedEdit.id : null}{...register('customer_id',{
                          shouldUnregister: true,
                          onChange: (e) => addEmail(e.target.value,"customer"),
                          })}>
@@ -1216,9 +1341,9 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                           ?
                            <option value={newCustomerSelectedEdit.id}>{newCustomerSelectedEdit.name}</option>
                           :
-                          <option >Seleccione un cliente..</option>
+                          <option >Seleccionar..</option>
                         }
-                        {dataCustomersEdit.map((customer)=>{   
+                        {filteredCustomers.map((customer)=>{   
                           const customerSelected = itemToEdit && itemToEdit.customer.id == customer.id ?  'selected' : '';   
                             return <option className={itemToEdit && itemToEdit.customer.id == customer.id ? "option-selected" :"option-modal"} 
                                            key={customer.id} 
@@ -1245,7 +1370,9 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
               <div className="div-inputs">
               <label htmlFor="cellphone">Celular</label>
               <div className="div-container-select-button">
-                  <select className={errors.cellphone_id ? "form-select error" : "form-select"} type="text" name="email" id="email"  defaultValue={itemToEdit && newCellphoneSelectedEdit.length < 1 ? itemToEdit.cellphone.id : newCellphoneSelectedEdit.length > 0 ? newCellphoneSelectedEdit.id : null}{...register('cellphone_id',{
+              <input type="search" onChange={(e)=>handleInputChange(e,"cellphone")} placeholder="buscar.." className={selectCellphoneActive ? "input-search" : "input-search-none"}></input>
+              <FontAwesomeIcon onClick={()=> activeInputSearch(getValues(),"cellphone")} className="icon-search" icon={faMagnifyingGlass} />
+                  <select  className={errors.cellphone_id ? "form-select error" : "form-select"} type="text" name="email" id="email"  defaultValue={itemToEdit && newCellphoneSelectedEdit.length < 1 ? itemToEdit.cellphone.id : newCellphoneSelectedEdit.length > 0 ? newCellphoneSelectedEdit.id : null}{...register('cellphone_id',{
                          shouldUnregister: true,
                          onChange: () => changeError("cellphone"),
                          })}>
@@ -1254,9 +1381,9 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                           ?
                            <option value={newCellphoneSelectedEdit.id}>{newCellphoneSelectedEdit.model}</option>
                           :
-                          <option >Seleccione un Celular..</option>
+                          <option >Seleccionar..</option>
                         }
-                        {dataCellphonesEdit.map((cellphone)=>{
+                        {filteredCellphones.map((cellphone)=>{
                           const cellphoneSelected = itemToEdit && itemToEdit.cellphone.id == cellphone.id ?  'selected' : "";                
                             return <option className={itemToEdit && itemToEdit.cellphone.id == cellphone.id ? "option-selected" :"option-modal"} 
                             key={cellphone.id} 
@@ -1295,7 +1422,9 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
               <div className="div-inputs">
               <label htmlFor="service">Servicio</label>
               <div className="div-container-select-button">
-                  <select className={errors.service_id ? "form-select error" : "form-select"} type="text" name="service" id="service"  defaultValue={itemToEdit && newServiceSelectedEdit.length < 1 ? itemToEdit.service.id : newServiceSelectedEdit.length > 0 ? newServiceSelectedEdit.id : null}{...register('service_id',{
+              <input type="search" onChange={(e)=>handleInputChange(e,"service")} placeholder="buscar.." className={selectServiceActive ? "input-search" : "input-search-none"}></input>
+              <FontAwesomeIcon onClick={() => activeInputSearch(getValues(),"service")} className="icon-search" icon={faMagnifyingGlass} />
+                  <select  className={errors.service_id ? "form-select error" : "form-select"} type="text" name="service" id="service"  defaultValue={itemToEdit && newServiceSelectedEdit.length < 1 ? itemToEdit.service.id : newServiceSelectedEdit.length > 0 ? newServiceSelectedEdit.id : null}{...register('service_id',{
                          shouldUnregister: true,
                          onChange: () => changeError("service"),
                          })}>
@@ -1304,9 +1433,9 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                           ?
                            <option value={newServiceSelectedEdit.id}>{newServiceSelectedEdit.description}</option>
                           :
-                          <option >Seleccione un Servicio..</option>
+                          <option >Seleccionar..</option>
                         }
-                        {dataServicesEdit.map((service)=>{                 
+                        {filteredServices.map((service)=>{                 
                             return <option className={itemToEdit && itemToEdit.service.id == service.id ? "option-selected" :"option-modal"}
                              key={service.id}
                              value={service.id}>{service.description}</option>   
@@ -1513,6 +1642,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                 <input className="form-control" type="number" name="id" readOnly value={`${dataCellphonesEdit.length+1}`}  />
                 <br/>
                 <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("email")}></input>
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("customer_id")}></input>
                 <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
                 <label htmlFor="modelo">Modelo</label>
                 <input className={errorsApi.model ? "form-control error" : "form-control"} type="text" name="modelo" {...register('model',{
@@ -1527,8 +1657,11 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                   })} />
                 <br/>
                 <label htmlFor="brnad_id">Marca</label>
+                
                 <div className="div-container-select-button">
-                <select className={errorsApi.brand_id ? "form-select error" : "form-select"} name="select" defaultValue={itemToEdit && newBrandSelectedEdit.length < 1 ? itemToEdit.cellphone.brand_id : newBrandSelectedEdit.length > 0 ? newBrandSelectedEdit.id : null}{...register('brand_id',{
+                <input type="search" onChange={(e)=>handleInputChange(e,"brand")} placeholder="buscar.." className={selectBrandActive ? "input-search brand" : "input-search-none"}></input>
+                <FontAwesomeIcon onClick={()=> activeInputSearch(getValues(),"brand")} className="icon-search" icon={faMagnifyingGlass} />
+                <select  className={errorsApi.brand_id ? "form-select error" : "form-select"} name="select" defaultValue={itemToEdit && newBrandSelectedEdit.length < 1 ? itemToEdit.cellphone.brand_id : newBrandSelectedEdit.length > 0 ? newBrandSelectedEdit.id : null}{...register('brand_id',{
                    shouldUnregister: true,
                    onChange: () => changeErrorApi("brand_id"),
                    })}>
@@ -1537,9 +1670,9 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                           ?
                            <option value={newBrandSelectedEdit.id}>{newBrandSelectedEdit.title}</option>
                           :
-                          <option >Seleccione una Marca..</option>
+                          <option >Seleccionar..</option>
                         }
-                  {dataBrandsEdit.map((brand)=>{
+                  {filteredBrands.map((brand)=>{
                       return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option>
                   })}
                 </select>
@@ -1604,6 +1737,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                 <input className={errorsApi.description ? "form-control error" : "form-control"} type="number" name="id" id="id" readOnly value={dataServicesEdit.length + 1} ></input>
                 <br />
                 <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("customer_id")}></input>
                 <label htmlFor="marca">Descripcion</label>
                 <input className="form-control" type="text" name="marca"  {...register('description',{
                   value:null,

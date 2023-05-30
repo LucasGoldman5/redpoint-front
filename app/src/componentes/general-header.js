@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import GetUserData from '../helpers/getUserData';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import getEnviroment from "../helpers/getEnviroment";
-import { faM,faMobileRetro,faBuilding,faUsers,faScrewdriverWrench, faCaretDown, faCaretUp, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { faM,faMobileRetro,faBuilding,faUsers,faScrewdriverWrench, faCaretDown, faCaretUp, faCircleXmark, faHourglassHalf, faCheck, faUserGear } from '@fortawesome/free-solid-svg-icons';
 
 
 const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,dataCellphones,dataServices,arrowIcon,seeNavReport} ) =>{
@@ -27,35 +27,39 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
   const [chainCustomers, setChainCustomers] = useState("");
   const [chainServices, setChainServices] = useState("");
   const [dropdown, setDropdown] = useState(true);
-  const [dropdownLinksMenu, setDropdownLinksMenu] = useState(true);
   const [seeingPBrand, setSeeingPBrand] = useState(false);
   const [seeingPCellphone, setSeeingPCellphone] = useState(false);
   const [seeingPService, setSeeingPService] = useState(false);
   const [seeingPCustomer, setSeeingPCustomer] = useState(false);
   const [seeingPReparation, setSeeingPReparation] = useState(false);
+  const [seeingPReparationPending, setSeeingPReparationPending] = useState(false);
+  const [seeingPReparationSuccess, setSeeingPReparationSuccess] = useState(false);
+  const [seeingPUsers, setSeeingPUsers] = useState(false);
   const [seeingPReport, setSeeingPReport] = useState(false);
   const [apiURL, setApiURL] = useState('');
   const [apiURLLocal, setApiURLLocal] = useState('');
+  const [superAdmin, setSuperAdmin] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       const url = await getEnviroment();
       setApiURLLocal(url.url);
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const url = await getEnviroment();
       setApiURL(url.url);
     };
-
     fetchData();
+    admin()
   }, []);
 
-  const linksDropdowns = () =>{
-    setDropdownLinksMenu(!dropdownLinksMenu);
+  const getUser = localStorage.getItem("user");
+
+  const admin = () =>{
+    let usuario = JSON.parse(getUser);
+      if(usuario.user.roles === "admin"){
+        setSuperAdmin(false)
+
+      }else if(usuario.user.roles === "super-admin"){
+        setSuperAdmin(true)
+      };
   };
 
   const menuDropdown = () =>{
@@ -73,30 +77,50 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
     window.location.assign('/Login');
   };
    
-  const reload = () =>{
-
-    setTimeout(()=>{
-       window.location.reload();
-    },100)
-  };
 
   const seeP = (e) =>{
     if(e === "b"){
-      setSeeingPBrand(!seeingPBrand);
+      setSeeingPBrand(true);
     }else if(e === "ce"){
-      setSeeingPCellphone(!seeingPCellphone)
+      setSeeingPCellphone(true)
     }else if(e === "s"){
-      setSeeingPService(!seeingPService)
+      setSeeingPService(true)
     }else if(e === "cu"){
-      setSeeingPCustomer(!seeingPCustomer)
+      setSeeingPCustomer(true)
     }else if(e === "rn"){
-      setSeeingPReparation(!seeingPReparation)
+      setSeeingPReparation(true)
     }else if(e === "rt"){
-      setSeeingPReport(!seeingPReport)
-    } 
+      setSeeingPReport(true)
+    }else if(e === "rp"){
+      setSeeingPReparationPending(true)
+    }else if(e === "rs"){
+      setSeeingPReparationSuccess(true)
+    }else if(e === "us"){
+      setSeeingPUsers(true)
+    }   
   }
 
-
+  const noSeeP = (e) =>{
+    if(e === "b"){
+      setSeeingPBrand(false);
+    }else if(e === "ce"){
+      setSeeingPCellphone(false)
+    }else if(e === "s"){
+      setSeeingPService(false)
+    }else if(e === "cu"){
+      setSeeingPCustomer(false)
+    }else if(e === "rn"){
+      setSeeingPReparation(false)
+    }else if(e === "rt"){
+      setSeeingPReport(false)
+    }else if(e === "rp"){
+    setSeeingPReparationPending(false)
+    }else if(e === "rs"){
+      setSeeingPReparationSuccess(false)
+    }else if(e === "us"){
+      setSeeingPUsers(false)
+    }
+  }
   
 
   const mouseOverLi = (e) => {
@@ -155,14 +179,6 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
     };
   };
 
-  const getReparationsPenSuc = async (e) =>{
-
-    if(e === "pendientes"){
-        window.location.assign(`${apiURLLocal}Table/report/reparations-pending`);
-    }else if(e === "Entregadas"){
-        window.location.assign(`${apiURLLocal}Table/report/reparations-success`);
-    };
-  };
 
 
   const dataBrandsFilter = (e) => {
@@ -243,118 +259,150 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
               </div>
               <div className="contenedor-contenedor-links">
                 <Nav >
-                    <li className='nav-li-link'><Link onMouseEnter={()=>seeP("b")} onMouseLeave={()=>seeP("b")} onClick={()=>  changeUrl("brands")} to={`/Table/brands`}><FontAwesomeIcon className={(window.location.href === `${apiURL}Table/brands`)? "icon" : "icon-none"}  icon={faM}></FontAwesomeIcon><p className={seeingPBrand ? "p-entity" : "p-entity-none"}>Marcas</p></Link></li>
-                    <li className='nav-li-link'><Link onMouseEnter={()=>seeP("ce")} onMouseLeave={()=>seeP("ce")}  onClick={()=> changeUrl("cellphones")} to={`/Table/cellphones`}><FontAwesomeIcon className={(window.location.href === `${apiURL}Table/cellphones`)? "icon" : "icon-none"} icon={faMobileRetro}></FontAwesomeIcon><p className={seeingPCellphone ? "p-entity" : "p-entity-none"}>Celulares</p></Link></li> 
-                    <li className='nav-li-link'><Link onMouseEnter={()=>seeP("s")} onMouseLeave={()=>seeP("s")}   onClick={()=>  changeUrl("services")} to={`/Table/services`}><FontAwesomeIcon className={(window.location.href === `${apiURL}Table/services`)? "icon" : "icon-none"} icon={faBuilding}></FontAwesomeIcon><p className={seeingPService ? "p-entity" : "p-entity-none"}>Servicios</p></Link></li>
-                    <li className='nav-li-link'><Link onMouseEnter={()=>seeP("cu")} onMouseLeave={()=>seeP("cu")}  onClick={()=>  changeUrl("customers")} to={`/Table/customers`}><FontAwesomeIcon className={(window.location.href === `${apiURL}Table/customers`)? "icon" : "icon-none"} icon={faUsers}></FontAwesomeIcon><p className={seeingPCustomer ? "p-entity" : "p-entity-none"}>Clientes</p></Link></li>
-                    <li className='nav-li-link'><Link onMouseEnter={()=>seeP("rn")} onMouseLeave={()=>seeP("rn")}  onClick={()=>  changeUrl("reparations")} to={`/Table/reparations`}><FontAwesomeIcon className={(window.location.href === `${apiURL}Table/reparations`)? "icon" : "icon-none"} icon={faScrewdriverWrench}></FontAwesomeIcon><p className={seeingPReparation ? "p-entity" : "p-entity-none"}>Reparaciones</p></Link></li>
+                    <div className="container-li-span">
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("b")} onMouseLeave={()=>noSeeP("b")} onClick={()=>  changeUrl("brands")} to={`/Table/brands`}><FontAwesomeIcon className={(window.location.href === `${apiURL}Table/brands`)? "icon" : "icon-none"}  icon={faM}></FontAwesomeIcon></Link></li>
+                      <span className={seeingPBrand ? "span" : "span-none"}><p>Marcas</p></span>
+                    </div>
+                    <div className="container-li-span">
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("ce")} onMouseLeave={()=>noSeeP("ce")}  onClick={()=> changeUrl("cellphones")} to={`/Table/cellphones`}><FontAwesomeIcon className={(window.location.href === `${apiURL}Table/cellphones`)? "icon" : "icon-none"} icon={faMobileRetro}></FontAwesomeIcon></Link></li>
+                      <span className={seeingPCellphone ? "span" : "span-none"}><p>Celulares</p></span> 
+                    </div>
+                    <div className="container-li-span">
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("s")} onMouseLeave={()=>noSeeP("s")}   onClick={()=>  changeUrl("services")} to={`/Table/services`}><FontAwesomeIcon className={(window.location.href === `${apiURL}Table/services`)? "icon" : "icon-none"} icon={faBuilding}></FontAwesomeIcon></Link></li>
+                      <span className={seeingPService ? "span" : "span-none"}><p>Servicios</p></span>
+                    </div>
+                    <div className="container-li-span">
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("cu")} onMouseLeave={()=>noSeeP("cu")}  onClick={()=>  changeUrl("customers")} to={`/Table/customers`}><FontAwesomeIcon className={(window.location.href === `${apiURL}Table/customers`)? "icon" : "icon-none"} icon={faUsers}></FontAwesomeIcon></Link></li>
+                      <span className={seeingPCustomer ? "span" : "span-none"}><p>Clientes</p></span>
+                    </div>
+                    <div className="container-li-span">
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("rn")} onMouseLeave={()=>noSeeP("rn")}  onClick={()=>  changeUrl("reparations")} to={`/Table/reparations`}><FontAwesomeIcon className={(window.location.href === `${apiURL}Table/reparations`)? "icon" : "icon-none"} icon={faScrewdriverWrench}></FontAwesomeIcon></Link></li>
+                      <span className={seeingPReparation ? "span" : "span-none"}><p>Reparaciones</p></span>
+                    </div>
                     <div className="div-button-filter">
-                            <button className={(window.location.href.includes("report"))? "button-reparation-filter" : "button-reparation-filter-none"} onClick={() => openNavReports()}>Reparaciones filtradas<FontAwesomeIcon icon={arrowIcon ? faCaretDown : faCaretUp}></FontAwesomeIcon></button>   
-                    </div> 
+                            <button className={(window.location.href.includes("by"))? "button-reparation-filter" : "button-reparation-filter-none"} onClick={() => openNavReports()}>Reparaciones filtradas<FontAwesomeIcon icon={arrowIcon ? faCaretDown : faCaretUp}></FontAwesomeIcon></button>   
+                    </div>
+                    <div className="container-li-span">
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("rp")} onMouseLeave={()=>noSeeP("rp")}  onClick={() => changeUrl("report/reparations-pending")} to={`/Table/report/reparations-pending`}><FontAwesomeIcon className={(window.location.href === `${apiURL}Table/report/reparations-pending`)? "icon" : "icon-none"}  icon={faHourglassHalf} /></Link></li>
+                      <span className={seeingPReparationPending ? "span" : "span-none"}><p>Reparaciones Pendientes</p></span>
+                    </div>
+                    <div className="container-li-span">
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("rs")} onMouseLeave={()=>noSeeP("rs")}  onClick={() => changeUrl("report/reparations-success")} to={`/Table/report/reparations-success`}><FontAwesomeIcon className={(window.location.href === `${apiURL}Table/report/reparations-success`)? "icon" : "icon-none"} icon={faCheck}></FontAwesomeIcon></Link></li>
+                      <span className={seeingPReparationSuccess ? "span" : "span-none"}><p>Reparaciones Finalizadas</p></span>
+                    </div>
+                    {
+                      (superAdmin === true)
+                      ?
+                      <div className="container-li-span">
+                        <li className='nav-li-link'><Link onMouseOver={()=>seeP("us")} onMouseLeave={()=>noSeeP("us")}  onClick={() => changeUrl("report/reparations-success")} to={`/Table/report/reparations-success`}><FontAwesomeIcon className={(window.location.href === `${apiURL}Table/report/reparations-success`)? "icon" : "icon-none"} icon={faUserGear}></FontAwesomeIcon></Link></li>
+                        <span className={seeingPUsers ? "span" : "span-none"}><p>Usuarios</p></span>
+                      </div>
+                      :
+                      ""
+                    } 
                 </Nav>
               </div>
               <div className={seeNavReport ? "nav-reports" : "nav-reports-none"}>
-                                <Link className={(window.location.href.includes("pending")) ? "li-nav-report" : "li-nav-report-none"} onClick={() => changeUrl("report/reparations-pending")} to={`/Table/report/reparations-pending`}>Pendientes</Link>
-                                <Link className={(window.location.href.includes("success")) ? "li-nav-report" : "li-nav-report-none"} onClick={() => changeUrl("report/reparations-success")} to={`/Table/report/reparations-success`}>Entregadas</Link>
-                                <div className="div-li-hover">
-                                 <li onMouseEnter={() => mouseOverLi("brand")}  className={(window.location.href.includes("by-brand")) ? "li-nav-report" : "li-nav-report-none"}>Marca <FontAwesomeIcon icon={arrowBrand ? faCaretDown : faCaretUp} /></li>
-                                </div>
-                                <div className={liBrandHover ? "container-reparations-filter" : "container-reparations-filter-none"}>
-                                <div className="header-nav-reparations">
-                                        <div className="div-input-search">
-                                          <input className="search-reparations-input" type="search" placeholder="buscar..." onChange={(e) => dataBrandsFilter(e)}></input>
-                                        </div>
-                                        <div className="div-x">
-                                          <FontAwesomeIcon onClick={() => closeGridFilter("brand")} icon={faCircleXmark}/>
-                                        </div>
-                                    </div>
-                                    <div className="div-container-map-filter">
-                                        {
-                                            
-                                           (dataBrandsFilter().length > 0) ?  dataBrandsFilter().map((brand)=>{
-                                            return(
-                                             <Link className="p-entity-filter" key={brand.id} onClick={() => changeUrl("report/reparations-by-brand",brand.id,brand.title)} to={`/Table/report/reparations-by-brand/${brand.id}`}>{brand.title}</Link>
-                                            )
-                                         })
-                                         :
-                                         <p>Cargando Marcas...</p>
-                                        }
-                                    </div>
-                                </div>
-                                <div className="div-li-hover">
-                                 <li onMouseEnter={() => mouseOverLi("cellphone")} className={(window.location.href.includes("by-cellphone")) ? "li-nav-report" : "li-nav-report-none"}>Celular <FontAwesomeIcon icon={arrowCellphone ? faCaretDown : faCaretUp} /></li>
-                                </div>
-                                <div className={liCellphoneHover ? "container-reparations-filter" : "container-reparations-filter-none"}>
-                                    <div className="header-nav-reparations">
-                                        <div className="div-input-search">
-                                          <input className="search-reparations-input" type="search" placeholder="buscar..." onChange={(e) => dataCellphonesFilter(e)}></input>
-                                        </div>
-                                        <div className="div-x">
-                                          <FontAwesomeIcon onClick={() => closeGridFilter("cellphone")} icon={faCircleXmark}/>
-                                        </div>
-                                    </div>
-                                    <div className="div-container-map-filter">
-                                        {
-                                            (dataCellphonesFilter().length > 0) ? dataCellphonesFilter().map((cellphone)=>{
-                                                return(
-                                                 <Link className="p-entity-filter" key={cellphone.id} onClick={() => changeUrl("report/reparations-by-cellphone",cellphone.id)} to={`/Table/report/reparations-by-cellphone/${cellphone.id}`}>{cellphone.model}</Link>
-                                                )
-                                             })
-                                             :
-                                             <p>Cargando Celulares...</p>
-                                        }
-                                    </div>
-                                </div>
-                                <div className="div-li-hover">
-                                 <li onMouseEnter={() => mouseOverLi("customer")} className={(window.location.href.includes("by-customer")) ? "li-nav-report" : "li-nav-report-none"}>Cliente <FontAwesomeIcon icon={arrowCustomer ? faCaretDown : faCaretUp} /></li>
-                                </div>
-                                <div className={liCustomerHover ? "container-reparations-filter" : "container-reparations-filter-none"}>
-                                <div className="header-nav-reparations">
-                                        <div className="div-input-search">
-                                          <input className="search-reparations-input" type="search" placeholder="buscar..." onChange={(e) => dataCustomersFilter(e)}></input>
-                                        </div>
-                                        <div className="div-x">
-                                          <FontAwesomeIcon onClick={() => closeGridFilter("customer")} icon={faCircleXmark}/>
-                                        </div>
-                                    </div>
-                                    <div className="div-container-map-filter">
-                                        {
-                                            (dataCustomersFilter().length > 0) ? dataCustomersFilter().map((customer)=>{
-                                                return(
-                                                 <Link className="p-entity-filter" key={customer.id} onClick={() => changeUrl("report/reparations-by-customer",customer.id)} to={`Table/report/reparations-by-customer/${customer.id}`}>{customer.name}</Link>
-                                                )
-                                             })
-                                             :
-                                             <p>Cargando Clientes...</p>
-                                        }
-                                    </div>
-                                </div>
-                                <div className="div-li-hover">
-                                 <li onMouseEnter={() => mouseOverLi("service")} className={(window.location.href.includes("by-service")) ? "li-nav-report" : "li-nav-report-none"}>Servicio <FontAwesomeIcon icon={arrowService ? faCaretDown : faCaretUp} /></li>
-                                </div>
-                              <div className={liServiceHover ? "container-reparations-filter" : "container-reparations-filter-none"}>
-                                <div className="header-nav-reparations">
-                                        <div className="div-input-search">
-                                          <input className="search-reparations-input" type="search" placeholder="buscar..." onChange={(e) => dataServicesFilter(e)}></input>
-                                        </div>
-                                        <div className="div-x">
-                                          <FontAwesomeIcon onClick={() => closeGridFilter("service")} icon={faCircleXmark}/>
-                                        </div>
-                                    </div>
-                                    <div className="div-container-map-filter">
-                                        {
-                                            (dataServicesFilter().length > 0) ? dataServicesFilter().map((service)=>{
-                                                return(
-                                                 <Link className="p-entity-filter" key={service.id} onClick={() => changeUrl("report/reparations-by-service",service.id)} to={`Table/report/reparations-by-service/${service.id}`}>{service.description}</Link>
-                                                )
-                                             })
-                                             :
-                                             <p>Cargando Servicios...</p>
-                                        }
-                                    </div>
-                              </div>
+                  <div className="div-li-hover">
+                  <li onMouseEnter={() => mouseOverLi("brand")}  className={(window.location.href.includes("by-brand")) ? "li-nav-report" : "li-nav-report-none"}>Marca <FontAwesomeIcon icon={arrowBrand ? faCaretDown : faCaretUp} /></li>
+                  </div>
+                  <div className={liBrandHover ? "container-reparations-filter" : "container-reparations-filter-none"}>
+                    <div className="header-nav-reparations">
+                      <div className="div-input-search">
+                        <input className="search-reparations-input" type="search" placeholder="buscar..." onChange={(e) => dataBrandsFilter(e)}></input>
+                      </div>
+                      <div className="div-x">
+                        <FontAwesomeIcon onClick={() => closeGridFilter("brand")} icon={faCircleXmark}/>
+                      </div>
+                    </div>
+                    <div className="div-container-map-filter">
+                        {
+                            
+                          (dataBrandsFilter().length > 0)
+                            ?
+                            dataBrandsFilter().map((brand)=>{
+                            return(
+                            <Link className="p-entity-filter" key={brand.id} onClick={() => changeUrl("report/reparations-by-brand",brand.id,brand.title)} to={`/Table/report/reparations-by-brand/${brand.id}`}>{brand.title}</Link>
+                            )
+                        })
+                        :
+                        <p>Cargando Marcas...</p>
+                        }
+                    </div>
+                  </div>
+                  <div className="div-li-hover">
+                  <li onMouseEnter={() => mouseOverLi("cellphone")} className={(window.location.href.includes("by-cellphone")) ? "li-nav-report" : "li-nav-report-none"}>Celular <FontAwesomeIcon icon={arrowCellphone ? faCaretDown : faCaretUp} /></li>
+                  </div>
+                  <div className={liCellphoneHover ? "container-reparations-filter" : "container-reparations-filter-none"}>
+                    <div className="header-nav-reparations">
+                        <div className="div-input-search">
+                          <input className="search-reparations-input" type="search" placeholder="buscar..." onChange={(e) => dataCellphonesFilter(e)}></input>
+                        </div>
+                        <div className="div-x">
+                          <FontAwesomeIcon onClick={() => closeGridFilter("cellphone")} icon={faCircleXmark}/>
+                        </div>
+                    </div>
+                    <div className="div-container-map-filter">
+                        {
+                            (dataCellphonesFilter().length > 0) ? dataCellphonesFilter().map((cellphone)=>{
+                                return(
+                                <Link className="p-entity-filter" key={cellphone.id} onClick={() => changeUrl("report/reparations-by-cellphone",cellphone.id)} to={`/Table/report/reparations-by-cellphone/${cellphone.id}`}>{cellphone.model}</Link>
+                                )
+                            })
+                            :
+                            <p>Cargando Celulares...</p>
+                        }
+                    </div>
+                  </div>
+                  <div className="div-li-hover">
+                  <li onMouseEnter={() => mouseOverLi("customer")} className={(window.location.href.includes("by-customer")) ? "li-nav-report" : "li-nav-report-none"}>Cliente <FontAwesomeIcon icon={arrowCustomer ? faCaretDown : faCaretUp} /></li>
+                  </div>
+                  <div className={liCustomerHover ? "container-reparations-filter" : "container-reparations-filter-none"}>
+                  <div className="header-nav-reparations">
+                          <div className="div-input-search">
+                            <input className="search-reparations-input" type="search" placeholder="buscar..." onChange={(e) => dataCustomersFilter(e)}></input>
+                          </div>
+                          <div className="div-x">
+                            <FontAwesomeIcon onClick={() => closeGridFilter("customer")} icon={faCircleXmark}/>
+                          </div>
+                      </div>
+                      <div className="div-container-map-filter">
+                          {
+                            (dataCustomersFilter().length > 0) ? dataCustomersFilter().map((customer)=>{
+                                return(
+                                <Link className="p-entity-filter" key={customer.id} onClick={() => changeUrl("report/reparations-by-customer",customer.id)} to={`Table/report/reparations-by-customer/${customer.id}`}>{customer.name}</Link>
+                                )
+                            })
+                            :
+                            <p>Cargando Clientes...</p>
+                          }
+                      </div>
+                  </div>
+                  <div className="div-li-hover">
+                  <li onMouseEnter={() => mouseOverLi("service")} className={(window.location.href.includes("by-service")) ? "li-nav-report" : "li-nav-report-none"}>Servicio <FontAwesomeIcon icon={arrowService ? faCaretDown : faCaretUp} /></li>
+                  </div>
+                <div className={liServiceHover ? "container-reparations-filter" : "container-reparations-filter-none"}>
+                  <div className="header-nav-reparations">
+                          <div className="div-input-search">
+                            <input className="search-reparations-input" type="search" placeholder="buscar..." onChange={(e) => dataServicesFilter(e)}></input>
+                          </div>
+                          <div className="div-x">
+                            <FontAwesomeIcon onClick={() => closeGridFilter("service")} icon={faCircleXmark}/>
+                          </div>
+                      </div>
+                      <div className="div-container-map-filter">
+                          {
+                            (dataServicesFilter().length > 0) ? dataServicesFilter().map((service)=>{
+                                return(
+                                <Link className="p-entity-filter" key={service.id} onClick={() => changeUrl("report/reparations-by-service",service.id)} to={`Table/report/reparations-by-service/${service.id}`}>{service.description}</Link>
+                                )
+                            })
+                            :
+                            <p>Cargando Servicios...</p>
+                          }
+                      </div>
+                </div>
               </div>
-
             </div>
             <div className="contenedor-micuenta">
               <div onClick={menuDropdown} className="icono-micuenta">

@@ -34,13 +34,48 @@
 .form-select.error{
     border: 1px solid red;
 }
-
+.form-select{
+    text-align: center;
+}
 .input-select{
     position: absolute;
     z-index: 1000;
     border: none;
     width: 60%;
     height: 38px;
+}
+.icon-search{
+    width: 20px;
+    position: absolute;
+    margin-left: 5px;
+    height: 45px;
+    cursor: pointer;
+}
+
+.input-search-none{
+    width: 0px;
+    position: absolute;
+    margin-right: 50px;
+    height: 45px;
+    z-index: -1;
+}
+
+.input-search{
+    position: absolute;
+    outline: none;
+    text-align: center;
+    width: 30.5%;
+    height: 45px;
+    transition: all 0.5s;
+}
+.input-search::-webkit-search-cancel-button{
+    display: none;
+}
+.input-search.brand{
+    position: absolute;
+    outline: none;
+    width: 83.5%;
+    height: 45px;
 }
 
 
@@ -114,6 +149,7 @@
 .div-container-select-button{
     display: flex;
     height: 45px;
+    justify-content: flex-start;
 }
 .btn-edit{
     background: rgb(202, 172, 0);
@@ -141,8 +177,10 @@
 
 .h1-add{
     cursor: pointer;
-    color: blue;
+    font-weight: 700;
+    color: green;
 }
 .h1-add:hover{
-    color: green;
+    color: rgb(0, 194, 0);
+    font-weight: 500;
 }

@@ -1,8 +1,14 @@
 /* global getManualColumns */
+import getEnviroment from "./getEnviroment";
 
 export default async function getManualColumns (url){
 
-    if(url === "http://localhost:3000/Table/reparations"){
+    const urlLocal = async () =>{
+        const enviroment = await getEnviroment();
+        return enviroment.url
+    } 
+
+    if(url === `${await urlLocal()}Table/reparations`){
         const columns = 
         {
           "customer":"Cliente",
@@ -16,7 +22,7 @@ export default async function getManualColumns (url){
         }
         localStorage.setItem("column",JSON.stringify(columns));
 
-    }else if(url === "http://localhost:3000/Table/brands"){
+    }else if(url === `${await urlLocal()}Table/brands`){
         const columns = 
         {
             'id' : 'id',
@@ -25,7 +31,7 @@ export default async function getManualColumns (url){
         }
         localStorage.setItem("column",JSON.stringify(columns));
 
-    }else if(url === "http://localhost:3000/Table/cellphones"){
+    }else if(url === `${await urlLocal()}Table/cellphones`){
         const columns = 
         {
             'id' : 'id',
@@ -34,7 +40,7 @@ export default async function getManualColumns (url){
         }
         localStorage.setItem("column",JSON.stringify(columns));
 
-    }else if(url === "http://localhost:3000/Table/customers"){
+    }else if(url === `${await urlLocal()}Table/customers`){
         const columns = 
         {
             'name' : 'Cliente',
@@ -43,7 +49,7 @@ export default async function getManualColumns (url){
         }
         localStorage.setItem("column",JSON.stringify(columns));
 
-    }else if(url === "http://localhost:3000/Table/services"){
+    }else if(url === `${await urlLocal()}Table/services`){
         const columns = 
         {
             'description' : 'Servicio',

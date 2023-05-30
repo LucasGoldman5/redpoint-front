@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import './modales.css'
 import HelperBuildRequest from "../helpers/buildRequest";
 import getEnviroment from "../helpers/getEnviroment";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
 
 
 const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
@@ -26,6 +28,14 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
   const [newCellphoneSelected, setNewCellphoneSelected] = useState([]);
   const [newServiceSelected, setNewServiceSelected] = useState([]);
   const [newBrandSelected, setNewBrandSelected] = useState([]);
+  const [selectCustomerActive, setSelectCustomerActive] = useState(false);
+  const [selectCellphoneActive, setSelectCellphoneActive] = useState(false);
+  const [selectServiceActive, setSelectServiceActive] = useState(false);
+  const [selectBrandActive, setSelectBrandActive] = useState(false);
+  const [filterCustomerValue, setFilterCustomerValue] = useState('');
+  const [filterCellphoneValue, setFilterCellphoneValue] = useState('');
+  const [filterServiceValue, setFilterServiceValue] = useState('');
+  const [filterBrandValue, setFilterBrandValue] = useState('');
   const [apiURLLocal, setApiURLLocal] = useState('');
   const location = window.location.href;
 
@@ -50,90 +60,122 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
     setErrors(errorsInTable);
   },[errorsInTable])
 
-  /*console.log(current, childrenData);*/
+  const url = async () =>{
+    const enviroment = await getEnviroment()
+    return  enviroment.apiURL 
+  }
+
+  const urlLocal = async () =>{
+    const enviroment = await getEnviroment()
+    return enviroment.url 
+  }
 
   const getDataModal =  async () =>{
    
-      try{
+      if(window.location.href.includes("reparations" || "report")){
+
+        try{
                   
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`http://localhost:8000/api/select-box/brand`, config);
+          const config = await HelperBuildRequest("GET",null, "dataTable");
+          const request = await fetch(`${await url()}select-box/brand`, config);
+  
+            if(request.status === 200){
+                const response = await request.json();
+                  if(response.error){
+                      setTimeout(()=>{
+                        console.log(response.error);
+                      },1000);
+                  }else{                    
+                      setDataBrands(response);
+                  }  
+            };
+  
+        }catch(error){
+          console.log(error)
+        }
+        
+        try{
+                    
+          const config = await HelperBuildRequest("GET",null, "dataTable");
+          const request = await fetch(`${await url()}select-box/customer`, config);
+  
+            if(request.status === 200){
+                const response = await request.json();
+                  if(response.error){
+                      setTimeout(()=>{
+                        console.log(response.error);
+                      },1000);
+                  }else{                    
+                      setDataCustomers(response);
+                  }  
+            };
+  
+        }catch(error){
+          console.log(error)
+        }
+        
+        try{
+                    
+          const config = await HelperBuildRequest("GET",null, "dataTable");
+          const request = await fetch(`${await url()}select-box/cellphone`, config);
+  
+            if(request.status === 200){
+                const response = await request.json();
+                  if(response.error){
+                      setTimeout(()=>{
+                        console.log(response.error);
+                      },1000);
+                  }else{                      
+                      setDataCellPhones(response);
+                  }  
+            };
+  
+        }catch(error){
+          console.log(error)
+        }
+        
+        try{
+                    
+          const config = await HelperBuildRequest("GET",null, "dataTable");
+          const request = await fetch(`${await url()}select-box/service`, config);
+  
+            if(request.status === 200){
+                const response = await request.json();
+                  if(response.error){
+                      setTimeout(()=>{
+                        console.log(response.error);
+                      },1000);
+                  }else{                      
+                      setDataServices(response);
+                  }  
+            };
+  
+        }catch(error){
+          console.log(error)
+        };
 
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                    
-                    setDataBrands(response);
-                }  
-          };
-
-      }catch(error){
-        console.log(error)
-      }
-      
-      try{
+      }else if(window.location.href === `${await urlLocal()}Table/cellphones`){
+        
+        try{
                   
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`http://localhost:8000/api/select-box/customer`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                    
-                    setDataCustomers(response);
-                }  
-          };
-
-      }catch(error){
-        console.log(error)
+          const config = await HelperBuildRequest("GET",null, "dataTable");
+          const request = await fetch(`${await url()}select-box/brand`, config);
+  
+            if(request.status === 200){
+                const response = await request.json();
+                  if(response.error){
+                      setTimeout(()=>{
+                        console.log(response.error);
+                      },1000);
+                  }else{                    
+                      setDataBrands(response);
+                  }  
+            };
+  
+        }catch(error){
+          console.log(error)
+        }
       }
-      
-      try{
-                  
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`http://localhost:8000/api/select-box/cellphone`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                      
-                    setDataCellPhones(response);
-                }  
-          };
-
-      }catch(error){
-        console.log(error)
-      }
-      
-      try{
-                  
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`http://localhost:8000/api/select-box/service`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                      
-                    setDataServices(response);
-                }  
-          };
-
-      }catch(error){
-        console.log(error)
-      }
-
   };
 
   const changeModal = (fact) =>{
@@ -200,15 +242,6 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
      setCheckBox(!checkbox);
   };
   
-  const url = async () =>{
-    const enviroment = await getEnviroment()
-    return  enviroment.apiURL 
-  }
-
-  const urlLocal = async () =>{
-    const enviroment = await getEnviroment()
-    return enviroment.api 
-  }
 
   const onSubmitBrand = async (data) =>{
   
@@ -487,12 +520,16 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
   };
 
   const addEmail = (customerId,entity) =>{
+
+    setFilterCustomerValue('');
+    setSelectCustomerActive(false);
+
     dataCustomers.map((customer) =>{
       if(customer.id == customerId){
          setValue("email", customer.email);
          setValue("number", customer.phone);
-      }
-    })
+      };
+    });
 
     if(entity === "customer"){
       setErrors({customer_id:null, cellphone_id:errors.cellphone_id, service_id:errors.service_id})
@@ -505,13 +542,19 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
       setErrors({customer_id:null, cellphone_id:errors.cellphone_id, service_id:errors.service_id})
     }
     else if(entity === "cellphone"){
-      setErrors({customer_id:errors.customer_id, cellphone_id:null, service_id:errors.service_id})
+      setFilterCellphoneValue('');
+      setSelectCellphoneActive(false);
+      setErrors({customer_id:errors.customer_id, cellphone_id:null, service_id:errors.service_id});
     }
     else if(entity === "service"){
-      setErrors({customer_id:errors.customer_id, cellphone_id:errors.cellphone_id, service_id:null})
+      setFilterServiceValue('');
+      setSelectServiceActive(false);
+      setErrors({customer_id:errors.customer_id, cellphone_id:errors.cellphone_id, service_id:null});
     }
     else if(entity === "brand"){
-      setErrors({brand_id:null, model:errors.model})
+      setFilterBrandValue('');
+      setSelectBrandActive(false);
+      setErrors({brand_id:null, model:errors.model});
     }
     else if(entity === "model"){
       setErrors({model:null, brand_id:errors.brand_id})
@@ -557,12 +600,64 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
       setErrorsApi({model:null, brand_id:errorsApi.brand_id})
     }
     else if(entity === "brand_id"){
-      setErrorsApi({model:errorsApi.model, brand_id:null})
+      setFilterBrandValue('');
+      setSelectBrandActive(false);
+      setErrorsApi({model:errorsApi.model, brand_id:null});
     }
     else if(entity === "description"){
       setErrorsApi({description:null})
     }
   };
+
+
+  const activeInputSearch = (data,entity) =>{
+    
+    if(entity === "customer"){
+      setSelectCustomerActive(!selectCustomerActive);
+    }
+    else if(entity === "cellphone"){
+      setSelectCellphoneActive(!selectCellphoneActive);
+    }
+    else if(entity === "service"){
+      setSelectServiceActive(!selectServiceActive);
+    }
+    else if(entity === "brand"){
+      setSelectBrandActive(!selectBrandActive);
+    };
+  };
+
+
+  const handleInputChange = (e,entity) => {
+    if(entity === "customer"){
+      setFilterCustomerValue(e.target.value);
+    }
+    else if(entity === "cellphone"){
+      setFilterCellphoneValue(e.target.value)
+    }
+    else if(entity === "service"){
+      setFilterServiceValue(e.target.value)
+    }
+    else if(entity === "brand"){
+      setFilterBrandValue(e.target.value)
+    }
+  };
+ 
+  
+  const filteredCustomers = dataCustomers.filter((customer) =>
+    customer.name.toLowerCase().includes(filterCustomerValue.toLowerCase())
+  );
+
+  const filteredCellphones = dataCellPhones.filter((cellphone) =>
+    cellphone.model.toLowerCase().includes(filterCellphoneValue.toLowerCase())
+  );
+
+  const filteredServices = dataServices.filter((service) =>
+    service.description.toLowerCase().includes(filterServiceValue.toLowerCase())
+  );
+
+  const filteredBrands = dataBrands.filter((brand) =>
+    brand.title.toLowerCase().includes(filterBrandValue.toLowerCase())
+  );
 
   
   const { register, handleSubmit, getValues, setValue} = useForm ();
@@ -598,12 +693,14 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
                 <br/>
                 <label htmlFor="brnad_id">Marca</label>
                 <div className="div-container-select-button">
-                <select className="form-select brand" name="select"  {...register('brand_id',{
+                <input type="search" onChange={(e)=>handleInputChange(e,"brand")} placeholder="buscar.." className={selectBrandActive ? "input-search brand" : "input-search-none"}></input>
+                <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"brand")} className="icon-search" icon={faMagnifyingGlass} />
+                <select  className="form-select brand" name="select"  {...register('brand_id',{
                   value:null,
                   onChange: () => changeError("brand"),
                   })}>
-                    <option value={null}>Seleccione una Marca..</option>
-                  {dataBrands.map((brand)=>{
+                    <option value={null}>Seleccionar..</option>
+                  {filteredBrands.map((brand)=>{
                       if(brand.title.includes(chainBrand)){
                         return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option>
                       }
@@ -801,17 +898,21 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
                 <div className="div-inputs">
                   <label htmlFor="marca">Cliente</label>
                   <div className="div-container-select-button">
-                    <select className={errors.customer_id ? "form-select error" : "form-select"} name="select" defaultValue={newCustomerSelected.id ? newCustomerSelected.id : ""} {...register('customer_id',{
-                      onChange: (e) => addEmail(e.target.value,"customer"),
+                    <input  type="search" onChange={(e)=>handleInputChange(e,"customer")} placeholder="buscar.." className={selectCustomerActive ? "input-search" : "input-search-none"}></input>
+                    <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"customer")} className="icon-search" icon={faMagnifyingGlass} />
+                    <select  className={errors.customer_id ? "form-select error" : "form-select"} name="select" defaultValue={newCustomerSelected.id ? newCustomerSelected.id : ""} {...register('customer_id',{
+                      onChange: (e) => {
+                        addEmail(e.target.value,"customer");
+                      },
                           })}>
                           {
                             (newCustomerSelected.id)
                             ?
-                             <option value={newCustomerSelected.id}>{newCustomerSelected.name}</option>
+                             <option className="option-selected" value={newCustomerSelected.id}>{newCustomerSelected.name}</option>
                             :
-                            <option >Seleccione un cliente..</option>
+                            <option className="option-selected">Seleccionar..</option>
                           }
-                          {dataCustomers.map((customer)=>{
+                          {filteredCustomers.map((customer)=>{
                               return <option className="option-modal" key={customer.id} value={customer.id} >{customer.name}</option>                              
                           })}
                       </select>
@@ -838,17 +939,19 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
                 <div className="div-inputs">
                   <label htmlFor="url">Celular</label>
                   <div className="div-container-select-button">
-                    <select className={errors.cellphone_id ? "form-select error" : "form-select"} name="select"  defaultValue={newCellphoneSelected.id ? newCellphoneSelected.id : ""} {...register('cellphone_id',{
+                  <input type="search" onChange={(e)=>handleInputChange(e,"cellphone")} placeholder="buscar.." className={selectCellphoneActive ? "input-search" : "input-search-none"}></input>
+                  <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"cellphone")} className="icon-search" icon={faMagnifyingGlass} />
+                    <select  className={errors.cellphone_id ? "form-select error" : "form-select"} name="select"  defaultValue={newCellphoneSelected.id ? newCellphoneSelected.id : ""} {...register('cellphone_id',{
                       onChange: () => changeError("cellphone"),
                         })}>
                           {
                           newCellphoneSelected.id
                           ?
-                          <option value={newCellphoneSelected.id}>{newCellphoneSelected.model}</option>
+                          <option className="option-selected" value={newCellphoneSelected.id}>{newCellphoneSelected.model}</option>
                           :
-                          <option >Seleccione un celular..</option>
+                          <option className="option-selected">Seleccionar..</option>
                           }
-                        {dataCellPhones.map((cellphone)=>{
+                        {filteredCellphones.map((cellphone)=>{
                             return <option className="option-modal" key={cellphone.id} value={cellphone.id} >{cellphone.model}</option>
                         })}
                     </select>
@@ -883,17 +986,19 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
                 <div className="div-inputs">
                   <label htmlFor="url">Servicio</label>
                   <div className="div-container-select-button">
-                    <select className={errors.service_id ? "form-select error" : "form-select"} name="select"  defaultValue={newServiceSelected.id ? newServiceSelected.id : ""} {...register('service_id',{
+                  <input type="search" onChange={(e)=>handleInputChange(e,"service")} placeholder="buscar.." className={selectServiceActive ? "input-search" : "input-search-none"}></input>
+                  <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"service")} className="icon-search" icon={faMagnifyingGlass} />
+                    <select  className={errors.service_id ? "form-select error" : "form-select"} name="select"  defaultValue={newServiceSelected.id ? newServiceSelected.id : ""} {...register('service_id',{
                       onChange: () => changeError("service"),
                         })}>
                           {
                           newServiceSelected.id
                           ?
-                          <option value={newServiceSelected.id}>{newServiceSelected.description}</option>
+                          <option className="option-selected" value={newServiceSelected.id}>{newServiceSelected.description}</option>
                           :
-                          <option>Seleccione un servicio..</option>
+                          <option className="option-selected">Seleccionar..</option>
                           }
-                        {dataServices.map((service)=>{
+                        {filteredServices.map((service)=>{
                             return <option className="option-modal" key={service.id} value={service.id} >{service.description}</option>
                         })}
                     </select>
@@ -1125,18 +1230,20 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
                 <br/>
                 <label htmlFor="brnad_id">Marca</label>
                 <div className="div-container-select-button">
-                <select className={errorsApi.brand_id ? "form-select error" : "form-select"} name="select" defaultValue={newBrandSelected.id ? newBrandSelected.id : ""}  {...register('brand_id',{
+                <input type="search" onChange={(e)=>handleInputChange(e,"brand")} placeholder="buscar.." className={selectBrandActive ? "input-search brand" : "input-search-none"}></input>
+                <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"brand")} className="icon-search" icon={faMagnifyingGlass} />
+                <select  className={errorsApi.brand_id ? "form-select error" : "form-select"} name="select" defaultValue={newBrandSelected.id ? newBrandSelected.id : ""}  {...register('brand_id',{
                   onChange: () => changeErrorApi("brand_id"),
                   shouldUnregister:true,
                   })}>
                     {
                       newBrandSelected.id
                       ?
-                      <option value={newBrandSelected.id} >{newBrandSelected.title}</option>
+                      <option className="option-selected" value={newBrandSelected.id} >{newBrandSelected.title}</option>
                       :
-                      <option>Seleccione una marca..</option>    
+                      <option className="option-selected">Seleccionar..</option>    
                     }
-                  {dataBrands.map((brand)=>{
+                  {filteredBrands.map((brand)=>{
                       return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option>
                   })}
                 </select>
@@ -1233,7 +1340,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
           </Modal>
         </>
     );
-  }else if(window.location.href.includes("report")){
+  }/*else if(window.location.href.includes("report")){
 
     return(
       <>
@@ -1250,7 +1357,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
                 <select className="form-select" name="select"  defaultValue={null}{...register('customer_id',{
                     value:null
                     })}>
-                      <option  value={null}>Seleccione un cliente..</option>
+                      <option className="option-selected" value={null}>Seleccionar..</option>
                     {dataCustomers.map((customer)=>{
                         return <option className="option-modal" key={customer.id} value={customer.id} >{customer.name}</option>
                     })}
@@ -1273,7 +1380,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
               <div className="div-container-select-button">
                 <select className="form-select" name="select"  defaultValue={null}{...register('cellphone_id',{
                     })}>
-                      <option  value={null}>Seleccione un celular..</option>
+                      <option className="option-selected" value={null}>Seleccionar..</option>
                     {dataCellPhones.map((cellphone)=>{
                         return <option className="option-modal" key={cellphone.id} value={cellphone.id} >{cellphone.model}</option>
                     })}
@@ -1302,7 +1409,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
               <div className="div-container-select-button">
                 <select className="form-select" name="select"  defaultValue={null}{...register('service_id',{
                     })}>
-                      <option  value={null}>Seleccione un servicio..</option>
+                      <option className="option-selected" value={null}>seleccionar..</option>
                     {dataServices.map((service)=>{
                         return <option className="option-modal" key={service.id} value={service.id} >{service.description}</option>
                     })}
@@ -1514,7 +1621,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
                 <select className="form-select brand" name="select"  {...register('brand_id',{
                   value:null
                   })}>
-                    <option value={null}>Seleccione una Marca..</option>
+                    <option className="option-selected" value={null}>Seleccionar..</option>
                   {dataBrands.map((brand)=>{
                       return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option>
                   })}
@@ -1609,7 +1716,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
           </Modal>
       </>
     );
-  };
+  };*/
 };
 
 

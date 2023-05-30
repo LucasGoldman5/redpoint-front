@@ -82,11 +82,11 @@ function Table  ({urlTable}) {
       setSpinnerLoadTable(true);
       setSpinnerLoadPage(true);
 
-      getManualColumns(window.location.href);
+      await getManualColumns(window.location.href);
       setDataColumns(JSON.parse(localStorage.getItem('column')));
-
       const config = await HelperBuildRequest('GET', null, 'dataTable');
       const apiURL = await url()
+
         await fetch(apiURL, config)
           .then( res  => res.json())
           .then( datos =>{
@@ -346,7 +346,7 @@ function Table  ({urlTable}) {
     };
 
 
-    if(dataApi.length != 0 && dataColumns){
+    if(dataApi.data && dataColumns){
 
       /*const fact = Object.values(dataApi.columns).filter((fact) =>{       
         const listaDeColumnas = ['Marca', 'Modelo', 'Nombre', 'id','Numero de Telefono','recibido por'];
@@ -580,9 +580,9 @@ function Table  ({urlTable}) {
                               :
                               (spinnerLoadTable === true)
                               ?
-                              <tr className='tr-coincidence' key={uniqueKeys.trBodyNd}><td className='td-coincidence'key={uniqueKeys.tdBodyNd}><PulseLoader color="#d41c1c" size={20}></PulseLoader></td></tr>
+                              <tr className='tr-coincidence'><td className='div-no-coincidence'><PulseLoader color="#d41c1c" size={16}></PulseLoader></td></tr>
                               :
-                              <tr className='tr-coincidence' key={uniqueKeys.trBodyNd} ><td className='td-coincidence'key={uniqueKeys.tdBodyNd}>No hay coincidencias</td></tr>
+                              <tr className='tr-coincidence'><p className='p-no-coincidence'>No hay coincidencias</p></tr>
                               }
                             </tbody>
                           </table>
@@ -641,8 +641,7 @@ function Table  ({urlTable}) {
 
       );
 
-    };
-   
+    };  
 };
 
 export default Table;
