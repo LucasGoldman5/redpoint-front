@@ -4,25 +4,17 @@ import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import './information-header.css';
 import {  Link } from 'react-router-dom';
-import getEnviroment from "../helpers/getEnviroment";
 
 
-const InformationHeader = () =>{
+const InformationHeader = ({enviroment}) =>{
   
-  const url = async () =>{
-    const enviroment = await getEnviroment()
-     return  enviroment.url
-  }
-
 
   const comeBack = async () =>{
-    const apiURL = await url();
-    window.location.assign(`${apiURL}Table/report/reparations-pending`);
+    window.location.assign(`${enviroment.selfUrl.main}Table/report/reparations-pending`);
   }
 
   const home = async () =>{
-    const apiURL = await url();
-    window.location.assign(`${apiURL}Table/report/reparations-pending`);
+    window.location.assign(`${enviroment.selfUrl.main}Table/report/reparations-pending`);
   }
 
     return(

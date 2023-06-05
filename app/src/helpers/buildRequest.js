@@ -14,6 +14,16 @@ export default async function  HelperBuildRequest ( method, data = {}, type = nu
             body: JSON.stringify(data)
         };
     }
+
+    if(type === 'register') {
+        return {
+            method: method,
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json',
+            }
+        };
+    }
         
     const userData = JSON.parse( localStorage.getItem('user') );
     const tokenType = userData.token_type[0].toUpperCase() + userData.token_type.slice(1, userData.token_type.length );
