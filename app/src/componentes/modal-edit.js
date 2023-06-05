@@ -1,14 +1,13 @@
 import React, {useState,useEffect} from "react";
 import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
-import { useForm } from "react-hook-form";
-import getEnviroment from "../helpers/getEnviroment";
+import { set, useForm } from "react-hook-form";
 import HelperBuildRequest from "../helpers/buildRequest";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
 import './modales.css'
 
 
-const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,errorsInTable }) => {
+const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,errorsInTable,enviroment,dataBrandsApp,dataCellphonesApp,dataCustomersApp,dataServicesApp,dataStatusApp,dataRolesApp}) => {
 
   const location = window.location.href;
   const [dataStatesEdit, setDataStatesEdit] = useState([]);
@@ -16,6 +15,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
   const [dataCustomersEdit, setDataCustomersEdit] = useState([]);
   const [dataCellphonesEdit, setDataCellPhonesEdit] = useState([]);
   const [dataServicesEdit, setDataServicesEdit] = useState([]);
+  const [dataRolesEdit, setDataRolesEdit] = useState([]);
   const [errors, setErrors] = useState([]);
   const [errorsApi, setErrorsApi] = useState([]);
   const [openModalEdit, setOpenModalEdit] = useState(false);
@@ -36,147 +36,24 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
   const [filterServiceValue, setFilterServiceValue] = useState('');
   const [filterBrandValue, setFilterBrandValue] = useState('');
   const [checkbox, setCheckBox] = useState(false);
-  const [apiURLLocal, setApiURLLocal] = useState('');
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const url = await getEnviroment();
-      setApiURLLocal(url.url);
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() =>{
-    getDataSelectEdit()
-  },[]);
+ 
 
   useEffect(() =>{
     setOpenModalEdit(getOpenModalEdit);
   },[getOpenModalEdit]);
 
+  useEffect(()=>{
+    setDataBrandsEdit(dataBrandsApp);
+    setDataCellPhonesEdit(dataCellphonesApp);
+    setDataCustomersEdit(dataCustomersApp);
+    setDataServicesEdit(dataServicesApp);
+    setDataStatesEdit(dataStatusApp);
+    setDataRolesEdit(dataRolesApp);
+  },[dataStatusApp])
+
   useEffect(() =>{
     setErrors(errorsInTable);
   },[errorsInTable]);
-
-
-  const url = async () =>{
-    const enviroment = await getEnviroment()
-    return  enviroment.apiURL 
-  }
-
-  const urlLocal = async () =>{
-    const enviroment = await getEnviroment()
-    return enviroment.url 
-  }
-
-  const getDataSelectEdit = async () =>{
-
-    if(window.location.href.includes("reparations" || "report")){
-
-      try{
-                
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`${await url()}select-box/brand`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                    
-                    setDataBrandsEdit(response);
-                }  
-          };
-
-      }catch(error){
-        console.log(error)
-      }
-      
-      try{
-                  
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`${await url()}select-box/customer`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                    
-                    setDataCustomersEdit(response);
-                }  
-          };
-
-      }catch(error){
-        console.log(error)
-      }
-      
-      try{
-                  
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`${await url()}select-box/cellphone`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                      
-                    setDataCellPhonesEdit(response);
-                }  
-          };
-
-      }catch(error){
-        console.log(error)
-      }
-      
-      try{
-                  
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`${await url()}select-box/service`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                      
-                    setDataServicesEdit(response);
-                }  
-          };
-
-      }catch(error){
-        console.log(error)
-      };
-
-    }else if(window.location.href === `${await urlLocal()}Table/cellphones`){
-      
-      try{
-                
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`${await url()}select-box/brand`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                    
-                    setDataBrandsEdit(response);
-                }  
-          };
-
-      }catch(error){
-        console.log(error)
-      }
-    }
-  };
 
   const changeModal = (fact) =>{
 
@@ -256,8 +133,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
       try{
 
         const config = await HelperBuildRequest("POST", data, "dataTablePost");
-        const apiURL = await url()
-        const request = await fetch(`${apiURL}brands`, config);
+        const request = await fetch(`${enviroment.apiURL.url}${enviroment.entities.brands}`, config);
         
           if(request.status === 200){
               const response = await request.json();
@@ -326,8 +202,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
       try{
 
         const config = await HelperBuildRequest("POST", data, "dataTablePost");
-        const apiURL = await url()
-        const request = await fetch(`${apiURL}customers`, config);
+        const request = await fetch(`${enviroment.apiURL.url}${enviroment.entities.customers}`, config);
         
           if(request.status === 200){
               const response = await request.json();
@@ -375,8 +250,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
       try{
 
         const config = await HelperBuildRequest("POST", data, "dataTablePost");
-        const apiURL = await url()
-        const request = await fetch(`${apiURL}cellphones`, config);
+        const request = await fetch(`${enviroment.apiURL.url}${enviroment.entities.cellphones}`, config);
         
           if(request.status === 200){
               const response = await request.json();
@@ -436,8 +310,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
       try{
 
         const config = await HelperBuildRequest("POST", data, "dataTablePost");
-        const apiURL = await url()
-        const request = await fetch(`${apiURL}services`, config);
+        const request = await fetch(`${enviroment.apiURL.url}${enviroment.entities.services}`, config);
         
           if(request.status === 200){
               const response = await request.json();
@@ -627,7 +500,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
  
   const { register, handleSubmit, getValues, setValue} = useForm ();
 
-  if(location === `${apiURLLocal}Table/brands` ){
+  if(location === `${enviroment.selfUrl.main}Table/brands` ){
 
     return(
 
@@ -664,7 +537,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
       </Modal>
     )
 
-  }else if(location === `${apiURLLocal}Table/cellphones`){
+  }else if(location === `${enviroment.selfUrl.main}Table/cellphones`){
 
     return(
 
@@ -756,7 +629,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
           </Modal>
       </>
     )
-  }else if(location === `${apiURLLocal}Table/services`){
+  }else if(location === `${enviroment.selfUrl.main}Table/services`){
 
     return(
       <Modal isOpen={openModalEdit}>
@@ -801,7 +674,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
         </ModalBody> 
       </Modal>
     );
-  }else if(location === `${apiURLLocal}Table/customers`){
+  }else if(location === `${enviroment.selfUrl.main}Table/customers`){
 
     return(
       <Modal isOpen={openModalEdit}>
@@ -847,7 +720,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
         </ModalBody> 
       </Modal>
     );
-  } else if(location === `${apiURLLocal}Table/reparations`){
+  } else if(location === `${enviroment.selfUrl.main}Table/reparations`){
     
       return(
          <>
@@ -1774,7 +1647,71 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
           </Modal>
         </>
       );
-    };
+    }else if(window.location.href.includes("users")){
+
+      return(
+        <>
+          <Modal isOpen={openModalEdit}>
+            <ModalHeader style={{display: 'block'}}>
+              <div>
+                <h5  style={{float: 'center', color:'gold'}} >Editar Usuario</h5> 
+              </div>
+            </ModalHeader>
+            <ModalBody>
+              <form className="form-group" onSubmit={handleSubmit(onsubmit)}>
+                <input style={{ visibility: 'hidden', position: 'absolute' }} type="text" readOnly name="id" defaultValue={itemToEdit ? itemToEdit.id : ""} {...register('id',{ shouldUnregister: true,})} />
+                <label htmlFor="descripcion">Nombre</label>
+                <input className={errors.name ? "form-control error" : "form-control"} type="text" name="name" id="name"  defaultValue={itemToEdit ? itemToEdit.name : ''} {...register('name',{
+                  shouldUnregister: true,
+                  onChange: () => changeError("name"),
+                  })} />
+                  {errors.name? <p className="p-errores">{errors.name}</p>: ""}
+                <br />
+                <label htmlFor="number">Email</label>
+                <input className={errors.email ? "form-control error" : "form-control"} type="text" name="email" id="email"  defaultValue={itemToEdit ? itemToEdit.email : ''}{...register('email',{
+                  shouldUnregister: true,
+                  onChange: (e) => changeError("email",e.target.value),
+                  })} />
+                  {errors.email? <p className="p-errores">{errors.email}</p> : ""}
+                <br />
+                <label htmlFor="direccion">Numero de Telefono</label>
+                <input className={errors.phone_number ? "form-control error" : "form-control"} type="text" name="phone" id="phone"  defaultValue={itemToEdit ? itemToEdit.phone_number : ''}{...register('phone_number',{ 
+                  shouldUnregister: true,
+                  onChange: () => changeError("phone_number"),
+                  })} />
+                {errors.phone_number? <p className="p-errores">{errors.phone_number}</p> : ""}
+                <br />
+                <label htmlFor="descripcion">Activo:</label>
+                <input className="input-check" type="checkbox"  defaultChecked={itemToEdit ? itemToEdit.active : 0} {...register('active',{
+                  shouldUnregister: true,
+                  })} />
+                <br />
+                <br/>
+                <label htmlFor="rol">Rol</label>
+                <select  className={errors.rol_id ? "form-select  error" : "form-select brand"} defaultValue={itemToEdit ? itemToEdit.rol_id : ""}  name="select"  {...register('rol_id',{
+                      onChange: () => changeError("rol_id"),
+                      })}>
+                      <option value={itemToEdit ? itemToEdit.rol_id : null} className="option-selected">{itemToEdit ? dataRolesEdit.map((rol)=>{
+                        if(rol.id === itemToEdit.rol_id){
+                          return rol.description
+                        }
+                      }): ""}</option>
+                      {dataRolesEdit.map((rol)=>{
+                        return <option className="option-modal" key={rol.id} value={rol.id} >{rol.description}</option>                     
+                      })}
+                </select>
+                {errors.rol_id ? <p className="p-errores">El campo Rol debe ser seleccionado</p> : ""}
+                <br />
+                <div className="contenedor-boton-modal-dentro">
+                  <button className="btn btn-edit" type="submit" onClick={edit}>Editar</button>
+                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1> 
+                </div>
+              </form>
+            </ModalBody> 
+          </Modal>
+        </>
+      )
+    }
 };
 
 

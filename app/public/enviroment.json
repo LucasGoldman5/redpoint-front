@@ -1,11 +1,44 @@
 {
-    "apiURL": "http://localhost:8000/api/",
-    "entities": [
-         "cellphones",
-         "brands",
-         "customers",
-         "services",
-         "reparations"
-    ],
-    "url": "http://localhost:3000/"
+    "apiURL": {
+        "url": "http://localhost:8000/api/",
+        "selectBox": "select-box/",
+        "generatePassword": "generate-password/",
+        "getUser": "get-user/"
+    },
+    "entities": {
+        "cellphone": "cellphone",
+        "brand": "brand",
+        "customer": "customer",
+        "service": "service",
+        "reparation": "reparation",
+        "report": "report",
+        "cellphones": "cellphones",
+        "brands": "brands",
+        "customers": "customers",
+        "services": "services",
+        "roles": "roles",
+        "status": "status",
+        "reparations": "reparations",
+        "users": "users"
+    },
+    "selfUrl":{
+        "main": "http://localhost:3000/",
+        "login" : "login",
+        "notFound" : "pagina-no-encontrada",
+        "dataTable": "Tabla/",
+        "report": "reporte/",
+        "personalInformation": "personal-information",
+        "generatePassRoute": "generar-contraseña/*",
+        "generatePass": "generar-contraseña/",
+        "localEntities":[
+            {"pending":"reparaciones-pendientes"},
+            {"succsess":"reparaciones-entregadas"},
+            {"brands":"marcas/"},
+            {"cellphones":"celulares/"},
+            {"customers":"clientes/"},
+            {"services":"servicios/"},
+            {"reparations":"reparaciones-por-"}
+        ]
+    }
+    
 }

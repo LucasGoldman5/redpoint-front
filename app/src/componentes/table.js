@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
 import './table.css';
@@ -16,9 +16,10 @@ import { v4 as uuidv4 } from 'uuid';
 import getManualColumns from '../helpers/getManualColumns';
 import getEnviroment from '../helpers/getEnviroment';
 import { PulseLoader } from "react-spinners";
+import Error404 from './page404';
 
 
-function Table  ({urlTable}) {
+function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphonesApp,dataCustomersApp,dataServicesApp,dataRolesApp,dataStatusApp}) {
 
 
     const [dataApi, setDataApi] = useState([]);
@@ -35,13 +36,14 @@ function Table  ({urlTable}) {
     const [changePage,setChangePage] = useState(false);
     const [spinnerLoadTable, setSpinnerLoadTable] = useState(false);
     const [spinnerLoadPage, setSpinnerLoadPage] = useState(false);
+    const [notfound, setNotFound] = useState(false);
     const { id } = useParams();
     const { title } = useParams();
-    
     
     const location = useLocation();
     const getUser = localStorage.getItem("user");
   
+
     const tables = [
       
         {"brands":"Marcas"},
@@ -50,8 +52,10 @@ function Table  ({urlTable}) {
         {"customers":"Clientes"},
         {"reparations":"Reparaciones"},
         {"report/reparations-pending":"Reparaciones Pendientes"},
-        {"report/reparations-success":"Reparaciones Entregadas"}    
+        {"report/reparations-success":"Reparaciones Entregadas"},
+        {"users":"Usuarios"}    
     ];
+
 
     const admin = () =>{
       let usuario = JSON.parse(getUser);
@@ -63,45 +67,71 @@ function Table  ({urlTable}) {
         };
     };
     
-
     useEffect(() => {
-        url();
         getData();
         admin();
     }, [urlTable]);
 
-    const url = async () =>{
+    useEffect(()=>{
+      tableActive(dataApi)
+    },[dataApi])
 
-        const enviroment = await getEnviroment()
-        return  enviroment.apiURL + urlTable;
-      
+    const urlApi = () =>{
+        return  enviroment.apiURL.url + urlTable;
     }
+
+    const urlLocal = () =>{
+      return enviroment.selfUrl
+    }
+
 
     const getData = async () => {
 
       setSpinnerLoadTable(true);
       setSpinnerLoadPage(true);
 
-      await getManualColumns(window.location.href);
-      setDataColumns(JSON.parse(localStorage.getItem('column')));
-      const config = await HelperBuildRequest('GET', null, 'dataTable');
-      const apiURL = await url()
+      try{
+        await getManualColumns(window.location.href,enviroment.selfUrl);
+        setDataColumns(JSON.parse(localStorage.getItem('column')));
+        const config = await HelperBuildRequest('GET', null, 'dataTable');
+        const apiURL = urlApi()
 
-        await fetch(apiURL, config)
-          .then( res  => res.json())
-          .then( datos =>{
-            setDataApi(datos);
-            console.log(datos);
-          });
+          const request = await fetch(apiURL, config)
 
-          setTimeout(()=>{
-            setSpinnerLoadPage(false);
-          },200) 
-
-          setTimeout(()=>{
-            setSpinnerLoadTable(false);
-          },1000)   
+          if(request.status === 200){
+            const response = request.json();
+            if(response.error){
+              setTimeout(()=>{
+                console.log(response.error);
+              },1000);
+            }else{
+              const data = await response
+              setDataApi(data)
+              setTimeout(()=>{
+                setSpinnerLoadPage(false);
+              },200)
+              setTimeout(()=>{
+                setSpinnerLoadTable(false);
+              },1000) 
+            }
+          }else if(request.status === 404){
+             setTimeout(()=>{
+              setNotFound(true);
+             },500)
+          }else if(request.status === 405){
+            setTimeout(()=>{
+             setNotFound(true);
+            },500)
+         }
+      }catch(error){
+        console.log(error);
+        setTimeout(()=>{
+          setNotFound(true);
+         },500)
+      }   
     };
+
+    
 
     const openModalAdd = () =>{
       setOpenModal(true);
@@ -115,7 +145,8 @@ function Table  ({urlTable}) {
   
             try {
 
-              const apiURL = await url()
+              const apiURL = urlApi()
+              const localUrl = urlLocal()
               const config = await HelperBuildRequest("POST", data, "dataTablePost");                    
               const request = await fetch(apiURL, config);
   
@@ -127,8 +158,16 @@ function Table  ({urlTable}) {
                       },1000);
                     }else{               
                       setOpenModal(false);
-                      setErrors([]);    
-                      getData();
+                      setErrors([]);
+                      if(window.location.href.includes("users")){
+                        const hash = response.data.hash
+                        setTimeout(async () =>{
+                          alert(`El usuario a sido creado con exito, para ingresar a la aplicacion debe ingresar a la siguiente url: ${localUrl.main}${localUrl.generatePass}#${hash}`)
+                        },1000)
+                        getData();
+                      }else{
+                        getData();
+                      }    
                     };  
                 };
   
@@ -168,13 +207,12 @@ function Table  ({urlTable}) {
     const edit =  async (data) =>{
       console.log(data);
       
-      const urlEdit = async () =>{
+      const urlEdit = () =>{
 
         if(window.location.href.includes("report")){
-          const enviroment = await getEnviroment()
-          return enviroment.apiURL + "reparations"
+          return enviroment.apiURL.url + "reparations"
         }else{
-          return await url()
+          return urlApi()
         }
       }
 
@@ -218,7 +256,7 @@ function Table  ({urlTable}) {
             console.log(error);
             
           };          
-        };  
+        };
     }; 
 
 
@@ -242,13 +280,12 @@ function Table  ({urlTable}) {
           
             try{
 
-                const urlDelete = async () =>{
+                const urlDelete = () =>{
 
                   if(window.location.href.includes("report")){
-                    const enviroment = await getEnviroment()
-                    return enviroment.apiURL + "reparations"
+                    return enviroment.apiUrl.url + "reparations"
                   }else{
-                    return await url()
+                    return  urlApi()
                   }
                 }             
                   const config = await HelperBuildRequest("DELETE", "dataTable");
@@ -273,6 +310,47 @@ function Table  ({urlTable}) {
         });
     };
 
+    
+
+    const actionUser = async (data,id) => {
+
+      const newData = {
+        ...data,
+        "active":!data.active
+      }
+      console.log(newData);
+      setTimeout(()=>{
+        setOpenModalEdit(false);
+      })
+      try {
+
+        const config =await HelperBuildRequest("PUT", newData, "dataTablePut");
+        const apiURL = urlApi()
+        const request = await fetch(`${apiURL}/${id}`, config);
+
+        if(request.status === 200){
+          const response = await request.json();
+            if(response.error){
+              setTimeout(()=>{
+                console.log(response.error);
+              },1000);
+            }else{                      
+              getData();
+            }  
+        }
+
+        if(request.status === 422){
+          const response = await request.json();
+            if(response.errors){
+              console.log(response.errors);
+            };
+        };
+     
+  }catch(error){
+    console.log(error);
+    
+  };       
+    };
 
     /*const OpenModalView = (element) => {
 
@@ -315,7 +393,6 @@ function Table  ({urlTable}) {
               setChangePage(false);
              },500)
             setDataApi(datos);
-            setDataApi(datos);
           });  
         }else{
           alert("Ya se encuentra en la primer Pagina")
@@ -326,7 +403,7 @@ function Table  ({urlTable}) {
 
   
       const config = await HelperBuildRequest('GET', null, 'dataTable');
-      const apiURL = await url()
+      const apiURL = urlApi()
 
         if(i){
 
@@ -338,7 +415,6 @@ function Table  ({urlTable}) {
               setChangePage(false);
              },500)
             setDataApi(datos);
-            setDataApi(datos);
           });  
         }else{
           alert("kk")
@@ -346,31 +422,22 @@ function Table  ({urlTable}) {
     };
 
 
-    if(dataApi.data && dataColumns){
-
-      /*const fact = Object.values(dataApi.columns).filter((fact) =>{       
-        const listaDeColumnas = ['Marca', 'Modelo', 'Nombre', 'id','Numero de Telefono','recibido por'];
-          if(listaDeColumnas.includes(fact)){
-            return fact;
-          } ;
-      });*/
-
+    if(dataApi.data && dataColumns ){
 
       const dataFilter = (e) => {
         let filteredData = dataApi.data;
       
         if (e) {
-          setChain(e.target.value.toLocaleLowerCase());
+          setChain(e.target.value.toLowerCase());
         }
       
         if (chain.length >= 1) {
           filteredData = filteredData.filter((fact) => {
-      
-                    
+         
             for (let property in fact) {
                 const value = fact[property];
                 if (value && typeof value == 'string') {
-                  if (value.toLocaleLowerCase().includes(chain)) {
+                  if (value.toLowerCase().includes(chain)) {
                     return true;
                   }
                 }
@@ -425,19 +492,19 @@ function Table  ({urlTable}) {
                 <div className='titulo-tabla'>
                   <h1>
                     {
-                    (window.location.href.includes("by-brand"))
+                    (window.location.href.includes("by-brand") && dataApi.data[0].cellphone)
                     ?
                     `Reparaciones por ${dataApi.data[0].cellphone.brand}`
                     :
-                    (window.location.href.includes("by-customer"))
+                    (window.location.href.includes("by-customer") && dataApi.data[0].customer)
                     ?
                     `Reparaciones por ${dataApi.data[0].customer.customer}`
                     :
-                    (window.location.href.includes("by-cellphone"))
+                    (window.location.href.includes("by-cellphone") && dataApi.data[0].cellphone)
                     ?
                     `Reparaciones por ${dataApi.data[0].cellphone.model}`
                     :
-                    (window.location.href.includes("by-service"))
+                    (window.location.href.includes("by-service") && dataApi.data[0].service)
                     ?
                     `Reparaciones por ${dataApi.data[0].service.service}`
                     :
@@ -476,7 +543,13 @@ function Table  ({urlTable}) {
                                 {Object.values(dataColumns).map((column,index)=>(
                                   <th key={`${uniqueKeys.thColumn}-${index}`} className='th-columnas'>{column}</th>
                                 ))}
-                                <th className='ultima-columna' key={uniqueKeys.thColumnActions} >Eliminar</th>
+                                {
+                                  (window.location.href.includes("users"))
+                                  ?
+                                  ""
+                                  :
+                                  <th className='ultima-columna' key={uniqueKeys.thColumnActions} >Eliminar</th>
+                                }
                               </tr>
                             </thead>
                             <tbody className='tbody' key={uniqueKeys.tbody}>
@@ -509,11 +582,18 @@ function Table  ({urlTable}) {
                                           if(column === "state_id"){
                                             return <td className='td'  key={`${uniqueKeys.tbody}-${i}`}><p>{item.description}</p></td>
                                           }
-                                          if(column === "cellphone"){
+                                          if(column === "cellphone" && dataApi.data[0].cellphone){
                                             return <td className='td'  key={`${uniqueKeys.tbody}-${i}`}><p>{item.model}</p></td>
                                           }
-                                          if(column === "customer"){
+                                          if(column === "customer"){  
                                             return <td className='td'  key={`${uniqueKeys.tbody}-${i}`}><p>{item.customer}</p></td>
+                                          }
+                                          if(column === "rol_id"){
+                                            if(Object.values(element)[i] === 1){
+                                              return <td className='td'  key={`${uniqueKeys.tbody}-${i}`}><p>Admin</p></td>
+                                            }else{
+                                              return <td className='td'  key={`${uniqueKeys.tbody}-${i}`}><p>Super-admin</p></td>
+                                            }
                                           }
                                           if(column === "failure"){
                                             return <td className='td-service' key={`${uniqueKeys.tbody}-${i}`}>
@@ -551,6 +631,12 @@ function Table  ({urlTable}) {
                                             }else{
                                               return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
                                             }
+                                          }if(column === "last_connection"){
+                                            if(Object.values(element)[i] === null){
+                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
+                                            }else{
+                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
+                                            }
                                           }
                                           if(column === "email"){
                                             return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={""} >{item}</a></td>
@@ -562,19 +648,31 @@ function Table  ({urlTable}) {
                                               return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>No</p></td>
                                             }
                                           }
+                                          if(column === "active"){
+                                            if(Object.values(element)[i] === 1){
+                                              return <td className='td-active' key={`${uniqueKeys.tbody}-${i}`}><p className='p-active-yes'>Si</p><button className='button-active' onClick={()=>actionUser(element,element.id)}>Desactivar</button></td>
+                                            }else{ 
+                                               return <td className='td-active' key={`${uniqueKeys.tbody}-${i}`}><p className='p-active-no'>No</p><button className='button-desactive' onClick={()=>actionUser(element,element.id)}>Activar</button></td> 
+                                            }
+                                          }
                                             return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>{item}</p></td>
                                         }
                                       }
                                     })}
                                         
-                                    <td className='ultima-celda' key={uniqueKeys.tdBody}>
+                                    {
+                                      (window.location.href.includes("users"))
+                                      ?
+                                      ""
+                                      :
+                                      <td className='ultima-celda' key={uniqueKeys.tdBody}>
                                       {
-                                        
                                         <div className='botones-acciones' >                                        
                                           <button className='boton-eliminar' onClick={() => eliminate(element)}><FontAwesomeIcon icon={faTrashAlt} /></button> 
                                         </div>
                                       }
                                     </td>
+                                    }
                                   </tr>
                               )
                               :
@@ -582,7 +680,7 @@ function Table  ({urlTable}) {
                               ?
                               <tr className='tr-coincidence'><td className='div-no-coincidence'><PulseLoader color="#d41c1c" size={16}></PulseLoader></td></tr>
                               :
-                              <tr className='tr-coincidence'><p className='p-no-coincidence'>No hay coincidencias</p></tr>
+                              <tr className='tr-coincidence'><td className='p-no-coincidence'>No hay coincidencias</td></tr>
                               }
                             </tbody>
                           </table>
@@ -599,14 +697,20 @@ function Table  ({urlTable}) {
                     :
                     ""
                   }
-                  
-                    
+                   
                   <ModalEdit
                     getOpenModalEdit={openModalEdit}
                     itemToEdit={itemToEdit}
                     onsubmit={edit}
                     closeForm={closeForm}
-                    errorsInTable={errors}>
+                    errorsInTable={errors}
+                    enviroment={enviroment}
+                    dataBrandsApp={dataBrandsApp}
+                    dataCustomersApp={dataCustomersApp}
+                    dataServicesApp={dataServicesApp}
+                    dataCellphonesApp={dataCellphonesApp}
+                    dataStatusApp={dataStatusApp}
+                    dataRolesApp={dataRolesApp}>
                   </ModalEdit>
 
                   <ModalAdd
@@ -614,7 +718,13 @@ function Table  ({urlTable}) {
                     closeForm={closeForm}
                     dataApi={dataApi}
                     openModal={openModal}
-                    errorsInTable={errors}>
+                    errorsInTable={errors}
+                    enviroment={enviroment}
+                    dataBrandsApp={dataBrandsApp}
+                    dataCustomersApp={dataCustomersApp}
+                    dataServicesApp={dataServicesApp}
+                    dataCellphonesApp={dataCellphonesApp}
+                    dataRolesApp={dataRolesApp}>
                   </ModalAdd>
 
                   <ModalView
@@ -641,7 +751,13 @@ function Table  ({urlTable}) {
 
       );
 
-    };  
+    }else if(notfound === true){
+      return (
+        <>
+        <Error404/>
+        </>
+      )
+    } 
 };
 
 export default Table;

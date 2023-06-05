@@ -33,6 +33,7 @@ body{
 }
 
 .general-container-table{
+    max-width: 1100px;
     width: 95%;
     height: max-content;
     max-height: 420px;
@@ -40,9 +41,9 @@ body{
     flex-direction: column;
     align-items: center;
     background: rgb(255, 190, 212);
-    box-shadow: 4px 4px 6px rgb(255, 190, 212);
+    box-shadow: 6px 6px 6px rgb(236, 175, 196);
     border: 0.5px solid black;
-    border-radius: 12px;
+    border-radius: 6px;
     padding-bottom: 10px;
 }
 
@@ -54,10 +55,18 @@ body{
     height: max-content;
     max-height: 500px;
     overflow-x: scroll;
-    border-left: 1px solid gray;
-    border-right: 1px solid gray;
-    border-radius: 15px;
+    border-radius: 6px;
 }
+::-webkit-scrollbar {
+    width: 10px;
+    background-color: #d8d8d8;
+    border-radius: 20px;
+  }
+::-webkit-scrollbar-thumb {
+    background-color: #919191;
+    border-radius: 15px;
+    
+  }
 .contenedor-barra{
     width: 50%;
     display: flex;
@@ -74,6 +83,7 @@ body{
 }
 .contenedor-barra-botonagregar{
     display: flex;
+    max-width: 1100px;
     width: 95%;
 }
 .contenedor-barra-botonagregar-report{
@@ -164,6 +174,50 @@ body{
     padding-left: 5px;
     white-space: nowrap;
     text-align: start;
+}
+.td-active{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 39px;
+}
+.td-active button{
+    border: none;
+    color: rgb(247, 247, 247);
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 8px;
+    width: 85px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 25px;
+    margin-left: 8px;
+}
+
+.button-active{
+  background: rgba(255, 0, 0, 0.767);
+}
+.button-desactive{
+    background: rgba(0, 128, 0, 0.767);
+}
+.button-active:hover{
+    transition: all 0.2s;
+    background: rgb(150, 0, 0);
+  }
+  .button-desactive:hover{
+    transition: all 0.2s;
+    background: rgb(0, 92, 0);
+  }
+.p-active-yes{
+    margin: 0;
+    font-weight: 700;
+    color: green;
+}
+.p-active-no{
+    margin: 0;
+    font-weight: 700;
+    color: red;
 }
 
 .td p{

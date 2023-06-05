@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
 
 
-const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
+const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,dataBrandsApp,dataCellphonesApp,dataCustomersApp,dataServicesApp,dataRolesApp}) =>{
   
   const [chainBrand, setChainBrand] = useState ("");
   const [errorsApi, setErrorsApi] = useState([]);
@@ -20,6 +20,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
   const [dataCustomers, setDataCustomers] = useState([]);
   const [dataCellPhones, setDataCellPhones] = useState([]);
   const [dataServices, setDataServices] = useState([]);
+  const [dataRoles, setDataRoles] = useState([]);
   const [openModalAddBrand, setOpenModalAddBrand] = useState(false);
   const [openModalAddCustomer, setOpenModalAddCustomer] = useState(false);
   const [openModalAddCellphone, setOpenModalAddCellphone] = useState(false);
@@ -36,22 +37,8 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
   const [filterCellphoneValue, setFilterCellphoneValue] = useState('');
   const [filterServiceValue, setFilterServiceValue] = useState('');
   const [filterBrandValue, setFilterBrandValue] = useState('');
-  const [apiURLLocal, setApiURLLocal] = useState('');
   const location = window.location.href;
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const url = await getEnviroment();
-      setApiURLLocal(url.url);
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() =>{
-    getDataModal()
-  },[])
-
+ 
   useEffect(() =>{
     setOpenModalAdd(openModal);
   },[openModal])
@@ -60,123 +47,13 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
     setErrors(errorsInTable);
   },[errorsInTable])
 
-  const url = async () =>{
-    const enviroment = await getEnviroment()
-    return  enviroment.apiURL 
-  }
-
-  const urlLocal = async () =>{
-    const enviroment = await getEnviroment()
-    return enviroment.url 
-  }
-
-  const getDataModal =  async () =>{
-   
-      if(window.location.href.includes("reparations" || "report")){
-
-        try{
-                  
-          const config = await HelperBuildRequest("GET",null, "dataTable");
-          const request = await fetch(`${await url()}select-box/brand`, config);
-  
-            if(request.status === 200){
-                const response = await request.json();
-                  if(response.error){
-                      setTimeout(()=>{
-                        console.log(response.error);
-                      },1000);
-                  }else{                    
-                      setDataBrands(response);
-                  }  
-            };
-  
-        }catch(error){
-          console.log(error)
-        }
-        
-        try{
-                    
-          const config = await HelperBuildRequest("GET",null, "dataTable");
-          const request = await fetch(`${await url()}select-box/customer`, config);
-  
-            if(request.status === 200){
-                const response = await request.json();
-                  if(response.error){
-                      setTimeout(()=>{
-                        console.log(response.error);
-                      },1000);
-                  }else{                    
-                      setDataCustomers(response);
-                  }  
-            };
-  
-        }catch(error){
-          console.log(error)
-        }
-        
-        try{
-                    
-          const config = await HelperBuildRequest("GET",null, "dataTable");
-          const request = await fetch(`${await url()}select-box/cellphone`, config);
-  
-            if(request.status === 200){
-                const response = await request.json();
-                  if(response.error){
-                      setTimeout(()=>{
-                        console.log(response.error);
-                      },1000);
-                  }else{                      
-                      setDataCellPhones(response);
-                  }  
-            };
-  
-        }catch(error){
-          console.log(error)
-        }
-        
-        try{
-                    
-          const config = await HelperBuildRequest("GET",null, "dataTable");
-          const request = await fetch(`${await url()}select-box/service`, config);
-  
-            if(request.status === 200){
-                const response = await request.json();
-                  if(response.error){
-                      setTimeout(()=>{
-                        console.log(response.error);
-                      },1000);
-                  }else{                      
-                      setDataServices(response);
-                  }  
-            };
-  
-        }catch(error){
-          console.log(error)
-        };
-
-      }else if(window.location.href === `${await urlLocal()}Table/cellphones`){
-        
-        try{
-                  
-          const config = await HelperBuildRequest("GET",null, "dataTable");
-          const request = await fetch(`${await url()}select-box/brand`, config);
-  
-            if(request.status === 200){
-                const response = await request.json();
-                  if(response.error){
-                      setTimeout(()=>{
-                        console.log(response.error);
-                      },1000);
-                  }else{                    
-                      setDataBrands(response);
-                  }  
-            };
-  
-        }catch(error){
-          console.log(error)
-        }
-      }
-  };
+  useEffect(()=>{
+    setDataBrands(dataBrandsApp);
+    setDataCellPhones(dataCellphonesApp);
+    setDataCustomers(dataCustomersApp);
+    setDataServices(dataServicesApp);
+    setDataRoles(dataRolesApp);
+  },[dataRolesApp])
 
   const changeModal = (fact) =>{
 
@@ -252,8 +129,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
       try{
 
         const config = await HelperBuildRequest("POST", data, "dataTablePost");
-        const apiURL = await url()
-        const request = await fetch(`${apiURL}brands`, config);
+        const request = await fetch(`${enviroment.apiURL.url}${enviroment.entities.brands}`, config);
         
           if(request.status === 200){
               const response = await request.json();
@@ -316,8 +192,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
       try{
 
         const config = await HelperBuildRequest("POST", data, "dataTablePost");
-        const apiURL = await url()
-        const request = await fetch(`${apiURL}customers`, config);
+        const request = await fetch(`${enviroment.apiURL.url}${enviroment.entities.customers}`, config);
 
           if(request.status === 200){
               const response = await request.json();
@@ -380,8 +255,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
       try{
 
         const config = await HelperBuildRequest("POST", data, "dataTablePost");
-        const apiURL = await url()
-        const request = await fetch(`${apiURL}services`, config);
+        const request = await fetch(`${enviroment.apiURL.url}${enviroment.entities.services}`, config);
 
           if(request.status === 200){
               const response = await request.json();
@@ -453,8 +327,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
       try{
 
         const config = await HelperBuildRequest("POST", data, "dataTablePost");
-        const apiURL = await url()
-        const request = await fetch(`${apiURL}cellphones`, config);
+        const request = await fetch(`${enviroment.apiURL.url}${enviroment.entities.cellphones}`, config);
 
           if(request.status === 200){
               const response = await request.json();
@@ -566,16 +439,19 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
       setErrors({description:null})
     }
     else if(entity === "name"){
-      setErrors({name:null, email:errors.email, phone_number:errors.phone_number})
+      setErrors({name:null, email:errors.email, phone_number:errors.phone_number, rol_id:errors.rol_id})
     }
     else if(entity === "email"){
       setErrors({name:errors.name, email:"El email requiere este formato : xxxx@xx.xx", phone_number:errors.phone_number})
       if(value.includes("@" && ".")){
-        setErrors({name:errors.name, email:null, phone_number:errors.phone_number})
+        setErrors({name:errors.name, email:null, phone_number:errors.phone_number, rol_id:errors.rol_id})
       }
     }
     else if(entity === "phone_number"){
-      setErrors({name:errors.name, email:errors.email, phone_number:null})
+      setErrors({name:errors.name, email:errors.email, phone_number:null, rol_id:errors.rol_id})
+    }
+    else if(entity === "rol_id"){
+      setErrors({name:errors.name, email:errors.email, phone_number:errors.phone_number, rol_id:null})
     }
   };
 
@@ -663,7 +539,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
   const { register, handleSubmit, getValues, setValue} = useForm ();
 
 
-  if(location === `${apiURLLocal}Table/cellphones`){
+  if(location === `${enviroment.selfUrl.main}Table/cellphones`){
 
     return(
 
@@ -696,7 +572,6 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
                 <input type="search" onChange={(e)=>handleInputChange(e,"brand")} placeholder="buscar.." className={selectBrandActive ? "input-search brand" : "input-search-none"}></input>
                 <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"brand")} className="icon-search" icon={faMagnifyingGlass} />
                 <select  className="form-select brand" name="select"  {...register('brand_id',{
-                  value:null,
                   onChange: () => changeError("brand"),
                   })}>
                     <option value={null}>Seleccionar..</option>
@@ -753,7 +628,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
 
         </>  
     );
-  }else if(location === `${apiURLLocal}Table/brands` ){
+  }else if(location === `${enviroment.selfUrl.main}Table/brands` ){
 
     return(
 
@@ -793,7 +668,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
       </Modal>
 
     )
-  }else if(location === `${apiURLLocal}Table/services`){
+  }else if(location === `${enviroment.selfUrl.main}Table/services`){
 
     return(
       <Modal isOpen={openModalAdd}>
@@ -838,7 +713,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
         </ModalBody>
       </Modal>
     );
-  }else if(location === `${apiURLLocal}Table/customers`){
+  }else if(location === `${enviroment.selfUrl.main}Table/customers`){
 
     return(
       <Modal isOpen={openModalAdd}>
@@ -883,7 +758,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
         </ModalBody>
       </Modal>
     );
-  }else if(location === `${apiURLLocal}Table/reparations`){
+  }else if(location === `${enviroment.selfUrl.main}Table/reparations`){
 
     return(
         <>
@@ -1340,7 +1215,57 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm}) =>{
           </Modal>
         </>
     );
-  }/*else if(window.location.href.includes("report")){
+  }else if(window.location.href.includes("users")){
+
+    return(
+      <Modal isOpen={openModalAdd}>
+        <ModalHeader style={{display: 'block'}}>
+          <div>
+          <h5  className="h5-modal-add" >Crear Usuario</h5> 
+          </div>
+        </ModalHeader>
+        <ModalBody className="contenedor-modal-body">
+          <form className="form-group" onSubmit={handleSubmit(create)}>
+            <label htmlFor="marca">Nombre</label>
+            <input className={errors.name ? "form-control error" : "form-control"} type="text" name="name"  {...register('name',{
+              onChange: () => changeError("name"),
+              value:null
+              })} />
+              {errors.name? <p className="p-errores">{errors.name}</p> : ""} 
+            <br />
+            <label htmlFor="url">Email</label>
+            <input className={errors.email ? "form-control error" : "form-control"} type="text" name="email" {...register('email',{
+              onChange: (e) => changeError("email",e.target.value),
+              value:null
+              })} />
+              {errors.email? <p className="p-errores">{errors.email}</p> : ""}
+            <br />
+            <label htmlFor="url">Activo</label>
+            <input className="form-active"  type="checkbox" name="phone"  {...register('active',{
+              })} />
+            <br />
+            <br/>
+            <label htmlFor="rol">Rol</label>
+            <select  className={errors.rol_id ? "form-select  error" : "form-select brand"} defaultValue={null}  name="select"  {...register('rol_id',{
+                  onChange: () => changeError("rol_id"),
+                  })}>
+                  <option value={null} className="option-selected">Seleccionar..</option>
+                  {dataRoles.map((rol)=>{
+                    return <option className="option-modal" key={rol.id} value={rol.id} >{rol.description}</option>                     
+                  })}
+            </select>
+            {errors.rol_id ? <p className="p-errores">El campo Rol debe ser seleccionado</p> : ""}
+            <br />
+            <div className="contenedor-boton-modal-dentro-reparations">
+                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
+                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
+                </div>
+              </form>
+        </ModalBody>
+      </Modal>
+    );
+  }
+  /*else if(window.location.href.includes("report")){
 
     return(
       <>

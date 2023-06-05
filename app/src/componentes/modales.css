@@ -53,18 +53,18 @@
 }
 
 .input-search-none{
-    width: 0px;
+    width: 0%;
     position: absolute;
-    margin-right: 50px;
     height: 45px;
-    z-index: -1;
+    visibility: hidden;
+    transition: all 0.5s;
 }
 
 .input-search{
     position: absolute;
     outline: none;
     text-align: center;
-    width: 30.5%;
+    width: 30%;
     height: 45px;
     transition: all 0.5s;
 }
@@ -74,11 +74,16 @@
 .input-search.brand{
     position: absolute;
     outline: none;
-    width: 83.5%;
+    width: 80.5%;
     height: 45px;
 }
+.input-check{
+    margin-left: 7px;
+}
 
-
+.form-active{
+    margin-left: 10px;
+}
 .contenedor-modal-body{
    display: flex;   
    align-items: end;
@@ -177,10 +182,12 @@
 
 .h1-add{
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin: 0;
     font-weight: 700;
-    color: green;
+    color: rgb(1, 112, 1);
 }
 .h1-add:hover{
-    color: rgb(0, 194, 0);
-    font-weight: 500;
+    color: rgb(0, 255, 0);
 }

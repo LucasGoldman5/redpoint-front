@@ -19,7 +19,7 @@ const StartHeader = ({register}) =>{
           <Container className="contenedor">
             <Navbar.Brand className="titulo-nav-inicio" onClick={home} href="#home">ClaroApp</Navbar.Brand>
             <Nav className="contenedor-links-inicio" >
-              <li><Link className='nav-li-link-inicio' to={'/Login'}>Inicio</Link></li>
+              <li><Link className='nav-li-link-inicio' to={'/login'}>Inicio</Link></li>
             </Nav>
           </Container>
         </Navbar>

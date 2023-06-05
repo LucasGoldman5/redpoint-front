@@ -43,17 +43,23 @@ const ReportHeader = () =>{
 
      const url = async () =>{
         const enviroment = await getEnviroment()
-        return  enviroment.apiURL 
+        return  enviroment.apiUrl 
       }
 
+      const apiEntities = async () =>{
+        const enviroment = await getEnviroment()
+        return  enviroment.entities 
+      } 
+
       const apiURL = await url()
+      const urlEntities = await apiEntities()
       
 
      if(seeNavReport === false){
         try{
                     
             const config = await HelperBuildRequest("GET",null, "dataTable");
-            const request = await fetch(`${apiURL}select-box/brand`, config);
+            const request = await fetch(`${apiURL.url}${apiURL.selectBox}${urlEntities.brand}`, config);
     
               if(request.status === 200){
                   const response = await request.json();
@@ -73,7 +79,7 @@ const ReportHeader = () =>{
           try{
                       
             const config = await HelperBuildRequest("GET",null, "dataTable");
-            const request = await fetch(`${apiURL}select-box/customer`, config);
+            const request = await fetch(`${apiURL.url}${apiURL.selectBox}${urlEntities.customer}`, config);
     
               if(request.status === 200){
                   const response = await request.json();
@@ -94,7 +100,7 @@ const ReportHeader = () =>{
           try{
                       
             const config = await HelperBuildRequest("GET",null, "dataTable");
-            const request = await fetch(`${apiURL}select-box/cellphone`, config);
+            const request = await fetch(`${apiURL.url}${apiURL.selectBox}${urlEntities.cellphone}`, config);
     
               if(request.status === 200){
                   const response = await request.json();
@@ -115,7 +121,7 @@ const ReportHeader = () =>{
           try{
                       
             const config = await HelperBuildRequest("GET",null, "dataTable");
-            const request = await fetch(`${apiURL}select-box/service`, config);
+            const request = await fetch(`${apiURL.url}${apiURL.selectBox}${urlEntities.service}`, config);
     
               if(request.status === 200){
                   const response = await request.json();

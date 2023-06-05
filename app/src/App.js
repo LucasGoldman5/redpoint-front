@@ -2,7 +2,10 @@ import StartHeader from './componentes/start-header';
 import GeneralHeader from './componentes/general-header';
 import InformationHeader from './componentes/information-header';
 import Table from './componentes/table';
+import GeneratePassword from './componentes/generateUserPassword';
 import PersonalInformation from './componentes/personal-information';
+import Error404 from './componentes/page404';
+import NotAuthorized from './componentes/pageNotAuthorized';
 import Login from './componentes/login';
 import {  BrowserRouter, Route, Routes} from 'react-router-dom';
 import {  useEffect, useState } from 'react';
@@ -13,10 +16,9 @@ import getEnviroment from './helpers/getEnviroment';
 
 
 
+ 
 
-
-
- function App() {
+ const App = () => {
 
   
   const [ user, setUser ] = useState(GetUserData());
@@ -25,31 +27,78 @@ import getEnviroment from './helpers/getEnviroment';
   const [dataCustomers, setDataCustomers] = useState([]);
   const [dataCellphones, setDataCellPhones] = useState([]);
   const [dataServices, setDataServices] = useState([]);
+  const [dataRoles, setDataRoles] = useState([]);
+  const [dataStatus, setDataStatus] = useState([]);
   const [seeNavReport, setSeeNavReport] = useState(false);
   const [arrowIcon, setArrowIcon] = useState(true);
+  const [error404, setError404] = useState(false)
+  const [dataEnviroment, setDataEnviromet] = useState({});
 
-  const urlApi = async () =>{
-    const enviroment = await getEnviroment()
-    return  enviroment.apiURL 
+  const setEnviroment = async () =>{
+    setDataEnviromet( await getEnviroment())
   }
 
-  const urlLocal = async () =>{
-    const enviroment = await getEnviroment()
-    return  enviroment.url
+  const urlApi = () =>{
+      return  dataEnviroment.apiURL 
+  }
+
+  const urlEntities = () =>{
+    return dataEnviroment.entities
+  }
+
+  const timeOut = () =>{
+    setTimeout(()=>{
+    setError404(true)
+  },2000)
+}
+
+  useEffect(()=>{
+    timeOut()
+    setEnviroment()
+  },[])
+
+  const urlLocal = () =>{
+    const enviroment = dataEnviroment  
+    return  enviroment.selfUrl
   }
 
 
   const openNavReports = async () =>{
     setSeeNavReport(!seeNavReport);
-    setArrowIcon(!arrowIcon);
+    setArrowIcon(!arrowIcon);  
+ };
 
-     const apiURL = await urlApi()
+
+  const changeUrl = (url,id) =>{
+    if(id){
+      setSeeNavReport(false)
+      return setUrlTable(url+`/${id}`)
+    }else{
+      setSeeNavReport(false)
+     return setUrlTable(url)
+    };
+  };
+  
+  const enterAplication = async () =>{
+
+    const localUrl = urlLocal();
+
+    window.location.assign(`${localUrl.main}${localUrl.dataTable}${localUrl.report}${localUrl.localEntities.pending}`);
+
+  };
+
+
+  const changeSon = async (dataApi) =>{
+    
+    if(dataApi.data){
+
+      const apiURL = urlApi();
+      const entitiesUrl = urlEntities();
      
-    if(seeNavReport === false){
        try{
                    
            const config = await HelperBuildRequest("GET",null, "dataTable");
-           const request = await fetch(`${apiURL}select-box/brand`, config);
+           const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.brand}`, config);
    
              if(request.status === 200){
                  const response = await request.json();
@@ -69,7 +118,7 @@ import getEnviroment from './helpers/getEnviroment';
          try{
                      
            const config = await HelperBuildRequest("GET",null, "dataTable");
-           const request = await fetch(`${apiURL}select-box/customer`, config);
+           const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.customer}`, config);
    
              if(request.status === 200){
                  const response = await request.json();
@@ -90,7 +139,7 @@ import getEnviroment from './helpers/getEnviroment';
          try{
                      
            const config = await HelperBuildRequest("GET",null, "dataTable");
-           const request = await fetch(`${apiURL}select-box/cellphone`, config);
+           const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.cellphone}`, config);
    
              if(request.status === 200){
                  const response = await request.json();
@@ -111,7 +160,7 @@ import getEnviroment from './helpers/getEnviroment';
          try{
                      
            const config = await HelperBuildRequest("GET",null, "dataTable");
-           const request = await fetch(`${apiURL}select-box/service`, config);
+           const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.service}`, config);
    
              if(request.status === 200){
                  const response = await request.json();
@@ -127,32 +176,51 @@ import getEnviroment from './helpers/getEnviroment';
          }catch(error){
            console.log(error)
          }
-    };
- };
 
+         try{
+                  
+          const config = await HelperBuildRequest("GET",null, "dataTable");
+          const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.roles}`, config);
+  
+            if(request.status === 200){
+                const response = await request.json();
+                  if(response.error){
+                      setTimeout(()=>{
+                        console.log(response.error);
+                      },1000);
+                  }else{                    
+                      setDataRoles(response);
+                  }  
+            };
+  
+        }catch(error){
+          console.log(error)
+        }
 
-  const changeUrl = (url,id) =>{
-    if(id){
-      setSeeNavReport(false)
-      return setUrlTable(url+`/${id}`)
-    }else{
-      setSeeNavReport(false)
-     return setUrlTable(url)
+        try{
+                  
+          const config = await HelperBuildRequest("GET",null, "dataTable");
+          const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.status}`, config);
+  
+            if(request.status === 200){
+                const response = await request.json();
+                  if(response.error){
+                      setTimeout(()=>{
+                        console.log(response.error);
+                      },1000);
+                  }else{                    
+                      setDataStatus(response);
+                  }  
+            };
+  
+        }catch(error){
+          console.log(error)
+        }
     };
   };
-  
-  
-
-  const enterAplication = async () =>{
-
-    const localUrl = await urlLocal();
-
-    window.location.assign(`${localUrl}Table/report/reparations-pending`);
-
-  };
 
 
-  if(user && window.location.href != `http://localhost:3000/personal-information`){
+  if(user && window.location.href.includes("Tabla") && dataEnviroment.selfUrl ){
 
     return(
       <>
@@ -166,43 +234,60 @@ import getEnviroment from './helpers/getEnviroment';
            dataBrands={dataBrands}
            dataCustomers={dataCustomers}
            dataServices={dataServices}
-           dataCellphones={dataCellphones}>
+           dataCellphones={dataCellphones}
+           enviroment={dataEnviroment}>
            </GeneralHeader>
               
               <Routes>
-                  <Route path={`/Table/${urlTable}`} element={<Table urlTable={urlTable}/>}  ></Route>
-                  <Route path= '/Login'  element={<Login enterAplication={enterAplication}  />}  ></Route> 
-                  <Route path='/personal-information' element={<PersonalInformation />}></Route> 
+                  <Route path={`/${dataEnviroment.selfUrl.dataTable}${urlTable}`} element={
+                  <Table 
+                  urlTable={urlTable} 
+                  enviroment={dataEnviroment} 
+                  tableActive={changeSon}
+                  dataBrandsApp={dataBrands}
+                  dataCellphonesApp={dataCellphones}
+                  dataCustomersApp={dataCustomers}
+                  dataServicesApp={dataServices}
+                  dataRolesApp={dataRoles}
+                  dataStatusApp={dataStatus}/>
+                  }></Route>
+                  <Route path={`${dataEnviroment.selfUrl.login}`} element={<Login enterAplication={enterAplication} enviroment={dataEnviroment} />}  ></Route> 
+                  <Route path={`/${dataEnviroment.selfUrl.personalInformation}`} element={<PersonalInformation />}></Route> 
+                  <Route path={`/${dataEnviroment.selfUrl.dataTable}/*`} element={<Error404 />}></Route>  
               </Routes>  
               
           </BrowserRouter>       
         </div>
       </>
     )
-  }else if(user && window.location.href === `http://localhost:3000/personal-information`){
+  }else if(user && window.location.href.includes("personal-information") && dataEnviroment.selfUrl){
 
       return(
         <>
           <div className="App">
           <BrowserRouter>
-            <InformationHeader></InformationHeader>
+            <InformationHeader enviroment={dataEnviroment}/>
                 <Routes>
-                    <Route path={`/personal-information`} element={<PersonalInformation></PersonalInformation>}></Route>
-                    <Route path={`*`} element={<Table />}></Route>
+                    <Route path={`/${dataEnviroment.selfUrl.personalInformation}`} element={<PersonalInformation></PersonalInformation>}></Route>
+                    <Route path={`/${dataEnviroment.selfUrl.dataTable}/${urlTable}`} element={<Table urlTable={urlTable}/>}></Route>
+                    <Route path={`/${dataEnviroment.selfUrl.dataTable}/*`} element={<Error404 />}></Route>
+                    <Route path='*' element={<Error404 />}></Route>
                 </Routes>
               </BrowserRouter>
           </div>
         </>
 
       );
-  }else{
+  }else if(dataEnviroment.selfUrl){
     return(
         <>
           <div className="App">
           <BrowserRouter>
             <StartHeader></StartHeader>
                 <Routes>
-                    <Route path= '*'  element={<Login enterAplication={enterAplication} />}></Route>   
+                    <Route path={`/${dataEnviroment.selfUrl.login}`}  element={<Login enterAplication={enterAplication} enviroment={dataEnviroment} />}></Route> 
+                    <Route path={`/${dataEnviroment.selfUrl.generatePassRoute}`} element={<GeneratePassword enviroment={dataEnviroment}/>}></Route> 
+                    <Route path='*' element={<NotAuthorized/>}></Route> 
                 </Routes>
               </BrowserRouter>
           </div>

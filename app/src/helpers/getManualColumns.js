@@ -1,14 +1,11 @@
 /* global getManualColumns */
-import getEnviroment from "./getEnviroment";
 
-export default async function getManualColumns (url){
 
-    const urlLocal = async () =>{
-        const enviroment = await getEnviroment();
-        return enviroment.url
-    } 
+export default async function getManualColumns (url,urlLocal){
 
-    if(url === `${await urlLocal()}Table/reparations`){
+    console.log(urlLocal);
+
+    if(url === `${urlLocal.main}${urlLocal.dataTable}reparations`){
         const columns = 
         {
           "customer":"Cliente",
@@ -22,7 +19,7 @@ export default async function getManualColumns (url){
         }
         localStorage.setItem("column",JSON.stringify(columns));
 
-    }else if(url === `${await urlLocal()}Table/brands`){
+    }else if(url === `${urlLocal.main}${urlLocal.dataTable}brands`){
         const columns = 
         {
             'id' : 'id',
@@ -31,7 +28,7 @@ export default async function getManualColumns (url){
         }
         localStorage.setItem("column",JSON.stringify(columns));
 
-    }else if(url === `${await urlLocal()}Table/cellphones`){
+    }else if(url === `${urlLocal.main}${urlLocal.dataTable}cellphones`){
         const columns = 
         {
             'id' : 'id',
@@ -40,7 +37,7 @@ export default async function getManualColumns (url){
         }
         localStorage.setItem("column",JSON.stringify(columns));
 
-    }else if(url === `${await urlLocal()}Table/customers`){
+    }else if(url === `${urlLocal.main}${urlLocal.dataTable}customers`){
         const columns = 
         {
             'name' : 'Cliente',
@@ -49,7 +46,7 @@ export default async function getManualColumns (url){
         }
         localStorage.setItem("column",JSON.stringify(columns));
 
-    }else if(url === `${await urlLocal()}Table/services`){
+    }else if(url === `${urlLocal.main}${urlLocal.dataTable}services`){
         const columns = 
         {
             'description' : 'Servicio',
@@ -69,6 +66,17 @@ export default async function getManualColumns (url){
           "state_id":"Estado",
           "failure":"Falla",
           "notice_date":"Recibido el",
+        }
+        localStorage.setItem("column",JSON.stringify(columns));
+
+    }else if(url === `${urlLocal.main}${urlLocal.dataTable}users`){
+        const columns = 
+        {
+            'name' : 'Nombre',
+            'email' : 'Email',
+            'last_connection':'Ultima conexion',
+            'rol_id' : 'Rol',
+            'active' : 'Activo'
         }
         localStorage.setItem("column",JSON.stringify(columns));
 
