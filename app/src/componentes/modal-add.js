@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
 
 
-const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,dataBrandsApp,dataCellphonesApp,dataCustomersApp,dataServicesApp,dataRolesApp}) =>{
+const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,dataBrandsApp,dataCellphonesApp,dataCustomersApp,dataServicesApp,dataRolesApp,dataStatusApp,resetSelectBox}) =>{
   
   const [chainBrand, setChainBrand] = useState ("");
   const [errorsApi, setErrorsApi] = useState([]);
@@ -53,7 +53,14 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
     setDataCustomers(dataCustomersApp);
     setDataServices(dataServicesApp);
     setDataRoles(dataRolesApp);
-  },[dataRolesApp])
+  },[dataBrandsApp,dataRolesApp,dataStatusApp])
+
+  useEffect(() => {
+    setNewCustomerSelected([]);
+    setNewCellphoneSelected([]);
+    setNewBrandSelected([]);
+    setNewServiceSelected([]);
+  },[resetSelectBox])
 
   const changeModal = (fact) =>{
 
@@ -535,11 +542,13 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
     brand.title.toLowerCase().includes(filterBrandValue.toLowerCase())
   );
 
-  
+  const table = enviroment.selfUrl.dataTable;
+  const entities = enviroment.selfUrl.localEntities;
+
   const { register, handleSubmit, getValues, setValue} = useForm ();
 
 
-  if(location === `${enviroment.selfUrl.main}Table/cellphones`){
+  if(location === `${enviroment.selfUrl.main}${table}${entities.cellphones}`){
 
     return(
 
@@ -558,23 +567,31 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                 <label htmlFor="modelo">Modelo</label>
                 <input className={errors.model ? "form-control error" : "form-control"} type="text" name="modelo" {...register('model',{
                   onChange: () => changeError("model"),
-                  value:null
+                  value:null,
+                  shouldUnregister:true,
                   })}/>
                   {errors.model? <p className="p-errores">El campo Modelo debe ser completado</p> : ""}
                 <br />
                 <label htmlFor="url">Url</label>
                 <input className="form-control" type="text" name="url" {...register('url',{
-                  value:null
+                  value:null,
+                  shouldUnregister:true,
                   })} />
                 <br/>
                 <label htmlFor="brnad_id">Marca</label>
                 <div className="div-container-select-button">
                 <input type="search" onChange={(e)=>handleInputChange(e,"brand")} placeholder="buscar.." className={selectBrandActive ? "input-search brand" : "input-search-none"}></input>
                 <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"brand")} className="icon-search" icon={faMagnifyingGlass} />
-                <select  className="form-select brand" name="select"  {...register('brand_id',{
+                <select  className="form-select brand" name="select" defaultValue={newBrandSelected.id ? newBrandSelected.id : ""} {...register('brand_id',{
                   onChange: () => changeError("brand"),
                   })}>
-                    <option value={null}>Seleccionar..</option>
+                    {
+                      (newBrandSelected.id)
+                      ?
+                      <option className="option-selected" value={newBrandSelected.id} >{newBrandSelected.title}</option>
+                      :
+                      <option className="option-selected">Seleccionar..</option>    
+                    }
                   {filteredBrands.map((brand)=>{
                       if(brand.title.includes(chainBrand)){
                         return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option>
@@ -586,7 +603,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                   {errors.brand_id? <p className="p-errores">Haga click en una marca</p> : ""}
                   <br/>
                   <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
+                  <button type="submit" className="btn btn-success" >Crear</button>
                   <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
                 </div>
               </form>
@@ -602,20 +619,24 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
             <ModalBody className="contenedor-modal-body">
               <form className="form-group" onSubmit={handleSubmit(onSubmitBrand)}>
                 <br />
+                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("brand_id")}></input>
                 <label htmlFor="marca">Marca</label>
                 <input className={errorsApi.title ? "form-control error" : "form-control"} type="text" name="marca"  {...register('title',{
-                  onChange: () => changeErrorApi("title")
+                  onChange: () => changeErrorApi("title"),
+                  shouldUnregister:true,
                 })} />
                   {errorsApi.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
                 <br />
                 <label htmlFor="url">Descripcion</label>
                 <input className="form-control" type="text" name="url" {...register('description',{
-                  value:null
+                  value:null,
+                  shouldUnregister:true,
                   })} />
                 <br />
                 <label htmlFor="url">Url</label>
                 <input className="form-control" type="text" name="url"  {...register('url',{
-                  value:null
+                  value:null,
+                  shouldUnregister:true,
                   })} />
                 <br/>
                 <div className="contenedor-boton-modal-dentro-reparations">
@@ -628,7 +649,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
 
         </>  
     );
-  }else if(location === `${enviroment.selfUrl.main}Table/brands` ){
+  }else if(location === `${enviroment.selfUrl.main}${table}${entities.brands}` ){
 
     return(
 
@@ -645,22 +666,25 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
             <br />
             <label htmlFor="marca">Marca</label>
             <input className={errors.title ? "form-control error" : "form-control"} type="text" name="marca"  {...register('title',{
-              onChange: () => changeError("title")
+              onChange: () => changeError("title"),
+              shouldUnregister:true,
             })} />
               {errors.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
             <br />
             <label htmlFor="url">Descripcion</label>
             <input className="form-control" type="text" name="url" {...register('description',{
-              value:null
+              value:null,
+              shouldUnregister:true,
               })} />
             <br/>
             <label htmlFor="url">Url</label>
             <input className="form-control" type="text" name="url"  {...register('url',{
-              value:null
+              value:null,
+              shouldUnregister:true,
               })} />
             <br/>
             <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
+                  <button type="submit" className="btn btn-success"  >Crear</button>
                   <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
                 </div>
               </form>
@@ -668,7 +692,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
       </Modal>
 
     )
-  }else if(location === `${enviroment.selfUrl.main}Table/services`){
+  }else if(location === `${enviroment.selfUrl.main}${table}${entities.services}`){
 
     return(
       <Modal isOpen={openModalAdd}>
@@ -685,35 +709,39 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
             <label htmlFor="marca">Nombre del Servicio</label>
             <input className={errors.description ? "form-control error" : "form-control"} type="text" name="marca"  {...register('description',{
               value:null,
+              shouldUnregister:true,
               onChange: () => changeError("description")
               })} />
               {errors.description? <p className="p-errores">El campo Descripcion debe ser completado</p> : ""} 
             <br />
             <label htmlFor="url">Numero de Telefono</label>
             <input className={errors.phone_number ? "form-control error" : "form-control"} type="text" name="numero de telefono" {...register('phone_number',{
-              value:null
+              value:null,
+              shouldUnregister:true,
               })} />
               {errors.phone_number? <p className="p-errores">El campo Numero de telefono debe ser completado</p> : ""}
             <br />
             <label htmlFor="url">Direccion</label>
             <input className="form-control" type="text" name="direccion" {...register('address',{
-              value:null
+              value:null,
+              shouldUnregister:true,
               })} />
             <br />
             <label htmlFor="url">Email</label>
             <input className="form-control" type="text" name="email" {...register('email',{
-              value:null
+              value:null,
+              shouldUnregister:true,
               })} />
             <br />
             <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
+                  <button type="submit" className="btn btn-success"  >Crear</button>
                   <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
                 </div>
               </form>
         </ModalBody>
       </Modal>
     );
-  }else if(location === `${enviroment.selfUrl.main}Table/customers`){
+  }else if(location === `${enviroment.selfUrl.main}${table}${entities.customers}`){
 
     return(
       <Modal isOpen={openModalAdd}>
@@ -727,38 +755,42 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
             <label htmlFor="marca">Nombre</label>
             <input className={errors.name ? "form-control error" : "form-control"} type="text" name="name"  {...register('name',{
               onChange: () => changeError("name"),
-              value:null
+              value:null,
+              shouldUnregister:true
               })} />
               {errors.name? <p className="p-errores">{errors.name}</p> : ""} 
             <br />
             <label htmlFor="url">Email</label>
             <input className={errors.email ? "form-control error" : "form-control"} type="text" name="email" {...register('email',{
               onChange: (e) => changeError("email",e.target.value),
-              value:null
+              value:null,
+              shouldUnregister:true
               })} />
               {errors.email? <p className="p-errores">{errors.email}</p> : ""}
             <br />
             <label htmlFor="url">Numero de Telefono</label>
             <input className={errors.phone_number ? "form-control error" : "form-control"} type="text" name="phone" {...register('phone_number',{
               onChange: () => changeError("phone_number"),
-              value:null
+              value:null,
+              shouldUnregister:true
               })} />
               {errors.phone_number? <p className="p-errores">{errors.phone_number}</p> : ""}
             <br />
             <label htmlFor="url">Numero de telefono 2</label>
             <input className="form-control" type="text" name="phone_2" {...register('phhone_number_2',{
-              value:null
+              value:null,
+              shouldUnregister:true
               })} />
             <br />
             <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
+                  <button type="submit" className="btn btn-success" >Crear</button>
                   <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
                 </div>
               </form>
         </ModalBody>
       </Modal>
     );
-  }else if(location === `${enviroment.selfUrl.main}Table/reparations`){
+  }else if(location === `${enviroment.selfUrl.main}${table}${entities.reparations}`){
 
     return(
         <>
@@ -779,6 +811,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                       onChange: (e) => {
                         addEmail(e.target.value,"customer");
                       },
+                      shouldUnregister:true
                           })}>
                           {
                             (newCustomerSelected.id)
@@ -818,6 +851,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                   <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"cellphone")} className="icon-search" icon={faMagnifyingGlass} />
                     <select  className={errors.cellphone_id ? "form-select error" : "form-select"} name="select"  defaultValue={newCellphoneSelected.id ? newCellphoneSelected.id : ""} {...register('cellphone_id',{
                       onChange: () => changeError("cellphone"),
+                      shouldUnregister:true
                         })}>
                           {
                           newCellphoneSelected.id
@@ -838,21 +872,24 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                 <div className="div-inputs">
                   <label htmlFor="url">Falla</label>
                   <textarea className="form-control"  name="phone_2" {...register('failure',{
-                    value:null
+                    value:null,
+                    shouldUnregister:true
                     })} />
                 </div>
                 <br />
                 <div className="div-inputs">
                   <label htmlFor="url">Observacion</label>
                   <textarea className="form-control" type="text" name="phone_2" {...register('observation',{
-                    value:null
+                    value:null,
+                    shouldUnregister:true
                     })} />
                 </div>
                 <br/>
                 <div className="div-inputs">
                   <label htmlFor="url">Estado de la reparacion</label>
                   <select className="form-select" type="text" name="phone_2" {...register('state_id',{
-                    value:1   
+                    value:1,
+                    shouldUnregister:true   
                     })}>
                     <option value={1}>Recibido</option>
                   </select>
@@ -865,6 +902,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                   <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"service")} className="icon-search" icon={faMagnifyingGlass} />
                     <select  className={errors.service_id ? "form-select error" : "form-select"} name="select"  defaultValue={newServiceSelected.id ? newServiceSelected.id : ""} {...register('service_id',{
                       onChange: () => changeError("service"),
+                      shouldUnregister:true
                         })}>
                           {
                           newServiceSelected.id
@@ -885,14 +923,16 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                 <div className="div-inputs">
                   <label htmlFor="url">Valor de la reparacion</label>
                   <input className="form-control" type="text" name="phone_2" {...register('cost',{
-                    value:null
+                    value:null,
+                    shouldUnregister:true
                     })} />
                 </div>
                 <br/>
                 <div className="div-inputs">
                   <label htmlFor="url">Precio a cobrar<span>*</span> </label>
                   <input className="form-control" type="text" name="phone_2" {...register('amount',{
-                    value:null
+                    value:null,
+                    shouldUnregister:true
                     })} />
                 </div>
                 <br/>
@@ -900,6 +940,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                   <label htmlFor="url">Fecha de notificacion al cliente</label>
                   <input className="form-control" type="date" name="phone_2" {...register('notice_date',{
                     value:  null,
+                    shouldUnregister:true,
                     setValueAs : value =>{
                       if(value != null){
                         let dateInput = new Date(value)
@@ -921,7 +962,8 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                 <div className="div-inputs">
                   <label htmlFor="url">Cantidad de Notificaciones</label>
                   <input className="form-control" type="text" name="phone_2" {...register('notice_quantity',{
-                    value:0
+                    value:0,
+                    shouldUnregister:true,
                     })} />
                 </div>
                 <br/>
@@ -929,6 +971,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                 <label htmlFor="url">Fecha de entrega</label>
                   <input className="form-control" type="date" name="phone_2" {...register('delivery_date',{
                     value:  null,
+                    shouldUnregister:true,
                     setValueAs : v =>{
                       if(v != null){
                         let dateInput = new Date(v)
@@ -950,6 +993,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                   <label htmlFor="url">Fecha de inicio del servicio</label>
                   <input className="form-control" type="date" name="phone_2" {...register('service_start_date',{
                     value:  null,
+                    shouldUnregister:true,
                     setValueAs : v =>{
                       if(v != null){
                         let dateInput = new Date(v)
@@ -972,6 +1016,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                   <label htmlFor="url">Fecha de servicio terminado</label>
                   <input className="form-control" type="date" name="phone_2" {...register('service_end_date',{
                     value:  null,
+                    shouldUnregister:true,
                     setValueAs : v =>{
                       if(v != null){
                         let dateInput = new Date(v)
@@ -993,14 +1038,16 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                 <div className="div-inputs">
                   <label htmlFor="url">Imei</label>
                   <input className="form-control" type="text" name="phone_2" {...register('imei',{
-                    value:null
+                    value:null,
+                    shouldUnregister:true
                     })} />
                 </div>
                 <br/>
                 <div className="div-inputs">
                   <label htmlFor="check">Tiene seguridad</label>
                   <input onClick={checkBoxTrue} type="checkbox" name="phone_2" {...register('has_security',{
-                    value:0
+                    value:0,
+                    shouldUnregister:true
                     })} />
                   <br/>
                   {
@@ -1010,12 +1057,14 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                       <br/>
                       <label>Patron</label>
                       <input className="form-control" type="text" name="phone_2" {...register('pattern',{
-                        value:null
+                        value:null,
+                        shouldUnregister:true
                         })} />
                       <br/>
                       <label>Pin</label>
                       <input className="form-control" type="text" name="phone_2" {...register('pin',{
-                        value:null
+                        value:null,
+                        shouldUnregister:true
                         })} />  
                     </div>
                     :
@@ -1024,7 +1073,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                 </div>                                    
                 <hr />
                 <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
+                  <button type="submit" className="btn btn-success"  >Crear</button>
                   <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
                 </div>
               </form>
@@ -1042,7 +1091,8 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                 <label htmlFor="marca">Nombre</label>
                 <input className={errorsApi.name ? "form-control error" : "form-control"} type="text" name="name"  {...register('name',{
                   onChange: () => changeErrorApi("name"),
-                  value:null
+                  value:null,
+                  shouldUnregister:true
                   })} />
                   {errorsApi.name? <p className="p-errores">{errorsApi.name}</p> : ""} 
                 <br />
@@ -1051,7 +1101,8 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                 <input className={errorsApi.email ? "form-control error" : "form-control"} type="text" id="email2"{...register('email',{
                   onChange: (e) => changeErrorApi("email",e.target.value),
                   shouldUnregister:true,
-                  value:null
+                  value:null,
+                  shouldUnregister:true
                   })} />
                   {errorsApi.email? <p className="p-errores">{errorsApi.email}</p> : ""}
                 <br />
@@ -1094,13 +1145,15 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                 <label htmlFor="modelo">Modelo</label>
                 <input className={errorsApi.model ? "form-control error" : "form-control"} type="text" name="modelo" {...register('model',{
                   onChange: () => changeErrorApi("model"),
-                  value:null
+                  value:null,
+                  shouldUnregister:true
                   })}/>
                   {errorsApi.model? <p className="p-errores">El campo Modelo debe ser completado</p> : ""}
                 <br />
                 <label htmlFor="url">Url</label>
                 <input className="form-control" type="text" name="url" {...register('url',{
-                  value:null
+                  value:null,
+                  shouldUnregister:true
                   })} />
                 <br/>
                 <label htmlFor="brnad_id">Marca</label>
@@ -1149,7 +1202,8 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                 <label htmlFor="marca">Descripcion</label>
                 <input className={errorsApi.description ? "form-control error" : "form-control"} type="text" name="marca"  {...register('description',{
                   onChange: () => changeErrorApi("description"),
-                  value:null
+                  value:null,
+                  shouldUnregister:true
                   })} />
                   {errorsApi.description? <p className="p-errores">El campo Descripcion debe ser completado</p> : ""} 
                 <br />
@@ -1161,7 +1215,8 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                 <br />
                 <label htmlFor="url">Direccion</label>
                 <input className="form-control" type="text" name="direccion" {...register('address',{
-                  value:null
+                  value:null,
+                  shouldUnregister:true
                   })} />
                 <br />
                 <label htmlFor="url">Email</label>
@@ -1191,6 +1246,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                 <label htmlFor="marca">Marca</label>
                 <input className={errorsApi.title ? "form-control error" : "form-control"} type="text" name="marca"  {...register('title',{
                   onChange: () => changeErrorApi("title"),
+                  shouldUnregister:true
                 })} />
                   {errorsApi.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
                 <br />
@@ -1198,12 +1254,14 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                 <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
                 <label htmlFor="url">Descripcion</label>
                 <input className="form-control" type="text" name="url" {...register('description',{
-                  value:null
+                  value:null,
+                  shouldUnregister:true
                   })} />
                 <br />
                 <label htmlFor="url">Url</label>
                 <input className="form-control" type="text" name="url"  {...register('url',{
-                  value:null
+                  value:null,
+                  shouldUnregister:true
                   })} />
                 <br/>
                 <div className="contenedor-boton-modal-dentro-reparations">
@@ -1215,7 +1273,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
           </Modal>
         </>
     );
-  }else if(window.location.href.includes("users")){
+  }else if(window.location.href.includes("usuarios")){
 
     return(
       <Modal isOpen={openModalAdd}>
@@ -1229,25 +1287,29 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
             <label htmlFor="marca">Nombre</label>
             <input className={errors.name ? "form-control error" : "form-control"} type="text" name="name"  {...register('name',{
               onChange: () => changeError("name"),
-              value:null
+              value:null,
+              shouldUnregister:true
               })} />
               {errors.name? <p className="p-errores">{errors.name}</p> : ""} 
             <br />
             <label htmlFor="url">Email</label>
             <input className={errors.email ? "form-control error" : "form-control"} type="text" name="email" {...register('email',{
               onChange: (e) => changeError("email",e.target.value),
-              value:null
+              value:null,
+              shouldUnregister:true
               })} />
               {errors.email? <p className="p-errores">{errors.email}</p> : ""}
             <br />
             <label htmlFor="url">Activo</label>
             <input className="form-active"  type="checkbox" name="phone"  {...register('active',{
+              shouldUnregister:true
               })} />
             <br />
             <br/>
             <label htmlFor="rol">Rol</label>
             <select  className={errors.rol_id ? "form-select  error" : "form-select brand"} defaultValue={null}  name="select"  {...register('rol_id',{
                   onChange: () => changeError("rol_id"),
+                  shouldUnregister:true
                   })}>
                   <option value={null} className="option-selected">Seleccionar..</option>
                   {dataRoles.map((rol)=>{
@@ -1257,7 +1319,7 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
             {errors.rol_id ? <p className="p-errores">El campo Rol debe ser seleccionado</p> : ""}
             <br />
             <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="submit" className="btn btn-success" onClick={create} >Crear</button>
+                  <button type="submit" className="btn btn-success" >Crear</button>
                   <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
                 </div>
               </form>

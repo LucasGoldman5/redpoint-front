@@ -179,7 +179,7 @@ const Login = ({enterAplication,enviroment}) =>{
                 <div className="contenedor-form-registrarse-loading">
                     <h3 className="h3-encontrado">Usuario Encontrado!</h3>
                     <p className="p-find">Para iniciar la aplicacion haga click en el siguiente boton:</p>
-                    <div className="input-submit find">
+                    <div className="input-submit">
                         <button  onClick={enterAplication}>Ingresar</button>
                     </div>  
                 </div>
@@ -195,8 +195,10 @@ const Login = ({enterAplication,enviroment}) =>{
            <div className="contenedor-body-login">
                 <div className="contenedor-form-registrarse-loading">
                     <h3 className="h3-error">{txtError}</h3>
-                    <p>Presione el siguiente boton para volver a intentarlo</p>
+                    <p>Un super administrador debe activarlo, presione el siguiente boton para ingresar..</p>
+                    <div className="input-submit">
                     <button onClick={returnLogin}>volver</button>
+                    </div>
                 </div>
            </div>
           </>

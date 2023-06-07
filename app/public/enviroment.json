@@ -19,6 +19,12 @@
         "roles": "roles",
         "status": "status",
         "reparations": "reparations",
+        "pending":"reporte/reparaciones-pendientes",
+        "success":"reporte/reparaciones-entregadas",
+        "reparationsBrand": "reporte/reparaciones-por-marca",
+        "reparationsCustomer": "reporte/reparaciones-por-cliente",
+        "reparationsService": "reporte/reparaciones-por-servicio",
+        "reparationsCellphone": "reporte/reparaciones-por-celular",
         "users": "users"
     },
     "selfUrl":{
@@ -27,18 +33,24 @@
         "notFound" : "pagina-no-encontrada",
         "dataTable": "Tabla/",
         "report": "reporte/",
-        "personalInformation": "personal-information",
+        "personalInformation": "informacion-personal",
         "generatePassRoute": "generar-contraseña/*",
         "generatePass": "generar-contraseña/",
-        "localEntities":[
-            {"pending":"reparaciones-pendientes"},
-            {"succsess":"reparaciones-entregadas"},
-            {"brands":"marcas/"},
-            {"cellphones":"celulares/"},
-            {"customers":"clientes/"},
-            {"services":"servicios/"},
-            {"reparations":"reparaciones-por-"}
-        ]
+        "localEntities":{
+            "report/reparations-pending": "reporte/reparaciones-pendientes",
+            "report/reparations-success": "reporte/reparaciones-entregadas",
+            "brands": "marcas",
+            "cellphones": "celulares",
+            "customers": "clientes",
+            "services": "servicios",
+            "report": "reporte",
+            "reparations":"reparaciones",
+            "report/reparations-by-brand/": "reporte/reparaciones-por-marca",
+            "report/reparations-by-customer/": "reporte/reparaciones-por-cliente",
+            "report/reparations-by-service/": "reporte/reparaciones-por-servicio",
+            "report/reparations-by-cellphone/": "reporte/reparaciones-por-celular",
+            "users":"usuarios"
+        }
     }
     
 }

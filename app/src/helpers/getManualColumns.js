@@ -3,9 +3,8 @@
 
 export default async function getManualColumns (url,urlLocal){
 
-    console.log(urlLocal);
 
-    if(url === `${urlLocal.main}${urlLocal.dataTable}reparations`){
+    if(url === `${urlLocal.main}${urlLocal.dataTable}reparaciones`){
         const columns = 
         {
           "customer":"Cliente",
@@ -19,7 +18,7 @@ export default async function getManualColumns (url,urlLocal){
         }
         localStorage.setItem("column",JSON.stringify(columns));
 
-    }else if(url === `${urlLocal.main}${urlLocal.dataTable}brands`){
+    }else if(url === `${urlLocal.main}${urlLocal.dataTable}marcas`){
         const columns = 
         {
             'id' : 'id',
@@ -28,7 +27,7 @@ export default async function getManualColumns (url,urlLocal){
         }
         localStorage.setItem("column",JSON.stringify(columns));
 
-    }else if(url === `${urlLocal.main}${urlLocal.dataTable}cellphones`){
+    }else if(url === `${urlLocal.main}${urlLocal.dataTable}celulares`){
         const columns = 
         {
             'id' : 'id',
@@ -37,7 +36,7 @@ export default async function getManualColumns (url,urlLocal){
         }
         localStorage.setItem("column",JSON.stringify(columns));
 
-    }else if(url === `${urlLocal.main}${urlLocal.dataTable}customers`){
+    }else if(url === `${urlLocal.main}${urlLocal.dataTable}clientes`){
         const columns = 
         {
             'name' : 'Cliente',
@@ -46,7 +45,7 @@ export default async function getManualColumns (url,urlLocal){
         }
         localStorage.setItem("column",JSON.stringify(columns));
 
-    }else if(url === `${urlLocal.main}${urlLocal.dataTable}services`){
+    }else if(url === `${urlLocal.main}${urlLocal.dataTable}servicios`){
         const columns = 
         {
             'description' : 'Servicio',
@@ -69,7 +68,7 @@ export default async function getManualColumns (url,urlLocal){
         }
         localStorage.setItem("column",JSON.stringify(columns));
 
-    }else if(url === `${urlLocal.main}${urlLocal.dataTable}users`){
+    }else if(url === `${urlLocal.main}${urlLocal.dataTable}usuarios`){
         const columns = 
         {
             'name' : 'Nombre',

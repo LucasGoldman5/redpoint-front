@@ -35,6 +35,12 @@
     box-shadow: 5px 5px 8px rgb(245, 69, 69);   
 }
 
+.contenedor-form-registrarse-loading p{
+    text-align: center;
+    font-weight: 500;
+    margin: 0;
+}
+
 .form-registrarse-container{
     width: 100%;
     display: flex; 

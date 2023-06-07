@@ -62,17 +62,108 @@ import getEnviroment from './helpers/getEnviroment';
     return  enviroment.selfUrl
   }
 
-
   const openNavReports = async () =>{
     setSeeNavReport(!seeNavReport);
-    setArrowIcon(!arrowIcon);  
+    setArrowIcon(!arrowIcon);
+    const apiURL = urlApi();
+    const entitiesUrl = urlEntities();
+    const local = dataEnviroment.selfUrl.main;
+    const table = dataEnviroment.selfUrl.dataTable;
+    const ent = dataEnviroment.selfUrl.localEntities;
+    
+    if(dataBrands.length < 1){
+      try{
+                   
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.brand}`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                    
+                    setDataBrands(response);
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+    }
+    if(dataCellphones.length < 1){
+      try{
+                    
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.cellphone}`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                      
+                    setDataCellPhones(response);
+                    
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+    }
+    if(dataCustomers.length < 1){
+      try{
+                    
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.customer}`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                      
+                    setDataCustomers(response);
+                    
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+    }
+    if(dataServices.length < 1){
+      try{
+                    
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.service}`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                      
+                    setDataServices(response);
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+    }
  };
 
 
   const changeUrl = (url,id) =>{
     if(id){
       setSeeNavReport(false)
-      return setUrlTable(url+`/${id}`)
+      return setUrlTable(`${url}/${id}`)
     }else{
       setSeeNavReport(false)
      return setUrlTable(url)
@@ -83,102 +174,150 @@ import getEnviroment from './helpers/getEnviroment';
 
     const localUrl = urlLocal();
 
-    window.location.assign(`${localUrl.main}${localUrl.dataTable}${localUrl.report}${localUrl.localEntities.pending}`);
+    window.location.assign(`${localUrl.main}${localUrl.dataTable}${localUrl.report}reparaciones-pendientes`);
 
   };
 
 
   const changeSon = async (dataApi) =>{
+
     
-    if(dataApi.data){
+    if(dataApi.data && dataEnviroment){
 
       const apiURL = urlApi();
       const entitiesUrl = urlEntities();
-     
-       try{
-                   
-           const config = await HelperBuildRequest("GET",null, "dataTable");
-           const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.brand}`, config);
-   
-             if(request.status === 200){
-                 const response = await request.json();
-                   if(response.error){
-                       setTimeout(()=>{
-                         console.log(response.error);
-                       },1000);
-                   }else{                      
-                       setDataBrands(response);
-                   }  
-             };
-   
-         }catch(error){
-           console.log(error)
-         }
-         
-         try{
-                     
-           const config = await HelperBuildRequest("GET",null, "dataTable");
-           const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.customer}`, config);
-   
-             if(request.status === 200){
-                 const response = await request.json();
-                   if(response.error){
-                       setTimeout(()=>{
-                         console.log(response.error);
-                       },1000);
-                   }else{                      
-                       setDataCustomers(response);
-                       
-                   }  
-             };
-   
-         }catch(error){
-           console.log(error)
-         }
-         
-         try{
-                     
-           const config = await HelperBuildRequest("GET",null, "dataTable");
-           const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.cellphone}`, config);
-   
-             if(request.status === 200){
-                 const response = await request.json();
-                   if(response.error){
-                       setTimeout(()=>{
-                         console.log(response.error);
-                       },1000);
-                   }else{                      
-                       setDataCellPhones(response);
-                       
-                   }  
-             };
-   
-         }catch(error){
-           console.log(error)
-         }
-         
-         try{
-                     
-           const config = await HelperBuildRequest("GET",null, "dataTable");
-           const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.service}`, config);
-   
-             if(request.status === 200){
-                 const response = await request.json();
-                   if(response.error){
-                       setTimeout(()=>{
-                         console.log(response.error);
-                       },1000);
-                   }else{                      
-                       setDataServices(response);
-                   }  
-             };
-   
-         }catch(error){
-           console.log(error)
-         }
+      const local = dataEnviroment.selfUrl.main;
+      const table = dataEnviroment.selfUrl.dataTable;
+      const ent = dataEnviroment.selfUrl.localEntities;
 
-         try{
-                  
+      if(window.location.href === local+table+ent.cellphones){
+        
+        try{
+                   
+          const config = await HelperBuildRequest("GET",null, "dataTable");
+          const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.brand}`, config);
+  
+            if(request.status === 200){
+                const response = await request.json();
+                  if(response.error){
+                      setTimeout(()=>{
+                        console.log(response.error);
+                      },1000);
+                  }else{                    
+                      setDataBrands(response);
+                  }  
+            };
+  
+        }catch(error){
+          console.log(error)
+        }
+      }else if(window.location.href.includes(`${ent.reparations}`||`${ent.report}`)){
+
+        try{
+                   
+          const config = await HelperBuildRequest("GET",null, "dataTable");
+          const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.brand}`, config);
+  
+            if(request.status === 200){
+                const response = await request.json();
+                  if(response.error){
+                      setTimeout(()=>{
+                        console.log(response.error);
+                      },1000);
+                  }else{                      
+                      setDataBrands(response);
+                  }  
+            };
+  
+        }catch(error){
+          console.log(error)
+        }
+        
+        try{
+                    
+          const config = await HelperBuildRequest("GET",null, "dataTable");
+          const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.customer}`, config);
+  
+            if(request.status === 200){
+                const response = await request.json();
+                  if(response.error){
+                      setTimeout(()=>{
+                        console.log(response.error);
+                      },1000);
+                  }else{                      
+                      setDataCustomers(response);
+                      
+                  }  
+            };
+  
+        }catch(error){
+          console.log(error)
+        }
+        
+        try{
+                    
+          const config = await HelperBuildRequest("GET",null, "dataTable");
+          const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.cellphone}`, config);
+  
+            if(request.status === 200){
+                const response = await request.json();
+                  if(response.error){
+                      setTimeout(()=>{
+                        console.log(response.error);
+                      },1000);
+                  }else{                      
+                      setDataCellPhones(response);
+                      
+                  }  
+            };
+  
+        }catch(error){
+          console.log(error)
+        }
+        
+        try{
+                    
+          const config = await HelperBuildRequest("GET",null, "dataTable");
+          const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.service}`, config);
+  
+            if(request.status === 200){
+                const response = await request.json();
+                  if(response.error){
+                      setTimeout(()=>{
+                        console.log(response.error);
+                      },1000);
+                  }else{                      
+                      setDataServices(response);
+                  }  
+            };
+  
+        }catch(error){
+          console.log(error)
+        }
+
+       try{
+                 
+         const config = await HelperBuildRequest("GET",null, "dataTable");
+         const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.status}`, config);
+ 
+           if(request.status === 200){
+               const response = await request.json();
+                 if(response.error){
+                     setTimeout(()=>{
+                       console.log(response.error);
+                     },1000);
+                 }else{                    
+                     setDataStatus(response);
+                 }  
+           };
+       }catch(error){
+         console.log(error)
+       }
+
+      }else if(window.location.href === local+table+ent.users){
+
+        try{
+                 
           const config = await HelperBuildRequest("GET",null, "dataTable");
           const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.roles}`, config);
   
@@ -193,32 +332,15 @@ import getEnviroment from './helpers/getEnviroment';
                   }  
             };
   
-        }catch(error){
-          console.log(error)
-        }
-
-        try{
-                  
-          const config = await HelperBuildRequest("GET",null, "dataTable");
-          const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.status}`, config);
-  
-            if(request.status === 200){
-                const response = await request.json();
-                  if(response.error){
-                      setTimeout(()=>{
-                        console.log(response.error);
-                      },1000);
-                  }else{                    
-                      setDataStatus(response);
-                  }  
-            };
-  
-        }catch(error){
-          console.log(error)
-        }
+         }catch(error){
+           console.log(error)
+         }
+      }
     };
-  };
 
+  };
+     
+       
 
   if(user && window.location.href.includes("Tabla") && dataEnviroment.selfUrl ){
 
@@ -228,6 +350,7 @@ import getEnviroment from './helpers/getEnviroment';
         <BrowserRouter>
           <GeneralHeader
            changeUrl={changeUrl}
+           urlTable={urlTable} 
            arrowIcon={arrowIcon}
            openNavReports={openNavReports}
            seeNavReport={seeNavReport}
@@ -260,7 +383,7 @@ import getEnviroment from './helpers/getEnviroment';
         </div>
       </>
     )
-  }else if(user && window.location.href.includes("personal-information") && dataEnviroment.selfUrl){
+  }else if(user && window.location.href.includes("personal") && dataEnviroment.selfUrl){
 
       return(
         <>

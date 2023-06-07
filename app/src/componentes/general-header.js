@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faM,faMobileRetro,faBuilding,faUsers,faScrewdriverWrench, faCaretDown, faCaretUp, faCircleXmark, faHourglassHalf, faCheck, faUserGear } from '@fortawesome/free-solid-svg-icons';
 
 
-const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,dataCellphones,dataServices,arrowIcon,seeNavReport,enviroment} ) =>{
+const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,dataCellphones,dataServices,arrowIcon,seeNavReport,enviroment,urlTable} ) =>{
 
   
 
@@ -45,10 +45,10 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
 
   const admin = () =>{
     let usuario = JSON.parse(getUser);
-      if(usuario.user.roles === "admin"){
+      if(usuario.user.rol_id.rol === "admin"){
         setSuperAdmin(false)
 
-      }else if(usuario.user.roles === "super-admin"){
+      }else if(usuario.user.rol_id.rol  === "super-admin"){
         setSuperAdmin(true)
       };
   };
@@ -58,7 +58,7 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
   };
 
   const myInformation = () =>{
-    window.location.assign('/personal-information');
+    window.location.assign(`/${enviroment.selfUrl.personalInformation}`);
   };
 
   const signOff = ( ) =>{
@@ -238,6 +238,7 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
   
     return filteredDataServices;
   };
+  const ent = enviroment.selfUrl.localEntities;  
 
   if(enviroment.selfUrl){
     return(
@@ -246,46 +247,46 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
           <Navbar className="contenedor-nav-general" bg="dark" variant="dark">
             <div className="contenedor-general">
               <div className="contenedor-titulo">
-                <Navbar.Brand className="titulo-nav"  href="http://localhost:3000/Table/report/reparations-pending">ClaroApp</Navbar.Brand>
+                <Navbar.Brand className="titulo-nav"  href={`${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`}>ClaroApp</Navbar.Brand>
               </div>
               <div className="contenedor-contenedor-links">
                 <Nav >
                     <div className="container-li-span">
-                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("b")} onMouseLeave={()=>noSeeP("b")} onClick={()=>  changeUrl("brands")} to={`/Tabla/brands`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}brands`)? "icon" : "icon-none"}  icon={faM}></FontAwesomeIcon></Link></li>
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("b")} onMouseLeave={()=>noSeeP("b")} onClick={()=>  changeUrl(`${ent.brands}`)} to={`${enviroment.selfUrl.dataTable}${ent.brands}`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${ent.brands}`)? "icon" : "icon-none"}  icon={faM}></FontAwesomeIcon></Link></li>
                       <span className={seeingPBrand ? "span" : "span-none"}><p>Marcas</p></span>
                     </div>
                     <div className="container-li-span">
-                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("ce")} onMouseLeave={()=>noSeeP("ce")}  onClick={()=> changeUrl("cellphones")} to={`/Table/cellphones`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}cellphones`)? "icon" : "icon-none"} icon={faMobileRetro}></FontAwesomeIcon></Link></li>
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("ce")} onMouseLeave={()=>noSeeP("ce")}  onClick={()=> changeUrl(`${ent.cellphones}`)} to={`${enviroment.selfUrl.dataTable}${ent.cellphones}`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${ent.cellphones}`)? "icon" : "icon-none"} icon={faMobileRetro}></FontAwesomeIcon></Link></li>
                       <span className={seeingPCellphone ? "span" : "span-none"}><p>Celulares</p></span> 
                     </div>
                     <div className="container-li-span">
-                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("s")} onMouseLeave={()=>noSeeP("s")}   onClick={()=>  changeUrl("services")} to={`/Table/services`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}services`)? "icon" : "icon-none"} icon={faBuilding}></FontAwesomeIcon></Link></li>
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("s")} onMouseLeave={()=>noSeeP("s")}   onClick={()=>  changeUrl(`${ent.services}`)} to={`${enviroment.selfUrl.dataTable}${ent.services}`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${ent.services}`)? "icon" : "icon-none"} icon={faBuilding}></FontAwesomeIcon></Link></li>
                       <span className={seeingPService ? "span" : "span-none"}><p>Servicios</p></span>
                     </div>
                     <div className="container-li-span">
-                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("cu")} onMouseLeave={()=>noSeeP("cu")}  onClick={()=>  changeUrl("customers")} to={`/Table/customers`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}customers`)? "icon" : "icon-none"} icon={faUsers}></FontAwesomeIcon></Link></li>
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("cu")} onMouseLeave={()=>noSeeP("cu")}  onClick={()=>  changeUrl(`${ent.customers}`)} to={`${enviroment.selfUrl.dataTable}${ent.customers}`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${ent.customers}`)? "icon" : "icon-none"} icon={faUsers}></FontAwesomeIcon></Link></li>
                       <span className={seeingPCustomer ? "span" : "span-none"}><p>Clientes</p></span>
                     </div>
                     <div className="container-li-span">
-                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("rn")} onMouseLeave={()=>noSeeP("rn")}  onClick={()=>  changeUrl("reparations")} to={`/Table/reparations`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}reparations`)? "icon" : "icon-none"} icon={faScrewdriverWrench}></FontAwesomeIcon></Link></li>
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("rn")} onMouseLeave={()=>noSeeP("rn")}  onClick={()=>  changeUrl(`${ent.reparations}`)} to={`${enviroment.selfUrl.dataTable}${ent.reparations}`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${ent.reparations}`)? "icon" : "icon-none"} icon={faScrewdriverWrench}></FontAwesomeIcon></Link></li>
                       <span className={seeingPReparation ? "span" : "span-none"}><p>Reparaciones</p></span>
                     </div>
                     <div className="div-button-filter">
-                            <button className={(window.location.href.includes("by"))? "button-reparation-filter" : "button-reparation-filter-none"} onClick={() => openNavReports()}>Reparaciones filtradas<FontAwesomeIcon icon={arrowIcon ? faCaretDown : faCaretUp}></FontAwesomeIcon></button>   
+                            <button className={(window.location.href.includes("por"))? "button-reparation-filter" : "button-reparation-filter-none"} onClick={() => openNavReports()}>Reparaciones filtradas<FontAwesomeIcon icon={arrowIcon ? faCaretDown : faCaretUp}></FontAwesomeIcon></button>   
                     </div>
                     <div className="container-li-span">
-                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("rp")} onMouseLeave={()=>noSeeP("rp")}  onClick={() => changeUrl("report/reparations-pending")} to={`/Table/report/reparations-pending`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}report/reparations-pending`)? "icon" : "icon-none"}  icon={faHourglassHalf} /></Link></li>
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("rp")} onMouseLeave={()=>noSeeP("rp")}  onClick={() => changeUrl(`${enviroment.entities.pending}`)} to={`${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`)? "icon" : "icon-none"}  icon={faHourglassHalf} /></Link></li>
                       <span className={seeingPReparationPending ? "span" : "span-none"}><p>Reparaciones Pendientes</p></span>
                     </div>
                     <div className="container-li-span">
-                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("rs")} onMouseLeave={()=>noSeeP("rs")}  onClick={() => changeUrl("report/reparations-success")} to={`/Table/report/reparations-success`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}report/reparations-success`)? "icon" : "icon-none"} icon={faCheck}></FontAwesomeIcon></Link></li>
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("rs")} onMouseLeave={()=>noSeeP("rs")}  onClick={() => changeUrl(`${enviroment.entities.success}`)} to={`${enviroment.selfUrl.dataTable}${enviroment.entities.success}`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${enviroment.entities.success}`)? "icon" : "icon-none"} icon={faCheck}></FontAwesomeIcon></Link></li>
                       <span className={seeingPReparationSuccess ? "span" : "span-none"}><p>Reparaciones Finalizadas</p></span>
                     </div>
                     {
                       (superAdmin === true)
                       ?
                       <div className="container-li-span">
-                        <li className='nav-li-link'><Link onMouseOver={()=>seeP("us")} onMouseLeave={()=>noSeeP("us")}  onClick={() => changeUrl("users")} to={`/Table/users`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}users`)? "icon" : "icon-none"} icon={faUserGear}></FontAwesomeIcon></Link></li>
+                        <li className='nav-li-link'><Link onMouseOver={()=>seeP("us")} onMouseLeave={()=>noSeeP("us")}  onClick={() => changeUrl(`${ent.users}`)} to={`${enviroment.selfUrl.dataTable}${ent.users}`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${ent.users}`)? "icon" : "icon-none"} icon={faUserGear}></FontAwesomeIcon></Link></li>
                         <span className={seeingPUsers ? "span" : "span-none"}><p>Usuarios</p></span>
                       </div>
                       :
@@ -295,7 +296,7 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
               </div>
               <div className={seeNavReport ? "nav-reports" : "nav-reports-none"}>
                   <div className="div-li-hover">
-                  <li onMouseEnter={() => mouseOverLi("brand")}  className={(window.location.href.includes("by-brand")) ? "li-nav-report" : "li-nav-report-none"}>Marca <FontAwesomeIcon icon={arrowBrand ? faCaretDown : faCaretUp} /></li>
+                  <li onMouseEnter={() => mouseOverLi("brand")}  className={(window.location.href.includes("por-marca")) ? "li-nav-report" : "li-nav-report-none"}>Marca <FontAwesomeIcon icon={arrowBrand ? faCaretDown : faCaretUp} /></li>
                   </div>
                   <div className={liBrandHover ? "container-reparations-filter" : "container-reparations-filter-none"}>
                     <div className="header-nav-reparations">
@@ -313,7 +314,7 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
                             ?
                             dataBrandsFilter().map((brand)=>{
                             return(
-                            <Link className="p-entity-filter" key={brand.id} onClick={() => changeUrl("report/reparations-by-brand",brand.id,brand.title)} to={`/Table/report/reparations-by-brand/${brand.id}`}>{brand.title}</Link>
+                            <Link className="p-entity-filter" key={brand.id} onClick={() => changeUrl(`${enviroment.entities.reparationsBrand}`,brand.id,brand.title)} to={`${enviroment.selfUrl.dataTable}${enviroment.entities.reparationsBrand}/${brand.id}`}>{brand.title}</Link>
                             )
                         })
                         :
@@ -322,7 +323,7 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
                     </div>
                   </div>
                   <div className="div-li-hover">
-                  <li onMouseEnter={() => mouseOverLi("cellphone")} className={(window.location.href.includes("by-cellphone")) ? "li-nav-report" : "li-nav-report-none"}>Celular <FontAwesomeIcon icon={arrowCellphone ? faCaretDown : faCaretUp} /></li>
+                  <li onMouseEnter={() => mouseOverLi("cellphone")} className={(window.location.href.includes("por-celular")) ? "li-nav-report" : "li-nav-report-none"}>Celular <FontAwesomeIcon icon={arrowCellphone ? faCaretDown : faCaretUp} /></li>
                   </div>
                   <div className={liCellphoneHover ? "container-reparations-filter" : "container-reparations-filter-none"}>
                     <div className="header-nav-reparations">
@@ -337,7 +338,7 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
                         {
                             (dataCellphonesFilter().length > 0) ? dataCellphonesFilter().map((cellphone)=>{
                                 return(
-                                <Link className="p-entity-filter" key={cellphone.id} onClick={() => changeUrl("report/reparations-by-cellphone",cellphone.id)} to={`/Table/report/reparations-by-cellphone/${cellphone.id}`}>{cellphone.model}</Link>
+                                <Link className="p-entity-filter" key={cellphone.id} onClick={() => changeUrl(`${enviroment.entities.reparationsCellphone}`,cellphone.id)} to={`${enviroment.selfUrl.dataTable}${enviroment.entities.reparationsCellphone}/${cellphone.id}`}>{cellphone.model}</Link>
                                 )
                             })
                             :
@@ -346,7 +347,7 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
                     </div>
                   </div>
                   <div className="div-li-hover">
-                  <li onMouseEnter={() => mouseOverLi("customer")} className={(window.location.href.includes("by-customer")) ? "li-nav-report" : "li-nav-report-none"}>Cliente <FontAwesomeIcon icon={arrowCustomer ? faCaretDown : faCaretUp} /></li>
+                  <li onMouseEnter={() => mouseOverLi("customer")} className={(window.location.href.includes("por-cliente")) ? "li-nav-report" : "li-nav-report-none"}>Cliente <FontAwesomeIcon icon={arrowCustomer ? faCaretDown : faCaretUp} /></li>
                   </div>
                   <div className={liCustomerHover ? "container-reparations-filter" : "container-reparations-filter-none"}>
                   <div className="header-nav-reparations">
@@ -361,7 +362,7 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
                           {
                             (dataCustomersFilter().length > 0) ? dataCustomersFilter().map((customer)=>{
                                 return(
-                                <Link className="p-entity-filter" key={customer.id} onClick={() => changeUrl("report/reparations-by-customer",customer.id)} to={`Table/report/reparations-by-customer/${customer.id}`}>{customer.name}</Link>
+                                <Link className="p-entity-filter" key={customer.id} onClick={() => changeUrl(`${enviroment.entities.reparationsCustomer}`,customer.id)} to={`${enviroment.selfUrl.dataTable}${enviroment.entities.reparationsCustomer}/${customer.id}`}>{customer.name}</Link>
                                 )
                             })
                             :
@@ -370,7 +371,7 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
                       </div>
                   </div>
                   <div className="div-li-hover">
-                  <li onMouseEnter={() => mouseOverLi("service")} className={(window.location.href.includes("by-service")) ? "li-nav-report" : "li-nav-report-none"}>Servicio <FontAwesomeIcon icon={arrowService ? faCaretDown : faCaretUp} /></li>
+                  <li onMouseEnter={() => mouseOverLi("service")} className={(window.location.href.includes("por-servicio")) ? "li-nav-report" : "li-nav-report-none"}>Servicio <FontAwesomeIcon icon={arrowService ? faCaretDown : faCaretUp} /></li>
                   </div>
                 <div className={liServiceHover ? "container-reparations-filter" : "container-reparations-filter-none"}>
                   <div className="header-nav-reparations">
@@ -385,7 +386,7 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
                           {
                             (dataServicesFilter().length > 0) ? dataServicesFilter().map((service)=>{
                                 return(
-                                <Link className="p-entity-filter" key={service.id} onClick={() => changeUrl("report/reparations-by-service",service.id)} to={`Table/report/reparations-by-service/${service.id}`}>{service.description}</Link>
+                                <Link className="p-entity-filter" key={service.id} onClick={() => changeUrl(`${enviroment.entities.reparationsService}`,service.id)} to={`${enviroment.selfUrl.dataTable}${enviroment.entities.reparationsService}/${service.id}`}>{service.description}</Link>
                                 )
                             })
                             :
@@ -400,7 +401,7 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
                 <h2 className="letra-micuenta">{(user) ?user.name.charAt(0).toUpperCase(): 'Mi'}</h2>
               </div>
               <div className={dropdown ? "micuenta-desplegable none" : "micuenta-desplegable"}>
-                <li className="li-micuenta"><Link onClick={myInformation} to={'/personal-information'}>Mi cuenta</Link></li>
+                <li className="li-micuenta"><Link onClick={myInformation} to={'/informacion-personal'}>Mi cuenta</Link></li>
                 <li  className="li-micuenta"><Link onClick={signOff} to={"*" }>Cerrar Sesion</Link> </li>
               </div>
             </div>

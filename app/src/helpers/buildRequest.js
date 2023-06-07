@@ -30,18 +30,20 @@ export default async function  HelperBuildRequest ( method, data = {}, type = nu
 
     const tokenArr = userData.access_token.split('.');
     const tokenDecode =  JSON.parse( atob(tokenArr[1]) ); 
-    const expired = new Date(tokenDecode.exp * 1000);
+    const expired = tokenDecode.exp * 1000;
     const now = Date.now();
-    const limit = (expired.getTime() - 60000) - now;
+    const limit = (expired - 600000) - now;
 
-
-    if( limit > 0 ) {
+    if( limit > 2222222 ) {      
         return buildCallServer(method, data, type);
     } else {
-        const config = {
+        const config ={ 
+            "method": "GET",
+            "headers": {
             'Accept':'application/json',
             'Content-Type':'application/json',
             'Authorization': tokenType + ' ' + userData.access_token
+            }
         };
 
         await fetch(`http://localhost:8000/api/refresh`, config)

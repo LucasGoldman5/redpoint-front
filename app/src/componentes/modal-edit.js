@@ -49,7 +49,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
     setDataServicesEdit(dataServicesApp);
     setDataStatesEdit(dataStatusApp);
     setDataRolesEdit(dataRolesApp);
-  },[dataStatusApp])
+  },[dataBrandsApp,dataRolesApp,dataStatusApp])
 
   useEffect(() =>{
     setErrors(errorsInTable);
@@ -497,10 +497,13 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
     brand.title.toLowerCase().includes(filterBrandValue.toLowerCase())
   );
 
- 
+  const table = enviroment.selfUrl.dataTable;
+  const entities = enviroment.selfUrl.localEntities;
+  const local = enviroment.selfUrl.main;
+
   const { register, handleSubmit, getValues, setValue} = useForm ();
 
-  if(location === `${enviroment.selfUrl.main}Table/brands` ){
+  if(location === `${enviroment.selfUrl.main}${table}${entities.brands}` ){
 
     return(
 
@@ -514,6 +517,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
           <form className="form-group" onSubmit={handleSubmit(onsubmit)}>
             <label htmlFor="id">Numero identificador</label>
             <input className="form-control" type="number" name="id" id="id" readOnly  defaultValue={itemToEdit ? itemToEdit.id : ''} {...register('id',{ shouldUnregister: true})} />
+            <input  style={{ visibility: 'hidden', position: 'absolute' }} defaultValue={itemToEdit ? itemToEdit.created_at : ""} {...register("created_at")}></input>
             <br />
             <label htmlFor="marca">Marca</label>
             <input className={errors.title ? "form-control error" : "form-control"} type="text" name="marca" id="marca"  defaultValue={itemToEdit ? itemToEdit.title : ''}{...register('title',{
@@ -537,7 +541,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
       </Modal>
     )
 
-  }else if(location === `${enviroment.selfUrl.main}Table/cellphones`){
+  }else if(location === `${enviroment.selfUrl.main}${table}${entities.cellphones}`){
 
     return(
 
@@ -566,7 +570,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
               <div className="div-container-select-button">
               <input type="search" onChange={(e)=>handleInputChange(e,"brand")} placeholder="buscar.." className={selectBrandActive ? "input-search brand" : "input-search-none"}></input>
               <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"brand")} className="icon-search" icon={faMagnifyingGlass} />
-                <select  className="form-select" name="select"  defaultValue={itemToEdit && newBrandSelectedEdit.length < 1 ? itemToEdit.brand_id.id : newBrandSelectedEdit.length > 0 ? newBrandSelectedEdit.id : null} {...register('brand_id',{ 
+                <select  className="form-select" name="select"  defaultValue={itemToEdit && itemToEdit.brand_id && newBrandSelectedEdit.length < 1 ? itemToEdit.brand_id.id : newBrandSelectedEdit.length > 0 ? newBrandSelectedEdit.id : null} {...register('brand_id',{ 
                   shouldUnregister:true,
                   onChange: () => changeError("brand"),
                   })}>
@@ -575,7 +579,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                     ?
                     <option className={errors.brand_id ? "option-selected error" : "option-selected"} value={newBrandSelectedEdit.id}>{newBrandSelectedEdit.title}</option>
                     :
-                    <option className={errors.brand_id ? "option-selected error" : "option-selected"} value={itemToEdit ? itemToEdit.brand_id.id : null}>{itemToEdit ? itemToEdit.brand_id.brand : null}</option>
+                    <option className={errors.brand_id ? "option-selected error" : "option-selected"} value={itemToEdit ? itemToEdit.brand_id ? itemToEdit.brand_id.brand : null : null}>{itemToEdit ? itemToEdit.brand_id ? itemToEdit.brand_id.brand : "Seleccione una Marca" : null}</option>
                   }
                   {filteredBrands.map((brand)=>{
                       return <option  key={brand.id} value={brand.id} >{brand.title}</option>
@@ -629,7 +633,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
           </Modal>
       </>
     )
-  }else if(location === `${enviroment.selfUrl.main}Table/services`){
+  }else if(location === `${enviroment.selfUrl.main}${table}${entities.services}`){
 
     return(
       <Modal isOpen={openModalEdit}>
@@ -674,7 +678,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
         </ModalBody> 
       </Modal>
     );
-  }else if(location === `${enviroment.selfUrl.main}Table/customers`){
+  }else if(location === `${enviroment.selfUrl.main}${table}${entities.customers}`){
 
     return(
       <Modal isOpen={openModalEdit}>
@@ -720,7 +724,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
         </ModalBody> 
       </Modal>
     );
-  } else if(location === `${enviroment.selfUrl.main}Table/reparations`){
+  } else if(location === `${enviroment.selfUrl.main}${table}${entities.reparations}`){
     
       return(
          <>
@@ -773,7 +777,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                   <br />
                   <div className="div-inputs">
                     <label htmlFor="descripcion">Email</label>
-                    <input className="form-control" type="text" name="name" id="name"  defaultValue={itemToEdit ? itemToEdit.email : ''} {...register('email',{ shouldUnregister: true,})} />
+                    <input className="form-control" type="text" name="name" id="name"  defaultValue={itemToEdit ? itemToEdit.customer ? itemToEdit.email : '' : ""} {...register('email',{ shouldUnregister: true,})} />
                       {errors.email? <><p className="p-errores">El campo Email no cumple con el formato</p><p className="p-errores">Ejemplo:xxxxx@xxx.com</p></>: ""}
                   </div>
                   <br />
@@ -823,7 +827,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                       shouldUnregister:true
                     })}>
                       <option className="option-selected" value={itemToEdit ? itemToEdit.state_id.id : null}>{itemToEdit ? itemToEdit.state_id.description : null}</option>
-                      {filteredServices.map((state) => {
+                      {dataStatesEdit.map((state) => {
                         return <option value={state.id} key={state.id}>{state.description}</option>
                       })}
                     </select>
@@ -1184,7 +1188,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
           </Modal>
          </>
       );
-    }else if(window.location.href.includes("report")){
+    }else if(window.location.href.includes("reporte")){
       return(
         <>
           <Modal isOpen={openModalEdit} className="modal-reparations">
@@ -1647,7 +1651,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
           </Modal>
         </>
       );
-    }else if(window.location.href.includes("users")){
+    }else if(window.location.href.includes("usuario")){
 
       return(
         <>
@@ -1660,6 +1664,7 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
             <ModalBody>
               <form className="form-group" onSubmit={handleSubmit(onsubmit)}>
                 <input style={{ visibility: 'hidden', position: 'absolute' }} type="text" readOnly name="id" defaultValue={itemToEdit ? itemToEdit.id : ""} {...register('id',{ shouldUnregister: true,})} />
+                <input style={{ visibility: 'hidden', position: 'absolute' }} type="text" readOnly name="last_connection" defaultValue={itemToEdit ? itemToEdit.last_connection : null} {...register('last_connection',{ shouldUnregister: true,})} />
                 <label htmlFor="descripcion">Nombre</label>
                 <input className={errors.name ? "form-control error" : "form-control"} type="text" name="name" id="name"  defaultValue={itemToEdit ? itemToEdit.name : ''} {...register('name',{
                   shouldUnregister: true,
@@ -1667,6 +1672,9 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                   })} />
                   {errors.name? <p className="p-errores">{errors.name}</p>: ""}
                 <br />
+                <label>Generar contraseña en:</label>
+                <input className="form-control" type="text" readOnly defaultValue={itemToEdit ? local+enviroment.selfUrl.generatePass+"#"+itemToEdit.hash : ""}></input>
+                <br/>
                 <label htmlFor="number">Email</label>
                 <input className={errors.email ? "form-control error" : "form-control"} type="text" name="email" id="email"  defaultValue={itemToEdit ? itemToEdit.email : ''}{...register('email',{
                   shouldUnregister: true,
@@ -1682,17 +1690,17 @@ const ModalEdit = ({ getOpenModalEdit, itemToEdit, edit, closeForm,onsubmit,erro
                 {errors.phone_number? <p className="p-errores">{errors.phone_number}</p> : ""}
                 <br />
                 <label htmlFor="descripcion">Activo:</label>
-                <input className="input-check" type="checkbox"  defaultChecked={itemToEdit ? itemToEdit.active : 0} {...register('active',{
+                <input className="input-check" type="checkbox" defaultValue={itemToEdit ? itemToEdit.active : 0}  defaultChecked={itemToEdit ? itemToEdit.active : 0} {...register('active',{
                   shouldUnregister: true,
                   })} />
                 <br />
                 <br/>
                 <label htmlFor="rol">Rol</label>
-                <select  className={errors.rol_id ? "form-select  error" : "form-select brand"} defaultValue={itemToEdit ? itemToEdit.rol_id : ""}  name="select"  {...register('rol_id',{
+                <select  className={errors.rol_id ? "form-select  error" : "form-select brand"} defaultValue={itemToEdit ? itemToEdit.rol_id.id : ""}  name="select"  {...register('rol_id',{
                       onChange: () => changeError("rol_id"),
                       })}>
-                      <option value={itemToEdit ? itemToEdit.rol_id : null} className="option-selected">{itemToEdit ? dataRolesEdit.map((rol)=>{
-                        if(rol.id === itemToEdit.rol_id){
+                      <option value={itemToEdit ? {"id":itemToEdit.rol_id.id,"rol":itemToEdit.rol_id.rol} : null} className="option-selected">{itemToEdit ? dataRolesEdit.map((rol)=>{
+                        if(rol.id == itemToEdit.rol_id.id){
                           return rol.description
                         }
                       }): ""}</option>

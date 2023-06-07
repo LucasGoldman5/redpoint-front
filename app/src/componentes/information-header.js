@@ -10,11 +10,11 @@ const InformationHeader = ({enviroment}) =>{
   
 
   const comeBack = async () =>{
-    window.location.assign(`${enviroment.selfUrl.main}Table/report/reparations-pending`);
+    window.location.assign(`${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`);
   }
 
   const home = async () =>{
-    window.location.assign(`${enviroment.selfUrl.main}Table/report/reparations-pending`);
+    window.location.assign(`${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`);
   }
 
     return(

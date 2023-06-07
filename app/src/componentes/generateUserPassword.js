@@ -61,6 +61,7 @@ const GeneratePassword = ({enviroment}) =>{
     console.log(user);
     
     console.log(data);
+    setLoading(true);
     
       if(data){
         
@@ -70,7 +71,7 @@ const GeneratePassword = ({enviroment}) =>{
             const request = await fetch(`${enviroment.apiURL.url}${enviroment.apiURL.generatePassword}${user.hash}/${user.id}`, config);
 
             if(request.status === 200){
-                setLoading(true);
+                
                 limpiarFormulario();
                 const response = await request.json();
                   if(response.error){
@@ -101,7 +102,9 @@ const GeneratePassword = ({enviroment}) =>{
         }catch(error){
             console.log(error);
         };          
-      };
+      }else{
+        alert("La informacion del usuario no esta definida")
+      }
   };
 
   
@@ -157,12 +160,12 @@ const GeneratePassword = ({enviroment}) =>{
                                   <div className="inputs contraseña">
                                   <label>Confirmar contraseña</label>
                                       <div className="label-input-password">   
-                                          <input className={errors.confirm_password ? "input error" : "input"} type={(verContraseñaConfirmada === false)? 'password' : 'text'}  {...register('password', {
+                                          <input className={errors.confirm_password ? "input error" : "input"} type={(verContraseñaConfirmada === false)? 'password' : 'text'}  {...register('password_confirmation', {
                                               required: true, 
                                               validate : (value) => value === contraeña
                                           })}>
                                           </input>
-                                          {errors.password_confirmed ? <p className="p-validacion">{errors.confirm_password}</p> : ""}                
+                                          {errors.password_confirmation ? <p className="p-validacion">{errors.confirm_password}</p> : ""}                
                                       <div className="iconos">
                                           {
                                           (verContraseñaConfirmada === false) ? <AiFillEyeInvisible  onClick={verContraseñaConfirmadaClick}/> : <AiFillEye onClick={verContraseñaConfirmadaClick}/>
@@ -189,10 +192,12 @@ const GeneratePassword = ({enviroment}) =>{
       
               return(
                       <>
-                         <div className="contenedor-form-registrarse-loading">
+                         <div className="body-container">
+                            <div className="contenedor-form-registrarse-loading">
                               <h3>Enviando Registro</h3>
                               <PulseLoader className="animacion-loading" color="#36d7b7" size={20}></PulseLoader>
-                          </div>
+                            </div>
+                         </div>
                       </>
               )
       
@@ -200,11 +205,13 @@ const GeneratePassword = ({enviroment}) =>{
       
               return(
                       <>
-                          <div className="contenedor-form-registrarse-loading">
-                              <h3>Registro enviado exitosamente</h3>  
-                              <div className="contenedor-p">
-                                   <p className="p-volver">Haga click en <Link to={'/Login'}>Inicio</Link> para comenzar</p>
-                              </div>
+                          <div className="body-container">
+                            <div className="contenedor-form-registrarse-loading">
+                                <h3>Registro enviado exitosamente</h3>  
+                                <div className="contenedor-p">
+                                    <p className="p-volver">Haga click en <Link to={'/Login'}>Inicio</Link> para ingresar con el usuario activado</p>
+                                </div>
+                            </div>
                           </div>
                      </>
               )

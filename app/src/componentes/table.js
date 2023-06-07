@@ -37,8 +37,9 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
     const [spinnerLoadTable, setSpinnerLoadTable] = useState(false);
     const [spinnerLoadPage, setSpinnerLoadPage] = useState(false);
     const [notfound, setNotFound] = useState(false);
+    const [rowId, setRowId] = useState(null);
+    const [resetSelectBox, setResetSelectBox] = useState(false)
     const { id } = useParams();
-    const { title } = useParams();
     
     const location = useLocation();
     const getUser = localStorage.getItem("user");
@@ -46,23 +47,33 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
 
     const tables = [
       
-        {"brands":"Marcas"},
-        {"cellphones":"Celulares"},
-        {"services":"Servicios"},
-        {"customers":"Clientes"},
-        {"reparations":"Reparaciones"},
-        {"report/reparations-pending":"Reparaciones Pendientes"},
-        {"report/reparations-success":"Reparaciones Entregadas"},
-        {"users":"Usuarios"}    
+        {"marcas":"Marcas"},
+        {"celulares":"Celulares"},
+        {"servicios":"Servicios"},
+        {"clientes":"Clientes"},
+        {"reparaciones":"Reparaciones"},
+        {"reporte/reparaciones-pendientes":"Reparaciones Pendientes"},
+        {"reporte/reparaciones-entregadas":"Reparaciones Entregadas"},
+        {"usuarios":"Usuarios"}    
     ];
+
+    const title = {
+      "marcas":"Marca",
+      "celulares":"Celular",
+      "servicios":"Servicio",
+      "clientes":"Cliente",
+      "reparaciones":"Reparacion",
+      "reporte":"Reparacion",
+      "usuarios":"Usuario"
+    }
 
 
     const admin = () =>{
       let usuario = JSON.parse(getUser);
-        if(usuario.user.roles === "admin"){
+        if(usuario.user.rol_id.rol  === "admin"){
           setSuperAdmin(true)
 
-        }else if(usuario.user.roles === "super-admin"){
+        }else if(usuario.user.rol_id.rol  === "super-admin"){
           setSuperAdmin(false)
         };
     };
@@ -77,13 +88,27 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
     },[dataApi])
 
     const urlApi = () =>{
-        return  enviroment.apiURL.url + urlTable;
+
+      const id = window.location.href.split("/").slice(6).join('/');
+      const newUrl = () =>{
+        if(id){
+          return window.location.href.split("/").slice(4, -1).join("/");
+        }else{
+          return urlTable
+        }
+      }
+     
+      const key = Object.keys(enviroment.selfUrl.localEntities).find(key => enviroment.selfUrl.localEntities[key] === newUrl());
+        if(id){
+          return  enviroment.apiURL.url+key+id
+        }else{
+          return  enviroment.apiURL.url + key;
+        }
     }
 
     const urlLocal = () =>{
       return enviroment.selfUrl
     }
-
 
     const getData = async () => {
 
@@ -161,12 +186,17 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
                       setErrors([]);
                       if(window.location.href.includes("users")){
                         const hash = response.data.hash
-                        setTimeout(async () =>{
+                        setTimeout(() =>{
                           alert(`El usuario a sido creado con exito, para ingresar a la aplicacion debe ingresar a la siguiente url: ${localUrl.main}${localUrl.generatePass}#${hash}`)
                         },1000)
                         getData();
                       }else{
-                        getData();
+                        console.log(response.data);
+                        setDataApi({...dataApi,data:dataApi.data.concat(response.data)});
+                        setResetSelectBox(true);
+                        setTimeout(()=>{
+                          alert("creado con exito")
+                        },1000)
                       }    
                     };  
                 };
@@ -192,20 +222,21 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
       setOpenModalEdit(false);
       setOpenModalView(false);
       setItemToEdit(null);
+      setRowId(null);
+      setResetSelectBox(true);
 
     };
 
 
-    const OpenModalEdit = async (element) =>{
-        console.log(element);
+    const OpenModalEdit =  (element) =>{
+      setRowId(element.id);
         setItemToEdit(element);
         setOpenModalEdit(true);
-            
+      
     };   
   
                
     const edit =  async (data) =>{
-      console.log(data);
       
       const urlEdit = () =>{
 
@@ -216,13 +247,29 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
         }
       }
 
+      const ent = enviroment.selfUrl.localEntities;
+      const location = window.location.href;
+
       let id = data["id"];
     
         if(data){
 
+          const newData = () =>{
+            
+            if(location.includes(`${ent.users}`)){
+              return {
+                ...data,
+                "last_connection":data.last_connection,
+                "active":data.active
+              }
+            }else{
+              return data
+            }
+          }
+  
           try {
 
-                const config =await HelperBuildRequest("PUT", data, "dataTablePut");
+                const config =await HelperBuildRequest("PUT", newData(), "dataTablePut");
                 const apiURL = await urlEdit()
                 const request = await fetch(`${apiURL}/${id}`, config);
 
@@ -232,11 +279,19 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
                       setTimeout(()=>{
                         console.log(response.error);
                       },1000);
-                    }else{                      
+                    }else{
+                      setTimeout(()=>{
+                        setRowId(null);
+                      },1000)                      
                       setOpenModalEdit(false);
                       setErrors([]);
                       setItemToEdit(null)
-                      getData();
+                      if(location.includes(`${ent.reparations}`) || location.includes(`${ent.report}`) || location.includes(`${ent.cellphones}`)){
+                        getData()
+                      }else{
+                       const result = dataApi.data.map((row) => row.id == newData().id ? newData() : row);
+                       setDataApi({...dataApi, data:result}) 
+                      } 
                     }  
                 }
 
@@ -260,23 +315,33 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
     }; 
 
 
-    const eliminate= async (i)=>{
+    const eliminate= async (element)=>{
       
       setTimeout(()=>{
         setOpenModalEdit(false);
       })
-      const controlList = ['title', 'model', 'name', 'customer'];
-      const keys = Object.keys(i);
+      const controlList = ['title', 'model', 'name', 'customer', 'description'];
+      const keys = Object.keys(element);
       const include = keys.filter( (key) => controlList.includes(key) ).sort( (a,b) => a.localeCompare(b));
-      const id = i.id;
+      const id = element.id;
+      const location = window.location.href;
+      const ent = enviroment.selfUrl.localEntities;
+      const entiti = () =>{
+        if(Object.keys(title).includes(urlTable)){
+          return title[urlTable]
+        }
+      } 
+
+      
       
         swal({
           title:"Eliminar",
-          text:`¿Seguro que desea eliminar a ${i[include]}`,
+          text:location.includes(`${ent.reparations}`||`${ent.report}`) ? "¿Seguro que desea eliminar la reparacion?" : `¿Seguro que desea eliminar a ${element[include]}`,
           buttons: ["No","Si"]
         }).then(async response0 =>{
 
           if(response0){
+            
           
             try{
 
@@ -298,14 +363,28 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
                         setTimeout(()=>{
                           console.log(response.error);
                         },1000);
-                      }else{                      
-                       window.location.reload()
+                      }else{         
+                      const result =  dataApi.data.filter(object => object !== element);
+                      setDataApi({...dataApi,data:result});
+                      setErrors([]);
+                      setItemToEdit(null)
+                      if(location.includes(`${ent.reparations}`) || location.includes(`${ent.brands}`)){
+                        setTimeout(()=>{
+                          alert(`${entiti()} eliminada con exito`)
+                        },500)
+                      }else{
+                        setTimeout(()=>{
+                          alert(`${entiti()} eliminado con exito`)
+                        },500)
+                      }
                       };
                   };
               
             }catch(error){
               console.log(error)
             };
+          }else{
+            setRowId(null);
           }
         });
     };
@@ -314,17 +393,26 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
 
     const actionUser = async (data,id) => {
 
-      const newData = {
-        ...data,
-        "active":!data.active
+      const newData = () =>{
+        if(data.active === 0){
+          return {
+            ...data,
+            "active":1
+          }
+        }else if(data.active === 1){
+          return {
+            ...data,
+            "active":0
+          }
+        }
       }
-      console.log(newData);
+
       setTimeout(()=>{
         setOpenModalEdit(false);
       })
       try {
-
-        const config =await HelperBuildRequest("PUT", newData, "dataTablePut");
+        console.log(newData());
+        const config =await HelperBuildRequest("PUT", newData(), "dataTablePut");
         const apiURL = urlApi()
         const request = await fetch(`${apiURL}/${id}`, config);
 
@@ -334,8 +422,12 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
               setTimeout(()=>{
                 console.log(response.error);
               },1000);
-            }else{                      
-              getData();
+            }else{
+              setTimeout(()=>{
+                setRowId(null)
+              },500)
+              const result = dataApi.data.map((row) => row.id == newData().id ? newData() : row);                      
+              setDataApi({...dataApi, data:result})
             }  
         }
 
@@ -346,10 +438,10 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
             };
         };
      
-  }catch(error){
-    console.log(error);
-    
-  };       
+      }catch(error){
+        console.log(error);
+        
+      }; 
     };
 
     /*const OpenModalView = (element) => {
@@ -492,24 +584,24 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
                 <div className='titulo-tabla'>
                   <h1>
                     {
-                    (window.location.href.includes("by-brand") && dataApi.data[0].cellphone)
+                    (window.location.href.includes("por-marca") && dataApi.data[0].cellphone)
                     ?
                     `Reparaciones por ${dataApi.data[0].cellphone.brand}`
                     :
-                    (window.location.href.includes("by-customer") && dataApi.data[0].customer)
+                    (window.location.href.includes("por-cliente") && dataApi.data[0].customer)
                     ?
                     `Reparaciones por ${dataApi.data[0].customer.customer}`
                     :
-                    (window.location.href.includes("by-cellphone") && dataApi.data[0].cellphone)
+                    (window.location.href.includes("por-celular") && dataApi.data[0].cellphone)
                     ?
                     `Reparaciones por ${dataApi.data[0].cellphone.model}`
                     :
-                    (window.location.href.includes("by-service") && dataApi.data[0].service)
+                    (window.location.href.includes("por-servicio") && dataApi.data[0].service)
                     ?
                     `Reparaciones por ${dataApi.data[0].service.service}`
                     :
                     tables.map((titulo)=>{
-                      if(window.location.href === `http://localhost:3000/Table/${Object.keys(titulo)}`){
+                      if(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${Object.keys(titulo)}`){
                         return Object.values(titulo)
                       }
                     })
@@ -544,7 +636,7 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
                                   <th key={`${uniqueKeys.thColumn}-${index}`} className='th-columnas'>{column}</th>
                                 ))}
                                 {
-                                  (window.location.href.includes("users"))
+                                  (window.location.href.includes("usuarios"))
                                   ?
                                   ""
                                   :
@@ -558,8 +650,8 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
                               (dataFilter().length > 0 && spinnerLoadTable === false)
                               ?  
                               dataFilter().map((element,index) =>
-                                  
-                                    <tr onClick={() => OpenModalEdit(element)} className='tr-data' key={`${uniqueKeys.trBody}-${index}`}>
+                              
+                                    <tr onClick={() => OpenModalEdit(element)} id={index} className={rowId ? rowId == element.id ? "tr-active" : "tr-data" : "tr-data"} key={`${uniqueKeys.trBody}-${index}`}>
                                     {Object.keys(dataColumns).map((column)=>{
                                       for(let i = 0 ; i < Object.keys(element).length ; i++){
                                         if(Object.keys(element)[i] === column){
@@ -588,12 +680,14 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
                                           if(column === "customer"){  
                                             return <td className='td'  key={`${uniqueKeys.tbody}-${i}`}><p>{item.customer}</p></td>
                                           }
-                                          if(column === "rol_id"){
-                                            if(Object.values(element)[i] === 1){
-                                              return <td className='td'  key={`${uniqueKeys.tbody}-${i}`}><p>Admin</p></td>
-                                            }else{
-                                              return <td className='td'  key={`${uniqueKeys.tbody}-${i}`}><p>Super-admin</p></td>
-                                            }
+                                          if(column === "rol_id"){         
+                                              if(item == 1){
+                                                return <td className='td'  key={`${uniqueKeys.tbody}-${i}`}><p>admin</p></td>
+                                              }else if(item == 3){
+                                                return <td className='td'  key={`${uniqueKeys.tbody}-${i}`}><p>Super-admin</p></td>
+                                              }else{
+                                                return <td className='td'  key={`${uniqueKeys.tbody}-${i}`}><p>{item.rol}</p></td>
+                                              }
                                           }
                                           if(column === "failure"){
                                             return <td className='td-service' key={`${uniqueKeys.tbody}-${i}`}>
@@ -632,7 +726,7 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
                                               return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
                                             }
                                           }if(column === "last_connection"){
-                                            if(Object.values(element)[i] === null){
+                                            if(Object.values(element)[i] === null || Object.values(element)[i] === ""){
                                               return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
                                             }else{
                                               return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
@@ -649,7 +743,7 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
                                             }
                                           }
                                           if(column === "active"){
-                                            if(Object.values(element)[i] === 1){
+                                            if(Object.values(element)[i] == 1){
                                               return <td className='td-active' key={`${uniqueKeys.tbody}-${i}`}><p className='p-active-yes'>Si</p><button className='button-active' onClick={()=>actionUser(element,element.id)}>Desactivar</button></td>
                                             }else{ 
                                                return <td className='td-active' key={`${uniqueKeys.tbody}-${i}`}><p className='p-active-no'>No</p><button className='button-desactive' onClick={()=>actionUser(element,element.id)}>Activar</button></td> 
@@ -661,7 +755,7 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
                                     })}
                                         
                                     {
-                                      (window.location.href.includes("users"))
+                                      (window.location.href.includes("usuarios"))
                                       ?
                                       ""
                                       :
@@ -724,7 +818,9 @@ function Table  ({urlTable, enviroment, tableActive,dataBrandsApp,dataCellphones
                     dataCustomersApp={dataCustomersApp}
                     dataServicesApp={dataServicesApp}
                     dataCellphonesApp={dataCellphonesApp}
-                    dataRolesApp={dataRolesApp}>
+                    dataRolesApp={dataRolesApp}
+                    dataStatusApp={dataStatusApp}
+                    resetSelectBox={resetSelectBox}>
                   </ModalAdd>
 
                   <ModalView

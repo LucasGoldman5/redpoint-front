@@ -149,15 +149,22 @@ body{
 .tr-data{
     border-bottom: 1px solid black;
     cursor: pointer;
+    transition: all 0.3s;
+    background:rgb(255, 190, 212) ;
 }
-.tr-data:nth-child(odd){
-    background: rgb(255, 190, 212);
-}
+
 .tr-data:nth-child(even){
     background: rgb(221, 165, 184);
+    transition: all 0.5s;
 }
 .tr-data:hover{
     background: rgb(161, 119, 133);
+}
+
+.tr-active{
+    background: rgb(161, 119, 133);
+    border-bottom: 1px solid black;
+    transition: all 0.5s;
 }
 
 .no-match{
