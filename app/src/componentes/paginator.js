@@ -33,7 +33,7 @@ const Paginator = ({dataApi,nextPage,previousPage,specifyPage,changePage}) =>{
                     {
                     (arrayNumberPages.length > 1) ? (
                         arrayNumberPages.map((i) => (
-                        <button className={(i.toString() === dataApi.paginator.url.split("=")[1])?"buttons-paginator-on":"buttons-paginator"} onClick={() => specifyPage(i)} key={i}>{i}</button>
+                        <button className={(i.toString() == dataApi.paginator.url.split("=")[1])?"buttons-paginator-on":"buttons-paginator"} onClick={() => specifyPage(i)} key={i}>{i}</button>
                         ))
                     ) : (
                         <button className="buttons-paginator">0</button>

@@ -157,6 +157,17 @@
     background: rgb(167, 1, 1);
 }
 
+.button-change-pass{
+    border: none;
+    background: rgb(202, 172, 0);
+    border-radius: 5px;
+    color: white;
+    font-weight: 500;
+}
+.button-change-pass:hover{
+    background: rgb(143, 121, 0);
+}
+
 .p-validacion{
     color: red;
     margin: 0;

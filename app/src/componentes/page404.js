@@ -1,7 +1,7 @@
 import React from "react";
 import './page404.css'
 
-const Error404 = () =>{
+const Error404 = ({entitiNotFound}) =>{
 
 
     return(
@@ -11,7 +11,17 @@ const Error404 = () =>{
                 <h1 className="h1-404">404</h1>
             </div>
             <div className="container-p-notfound">
-                <p className="p-notfound">Pagina no encontrada</p>
+                {
+                    entitiNotFound
+                    ?
+                    entitiNotFound == "reparacion" || entitiNotFound == "marca"
+                    ?
+                    <p className="p-notfound">{`Esta ${entitiNotFound} fue Eliminada`}</p>
+                    :
+                    <p className="p-notfound">{`Este ${entitiNotFound} fue Eliminado`}</p>
+                    :
+                    <p className="p-notfound">{`pagina no encontrada`}</p>
+                }
             </div>
           </div>
         </>

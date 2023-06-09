@@ -57,8 +57,6 @@ const GeneratePassword = ({enviroment}) =>{
   }
 
   const onSubmit = async (data) =>{
-
-    console.log(user);
     
     console.log(data);
     setLoading(true);
@@ -72,7 +70,6 @@ const GeneratePassword = ({enviroment}) =>{
 
             if(request.status === 200){
                 
-                limpiarFormulario();
                 const response = await request.json();
                   if(response.error){
                     setTimeout(()=>{
@@ -107,10 +104,6 @@ const GeneratePassword = ({enviroment}) =>{
       }
   };
 
-  
-  const limpiarFormulario = () =>{ 
-    document.getElementById("formularioSignUp").reset();
-  };
 
   const verContraseñaClick = () =>{
     setVerContraseña(!verContraseña)
@@ -121,7 +114,7 @@ const GeneratePassword = ({enviroment}) =>{
   }
 
 
-  const { register, handleSubmit ,watch, getValues} = useForm ();
+  const { register, handleSubmit,getValues ,watch} = useForm ();
   const contraeña = watch('contraseña');
 
     if(spinner === false){
@@ -180,7 +173,7 @@ const GeneratePassword = ({enviroment}) =>{
                                   </div>
                                   <br/>
                                   <div className="input-submit">
-                                      <button  type="submit" onClick={() => onSubmit(getValues())} name="">Registrar</button>
+                                      <button  type="submit" onClick={()=> onSubmit(getValues())} name="">Registrar</button>
                                   </div>  
                               </form>
                           </div>

@@ -19,7 +19,7 @@ const PersonalInformation = () => {
                 <label>Email:</label>
                 <input type="text" readOnly defaultValue={user.email}></input>
                 <label>Cargo:</label>
-                <input type="text" readOnly defaultValue={user.roles}></input>
+                <input type="text" readOnly defaultValue={user.rol_id.rol}></input>
             </div>
         </div>
       </div>

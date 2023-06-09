@@ -1,17 +1,22 @@
 
 import React, { useState,useEffect } from "react"
 import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
-import { useForm } from "react-hook-form";
+import ModalAddBrand from "./modales-add/modalAddBrand";
+import ModalAddCustomer from "./modales-add/modalAddCustomer";
+import ModalAddService from "./modales-add/modalAddService";
+import ModalAddCellphone from "./modales-add/modalAddCellphone";
+import ModalAddReparation from "./modales-add/modalReparation";
+import ModalAddBrandIn from "./modales-add/modalAddBrandIn";
+import ModalAddCustomerIn from "./modales-add/modalAddCustomerIn";
+import ModalAddCellphoneIn from "./modales-add/modalAddCellphoneIn";
+import ModalAddServiceIn from "./modales-add/modalAddServiceIn";
+import ModalAddUser from "./modales-add/modalAddUser";
 import './modales.css'
 import HelperBuildRequest from "../helpers/buildRequest";
-import getEnviroment from "../helpers/getEnviroment";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
 
 
-const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,dataBrandsApp,dataCellphonesApp,dataCustomersApp,dataServicesApp,dataRolesApp,dataStatusApp,resetSelectBox}) =>{
+const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,dataBrandsApp,dataCellphonesApp,dataCustomersApp,dataServicesApp,dataRolesApp,dataStatusApp,resetSelectBox, urlTable}) =>{
   
-  const [chainBrand, setChainBrand] = useState ("");
   const [errorsApi, setErrorsApi] = useState([]);
   const [errors, setErrors] = useState([]);
   const [checkbox, setCheckBox] = useState(false);
@@ -60,14 +65,20 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
     setNewCellphoneSelected([]);
     setNewBrandSelected([]);
     setNewServiceSelected([]);
-  },[resetSelectBox])
+  },[resetSelectBox, urlTable])
 
   const changeModal = (fact) =>{
 
     if(fact === "brand"){
-      setOpenModalAddBrand(true);
-      setValue("url","")
-      setOpenModalAddCellphone(false);
+
+      if(location === `${enviroment.selfUrl.main}${table}${entities.cellphones}`){
+        setOpenModalAddBrand(true);
+        setOpenModalAdd(false);
+      }else{
+        setOpenModalAddBrand(true);
+        setOpenModalAddCellphone(false);
+      }
+
     }else if(fact === "customer"){  
       setOpenModalAddCustomer(true)
       setOpenModalAdd(false);
@@ -75,50 +86,33 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
       setOpenModalAddCellphone(true);
       setOpenModalAdd(false);
     }else if(fact === "service"){
-      setValue("email","");
       setOpenModalAddService(true);
       setOpenModalAdd(false);
     }
   };
 
 
-  const closeFormAdd = (entity,data) =>{
+  const closeFormAdd = (entity) =>{
    
-    const setEmail = () =>{
-      const id = data.customer_id        
-      if(newCustomerSelected.phone_number || newCustomerSelected.email){
-        setValue("email", newCustomerSelected.email);
-        setValue("number", newCustomerSelected.phone_number);
-      }else{
-        dataCustomers.map((customer) =>{
-          if(customer.id == id){
-             setValue("email", customer.email);
-             setValue("number", customer.phone);
-      }}); 
-      }
-    }
-
     if(entity === "brand"){
-      if(window.location.href.includes("reparations")){
+
+      if(window.location.href.includes("reparaciones")){
         setOpenModalAddBrand(false);
         setOpenModalAddCellphone(true);
-        setEmail()
       }else{
         setOpenModalAddBrand(false);
-        setOpenModalAddCellphone(true);
+        setOpenModalAdd(true);
       } 
+
     }else if(entity === "customer"){
       setOpenModalAddCustomer(false);
       setOpenModalAdd(true);
     }else if(entity === "cellphone"){
-      console.log(data);
       setOpenModalAddCellphone(false);
       setOpenModalAdd(true);
-       setEmail()
     }else if(entity === "service"){
       setOpenModalAddService(false);
       setOpenModalAdd(true);
-      setEmail()
     };
   };
 
@@ -126,11 +120,8 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
      setCheckBox(!checkbox);
   };
   
-
   const onSubmitBrand = async (data) =>{
-  
-    const id = data.customer_id  
-  
+ 
     if(data){
 
       try{
@@ -146,30 +137,20 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                   },1000);
               }else{
                 setNewBrandSelected(response.data);
-                if(newCustomerSelected.length < 1){
-                  dataCustomers.map((customer) =>{
-                    if(customer.id == id){
-                       setValue("email", customer.email);
-                       setValue("number", customer.phone);
-                    }
-                  })
+                setErrorsApi({model:errorsApi.model, brand_id:null})
+
+                if(location === `${enviroment.selfUrl.main}${table}${entities.cellphones}`){
+                  setOpenModalAddBrand(false);
+                  setOpenModalAdd(true);
                 }else{
-                  setValue("email", newCustomerSelected.email)
-                }
-                setValue("description","")
-                setValue("brand_id",newBrandSelected.id);
-                setValue("url","") 
+                  setOpenModalAddBrand(false);
+                  setOpenModalAddCellphone(true);
+                } 
 
                 if(dataBrands.length > 0){
                   setDataBrands(dataBrands.concat(response.data))
-                  setOpenModalAddBrand(false);
-                  setOpenModalAddCellphone(true);
-                  setErrorsApi({model:errorsApi.model, brand_id:null})
                 }else{
                   setDataBrands(response.data)
-                  setOpenModalAddCellphone(true);
-                  setOpenModalAddBrand(false);
-                  setErrorsApi({model:errorsApi.model, brand_id:null})
                 }
               };
           };
@@ -209,31 +190,13 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                   },1000);
               }else{
                 setNewCustomerSelected(response.data)
-                setValue("customer_id",newCustomerSelected.id);
-                setValue("number", data.phone_number)
-
+                setErrors({ customer_id:null, cellphone_id:errors.cellphone_id, service_id:errors.service_id}) 
+                setOpenModalAddCustomer(false);
+                setOpenModalAdd(true);
                   if(dataCustomers.length > 0){
-                    setDataCustomers(dataCustomers.concat(response.data))
-                    setOpenModalAddCustomer(false);
-                    setOpenModalAdd(true);
-                    setErrors(
-                      {
-                        customer_id:null,
-                        cellphone_id:errors.cellphone_id,
-                        service_id:errors.service_id
-                      }
-                    )              
+                    setDataCustomers(dataCustomers.concat(response.data))             
                   }else{
-                    setDataCustomers(response.data)
-                    setOpenModalAddCustomer(false);
-                    setOpenModalAdd(true);
-                    setErrors(
-                      {
-                        customer_id:null,
-                        cellphone_id:errors.cellphone_id,
-                        service_id:errors.service_id
-                      }
-                    )                  
+                    setDataCustomers(response.data)                
                   }
               };
           };
@@ -271,42 +234,15 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                     console.log(response.error);
                   },1000);
               }else{
-                setNewServiceSelected(response.data)
-                if(newCustomerSelected.length < 1){
-                  dataCustomers.map((customer) =>{
-                    if(customer.id == id){
-                       setValue("email", customer.email);
-                       setValue("number", customer.phone);
-                    }
-                  })
-                }else{
-                  setValue("email", newCustomerSelected.email);
-                  setValue("number", newCustomerSelected.phone_number);
-                }    
-                setValue("service_id",newServiceSelected.id);       
+                setNewServiceSelected(response.data)     
+                setErrors({ customer_id:errors.customer_id, cellphone_id:errors.cellphone_id, service_id:null })
+                setOpenModalAddService(false);
+                setOpenModalAdd(true);
 
                 if(dataServices.length > 0){
-                  setDataServices(dataServices.concat(response.data))
-                  setOpenModalAddService(false);
-                  setOpenModalAdd(true);
-                  setErrors(
-                    {
-                      customer_id:errors.customer_id,
-                      cellphone_id:errors.cellphone_id,
-                      service_id:null
-                    }
-                  ) 
+                  setDataServices(dataServices.concat(response.data)) 
                 }else{
                   setDataServices(response.data)
-                  setOpenModalAddService(false);
-                  setOpenModalAdd(true);
-                  setErrors(
-                    {
-                      customer_id:errors.customer_id,
-                      cellphone_id:errors.cellphone_id,
-                      service_id:null
-                    }
-                  ) 
                 }
               };
           };
@@ -344,43 +280,14 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
                   },1000);
               }else{
                 setNewCellphoneSelected(response.data)
-                if(newCustomerSelected.length < 1){
-                  dataCustomers.map((customer) =>{
-                    if(customer.id == id){
-                       setValue("email", customer.email);
-                       setValue("number", customer.phone);
-                    }
-                  })
-                }else{
-                  setValue("email", newCustomerSelected.email)
-                  setValue("number", newCustomerSelected.phone_number);
-                }  
-                setValue("url","")
-                setValue("cellphone_id",newCellphoneSelected.id);
-                setValue("brand_id",newBrandSelected.id);
+                setOpenModalAddCellphone(false);
+                setOpenModalAdd(true);
+                setErrors({ customer_id:errors.customer_id, cellphone_id:null, service_id:errors.service_id })
 
                 if(dataCellPhones.length > 0){
-                  setDataCellPhones(dataCellPhones.concat(response.data))
-                  setOpenModalAddCellphone(false);
-                  setOpenModalAdd(true);
-                  setErrors(
-                    {
-                      customer_id:errors.customer_id,
-                      cellphone_id:null,
-                      service_id:errors.service_id
-                    }
-                  )                
+                  setDataCellPhones(dataCellPhones.concat(response.data))               
                 }else{
-                  setDataCellPhones(response.data)
-                  setOpenModalAddCellphone(false);
-                  setOpenModalAdd(true);
-                  setErrors(
-                    {
-                      customer_id:errors.customer_id,
-                      cellphone_id:null,
-                      service_id:errors.service_id
-                    }
-                  )        
+                  setDataCellPhones(response.data)      
                 }
               };
           };
@@ -399,17 +306,10 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
     };
   };
 
-  const addEmail = (customerId,entity) =>{
+  const addEmail = (entity) =>{
 
     setFilterCustomerValue('');
     setSelectCustomerActive(false);
-
-    dataCustomers.map((customer) =>{
-      if(customer.id == customerId){
-         setValue("email", customer.email);
-         setValue("number", customer.phone);
-      };
-    });
 
     if(entity === "customer"){
       setErrors({customer_id:null, cellphone_id:errors.cellphone_id, service_id:errors.service_id})
@@ -545,107 +445,33 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
   const table = enviroment.selfUrl.dataTable;
   const entities = enviroment.selfUrl.localEntities;
 
-  const { register, handleSubmit, getValues, setValue} = useForm ();
-
 
   if(location === `${enviroment.selfUrl.main}${table}${entities.cellphones}`){
 
     return(
 
        <>
-          <Modal isOpen={openModalAdd}>
-            <ModalHeader style={{display: 'block'}}>
-              <div>
-                <h5  className="h5-modal-add" >Crear celular</h5> 
-              </div>
-            </ModalHeader>
-            <ModalBody className="contenedor-modal-body">
-              <form className="form-group" onSubmit={handleSubmit(create)}>
-                <label htmlFor="id">Numero de Marca</label>
-                <input className="form-control" type="number" name="id" readOnly value={`${dataApi.data.length+1}`}  />
-                <br/>
-                <label htmlFor="modelo">Modelo</label>
-                <input className={errors.model ? "form-control error" : "form-control"} type="text" name="modelo" {...register('model',{
-                  onChange: () => changeError("model"),
-                  value:null,
-                  shouldUnregister:true,
-                  })}/>
-                  {errors.model? <p className="p-errores">El campo Modelo debe ser completado</p> : ""}
-                <br />
-                <label htmlFor="url">Url</label>
-                <input className="form-control" type="text" name="url" {...register('url',{
-                  value:null,
-                  shouldUnregister:true,
-                  })} />
-                <br/>
-                <label htmlFor="brnad_id">Marca</label>
-                <div className="div-container-select-button">
-                <input type="search" onChange={(e)=>handleInputChange(e,"brand")} placeholder="buscar.." className={selectBrandActive ? "input-search brand" : "input-search-none"}></input>
-                <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"brand")} className="icon-search" icon={faMagnifyingGlass} />
-                <select  className="form-select brand" name="select" defaultValue={newBrandSelected.id ? newBrandSelected.id : ""} {...register('brand_id',{
-                  onChange: () => changeError("brand"),
-                  })}>
-                    {
-                      (newBrandSelected.id)
-                      ?
-                      <option className="option-selected" value={newBrandSelected.id} >{newBrandSelected.title}</option>
-                      :
-                      <option className="option-selected">Seleccionar..</option>    
-                    }
-                  {filteredBrands.map((brand)=>{
-                      if(brand.title.includes(chainBrand)){
-                        return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option>
-                      }
-                  })}
-                </select>
-                <h1 className="h1-add" onClick={()=>changeModal("brand")}>+</h1>
-                </div>
-                  {errors.brand_id? <p className="p-errores">Haga click en una marca</p> : ""}
-                  <br/>
-                  <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="submit" className="btn btn-success" >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
-                </div>
-              </form>
-            </ModalBody>
-          </Modal>
+          <ModalAddCellphone
+          openModalAdd={openModalAdd}
+          create={create}
+          dataApi={dataApi}
+          errors={errors}
+          handleInputChange={handleInputChange}
+          activeInputSearch={activeInputSearch}
+          changeModal={changeModal}
+          newBrandSelected={newBrandSelected}
+          filteredBrands={filteredBrands}
+          changeError={changeError}
+          closeForm={closeForm}
+          selectBrandActive={selectBrandActive}
+          />
 
-          <Modal isOpen={openModalAddBrand}>
-            <ModalHeader style={{display: 'block'}}>
-              <div>
-              <h5  className="h5-modal-add" >Crear Marca</h5> 
-              </div>
-            </ModalHeader>
-            <ModalBody className="contenedor-modal-body">
-              <form className="form-group" onSubmit={handleSubmit(onSubmitBrand)}>
-                <br />
-                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("brand_id")}></input>
-                <label htmlFor="marca">Marca</label>
-                <input className={errorsApi.title ? "form-control error" : "form-control"} type="text" name="marca"  {...register('title',{
-                  onChange: () => changeErrorApi("title"),
-                  shouldUnregister:true,
-                })} />
-                  {errorsApi.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
-                <br />
-                <label htmlFor="url">Descripcion</label>
-                <input className="form-control" type="text" name="url" {...register('description',{
-                  value:null,
-                  shouldUnregister:true,
-                  })} />
-                <br />
-                <label htmlFor="url">Url</label>
-                <input className="form-control" type="text" name="url"  {...register('url',{
-                  value:null,
-                  shouldUnregister:true,
-                  })} />
-                <br/>
-                <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="button" className="btn btn-success" onClick={()=>onSubmitBrand(getValues())} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={()=>closeFormAdd("brand")}>Cancelar</h1>
-                </div>
-              </form>
-            </ModalBody>
-          </Modal>
+         <ModalAddBrandIn
+          openModalAddBrand={openModalAddBrand}
+          onSubmitBrand={onSubmitBrand}
+          errorsApi={errorsApi}
+          changeErrorApi={changeErrorApi}
+          closeFormAdd={closeFormAdd}/>
 
         </>  
     );
@@ -653,678 +479,114 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
 
     return(
 
-      <Modal isOpen={openModalAdd}>
-        <ModalHeader style={{display: 'block'}}>
-          <div>
-          <h5  className="h5-modal-add" >Crear Marca</h5> 
-          </div>
-        </ModalHeader>
-        <ModalBody className="contenedor-modal-body">
-          <form className="form-group" onSubmit={handleSubmit(create)}>
-            <label htmlFor="id">Cantidad de marcas actuales</label>
-            <input className="form-control" type="number" name="id" id="id" readOnly value={dataApi.data.length} ></input>
-            <br />
-            <label htmlFor="marca">Marca</label>
-            <input className={errors.title ? "form-control error" : "form-control"} type="text" name="marca"  {...register('title',{
-              onChange: () => changeError("title"),
-              shouldUnregister:true,
-            })} />
-              {errors.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
-            <br />
-            <label htmlFor="url">Descripcion</label>
-            <input className="form-control" type="text" name="url" {...register('description',{
-              value:null,
-              shouldUnregister:true,
-              })} />
-            <br/>
-            <label htmlFor="url">Url</label>
-            <input className="form-control" type="text" name="url"  {...register('url',{
-              value:null,
-              shouldUnregister:true,
-              })} />
-            <br/>
-            <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="submit" className="btn btn-success"  >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
-                </div>
-              </form>
-        </ModalBody>
-      </Modal>
+      <ModalAddBrand
+       openModalAdd={openModalAdd}
+       create={create}
+       dataApi={dataApi}
+       errors={errors}
+       changeError={changeError}
+       closeForm={closeForm}/>
 
     )
   }else if(location === `${enviroment.selfUrl.main}${table}${entities.services}`){
 
     return(
-      <Modal isOpen={openModalAdd}>
-        <ModalHeader style={{display: 'block'}}>
-          <div>
-          <h5  className="h5-modal-add" >Crear Servicio</h5> 
-          </div>
-        </ModalHeader>
-        <ModalBody className="contenedor-modal-body">
-          <form className="form-group" onSubmit={handleSubmit(create)}>
-            <label htmlFor="id">Numero de Servicio</label>
-            <input className="form-control" type="number" name="id" id="id" readOnly value={dataApi.data.length + 1} ></input>
-            <br />
-            <label htmlFor="marca">Nombre del Servicio</label>
-            <input className={errors.description ? "form-control error" : "form-control"} type="text" name="marca"  {...register('description',{
-              value:null,
-              shouldUnregister:true,
-              onChange: () => changeError("description")
-              })} />
-              {errors.description? <p className="p-errores">El campo Descripcion debe ser completado</p> : ""} 
-            <br />
-            <label htmlFor="url">Numero de Telefono</label>
-            <input className={errors.phone_number ? "form-control error" : "form-control"} type="text" name="numero de telefono" {...register('phone_number',{
-              value:null,
-              shouldUnregister:true,
-              })} />
-              {errors.phone_number? <p className="p-errores">El campo Numero de telefono debe ser completado</p> : ""}
-            <br />
-            <label htmlFor="url">Direccion</label>
-            <input className="form-control" type="text" name="direccion" {...register('address',{
-              value:null,
-              shouldUnregister:true,
-              })} />
-            <br />
-            <label htmlFor="url">Email</label>
-            <input className="form-control" type="text" name="email" {...register('email',{
-              value:null,
-              shouldUnregister:true,
-              })} />
-            <br />
-            <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="submit" className="btn btn-success"  >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
-                </div>
-              </form>
-        </ModalBody>
-      </Modal>
+      <ModalAddService
+       openModalAdd={openModalAdd}
+       create={create}
+       dataApi={dataApi}
+       errors={errors}
+       changeError={changeError}
+       closeForm={closeForm}/>
     );
   }else if(location === `${enviroment.selfUrl.main}${table}${entities.customers}`){
 
     return(
-      <Modal isOpen={openModalAdd}>
-        <ModalHeader style={{display: 'block'}}>
-          <div>
-          <h5  className="h5-modal-add" >Crear Cliente</h5> 
-          </div>
-        </ModalHeader>
-        <ModalBody className="contenedor-modal-body">
-          <form className="form-group" onSubmit={handleSubmit(create)}>
-            <label htmlFor="marca">Nombre</label>
-            <input className={errors.name ? "form-control error" : "form-control"} type="text" name="name"  {...register('name',{
-              onChange: () => changeError("name"),
-              value:null,
-              shouldUnregister:true
-              })} />
-              {errors.name? <p className="p-errores">{errors.name}</p> : ""} 
-            <br />
-            <label htmlFor="url">Email</label>
-            <input className={errors.email ? "form-control error" : "form-control"} type="text" name="email" {...register('email',{
-              onChange: (e) => changeError("email",e.target.value),
-              value:null,
-              shouldUnregister:true
-              })} />
-              {errors.email? <p className="p-errores">{errors.email}</p> : ""}
-            <br />
-            <label htmlFor="url">Numero de Telefono</label>
-            <input className={errors.phone_number ? "form-control error" : "form-control"} type="text" name="phone" {...register('phone_number',{
-              onChange: () => changeError("phone_number"),
-              value:null,
-              shouldUnregister:true
-              })} />
-              {errors.phone_number? <p className="p-errores">{errors.phone_number}</p> : ""}
-            <br />
-            <label htmlFor="url">Numero de telefono 2</label>
-            <input className="form-control" type="text" name="phone_2" {...register('phhone_number_2',{
-              value:null,
-              shouldUnregister:true
-              })} />
-            <br />
-            <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="submit" className="btn btn-success" >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
-                </div>
-              </form>
-        </ModalBody>
-      </Modal>
+
+      <ModalAddCustomer
+       openModalAdd={openModalAdd}
+       create={create}
+       dataApi={dataApi}
+       errors={errors}
+       changeError={changeError}
+       closeForm={closeForm}/>
+    
     );
   }else if(location === `${enviroment.selfUrl.main}${table}${entities.reparations}`){
 
     return(
         <>
-          <Modal isOpen={openModalAdd} className="modal-reparations" >
-            <ModalHeader style={{display: 'block'}}>
-              <div>
-                <h5  style={{float: 'center', color: 'green'}} >Crear Reparacion</h5> 
-              </div>
-            </ModalHeader>
-            <ModalBody className="contenedor-modal-body">
-              <form className="form-group reparations" onSubmit={handleSubmit(create)}>
-                <div className="div-inputs">
-                  <label htmlFor="marca">Cliente</label>
-                  <div className="div-container-select-button">
-                    <input  type="search" onChange={(e)=>handleInputChange(e,"customer")} placeholder="buscar.." className={selectCustomerActive ? "input-search" : "input-search-none"}></input>
-                    <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"customer")} className="icon-search" icon={faMagnifyingGlass} />
-                    <select  className={errors.customer_id ? "form-select error" : "form-select"} name="select" defaultValue={newCustomerSelected.id ? newCustomerSelected.id : ""} {...register('customer_id',{
-                      onChange: (e) => {
-                        addEmail(e.target.value,"customer");
-                      },
-                      shouldUnregister:true
-                          })}>
-                          {
-                            (newCustomerSelected.id)
-                            ?
-                             <option className="option-selected" value={newCustomerSelected.id}>{newCustomerSelected.name}</option>
-                            :
-                            <option className="option-selected">Seleccionar..</option>
-                          }
-                          {filteredCustomers.map((customer)=>{
-                              return <option className="option-modal" key={customer.id} value={customer.id} >{customer.name}</option>                              
-                          })}
-                      </select>
-                    <h1 className="h1-add" onClick={()=>changeModal("customer")}>+</h1>
-                  </div> 
-                  {errors.customer_id ? <p className="p-errores">Debe seleccionar un Cliente</p> : ""}
-                </div>
-                <br />
-                <div className="div-inputs">
-                  <label htmlFor="url">Numero de contacto</label>
-                  <input className="form-control" type="text" name="contact-number" {...register('number',{
-                    shouldUnregister:true,
-                    value:null
-                    })} />
-                </div>
-                <br />
-                <div className="div-inputs">
-                  <label htmlFor="url">Email</label>
-                  <input className="form-control" type="text" defaultValue={""}{...register('email',{
-                    shouldUnregister:true,
-                    })} />
-                </div>
-                <br />
-                <div className="div-inputs">
-                  <label htmlFor="url">Celular</label>
-                  <div className="div-container-select-button">
-                  <input type="search" onChange={(e)=>handleInputChange(e,"cellphone")} placeholder="buscar.." className={selectCellphoneActive ? "input-search" : "input-search-none"}></input>
-                  <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"cellphone")} className="icon-search" icon={faMagnifyingGlass} />
-                    <select  className={errors.cellphone_id ? "form-select error" : "form-select"} name="select"  defaultValue={newCellphoneSelected.id ? newCellphoneSelected.id : ""} {...register('cellphone_id',{
-                      onChange: () => changeError("cellphone"),
-                      shouldUnregister:true
-                        })}>
-                          {
-                          newCellphoneSelected.id
-                          ?
-                          <option className="option-selected" value={newCellphoneSelected.id}>{newCellphoneSelected.model}</option>
-                          :
-                          <option className="option-selected">Seleccionar..</option>
-                          }
-                        {filteredCellphones.map((cellphone)=>{
-                            return <option className="option-modal" key={cellphone.id} value={cellphone.id} >{cellphone.model}</option>
-                        })}
-                    </select>
-                    <h1 className="h1-add" onClick={()=>changeModal("cellphone")}>+</h1>
-                  </div>
-                  {errors.cellphone_id ? <p className="p-errores">Debe seleccionar un celular</p> : ""}
-                </div>
-                <br />
-                <div className="div-inputs">
-                  <label htmlFor="url">Falla</label>
-                  <textarea className="form-control"  name="phone_2" {...register('failure',{
-                    value:null,
-                    shouldUnregister:true
-                    })} />
-                </div>
-                <br />
-                <div className="div-inputs">
-                  <label htmlFor="url">Observacion</label>
-                  <textarea className="form-control" type="text" name="phone_2" {...register('observation',{
-                    value:null,
-                    shouldUnregister:true
-                    })} />
-                </div>
-                <br/>
-                <div className="div-inputs">
-                  <label htmlFor="url">Estado de la reparacion</label>
-                  <select className="form-select" type="text" name="phone_2" {...register('state_id',{
-                    value:1,
-                    shouldUnregister:true   
-                    })}>
-                    <option value={1}>Recibido</option>
-                  </select>
-                </div>
-                <br/>
-                <div className="div-inputs">
-                  <label htmlFor="url">Servicio</label>
-                  <div className="div-container-select-button">
-                  <input type="search" onChange={(e)=>handleInputChange(e,"service")} placeholder="buscar.." className={selectServiceActive ? "input-search" : "input-search-none"}></input>
-                  <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"service")} className="icon-search" icon={faMagnifyingGlass} />
-                    <select  className={errors.service_id ? "form-select error" : "form-select"} name="select"  defaultValue={newServiceSelected.id ? newServiceSelected.id : ""} {...register('service_id',{
-                      onChange: () => changeError("service"),
-                      shouldUnregister:true
-                        })}>
-                          {
-                          newServiceSelected.id
-                          ?
-                          <option className="option-selected" value={newServiceSelected.id}>{newServiceSelected.description}</option>
-                          :
-                          <option className="option-selected">Seleccionar..</option>
-                          }
-                        {filteredServices.map((service)=>{
-                            return <option className="option-modal" key={service.id} value={service.id} >{service.description}</option>
-                        })}
-                    </select>
-                    <h1 className="h1-add" onClick={()=>changeModal("service")}>+</h1>
-                  </div>
-                  {errors.service_id ? <p className="p-errores">Debe seleccionar un Servicio</p> : ""}
-                </div>
-                <br/>
-                <div className="div-inputs">
-                  <label htmlFor="url">Valor de la reparacion</label>
-                  <input className="form-control" type="text" name="phone_2" {...register('cost',{
-                    value:null,
-                    shouldUnregister:true
-                    })} />
-                </div>
-                <br/>
-                <div className="div-inputs">
-                  <label htmlFor="url">Precio a cobrar<span>*</span> </label>
-                  <input className="form-control" type="text" name="phone_2" {...register('amount',{
-                    value:null,
-                    shouldUnregister:true
-                    })} />
-                </div>
-                <br/>
-                <div className="div-inputs">
-                  <label htmlFor="url">Fecha de notificacion al cliente</label>
-                  <input className="form-control" type="date" name="phone_2" {...register('notice_date',{
-                    value:  null,
-                    shouldUnregister:true,
-                    setValueAs : value =>{
-                      if(value != null){
-                        let dateInput = new Date(value)
-                      dateInput = dateInput.getUTCFullYear() + '-' +
-                      ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
-                      ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
-                      ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
-                      ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
-                      ('00' + dateInput.getUTCSeconds()).slice(-2);
+          <ModalAddReparation
+           openModalAdd={openModalAdd}
+           create={create}
+           errors={errors}
+           handleInputChange={handleInputChange}
+           activeInputSearch={activeInputSearch}
+           changeModal={changeModal}
+           newCustomerSelected={newCustomerSelected}
+           newCellphoneSelected={newCellphoneSelected}
+           newServiceSelected={newServiceSelected}
+           filteredCustomers={filteredCustomers}
+           filteredCellphones={filteredCellphones}
+           filteredServices={filteredServices}
+           addEmail={addEmail}
+           changeError={changeError}
+           closeForm={closeForm}
+           selectCustomerActive={selectCustomerActive}
+           selectCellphoneActive={selectCellphoneActive}
+           selectServiceActive={selectServiceActive}
+           checkBoxTrue={checkBoxTrue}
+           checkbox={checkbox}/>  
 
-                      return dateInput
-                      }else{
-                        return value
-                      } 
-                    } 
-                    })} />
-                </div>
-                <br/>
-                <div className="div-inputs">
-                  <label htmlFor="url">Cantidad de Notificaciones</label>
-                  <input className="form-control" type="text" name="phone_2" {...register('notice_quantity',{
-                    value:0,
-                    shouldUnregister:true,
-                    })} />
-                </div>
-                <br/>
-                <div className="div-inputs">
-                <label htmlFor="url">Fecha de entrega</label>
-                  <input className="form-control" type="date" name="phone_2" {...register('delivery_date',{
-                    value:  null,
-                    shouldUnregister:true,
-                    setValueAs : v =>{
-                      if(v != null){
-                        let dateInput = new Date(v)
-                      dateInput = dateInput.getUTCFullYear() + '-' +
-                      ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
-                      ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
-                      ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
-                      ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
-                      ('00' + dateInput.getUTCSeconds()).slice(-2);
+          <ModalAddCustomerIn
+           openModalAddCustomer={openModalAddCustomer}
+           addCustomerInReparation={addCustomerInReparation}
+           errorsApi={errorsApi}
+           changeErrorApi={changeErrorApi}
+           closeFormAdd={closeFormAdd}/>
 
-                      return dateInput
-                      }else{
-                        return v
-                      } 
-                    } 
-                    })} />
-                </div>
-                <div className="div-inputs">
-                  <label htmlFor="url">Fecha de inicio del servicio</label>
-                  <input className="form-control" type="date" name="phone_2" {...register('service_start_date',{
-                    value:  null,
-                    shouldUnregister:true,
-                    setValueAs : v =>{
-                      if(v != null){
-                        let dateInput = new Date(v)
-                      dateInput = dateInput.getUTCFullYear() + '-' +
-                      ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
-                      ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
-                      ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
-                      ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
-                      ('00' + dateInput.getUTCSeconds()).slice(-2);
+          <ModalAddCellphoneIn
+           openModalAddCellphone={openModalAddCellphone}
+           addCellphoneInReparation={addCellphoneInReparation}
+           errorsApi={errorsApi}
+           changeErrorApi={changeErrorApi}
+           closeFormAdd={closeFormAdd}
+           handleInputChange={handleInputChange}
+           activeInputSearch={activeInputSearch}
+           changeModal={changeModal}
+           selectBrandActive={selectBrandActive}
+           filteredBrands={filteredBrands}
+           newBrandSelected={newBrandSelected}
+           dataCellPhones={dataCellPhones}/>
 
-                      return dateInput
-                      }else{
-                        return v
-                      } 
-                    } 
-                    })} />
-                </div>
-                <br/>
-                <div className="div-inputs">
-                  <label htmlFor="url">Fecha de servicio terminado</label>
-                  <input className="form-control" type="date" name="phone_2" {...register('service_end_date',{
-                    value:  null,
-                    shouldUnregister:true,
-                    setValueAs : v =>{
-                      if(v != null){
-                        let dateInput = new Date(v)
-                      dateInput = dateInput.getUTCFullYear() + '-' +
-                      ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
-                      ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
-                      ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
-                      ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
-                      ('00' + dateInput.getUTCSeconds()).slice(-2);
+          <ModalAddBrandIn
+          openModalAddBrand={openModalAddBrand}
+          onSubmitBrand={onSubmitBrand}
+          errorsApi={errorsApi}
+          changeErrorApi={changeErrorApi}
+          closeFormAdd={closeFormAdd}/>
 
-                      return dateInput
-                      }else{
-                        return v
-                      } 
-                    } 
-                    })} />
-                </div>
-                <br/>
-                <div className="div-inputs">
-                  <label htmlFor="url">Imei</label>
-                  <input className="form-control" type="text" name="phone_2" {...register('imei',{
-                    value:null,
-                    shouldUnregister:true
-                    })} />
-                </div>
-                <br/>
-                <div className="div-inputs">
-                  <label htmlFor="check">Tiene seguridad</label>
-                  <input onClick={checkBoxTrue} type="checkbox" name="phone_2" {...register('has_security',{
-                    value:0,
-                    shouldUnregister:true
-                    })} />
-                  <br/>
-                  {
-                    (checkbox)
-                    ?
-                    <div>
-                      <br/>
-                      <label>Patron</label>
-                      <input className="form-control" type="text" name="phone_2" {...register('pattern',{
-                        value:null,
-                        shouldUnregister:true
-                        })} />
-                      <br/>
-                      <label>Pin</label>
-                      <input className="form-control" type="text" name="phone_2" {...register('pin',{
-                        value:null,
-                        shouldUnregister:true
-                        })} />  
-                    </div>
-                    :
-                    ""
-                  }  
-                </div>                                    
-                <hr />
-                <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="submit" className="btn btn-success"  >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
-                </div>
-              </form>
-            </ModalBody>
-          </Modal>  
+          <ModalAddServiceIn
+           openModalAddService={openModalAddService}
+           addServiceInReparation={addServiceInReparation}
+           errorsApi={errorsApi}
+           changeErrorApi={changeErrorApi}
+           closeFormAdd={closeFormAdd}
+           dataServices={dataServices}/>
 
-          <Modal isOpen={openModalAddCustomer}  >
-            <ModalHeader style={{display: 'block'}}>
-              <div>
-                <h5  style={{float: 'center', color: 'green'}} >Crear Cliente</h5> 
-              </div>
-            </ModalHeader>
-            <ModalBody className="contenedor-modal-body">
-              <form className="form-group" onSubmit={handleSubmit(addCustomerInReparation)} {...register('form')}>
-                <label htmlFor="marca">Nombre</label>
-                <input className={errorsApi.name ? "form-control error" : "form-control"} type="text" name="name"  {...register('name',{
-                  onChange: () => changeErrorApi("name"),
-                  value:null,
-                  shouldUnregister:true
-                  })} />
-                  {errorsApi.name? <p className="p-errores">{errorsApi.name}</p> : ""} 
-                <br />
-                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
-                <label htmlFor="url">Email</label>
-                <input className={errorsApi.email ? "form-control error" : "form-control"} type="text" id="email2"{...register('email',{
-                  onChange: (e) => changeErrorApi("email",e.target.value),
-                  shouldUnregister:true,
-                  value:null,
-                  shouldUnregister:true
-                  })} />
-                  {errorsApi.email? <p className="p-errores">{errorsApi.email}</p> : ""}
-                <br />
-                <label htmlFor="url">Numero de Telefono</label>
-                <input className={errorsApi.phone_number ? "form-control error" : "form-control"} type="text" name="phone" {...register('phone_number',{
-                  onChange: () => changeErrorApi("phone_number"),
-                  shouldUnregister:true,
-                  value:null
-                  })} />
-                  {errorsApi.phone_number? <p className="p-errores">{errorsApi.phone_number}</p> : ""}
-                <br />
-                <label htmlFor="url">Numero de telefono 2</label>
-                <input className="form-control" type="text" name="phone_2" {...register('phhone_number_2',{
-                  shouldUnregister:true,
-                  value:null
-                  })} />
-                <br />
-                <hr />
-                <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="button" className="btn btn-success" onClick={()=>addCustomerInReparation(getValues())} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={()=>closeFormAdd("customer")}>Cancelar</h1>
-                </div>
-              </form>
-            </ModalBody>
-          </Modal>
-
-          <Modal isOpen={openModalAddCellphone}>
-            <ModalHeader style={{display: 'block'}}>
-              <div>
-                <h5  style={{float: 'center', color: 'green'}} >Crear celular</h5> 
-              </div>
-            </ModalHeader>
-            <ModalBody className="contenedor-modal-body">
-              <form className="form-group" onSubmit={handleSubmit(addCellphoneInReparation)}>
-                <label htmlFor="id">Numero de Celular</label>
-                <input className="form-control" type="number" name="id" readOnly value={`${dataCellPhones.length+1}`}  />
-                <br/>
-                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("email")}></input>
-                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
-                <label htmlFor="modelo">Modelo</label>
-                <input className={errorsApi.model ? "form-control error" : "form-control"} type="text" name="modelo" {...register('model',{
-                  onChange: () => changeErrorApi("model"),
-                  value:null,
-                  shouldUnregister:true
-                  })}/>
-                  {errorsApi.model? <p className="p-errores">El campo Modelo debe ser completado</p> : ""}
-                <br />
-                <label htmlFor="url">Url</label>
-                <input className="form-control" type="text" name="url" {...register('url',{
-                  value:null,
-                  shouldUnregister:true
-                  })} />
-                <br/>
-                <label htmlFor="brnad_id">Marca</label>
-                <div className="div-container-select-button">
-                <input type="search" onChange={(e)=>handleInputChange(e,"brand")} placeholder="buscar.." className={selectBrandActive ? "input-search brand" : "input-search-none"}></input>
-                <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"brand")} className="icon-search" icon={faMagnifyingGlass} />
-                <select  className={errorsApi.brand_id ? "form-select error" : "form-select"} name="select" defaultValue={newBrandSelected.id ? newBrandSelected.id : ""}  {...register('brand_id',{
-                  onChange: () => changeErrorApi("brand_id"),
-                  shouldUnregister:true,
-                  })}>
-                    {
-                      newBrandSelected.id
-                      ?
-                      <option className="option-selected" value={newBrandSelected.id} >{newBrandSelected.title}</option>
-                      :
-                      <option className="option-selected">Seleccionar..</option>    
-                    }
-                  {filteredBrands.map((brand)=>{
-                      return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option>
-                  })}
-                </select>
-                <h1 className="h1-add" onClick={()=>changeModal("brand")}>+</h1>
-                </div>
-                  {errorsApi.brand_id? <p className="p-errores">Haga click en una marca</p> : ""}
-                <br/>  
-                <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="button" className="btn btn-success" onClick={()=>addCellphoneInReparation(getValues())} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={()=>closeFormAdd("cellphone",getValues())}>Cancelar</h1>
-                </div>
-              </form>
-            </ModalBody>
-          </Modal>
-
-          <Modal isOpen={openModalAddService}>
-            <ModalHeader style={{display: 'block'}}>
-              <div>
-                <h5  style={{float: 'center', color: 'green'}} >Crear Servicio</h5> 
-              </div>
-            </ModalHeader>
-            <ModalBody className="contenedor-modal-body">
-              <form className="form-group" onSubmit={handleSubmit(addServiceInReparation)}>
-                <label htmlFor="id">Numero de Servicio</label>
-                <input className="form-control" type="number" name="id" id="id" readOnly value={dataServices.length + 1} ></input>
-                <br />
-                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
-                <label htmlFor="marca">Descripcion</label>
-                <input className={errorsApi.description ? "form-control error" : "form-control"} type="text" name="marca"  {...register('description',{
-                  onChange: () => changeErrorApi("description"),
-                  value:null,
-                  shouldUnregister:true
-                  })} />
-                  {errorsApi.description? <p className="p-errores">El campo Descripcion debe ser completado</p> : ""} 
-                <br />
-                <label htmlFor="url">Numero de Telefono</label>
-                <input className="form-control" type="text" name="numero de telefono" {...register('phone_number',{
-                  shouldUnregister:true,
-                  value:null
-                  })} />
-                <br />
-                <label htmlFor="url">Direccion</label>
-                <input className="form-control" type="text" name="direccion" {...register('address',{
-                  value:null,
-                  shouldUnregister:true
-                  })} />
-                <br />
-                <label htmlFor="url">Email</label>
-                <input className="form-control" type="text" name="email" {...register('email',{
-                  shouldUnregister:true,
-                  value:null
-                  })} />
-                <br />
-                <hr />
-                <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="button" className="btn btn-success" onClick={()=>addServiceInReparation(getValues())} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={()=>closeFormAdd("service",getValues())}>Cancelar</h1>
-                </div>
-              </form>
-            </ModalBody>
-          </Modal>
-
-          <Modal isOpen={openModalAddBrand}>
-            <ModalHeader style={{display: 'block'}}>
-              <div>
-                <h5  style={{float: 'center', color: 'green'}} >Crear Marca</h5> 
-              </div>
-            </ModalHeader>
-            <ModalBody>
-              <form className="form-group" onSubmit={handleSubmit(onSubmitBrand)}>
-                <br />
-                <label htmlFor="marca">Marca</label>
-                <input className={errorsApi.title ? "form-control error" : "form-control"} type="text" name="marca"  {...register('title',{
-                  onChange: () => changeErrorApi("title"),
-                  shouldUnregister:true
-                })} />
-                  {errorsApi.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
-                <br />
-                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("email")}></input>
-                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
-                <label htmlFor="url">Descripcion</label>
-                <input className="form-control" type="text" name="url" {...register('description',{
-                  value:null,
-                  shouldUnregister:true
-                  })} />
-                <br />
-                <label htmlFor="url">Url</label>
-                <input className="form-control" type="text" name="url"  {...register('url',{
-                  value:null,
-                  shouldUnregister:true
-                  })} />
-                <br/>
-                <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="button" className="btn btn-success" onClick={()=>onSubmitBrand(getValues())} >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={()=>closeFormAdd("brand",getValues())}>Cancelar</h1>
-                </div>
-              </form>
-            </ModalBody>
-          </Modal>
         </>
     );
   }else if(window.location.href.includes("usuarios")){
 
     return(
-      <Modal isOpen={openModalAdd}>
-        <ModalHeader style={{display: 'block'}}>
-          <div>
-          <h5  className="h5-modal-add" >Crear Usuario</h5> 
-          </div>
-        </ModalHeader>
-        <ModalBody className="contenedor-modal-body">
-          <form className="form-group" onSubmit={handleSubmit(create)}>
-            <label htmlFor="marca">Nombre</label>
-            <input className={errors.name ? "form-control error" : "form-control"} type="text" name="name"  {...register('name',{
-              onChange: () => changeError("name"),
-              value:null,
-              shouldUnregister:true
-              })} />
-              {errors.name? <p className="p-errores">{errors.name}</p> : ""} 
-            <br />
-            <label htmlFor="url">Email</label>
-            <input className={errors.email ? "form-control error" : "form-control"} type="text" name="email" {...register('email',{
-              onChange: (e) => changeError("email",e.target.value),
-              value:null,
-              shouldUnregister:true
-              })} />
-              {errors.email? <p className="p-errores">{errors.email}</p> : ""}
-            <br />
-            <label htmlFor="url">Activo</label>
-            <input className="form-active"  type="checkbox" name="phone"  {...register('active',{
-              shouldUnregister:true
-              })} />
-            <br />
-            <br/>
-            <label htmlFor="rol">Rol</label>
-            <select  className={errors.rol_id ? "form-select  error" : "form-select brand"} defaultValue={null}  name="select"  {...register('rol_id',{
-                  onChange: () => changeError("rol_id"),
-                  shouldUnregister:true
-                  })}>
-                  <option value={null} className="option-selected">Seleccionar..</option>
-                  {dataRoles.map((rol)=>{
-                    return <option className="option-modal" key={rol.id} value={rol.id} >{rol.description}</option>                     
-                  })}
-            </select>
-            {errors.rol_id ? <p className="p-errores">El campo Rol debe ser seleccionado</p> : ""}
-            <br />
-            <div className="contenedor-boton-modal-dentro-reparations">
-                  <button type="submit" className="btn btn-success" >Crear</button>
-                  <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
-                </div>
-              </form>
-        </ModalBody>
-      </Modal>
+      <ModalAddUser
+      openModalAdd={openModalAdd}
+      create={create}
+      dataApi={dataApi}
+      errors={errors}
+      changeError={changeError}
+      closeForm={closeForm}
+      dataRoles={dataRoles}/>
     );
   }
   /*else if(window.location.href.includes("report")){

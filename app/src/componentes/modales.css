@@ -109,6 +109,10 @@
     margin-top: 15px;
 }
 
+.container-button-change-pass-none{
+    display: none;
+}
+
 
 
 .p-errores{

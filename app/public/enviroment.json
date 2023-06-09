@@ -25,7 +25,8 @@
         "reparationsCustomer": "reporte/reparaciones-por-cliente",
         "reparationsService": "reporte/reparaciones-por-servicio",
         "reparationsCellphone": "reporte/reparaciones-por-celular",
-        "users": "users"
+        "users": "users",
+        "recovery": "recovery-password/"
     },
     "selfUrl":{
         "main": "http://localhost:3000/",
