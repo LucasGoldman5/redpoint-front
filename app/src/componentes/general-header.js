@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faM,faMobileRetro,faBuilding,faUsers,faScrewdriverWrench, faCaretDown, faCaretUp, faCircleXmark, faHourglassHalf, faCheck, faUserGear } from '@fortawesome/free-solid-svg-icons';
 
 
-const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,dataCellphones,dataServices,arrowIcon,seeNavReport,enviroment,urlTable} ) =>{
+const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,dataCellphones,dataServices,dataManagers,arrowIcon,seeNavReport,enviroment,urlTable} ) =>{
 
   
 
@@ -17,14 +17,17 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
   const [liCellphoneHover, setLiCellphoneHover] = useState(false);
   const [liCustomerHover, setLiCustomerHover] = useState(false);
   const [liServiceHover, setLiServiceHover] = useState(false);
+  const [liManagerHover, setLiManagerHover] = useState(false);
   const [arrowBrand, setArrowBrand] = useState(true);
   const [arrowCellphone, setArrowCellphone] = useState(true);
   const [arrowCustomer, setArrowCustomer] = useState(true);
   const [arrowService, setArrowService] = useState(true);
+  const [arrowManager, setArrowManager] = useState(true);
   const [chainBrands, setChainBrands] = useState("");
   const [chainCellphones, setChainCellphones] = useState("");
   const [chainCustomers, setChainCustomers] = useState("");
   const [chainServices, setChainServices] = useState("");
+  const [chainManagers, setChainManagers] = useState("");
   const [dropdown, setDropdown] = useState(true);
   const [seeingPBrand, setSeeingPBrand] = useState(false);
   const [seeingPCellphone, setSeeingPCellphone] = useState(false);
@@ -121,6 +124,8 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
       setArrowCellphone(true);
       setArrowCustomer(true);
       setArrowService(true);
+      setArrowManager(true);
+      setLiManagerHover(false);
       setLiCellphoneHover(false);
       setLiCustomerHover(false);
       setLiServiceHover(false);
@@ -130,6 +135,8 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
         setArrowBrand(true);
         setArrowCustomer(true);
         setArrowService(true);
+        setArrowManager(true);
+        setLiManagerHover(false);
         setLiBrandHover(false);
         setLiCustomerHover(false);
         setLiServiceHover(false);
@@ -139,6 +146,8 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
         setArrowBrand(true);
         setArrowCellphone(true);
         setArrowService(true);
+        setArrowManager(true);
+        setLiManagerHover(false);
         setLiBrandHover(false);
         setLiCellphoneHover(false);
         setLiServiceHover(false);
@@ -148,10 +157,24 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
         setArrowBrand(true);
         setArrowCustomer(true);
         setArrowCellphone(true);
+        setArrowManager(true);
+        setLiManagerHover(false);
         setLiBrandHover(false);
         setLiCustomerHover(false);
         setLiCellphoneHover(false);
     }
+    else if( e === "manager"){
+      setArrowManager(!arrowManager);
+      setLiManagerHover(!liManagerHover);
+      setArrowBrand(true);
+      setArrowCustomer(true);
+      setArrowCellphone(true);
+      setArrowService(true);
+      setLiServiceHover(false);
+      setLiBrandHover(false);
+      setLiCustomerHover(false);
+      setLiCellphoneHover(false);
+  }
   };
 
   const closeGridFilter = (e) =>{
@@ -167,6 +190,9 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
     }else if(e === "service"){
         setArrowService(!arrowService);
         setLiServiceHover(!liServiceHover);  
+    }else if(e === "manager"){
+      setArrowManager(!arrowManager);
+      setLiManagerHover(!liManagerHover);  
     };
   };
 
@@ -238,6 +264,23 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
   
     return filteredDataServices;
   };
+
+  const dataManagersFilter = (e) => {
+    let filteredDataManagers = dataManagers;
+  
+    if (e) {
+      setChainManagers(e.target.value.toUpperCase());
+    }
+  
+    if (chainManagers.length >= 1) {
+      filteredDataManagers = filteredDataManagers.filter((manager) =>
+        manager.name.toUpperCase().includes(chainManagers)
+      );
+    }
+  
+    return filteredDataManagers;
+  };
+
   const ent = enviroment.selfUrl.localEntities;  
 
   if(enviroment.selfUrl){
@@ -391,6 +434,30 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
                             })
                             :
                             <p>Cargando Servicios...</p>
+                          }
+                      </div>
+                </div>
+                <div className="div-li-hover">
+                  <li onMouseEnter={() => mouseOverLi("manager")} className={(window.location.href.includes("por-manager")) ? "li-nav-report" : "li-nav-report-none"}>Manager <FontAwesomeIcon icon={arrowManager ? faCaretDown : faCaretUp} /></li>
+                  </div>
+                <div className={liManagerHover ? "container-reparations-filter" : "container-reparations-filter-none"}>
+                  <div className="header-nav-reparations">
+                          <div className="div-input-search">
+                            <input className="search-reparations-input" type="search" placeholder="buscar..." onChange={(e) => dataManagersFilter(e)}></input>
+                          </div>
+                          <div className="div-x">
+                            <FontAwesomeIcon onClick={() => closeGridFilter("manager")} icon={faCircleXmark}/>
+                          </div>
+                      </div>
+                      <div className="div-container-map-filter">
+                          {
+                            (dataManagersFilter().length > 0) ? dataManagersFilter().map((manager)=>{
+                                return(
+                                <Link className="p-entity-filter" key={manager.id} onClick={() => changeUrl(`${enviroment.entities.reparationsManager}`,manager.id)} to={`${enviroment.selfUrl.dataTable}${enviroment.entities.reparationsManager}/${manager.id}`}>{manager.name}</Link>
+                                )
+                            })
+                            :
+                            <p>Cargando Managers...</p>
                           }
                       </div>
                 </div>

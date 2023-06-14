@@ -16,6 +16,7 @@
         "brands": "brands",
         "customers": "customers",
         "services": "services",
+        "managers": "managers",
         "roles": "roles",
         "status": "status",
         "reparations": "reparations",
@@ -24,6 +25,7 @@
         "reparationsBrand": "reporte/reparaciones-por-marca",
         "reparationsCustomer": "reporte/reparaciones-por-cliente",
         "reparationsService": "reporte/reparaciones-por-servicio",
+        "reparationsManager": "reporte/reparaciones-por-manager",
         "reparationsCellphone": "reporte/reparaciones-por-celular",
         "users": "users",
         "recovery": "recovery-password/"
@@ -50,6 +52,7 @@
             "report/reparations-by-customer/": "reporte/reparaciones-por-cliente",
             "report/reparations-by-service/": "reporte/reparaciones-por-servicio",
             "report/reparations-by-cellphone/": "reporte/reparaciones-por-celular",
+            "report/reparations-by-manager/": "reporte/reparaciones-por-manager",
             "users":"usuarios"
         }
     }

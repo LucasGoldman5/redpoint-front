@@ -18,10 +18,10 @@ const ModalAddService = ({openModalAdd, create, errors, changeError, dataApi, cl
         </ModalHeader>
         <ModalBody className="contenedor-modal-body">
           <form className="form-group" onSubmit={handleSubmit(create)}>
-            <label htmlFor="id">Numero de Servicio</label>
+            <label >Numero de Servicio</label>
             <input className="form-control" type="number" name="id" id="id" readOnly value={dataApi.data.length + 1} ></input>
             <br />
-            <label htmlFor="marca">Nombre del Servicio</label>
+            <label >Nombre del Servicio</label>
             <input className={errors.description ? "form-control error" : "form-control"} type="text" name="marca"  {...register('description',{
               value:null,
               shouldUnregister:true,
@@ -29,20 +29,20 @@ const ModalAddService = ({openModalAdd, create, errors, changeError, dataApi, cl
               })} />
               {errors.description? <p className="p-errores">El campo Descripcion debe ser completado</p> : ""} 
             <br />
-            <label htmlFor="url">Numero de Telefono</label>
+            <label >Numero de Telefono</label>
             <input className={errors.phone_number ? "form-control error" : "form-control"} type="text" name="numero de telefono" {...register('phone_number',{
               value:null,
               shouldUnregister:true,
               })} />
               {errors.phone_number? <p className="p-errores">El campo Numero de telefono debe ser completado</p> : ""}
             <br />
-            <label htmlFor="url">Direccion</label>
+            <label >Direccion</label>
             <input className="form-control" type="text" name="direccion" {...register('address',{
               value:null,
               shouldUnregister:true,
               })} />
             <br />
-            <label htmlFor="url">Email</label>
+            <label >Email</label>
             <input className="form-control" type="text" name="email" {...register('email',{
               value:null,
               shouldUnregister:true,

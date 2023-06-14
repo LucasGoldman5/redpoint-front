@@ -4,6 +4,7 @@ import './page404.css'
 const Error404 = ({entitiNotFound}) =>{
 
 
+
     return(
         <>
           <div className="body-container-page404">

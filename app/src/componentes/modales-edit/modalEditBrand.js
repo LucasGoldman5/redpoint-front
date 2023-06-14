@@ -18,21 +18,21 @@ const ModalEditBrand = ({openModalEdit, onsubmit, itemToEdit, changeError, error
         </ModalHeader>
         <ModalBody>
           <form className="form-group" onSubmit={handleSubmit(onsubmit)}>
-            <label htmlFor="id">Numero identificador</label>
+            <label >Numero identificador</label>
             <input className="form-control" type="number" name="id" id="id" readOnly  defaultValue={itemToEdit ? itemToEdit.id : ''} {...register('id',{ shouldUnregister: true})} />
             <input  style={{ visibility: 'hidden', position: 'absolute' }} defaultValue={itemToEdit ? itemToEdit.created_at : ""} {...register("created_at")}></input>
             <br />
-            <label htmlFor="marca">Marca</label>
+            <label >Marca</label>
             <input className={errors.title ? "form-control error" : "form-control"} type="text" name="marca" id="marca"  defaultValue={itemToEdit ? itemToEdit.title : ''}{...register('title',{
                shouldUnregister: true,
                onChange: () => changeError("title"),
                })}/>
               {errors.title? <p className="p-errores">El campo Marca debe ser definido</p> : ""}
             <br />
-            <label htmlFor="descripcion">Descripcion</label>
+            <label >Descripcion</label>
             <input className="form-control" type="text" name="descripcion" id="descripcion"  defaultValue={itemToEdit ? itemToEdit.description : ''}{...register('description',{shouldUnregister: true})}/>
             <br />
-            <label htmlFor="url">Url</label>
+            <label >Url</label>
             <input className="form-control" type="text" name="url" id="url"  defaultValue={itemToEdit ? itemToEdit.url : ''}{...register('url',{ shouldUnregister: true,})} />
             <br />
             <div className="contenedor-boton-modal-dentro">

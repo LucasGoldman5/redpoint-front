@@ -52,7 +52,7 @@ const ModalEditUser = ({openModalEdit, onsubmit, itemToEdit, changeError, errors
               <form className="form-group" onSubmit={handleSubmit(onsubmit)}>
                 <input style={{ visibility: 'hidden', position: 'absolute' }} type="text" readOnly name="id" defaultValue={itemToEdit ? itemToEdit.id : ""} {...register('id',{ shouldUnregister: true,})} />
                 <input style={{ visibility: 'hidden', position: 'absolute' }} type="text" readOnly name="last_connection" defaultValue={itemToEdit ? itemToEdit.last_connection : null} {...register('last_connection',{ shouldUnregister: true,})} />
-                <label htmlFor="descripcion">Nombre</label>
+                <label >Nombre</label>
                 <input className={errors.name ? "form-control error" : "form-control"} type="text" name="name" id="name"  defaultValue={itemToEdit ? itemToEdit.name : ''} {...register('name',{
                   shouldUnregister: true,
                   onChange: () => changeError("name"),
@@ -78,27 +78,27 @@ const ModalEditUser = ({openModalEdit, onsubmit, itemToEdit, changeError, errors
                   :
                   ""
                 }
-                <label htmlFor="number">Email</label>
+                <label >Email</label>
                 <input className={errors.email ? "form-control error" : "form-control"} type="text" name="email" id="email"  defaultValue={itemToEdit ? itemToEdit.email : ''}{...register('email',{
                   shouldUnregister: true,
                   onChange: (e) => changeError("email",e.target.value),
                   })} />
                   {errors.email? <p className="p-errores">{errors.email}</p> : ""}
                 <br />
-                <label htmlFor="direccion">Numero de Telefono</label>
+                <label >Numero de Telefono</label>
                 <input className={errors.phone_number ? "form-control error" : "form-control"} type="text" name="phone" id="phone"  defaultValue={itemToEdit ? itemToEdit.phone_number : ''}{...register('phone_number',{ 
                   shouldUnregister: true,
                   onChange: () => changeError("phone_number"),
                   })} />
                 {errors.phone_number? <p className="p-errores">{errors.phone_number}</p> : ""}
                 <br />
-                <label htmlFor="descripcion">Activo:</label>
+                <label >Activo:</label>
                 <input className="input-check" type="checkbox"   defaultChecked={itemToEdit ? itemToEdit.active : false} {...register('active',{
                   shouldUnregister: true,
                   })} />
                 <br />
                 <br/>
-                <label htmlFor="rol">Rol</label>
+                <label >Rol</label>
                 <select  className={errors.rol_id ? "form-select  error" : "form-select brand"} defaultValue={itemToEdit ? itemToEdit.rol_id.id : ""}  name="select"  {...register('rol_id',{
                       onChange: () => changeError("rol_id"),
                       })}>

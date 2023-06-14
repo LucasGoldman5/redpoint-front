@@ -181,6 +181,7 @@
     max-height: 185px;
     margin-top: 50px;
     border-radius: 7px;
+    z-index: 20;
     display: flex;
     box-shadow: 5px 5px 5px 5px rgb(119, 66, 66);
     flex-direction: column;
@@ -231,6 +232,7 @@
     display: grid;
     text-align: center;
     grid-template-columns: repeat(4, 1fr);
+    z-index: 20;
 }
 
 .p-entity-filter{

@@ -28,16 +28,16 @@ const ModalEditCellphone = ({openModalEdit, onsubmit, itemToEdit, changeError, c
             <form className="form-group" onSubmit={handleSubmit(onsubmit)}>
               <input className="form-control" type="text"  id="modelo" readOnly defaultValue={itemToEdit ? itemToEdit.id : ''} {...register('id',{ shouldUnregister: true,})} />
               <br/>
-              <label htmlFor="marca">Modelo</label>
+              <label >Modelo</label>
               <input className={errors.model ? "form-control error" : "form-control"} type="text" name="modelo" id="modelo"  defaultValue={itemToEdit ? itemToEdit.model : ''} {...register('model',{
                  onChange: () => changeError("model"),
                  })} />
                 {errors.model? <p className="p-errores">El campo Modelo debe ser definido</p> : ""}
               <br />
-              <label htmlFor="url">Url</label>
+              <label >Url</label>
               <input className="form-control" type="text"   defaultValue={itemToEdit ? itemToEdit.url : ''}{...register('url')} />
               <br />
-              <label htmlFor="url">Marca</label>
+              <label >Marca</label>
               <div className="div-container-select-button">
               <input type="search" onChange={(e)=>handleInputChange(e,"brand")} placeholder="buscar.." className={selectBrandActive ? "input-search brand" : "input-search-none"}></input>
               <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"brand")} className="icon-search" icon={faMagnifyingGlass} />

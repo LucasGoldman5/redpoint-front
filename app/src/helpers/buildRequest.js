@@ -1,3 +1,5 @@
+import NotAuthorized from "../componentes/pageNotAuthorized";
+
 /* global HelperBuildRequest */
 export default async function  HelperBuildRequest ( method, data = {}, type = null ) {
 
@@ -47,6 +49,27 @@ export default async function  HelperBuildRequest ( method, data = {}, type = nu
             }
         };
 
+        try {
+            const response = await fetch('http://localhost:8000/api/refresh', config);
+            if(response.status === 200){
+              const datos = await response.json();
+            localStorage.setItem('user', JSON.stringify(datos));
+            return buildCallServer(method, data, type);  
+            }else if(response.status === 401){
+                console.log("fallo");
+                localStorage.removeItem('user');
+                localStorage.removeItem('column');
+                window.location.reload()
+                setTimeout(()=>{
+                    console.log("fallo 2");
+                    
+                },1500)
+            }
+          } catch (error) {
+            console.error('Error en la solicitud:', error);
+            // Manejar el error según sea necesario
+            return <NotAuthorized/>; // O cualquier otro valor que desees devolver en caso de error
+          }
         await fetch(`http://localhost:8000/api/refresh`, config)
           .then( res  => res.json())
           .then( datos =>{           

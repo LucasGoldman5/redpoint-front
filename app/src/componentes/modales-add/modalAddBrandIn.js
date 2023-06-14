@@ -20,20 +20,20 @@ const ModalAddBrandIn = ({openModalAddBrand, onSubmitBrand, errorsApi, changeErr
                 <ModalBody className="contenedor-modal-body">
                 <form className="form-group" onSubmit={handleSubmit(onSubmitBrand)}>
                     <br />
-                    <label htmlFor="marca">Marca</label>
+                    <label >Marca</label>
                     <input className={errorsApi.title ? "form-control error" : "form-control"} type="text" name="marca"  {...register('title',{
                     onChange: () => changeErrorApi("title"),
                     shouldUnregister:true,
                     })} />
                     {errorsApi.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
                     <br />
-                    <label htmlFor="url">Descripcion</label>
+                    <label >Descripcion</label>
                     <input className="form-control" type="text" name="url" {...register('description',{
                     value:null,
                     shouldUnregister:true,
                     })} />
                     <br />
-                    <label htmlFor="url">Url</label>
+                    <label >Url</label>
                     <input className="form-control" type="text" name="url"  {...register('url',{
                     value:null,
                     shouldUnregister:true,

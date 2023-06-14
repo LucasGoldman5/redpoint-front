@@ -26,22 +26,22 @@ const ModalAddCellphone = ({openModalAdd, create, errors, changeError, dataApi, 
             </ModalHeader>
             <ModalBody className="contenedor-modal-body">
               <form className="form-group" onSubmit={handleSubmit(create)}>
-                <label htmlFor="id">Numero de Marca</label>
+                <label >Numero de Marca</label>
                 <input className="form-control" type="number" name="id" readOnly value={`${dataApi.data.length+1}`}  />
                 <br/>
-                <label htmlFor="modelo">Modelo</label>
+                <label >Modelo</label>
                 <input className={errors.model ? "form-control error" : "form-control"} type="text" name="modelo" {...register('model',{
                   onChange: () => changeError("model"),
                   value:null,
                   })}/>
                   {errors.model? <p className="p-errores">El campo Modelo debe ser completado</p> : ""}
                 <br />
-                <label htmlFor="url">Url</label>
+                <label >Url</label>
                 <input className="form-control" type="text" name="url" {...register('url',{
                   value:null,
                   })} />
                 <br/>
-                <label htmlFor="brnad_id">Marca</label>
+                <label >Marca</label>
                 <div className="div-container-select-button">
                 <input type="search" onChange={(e)=>handleInputChange(e,"brand")} placeholder="buscar.." className={selectBrandActive ? "input-search brand" : "input-search-none"}></input>
                 <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"brand")} className="icon-search" icon={faMagnifyingGlass} />

@@ -15,7 +15,7 @@ import './modales.css'
 import HelperBuildRequest from "../helpers/buildRequest";
 
 
-const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,dataBrandsApp,dataCellphonesApp,dataCustomersApp,dataServicesApp,dataRolesApp,dataStatusApp,resetSelectBox, urlTable}) =>{
+const ModalAdd =({closeModal, create,dataApi,errorsInTable,openModal,closeForm,enviroment,dataBrandsApp,dataCellphonesApp,dataCustomersApp,dataServicesApp,dataRolesApp,dataStatusApp,resetSelectBox, urlTable}) =>{
   
   const [errorsApi, setErrorsApi] = useState([]);
   const [errors, setErrors] = useState([]);
@@ -42,6 +42,8 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
   const [filterCellphoneValue, setFilterCellphoneValue] = useState('');
   const [filterServiceValue, setFilterServiceValue] = useState('');
   const [filterBrandValue, setFilterBrandValue] = useState('');
+  const [ifChangeModal, setIfchangeModal] = useState(false);
+  const [count, setCount] = useState(0);
   const location = window.location.href;
  
   useEffect(() =>{
@@ -74,28 +76,77 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
       if(location === `${enviroment.selfUrl.main}${table}${entities.cellphones}`){
         setOpenModalAddBrand(true);
         setOpenModalAdd(false);
+        setIfchangeModal(true);
       }else{
         setOpenModalAddBrand(true);
         setOpenModalAddCellphone(false);
+        setIfchangeModal(true);
       }
 
     }else if(fact === "customer"){  
       setOpenModalAddCustomer(true)
       setOpenModalAdd(false);
+      setIfchangeModal(true);
     }else if(fact === "cellphone"){
       setOpenModalAddCellphone(true);
       setOpenModalAdd(false);
+      setIfchangeModal(true);
     }else if(fact === "service"){
       setOpenModalAddService(true);
       setOpenModalAdd(false);
+      setIfchangeModal(true);
     }
   };
 
+  const handleKeyUp = (event) => {
+    if (event.key === "Escape") {
+      if(openModalAddCustomer === true){
+        setOpenModalAddCustomer(false);
+        setOpenModalAdd(true);
+        setCount(1)
+      }else if(openModalAddCellphone === true){         
+          setOpenModalAddCellphone(false)
+          setOpenModalAdd(true)
+          setCount(1) 
+      }else if(openModalAddService === true){
+        setOpenModalAddService(false)
+        setOpenModalAdd(true)
+        setCount(1)
+      }else if(openModalAddBrand === true ){
+        if(window.location.href.includes("reparaciones")){
+          setOpenModalAddBrand(false);
+          setOpenModalAddCellphone(true);
+          setOpenModalAdd(false);
+        }else{
+          setOpenModalAddBrand(false);
+          setOpenModalAdd(true);
+        } 
+      }else{
+          setOpenModalAdd(false)
+          closeModal()
+          setIfchangeModal(false);
+          setCheckBox(false);
+      }
+      // Realizar la lógica deseada cuando se presiona la tecla Escape
+      
+    }
+};
+
+useEffect(() => {
+  
+  if (openModalAddCustomer === true || openModalAddCellphone === true || openModalAddService === true || openModalAddBrand === true || openModalAdd === true ) {
+    document.addEventListener('keyup', handleKeyUp);
+  } else if (openModalAdd === false && count === 0){
+    document.removeEventListener('keyup', handleKeyUp);
+    setIfchangeModal(false);
+    closeModal(count)
+  }
+  
+}, [openModalAddCellphone, openModalAddCustomer, openModalAddService, openModalAddBrand, openModalAdd]);
 
   const closeFormAdd = (entity) =>{
    
     if(entity === "brand"){
-
       if(window.location.href.includes("reparaciones")){
         setOpenModalAddBrand(false);
         setOpenModalAddCellphone(true);
@@ -103,7 +154,6 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
         setOpenModalAddBrand(false);
         setOpenModalAdd(true);
       } 
-
     }else if(entity === "customer"){
       setOpenModalAddCustomer(false);
       setOpenModalAdd(true);
@@ -536,7 +586,8 @@ const ModalAdd =({create,dataApi,errorsInTable,openModal,closeForm,enviroment,da
            selectCellphoneActive={selectCellphoneActive}
            selectServiceActive={selectServiceActive}
            checkBoxTrue={checkBoxTrue}
-           checkbox={checkbox}/>  
+           checkbox={checkbox}
+           ifChangeModal={ifChangeModal}/>  
 
           <ModalAddCustomerIn
            openModalAddCustomer={openModalAddCustomer}

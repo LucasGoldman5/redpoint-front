@@ -19,15 +19,14 @@ const ModalEditBrandIn = ({openModalAddBrandEdit, onSubmitBrand, changeErrorApi,
         <ModalBody className="contenedor-modal-body">
           <form className="form-group" onSubmit={handleSubmit(onSubmitBrand)}>
             <br />
-            <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("model")}></input>
-            <label htmlFor="marca">Marca</label>
+            <label >Marca</label>
             <input className={errorsApi.title ? "form-control error" : "form-control"} type="text" name="marca"  {...register('title',{
               shouldUnregister:true,
               onChange: () => changeErrorApi("title"),
             })} />
               {errorsApi.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
             <br />
-            <label htmlFor="url">Descripcion</label>
+            <label >Descripcion</label>
             <input className="form-control" type="text" name="url" {...register('description',{
               value:null
               })} />

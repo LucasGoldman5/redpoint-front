@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 
 const ModalEditService = ({openModalEdit, onsubmit, itemToEdit, changeError, errors, edit, closeForm}) =>{
 
-
     const { register, handleSubmit} = useForm ();
 
     return(
@@ -20,14 +19,14 @@ const ModalEditService = ({openModalEdit, onsubmit, itemToEdit, changeError, err
           <form className="form-group" onSubmit={handleSubmit(onsubmit)}>
             <input className="form-control" type="text" readOnly name="id" defaultValue={itemToEdit ? itemToEdit.id : ""} {...register('id',{ shouldUnregister: true,})} />
             <br/>
-            <label htmlFor="descripcion">Nombre del Servicio</label>
+            <label >Nombre del Servicio</label>
             <input className={errors.description ? "form-control error" : "form-control"} type="text" name="modelo" id="modelo"  defaultValue={itemToEdit ? itemToEdit.description : ''} {...register('description',{
                shouldUnregister: true,
                onChange: () => changeError("description"),
                })} />
               {errors.description? <p className="p-errores">{errors.description}</p>: ""}
             <br />
-            <label htmlFor="number">Numero de Telefono</label>
+            <label >Numero de Telefono</label>
             <input className={errors.phone_number ? "form-control error" : "form-control"} type="text" name="number" id="number"  defaultValue={itemToEdit ? itemToEdit.phone_number : ''}{...register('phone_number',{
                shouldUnregister: true,
                onChange: () => changeError("phone_number"),
@@ -37,7 +36,7 @@ const ModalEditService = ({openModalEdit, onsubmit, itemToEdit, changeError, err
             <label htmlFor="direccion">Direccion</label>
             <input className="form-control" type="text" name="direccion" id="direccion"  defaultValue={itemToEdit ? itemToEdit.address : ''}{...register('address',{ shouldUnregister: true,})} />
             <br />
-            <label htmlFor="Email">Email</label>
+            <label >Email</label>
             <input className={errors.email ? "form-control error" : "form-control"} type="text" name="email" id="email"  defaultValue={itemToEdit ? itemToEdit.email : ''}{...register('email',{ 
               shouldUnregister: true,
               onChange: (e) => changeError("email",e.target.value),

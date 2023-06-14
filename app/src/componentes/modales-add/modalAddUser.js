@@ -18,7 +18,7 @@ const ModalAddUser = ({openModalAdd, create, errors, changeError, closeForm, dat
         </ModalHeader>
         <ModalBody className="contenedor-modal-body">
           <form className="form-group" onSubmit={handleSubmit(create)}>
-            <label htmlFor="marca">Nombre</label>
+            <label >Nombre</label>
             <input className={errors.name ? "form-control error" : "form-control"} type="text" name="name"  {...register('name',{
               onChange: () => changeError("name"),
               value:null,
@@ -26,7 +26,7 @@ const ModalAddUser = ({openModalAdd, create, errors, changeError, closeForm, dat
               })} />
               {errors.name? <p className="p-errores">{errors.name}</p> : ""} 
             <br />
-            <label htmlFor="url">Email</label>
+            <label >Email</label>
             <input className={errors.email ? "form-control error" : "form-control"} type="text" name="email" {...register('email',{
               onChange: (e) => changeError("email",e.target.value),
               value:null,
@@ -34,13 +34,13 @@ const ModalAddUser = ({openModalAdd, create, errors, changeError, closeForm, dat
               })} />
               {errors.email? <p className="p-errores">{errors.email}</p> : ""}
             <br />
-            <label htmlFor="url">Activo</label>
+            <label >Activo</label>
             <input className="form-active"  type="checkbox" name="phone"  {...register('active',{
               shouldUnregister:true
               })} />
             <br />
             <br/>
-            <label htmlFor="rol">Rol</label>
+            <label >Rol</label>
             <select  className={errors.rol_id ? "form-select  error" : "form-select brand"} defaultValue={null}  name="select"  {...register('rol_id',{
                   onChange: () => changeError("rol_id"),
                   shouldUnregister:true

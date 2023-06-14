@@ -18,31 +18,34 @@ const ModalEditCustomerIn = ({openModalAddCustomerEdit, addCustomerInReparationE
             </ModalHeader>
             <ModalBody className="contenedor-modal-body">
               <form className={errorsApi.name ? "form-control error" : "form-control"} onSubmit={handleSubmit(addCustomerInReparationEdit)} {...register('form')}>
-                <label htmlFor="marca">Nombre</label>
+                <label >Nombre</label>
                 <input className="form-control" type="text" name="name"  {...register('name',{
                   value:null,
+                  shouldUnregister:true,
                   onChange: () => changeErrorApi("name"),
                   })} />
                   {errorsApi.name? <p className="p-errores">{errorsApi.name}</p> : ""} 
                 <br />
-                <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
-                <label htmlFor="url">Email</label>
+                <label >Email</label>
                 <input className={errorsApi.email ? "form-control error" : "form-control"} type="text" name="email" {...register('email',{
                   value:null,
+                  shouldUnregister:true,
                   onChange: (e) => changeErrorApi("email",e.target.value),
                   })} />
                   {errorsApi.email? <p className="p-errores">{errorsApi.email}</p> : ""}
                 <br />
-                <label htmlFor="url">Numero de Telefono</label>
+                <label >Numero de Telefono</label>
                 <input className={errorsApi.phone_number ? "form-control error" : "form-control"} type="text" name="phone" {...register('phone_number',{
                   value:null,
+                  shouldUnregister:true,
                   onChange: () => changeErrorApi("phone_number"),
                   })} />
                   {errorsApi.phone_number? <p className="p-errores">{errorsApi.phone_number}</p> : ""}
                 <br />
-                <label htmlFor="url">Numero de telefono 2</label>
+                <label >Numero de telefono 2</label>
                 <input className="form-control" type="text" name="phone_2" {...register('phhone_number_2',{
-                  value:null
+                  value:null,
+                  shouldUnregister:true,
                   })} />
                 <br />
                 <hr />

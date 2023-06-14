@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "../modales.css";
 import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
 import { useForm } from "react-hook-form";
@@ -6,38 +6,69 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
 
 
-const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleInputChange, activeInputSearch, newCustomerSelected, newCellphoneSelected, newServiceSelected, filteredCellphones, filteredCustomers, filteredServices, closeForm, changeModal, addEmail, selectCellphoneActive, selectCustomerActive, selectServiceActive, checkbox, checkBoxTrue}) =>{
+const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleInputChange, activeInputSearch, newCustomerSelected, newCellphoneSelected, newServiceSelected, filteredCellphones, filteredCustomers, filteredServices, closeForm, changeModal, addEmail, selectCellphoneActive, selectCustomerActive, selectServiceActive, checkbox, checkBoxTrue, ifChangeModal}) =>{
+
+
+  const [selectCustomer, setSelectCustomer] = useState({})
+  const [selectCellphone, setSelectCellphone] = useState({})
+  const [selectService, setSelectService] = useState({})
 
 
     const changueValue = () =>{
-        console.log("hola");
         if(newCustomerSelected.id){
             setValue("customer_id",newCustomerSelected.id)
             setValue("number",newCustomerSelected.phone_number)
             setValue("email",newCustomerSelected.email)
+        }else{
+          if(selectCustomer.id && ifChangeModal === true){
+            setValue("customer_id",selectCustomer.id)
+            setValue("number",selectCustomer.phone)
+            setValue("email",selectCustomer.email)
+          }
         }
 
         if(newCellphoneSelected.id){
             setValue("cellphone_id",newCellphoneSelected.id)
+        }else if(selectCellphone.id && ifChangeModal === true){
+          setValue("cellphone_id",selectCellphone.id)
         }else{
             setValue("cellphone_id","Seleccionar..")
         }
 
         if(newServiceSelected.id){
             setValue("service_id",newServiceSelected.id)
+        }else if(selectService.id && ifChangeModal === true){
+          setValue("service_id",selectService.id)
         }else{
             setValue("service_id","Seleccionar..")
         }
     }
 
-    const addValues = (customerId) =>{
+    const addValues = (id,entity) =>{
 
-        filteredCustomers.map((customer) =>{
-            if(customer.id == customerId){
+        if(entity == "customer"){
+          filteredCustomers.map((customer) =>{
+            if(customer.id == id){
                setValue("email", customer.email);
                setValue("number", customer.phone);
+               setSelectCustomer(customer);
             };
           });
+        }
+        if(entity == "cellphone"){
+          filteredCellphones.map((cellphone) =>{
+            if(cellphone.id == id){
+               setSelectCellphone(cellphone);
+            };
+          });
+        }
+        if(entity == "service"){
+          filteredServices.map((service) =>{
+            if(service.id == id){
+               setSelectService(service);
+            };
+          });
+        }
     }
 
     
@@ -54,14 +85,15 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
         <ModalBody className="contenedor-modal-body">
           <form className="form-group reparations" onSubmit={handleSubmit(create)}>
             <div className="div-inputs">
-              <label htmlFor="marca">Cliente</label>
+              <label >Cliente</label>
               <div className="div-container-select-button">
                 <input  type="search" onChange={(e)=>handleInputChange(e,"customer")} placeholder="buscar.." className={selectCustomerActive ? "input-search" : "input-search-none"}></input>
                 <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"customer")} className="icon-search" icon={faMagnifyingGlass} />
                 <select  className={errors.customer_id ? "form-select error" : "form-select"} name="select" defaultValue={newCustomerSelected.id ? newCustomerSelected.id : ""} {...register('customer_id',{
+                  shouldUnregister: ifChangeModal ? false : true,
                   onChange: (e) => {
                     addEmail(e.target.value,"customer");
-                    addValues(e.target.value)
+                    addValues(e.target.value, "customer")
                   },
                       })}>
                       {
@@ -79,27 +111,31 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
               </div> 
               {errors.customer_id ? <p className="p-errores">Debe seleccionar un Cliente</p> : ""}
             </div>
-            <br />
             <div className="div-inputs">
-              <label htmlFor="url">Numero de contacto</label>
+              <label >Numero de contacto</label>
               <input className="form-control" type="text" name="contact-number" {...register('number',{
-                value:null
+                shouldUnregister: ifChangeModal ? false : true,
+                value:null,
                 })} />
             </div>
-            <br />
             <div className="div-inputs">
-              <label htmlFor="url">Email</label>
+              <label >Email</label>
               <input className="form-control" type="text" defaultValue={""}{...register('email',{
+                shouldUnregister: ifChangeModal ? false : true,
                 })} />
             </div>
-            <br />
+            
             <div className="div-inputs">
-              <label htmlFor="url">Celular</label>
+              <label >Celular</label>
               <div className="div-container-select-button">
               <input type="search" onChange={(e)=>handleInputChange(e,"cellphone")} placeholder="buscar.." className={selectCellphoneActive ? "input-search" : "input-search-none"}></input>
               <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"cellphone")} className="icon-search" icon={faMagnifyingGlass} />
                 <select  className={errors.cellphone_id ? "form-select error" : "form-select"} name="select"  defaultValue={newCellphoneSelected.id ? newCellphoneSelected.id : ""} {...register('cellphone_id',{
-                  onChange: () => changeError("cellphone"),
+                  onChange: (e) => {
+                    changeError("cellphone")
+                    addValues(e.target.value, "cellphone")
+                  },
+                  shouldUnregister: ifChangeModal ? false : true,
                     })}>
                       {
                       newCellphoneSelected.id
@@ -116,37 +152,43 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
               </div>
               {errors.cellphone_id ? <p className="p-errores">Debe seleccionar un celular</p> : ""}
             </div>
-            <br />
+            
             <div className="div-inputs">
-              <label htmlFor="url">Falla</label>
+              <label >Falla</label>
               <textarea className="form-control"  name="phone_2" {...register('failure',{
+                shouldUnregister: ifChangeModal ? false : true,
                 value:null,
                 })} />
             </div>
-            <br />
+            
             <div className="div-inputs">
-              <label htmlFor="url">Observacion</label>
+              <label >Observacion</label>
               <textarea className="form-control" type="text" name="phone_2" {...register('observation',{
+                shouldUnregister: ifChangeModal ? false : true,
                 value:null,
                 })} />
             </div>
-            <br/>
+            
             <div className="div-inputs">
-              <label htmlFor="url">Estado de la reparacion</label>
+              <label >Estado de la reparacion</label>
               <select className="form-select" type="text" name="phone_2" {...register('state_id',{
                 value:1,  
                 })}>
-                <option value={1}>Recibido</option>
+                <option className="option-modal" value={1}>Recibido</option>
               </select>
             </div>
-            <br/>
+            
             <div className="div-inputs">
-              <label htmlFor="url">Servicio</label>
+              <label >Servicio</label>
               <div className="div-container-select-button">
               <input type="search" onChange={(e)=>handleInputChange(e,"service")} placeholder="buscar.." className={selectServiceActive ? "input-search" : "input-search-none"}></input>
               <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"service")} className="icon-search" icon={faMagnifyingGlass} />
                 <select  className={errors.service_id ? "form-select error" : "form-select"} name="select"  defaultValue={newServiceSelected.id ? newServiceSelected.id : ""} {...register('service_id',{
-                  onChange: () => changeError("service"),
+                  onChange: (e) => {
+                    changeError("service")
+                    addValues(e.target.value, "service")
+                  },
+                  shouldUnregister: ifChangeModal ? false : true,
                     })}>
                       {
                       newServiceSelected.id
@@ -163,27 +205,30 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
               </div>
               {errors.service_id ? <p className="p-errores">Debe seleccionar un Servicio</p> : ""}
             </div>
-            <br/>
+            
             <div className="div-inputs">
-              <label htmlFor="url">Valor de la reparacion</label>
-              <input className="form-control" type="text" name="phone_2" {...register('cost',{
+              <label >Valor de la reparacion</label>
+              <input className="form-control cost" type="text" name="phone_2" {...register('cost',{
                 value:null,
+                shouldUnregister: ifChangeModal ? false : true,
                 })} />
             </div>
-            <br/>
+            
             <div className="div-inputs">
-              <label htmlFor="url">Precio a cobrar<span>*</span> </label>
-              <input className="form-control" type="text" name="phone_2" {...register('amount',{
+              <label >Precio a cobrar<span>*</span> </label>
+              <input className="form-control value" type="text" name="phone_2" {...register('amount',{
                 value:null,
+                shouldUnregister: ifChangeModal ? false : true,
                 })} />
             </div>
-            <br/>
+            
             <div className="div-inputs">
-              <label htmlFor="url">Fecha de notificacion al cliente</label>
+              <label >Fecha de notificacion al cliente</label>
               <input className="form-control" type="date" name="phone_2" {...register('notice_date',{
                 value:  null,
+                shouldUnregister: ifChangeModal ? false : true,
                 setValueAs : value =>{
-                  if(value != null){
+                  if(value != null && value){
                     let dateInput = new Date(value)
                   dateInput = dateInput.getUTCFullYear() + '-' +
                   ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
@@ -194,25 +239,27 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
 
                   return dateInput
                   }else{
-                    return value
+                    return null
                   } 
                 } 
                 })} />
             </div>
-            <br/>
+            
             <div className="div-inputs">
-              <label htmlFor="url">Cantidad de Notificaciones</label>
+              <label >Cantidad de Notificaciones</label>
               <input className="form-control" type="text" name="phone_2" {...register('notice_quantity',{
                 value:0,
+                shouldUnregister: ifChangeModal ? false : true,
                 })} />
             </div>
-            <br/>
+            
             <div className="div-inputs">
-            <label htmlFor="url">Fecha de entrega</label>
+            <label >Fecha de entrega</label>
               <input className="form-control" type="date" name="phone_2" {...register('delivery_date',{
                 value:  null,
+                shouldUnregister: ifChangeModal ? false : true,
                 setValueAs : v =>{
-                  if(v != null){
+                  if(v != null && v){
                     let dateInput = new Date(v)
                   dateInput = dateInput.getUTCFullYear() + '-' +
                   ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
@@ -223,17 +270,19 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
 
                   return dateInput
                   }else{
-                    return v
+                    return null
                   } 
                 } 
                 })} />
             </div>
+            
             <div className="div-inputs">
-              <label htmlFor="url">Fecha de inicio del servicio</label>
+              <label >Fecha de inicio del servicio</label>
               <input className="form-control" type="date" name="phone_2" {...register('service_start_date',{
                 value:  null,
+                shouldUnregister: ifChangeModal ? false : true,
                 setValueAs : v =>{
-                  if(v != null){
+                  if(v != null && v){
                     let dateInput = new Date(v)
                   dateInput = dateInput.getUTCFullYear() + '-' +
                   ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
@@ -244,18 +293,19 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
 
                   return dateInput
                   }else{
-                    return v
+                    return null
                   } 
                 } 
                 })} />
             </div>
-            <br/>
+            
             <div className="div-inputs">
-              <label htmlFor="url">Fecha de servicio terminado</label>
+              <label >Fecha de servicio terminado</label>
               <input className="form-control" type="date" name="phone_2" {...register('service_end_date',{
                 value:  null,
+                shouldUnregister: ifChangeModal ? false : true,
                 setValueAs : v =>{
-                  if(v != null){
+                  if(v != null && v){
                     let dateInput = new Date(v)
                   dateInput = dateInput.getUTCFullYear() + '-' +
                   ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
@@ -266,45 +316,51 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
 
                   return dateInput
                   }else{
-                    return v
+                    return null
                   } 
                 } 
                 })} />
             </div>
-            <br/>
+            
             <div className="div-inputs">
-              <label htmlFor="url">Imei</label>
+              <label >Imei</label>
               <input className="form-control" type="text" name="phone_2" {...register('imei',{
                 value:null,
+                shouldUnregister: ifChangeModal ? false : true,
                 })} />
             </div>
-            <br/>
-            <div className="div-inputs">
-              <label htmlFor="check">Tiene seguridad</label>
+            
+            <div className="div-inputs security">
+              <label >Tiene seguridad</label>
               <input onClick={checkBoxTrue} type="checkbox" name="phone_2" {...register('has_security',{
                 value:0,
+                shouldUnregister: ifChangeModal ? false : true,
                 })} />
-              <br/>
+              
               {
                 (checkbox)
                 ?
-                <div>
-                  <br/>
+                <div className="div-security">
+                  <div className="div-inputs pattern">
                   <label>Patron</label>
                   <input className="form-control" type="text" name="phone_2" {...register('pattern',{
                     value:null,
+                    shouldUnregister: ifChangeModal ? false : true,
                     })} />
-                  <br/>
+                  </div>
+                  
+                  <div className="div-inputs pin">
                   <label>Pin</label>
                   <input className="form-control" type="text" name="phone_2" {...register('pin',{
                     value:null,
-                    })} />  
+                    shouldUnregister: ifChangeModal ? false : true,
+                    })} /> </div> 
                 </div>
                 :
                 ""
               }  
             </div>                                    
-            <hr />
+            
             <div className="contenedor-boton-modal-dentro-reparations">
               <button type="submit" className="btn btn-success"  >Crear</button>
               <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>

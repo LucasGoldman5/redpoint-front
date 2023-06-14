@@ -18,23 +18,23 @@ const ModalAddBrand = ({openModalAdd, create, dataApi, errors, changeError, clos
         </ModalHeader>
         <ModalBody className="contenedor-modal-body">
           <form className="form-group" onSubmit={handleSubmit(create)}>
-            <label htmlFor="id">Cantidad de marcas actuales</label>
+            <label >Cantidad de marcas actuales</label>
             <input className="form-control" type="number" name="id" id="id" readOnly value={dataApi.data.length} ></input>
             <br />
-            <label htmlFor="marca">Marca</label>
+            <label >Marca</label>
             <input className={errors.title ? "form-control error" : "form-control"} type="text" name="marca"  {...register('title',{
               onChange: () => changeError("title"),
               shouldUnregister:true,
             })} />
               {errors.title? <p className="p-errores">El campo Marca debe ser completado</p> : ""}
             <br />
-            <label htmlFor="url">Descripcion</label>
+            <label >Descripcion</label>
             <input className="form-control" type="text" name="url" {...register('description',{
               value:null,
               shouldUnregister:true,
               })} />
             <br/>
-            <label htmlFor="url">Url</label>
+            <label >Url</label>
             <input className="form-control" type="text" name="url"  {...register('url',{
               value:null,
               shouldUnregister:true,

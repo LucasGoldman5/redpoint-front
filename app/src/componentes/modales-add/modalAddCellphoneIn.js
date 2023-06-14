@@ -27,24 +27,22 @@ const ModalAddCellphoneIn = ({openModalAddCellphone, addCellphoneInReparation, e
         </ModalHeader>
         <ModalBody className="contenedor-modal-body">
           <form className="form-group" onSubmit={handleSubmit(addCellphoneInReparation)}>
-            <label htmlFor="id">Numero de Celular</label>
+            <label >Numero de Celular</label>
             <input className="form-control" type="number" name="id" readOnly value={`${dataCellPhones.length+1}`}  />
             <br/>
-            <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("email")}></input>
-            <input  style={{ visibility: 'hidden', position: 'absolute' }} {...register("number")}></input>
-            <label htmlFor="modelo">Modelo</label>
+            <label >Modelo</label>
             <input className={errorsApi.model ? "form-control error" : "form-control"} type="text" name="modelo" {...register('model',{
               onChange: () => changeErrorApi("model"),
               value:null,
               })}/>
               {errorsApi.model? <p className="p-errores">El campo Modelo debe ser completado</p> : ""}
             <br />
-            <label htmlFor="url">Url</label>
+            <label >Url</label>
             <input className="form-control" type="text" name="url" {...register('url',{
               value:null,
               })} />
             <br/>
-            <label htmlFor="brnad_id">Marca</label>
+            <label >Marca</label>
             <div className="div-container-select-button">
             <input type="search" onChange={(e)=>handleInputChange(e,"brand")} placeholder="buscar.." className={selectBrandActive ? "input-search brand" : "input-search-none"}></input>
             <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"brand")} className="icon-search" icon={faMagnifyingGlass} />

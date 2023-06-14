@@ -1,5 +1,5 @@
 body{
-    background-image: url('../img/logo192.png');  
+    background: rgb(252, 215, 215);
     z-index: 1;
 }
 
@@ -33,7 +33,7 @@ body{
 }
 
 .general-container-table{
-    max-width: 1100px;
+    max-width: 1200px;
     width: 95%;
     height: max-content;
     max-height: 420px;
@@ -41,7 +41,7 @@ body{
     flex-direction: column;
     align-items: center;
     background: rgb(255, 190, 212);
-    box-shadow: 6px 6px 6px rgb(236, 175, 196);
+    box-shadow: 6px 6px 6px rgb(141, 90, 108);
     border: 0.5px solid black;
     border-radius: 6px;
     padding-bottom: 10px;
@@ -54,7 +54,7 @@ body{
     flex-direction: column;
     height: max-content;
     max-height: 500px;
-    overflow-x: scroll;
+    overflow: scroll;
     border-radius: 6px;
 }
 ::-webkit-scrollbar {
@@ -75,20 +75,28 @@ body{
 
 .barra-busqueda{
     width: 100%;
-    border-radius: 8px;
+    border: 0px;
+    border-radius: 5px;
+    border-bottom: 2px solid  rgb(46, 46, 46);
+    background: transparent;
     outline: none;
     align-self: center;
     margin-top: 10px;
     padding-left: 20px;
 }
+.barra-busqueda::placeholder{
+    color: rgb(46, 46, 46);
+    font-weight: 700;
+}
 .contenedor-barra-botonagregar{
     display: flex;
-    max-width: 1100px;
+    max-width: 1200px;
     width: 95%;
 }
 .contenedor-barra-botonagregar-report{
     display: flex;
-    justify-content: center;
+    max-width: 1200px;
+    justify-content: start;
     padding-bottom: 5px;
     width: 95%;
 }
@@ -105,10 +113,12 @@ body{
     color: white;
     font-size: 100%;
     text-align: center;
+    position: sticky;
+    top: 0;
 }
 
 .th-columnas{
-    border: 1px solid rgb(255, 255, 255);
+    border-right: 1px solid rgb(255, 255, 255);
     width: max-content;
     padding-right: 5px;
     padding-left: 5px;
@@ -245,20 +255,19 @@ body{
     text-overflow: ellipsis;
     padding-right: 5px;
 }
-.tooltip {
-    position: relative;
-    display: inline-block;
-  }
+
   
   .tooltiptext-service {
     visibility: hidden;
     width: max-content;
     background-color: #333;
+    bottom: 10%;  
     color: #fff;
     text-align: center;
     border-radius: 6px;
     padding: 5px;
     position: absolute;
+    font-size: 13px;
     z-index: 1;
     opacity: 0;
     transition: opacity 0.3s;
@@ -272,29 +281,37 @@ body{
 
   .tooltiptext-failure {
     visibility: hidden;
+    right: 60%;
+    bottom: 10%;   
     width: max-content;
     background-color: #333;
     color: #fff;
-    text-align: center;
+    text-align: start;
+    font-size: 13px;
     border-radius: 6px;
     padding: 5px;
-    position: absolute;
-    right: 18%;
     z-index: 1;
+    position: absolute;
     opacity: 0;
     transition: opacity 0.3s;
   }
 
-  .td-service:hover .tooltiptext-failure {
+  .td-failure:hover .tooltiptext-failure {
     visibility: visible;
     opacity: 1;
     z-index: 1;
   }
 
+  .td-failure{
+    position: relative;
+  }
+
+  .td-service{
+    position: relative;
+  }
 .td-failure p{
-    margin: auto;
+    margin: 0;
     white-space: nowrap;
-    text-align: start;
     max-width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;

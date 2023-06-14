@@ -29,6 +29,7 @@ import getEnviroment from './helpers/getEnviroment';
   const [dataServices, setDataServices] = useState([]);
   const [dataRoles, setDataRoles] = useState([]);
   const [dataStatus, setDataStatus] = useState([]);
+  const [dataManagers, setDataManagers] = useState([]);
   const [seeNavReport, setSeeNavReport] = useState(false);
   const [arrowIcon, setArrowIcon] = useState(true);
   const [error404, setError404] = useState(false)
@@ -157,6 +158,27 @@ import getEnviroment from './helpers/getEnviroment';
         console.log(error)
       }
     }
+    if(dataManagers.length < 1){
+      try{
+                    
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.managers}`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                      
+                    setDataManagers(response);
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+    } 
  };
 
 
@@ -179,39 +201,19 @@ import getEnviroment from './helpers/getEnviroment';
   };
 
 
-  const changeSon = async (dataApi) =>{
+  useEffect(()=>{
+    changeSon()
+  },[dataEnviroment])
 
-    
-    if(dataApi.data && dataEnviroment){
+  const changeSon = async () =>{
+
+    if(dataEnviroment.selfUrl){
 
       const apiURL = urlApi();
       const entitiesUrl = urlEntities();
       const local = dataEnviroment.selfUrl.main;
       const table = dataEnviroment.selfUrl.dataTable;
       const ent = dataEnviroment.selfUrl.localEntities;
-
-      if(window.location.href === local+table+ent.cellphones){
-        
-        try{
-                   
-          const config = await HelperBuildRequest("GET",null, "dataTable");
-          const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.brand}`, config);
-  
-            if(request.status === 200){
-                const response = await request.json();
-                  if(response.error){
-                      setTimeout(()=>{
-                        console.log(response.error);
-                      },1000);
-                  }else{                    
-                      setDataBrands(response);
-                  }  
-            };
-  
-        }catch(error){
-          console.log(error)
-        }
-      }else if(window.location.href.includes(`${ent.reparations}`||`${ent.report}`)){
 
         try{
                    
@@ -314,7 +316,7 @@ import getEnviroment from './helpers/getEnviroment';
          console.log(error)
        }
 
-      }else if(window.location.href === local+table+ent.users){
+      
 
         try{
                  
@@ -335,14 +337,14 @@ import getEnviroment from './helpers/getEnviroment';
          }catch(error){
            console.log(error)
          }
-      }
+      
     };
 
   };
      
        
 
-  if(user && window.location.href.includes("Tabla") && dataEnviroment.selfUrl ){
+  if(user && window.location.href.includes("Tabla") && dataEnviroment.selfUrl){
 
     return(
       <>
@@ -358,6 +360,7 @@ import getEnviroment from './helpers/getEnviroment';
            dataCustomers={dataCustomers}
            dataServices={dataServices}
            dataCellphones={dataCellphones}
+           dataManagers={dataManagers}
            enviroment={dataEnviroment}>
            </GeneralHeader>
               
@@ -366,7 +369,6 @@ import getEnviroment from './helpers/getEnviroment';
                   <Table 
                   urlTable={urlTable} 
                   enviroment={dataEnviroment} 
-                  tableActive={changeSon}
                   dataBrandsApp={dataBrands}
                   dataCellphonesApp={dataCellphones}
                   dataCustomersApp={dataCustomers}

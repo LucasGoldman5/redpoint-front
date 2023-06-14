@@ -1,7 +1,7 @@
 
 .modal-reparations{
     width: 90%;
-    max-width: 80%;
+    max-width: 90%;
 }
 
 .h5-modal-add{
@@ -9,16 +9,37 @@
 }
 
 .div-inputs{
-    width: 40%;
+    width: 30%;
     margin-bottom: 30px;
 }
 .div-inputs label{
     font-weight: 700;
 }
+.div-inputs.security{
+    width: 30%;
+}
+.div-inputs.security input{
+    margin-left: 5px;
+}
+.div-security{
+    width: 95%;
+    display: flex;
+    margin-top: 10px;
+    margin-right: 0;
+    justify-content: space-between;
+}
+.div-inputs.pattern{
+    margin: 0;
+    width: 40%;
+}
+.div-inputs.pin{
+    margin: 0;
+    width: 40%;
+}
 .form-group.reparations{
     width: 100%;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 .form-group{
     width: 100%;
@@ -29,6 +50,15 @@
 
 .form-control.error{
     border: 1px solid red;
+}
+
+.form-control.cost{
+    text-align: end;
+    color: red;
+}
+.form-control.value{
+    text-align: end;
+    color: green;
 }
 
 .form-select.error{
@@ -123,10 +153,15 @@
 
 .option-modal{
     cursor: pointer;
+    text-align: start;
 }
 
+.option-modal:checked{
+    text-align: center;
+}
 .option-selected{
     color: rgb(192, 191, 191);
+    text-align: center;
 }
 
 .option-modal-crear{

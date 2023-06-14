@@ -18,7 +18,7 @@ const ModalAddCustomer = ({openModalAdd, create, errors, changeError, closeForm}
         </ModalHeader>
         <ModalBody className="contenedor-modal-body">
           <form className="form-group" onSubmit={handleSubmit(create)}>
-            <label htmlFor="marca">Nombre</label>
+            <label >Nombre</label>
             <input className={errors.name ? "form-control error" : "form-control"} type="text" name="name"  {...register('name',{
               onChange: () => changeError("name"),
               value:null,
@@ -26,7 +26,7 @@ const ModalAddCustomer = ({openModalAdd, create, errors, changeError, closeForm}
               })} />
               {errors.name? <p className="p-errores">{errors.name}</p> : ""} 
             <br />
-            <label htmlFor="url">Email</label>
+            <label >Email</label>
             <input className={errors.email ? "form-control error" : "form-control"} type="text" name="email" {...register('email',{
               onChange: (e) => changeError("email",e.target.value),
               value:null,
@@ -34,7 +34,7 @@ const ModalAddCustomer = ({openModalAdd, create, errors, changeError, closeForm}
               })} />
               {errors.email? <p className="p-errores">{errors.email}</p> : ""}
             <br />
-            <label htmlFor="url">Numero de Telefono</label>
+            <label >Numero de Telefono</label>
             <input className={errors.phone_number ? "form-control error" : "form-control"} type="text" name="phone" {...register('phone_number',{
               onChange: () => changeError("phone_number"),
               value:null,
@@ -42,7 +42,7 @@ const ModalAddCustomer = ({openModalAdd, create, errors, changeError, closeForm}
               })} />
               {errors.phone_number? <p className="p-errores">{errors.phone_number}</p> : ""}
             <br />
-            <label htmlFor="url">Numero de telefono 2</label>
+            <label >Numero de telefono 2</label>
             <input className="form-control" type="text" name="phone_2" {...register('phhone_number_2',{
               value:null,
               shouldUnregister:true
