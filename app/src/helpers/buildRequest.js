@@ -52,6 +52,7 @@ export default async function  HelperBuildRequest ( method, data = {}, type = nu
         try {
             const response = await fetch('http://localhost:8000/api/refresh', config);
             if(response.status === 200){
+                console.log("refrescado");
               const datos = await response.json();
             localStorage.setItem('user', JSON.stringify(datos));
             return buildCallServer(method, data, type);  

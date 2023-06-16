@@ -26,17 +26,14 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 20px;
-    height: 500px;
+    height: 600px;
     width: 100%;
-    
 }
 
 .general-container-table{
-    max-width: 1200px;
-    width: 95%;
+    width: 98%;
     height: max-content;
-    max-height: 420px;
+    max-height: 540px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -45,6 +42,7 @@ body{
     border: 0.5px solid black;
     border-radius: 6px;
     padding-bottom: 10px;
+    overflow: auto;
 }
 
 .contenedor-tabla{
@@ -90,15 +88,15 @@ body{
 }
 .contenedor-barra-botonagregar{
     display: flex;
-    max-width: 1200px;
-    width: 95%;
+    max-width: 1500px;
+    width: 98%;
 }
 .contenedor-barra-botonagregar-report{
     display: flex;
-    max-width: 1200px;
+    max-width: 1500px;
     justify-content: start;
     padding-bottom: 5px;
-    width: 95%;
+    width: 98%;
 }
 
 /*Styles for Table*/
@@ -161,11 +159,11 @@ body{
     cursor: pointer;
     transition: all 0.3s;
     background:rgb(255, 190, 212) ;
+    height: 32px;
 }
 
 .tr-data:nth-child(even){
     background: rgb(221, 165, 184);
-    transition: all 0.5s;
 }
 .tr-data:hover{
     background: rgb(161, 119, 133);
@@ -174,7 +172,7 @@ body{
 .tr-active{
     background: rgb(161, 119, 133);
     border-bottom: 1px solid black;
-    transition: all 0.5s;
+    height: 32px;
 }
 
 .no-match{
@@ -235,6 +233,21 @@ body{
     margin: 0;
     font-weight: 700;
     color: red;
+}
+
+.td-number{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 38px;
+    padding-right: 4px;
+}
+
+.icon-chat{
+    color: green;
+}
+.icon-chat:hover{
+    color: rgb(10, 201, 10);
 }
 
 .td p{
@@ -318,9 +331,10 @@ body{
     padding-right: 5px;
 }
 
-.td-a a{
+.td-a p{
     padding-left: 5px;
     padding-right: 5px;
+    margin: 0;
     overflow: hidden;
     display: inline-block;
     color: red;
@@ -330,7 +344,12 @@ body{
     max-width: 200px;
 }
 
-.td-a a:hover{
+.td-a a{
+    text-decoration: none;
+    color: red;
+}
+
+.td-a :hover{
     color: rgb(90, 1, 1);
     font-weight: 400;
 }

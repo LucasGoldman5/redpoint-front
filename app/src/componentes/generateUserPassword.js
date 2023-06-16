@@ -6,11 +6,9 @@ import { Link } from "react-router-dom";
 import {AiFillEyeInvisible, AiFillEye} from 'react-icons/ai';
 import { PulseLoader } from "react-spinners";
 import HelperBuildRequest from "../helpers/buildRequest";
-console.log('sads')
 
 const GeneratePassword = ({enviroment}) =>{
 
-    /*generate-password/hash/user_id*/
 
   const [verContraseña, setVerContraseña] = useState(false);
   const [verContraseñaConfirmada, setVerContraseñaConfirmada] = useState(false);
@@ -19,7 +17,6 @@ const GeneratePassword = ({enviroment}) =>{
   const [errors, setErrors] = useState([]);
   const [spinner, setSpinner] = useState(true);
   const [user, setUser] = useState([]);
-  const [txtError, setTxtError] = useState("");
 
   const hash = window.location.hash.substring(1)
   
@@ -57,6 +54,8 @@ const GeneratePassword = ({enviroment}) =>{
   }
 
   const onSubmit = async (data) =>{
+
+    console.log("hola");
     
     console.log(data);
     setLoading(true);
@@ -74,8 +73,7 @@ const GeneratePassword = ({enviroment}) =>{
                   if(response.error){
                     setTimeout(()=>{
                         setLoading(false)
-                        setResponse(false)
-                        setTxtError(`${response.error}`)
+                        setResponse(true)
                     },1000);
                   }else{
                     setTimeout( () => {
@@ -87,13 +85,18 @@ const GeneratePassword = ({enviroment}) =>{
             }else if(request.status === 422){
                 const response = await request.json();
                     if(response.errors){
+                        setTimeout(()=>{
+                            setLoading(false);
+                        },1000)
                       alert("Debe completar o corregir el formulario")
                       setErrors(response.errors); 
                     };
+            }else if(request.status === 204){
+                const response = await request.json()
+                console.log(response);
             }else{
                 setLoading(false)
                 setResponse(false)
-                setTxtError(`El usuario ingresado no es valido`);
             }
 
         }catch(error){
@@ -114,7 +117,7 @@ const GeneratePassword = ({enviroment}) =>{
   }
 
 
-  const { register, handleSubmit,getValues ,watch} = useForm ();
+  const { register, handleSubmit, watch, getValues} = useForm ();
   const contraeña = watch('contraseña');
 
     if(spinner === false){
@@ -126,19 +129,19 @@ const GeneratePassword = ({enviroment}) =>{
                       <div className="contenedor-form-registrarse">
                       <h4 className="h4-registro">Generar Contraseña</h4>
                           <div className="form-registrarse-container">
-                              <form className="form-generate-password" id="formularioSignUp" onSubmit={handleSubmit(onSubmit)}>
+                                <form className="form-generate-password"  >
                                   <div className="inputs ">
                                       <label>Nombre de Usuario</label>
-                                      <input className={errors.name ? "input error" : "input"} type="text" readOnly value={user.name}  {...register('name', {
+                                      <input className={errors.name ? "input error" : "input"} type="text" autoComplete="username" readOnly value={user.name}  {...register('name', {
                                       })}>   
                                       </input>
                                       {errors.name ?<p className="p-validacion">{errors.name}</p> : ""}       
                                   </div>
-                                  <br/>
+                                  
                                   <div className="inputs contraseña">
                                       <label>Contraseña</label>
                                       <div className="label-input-password">
-                                          <input className={errors.password ? "input error" : "input"} type={(verContraseña === false)? 'password' : 'text'}  {...register('password', {
+                                          <input autoComplete="new-password" className={errors.password ? "input error" : "input"} type={(verContraseña === false)? 'password' : 'text'}  {...register('password', {
                                           })}>
                                           </input>
                                           {errors.password ? <p className="p-validacion">{errors.password}</p> : ""}
@@ -149,16 +152,16 @@ const GeneratePassword = ({enviroment}) =>{
                                           </div>
                                       </div>
                                   </div>
-                                  <br/>
+                                  
                                   <div className="inputs contraseña">
                                   <label>Confirmar contraseña</label>
                                       <div className="label-input-password">   
-                                          <input className={errors.confirm_password ? "input error" : "input"} type={(verContraseñaConfirmada === false)? 'password' : 'text'}  {...register('password_confirmation', {
+                                          <input autoComplete="new-password" className={errors.password ? "input error" : "input"} type={(verContraseñaConfirmada === false)? 'password' : 'text'}  {...register('password_confirmation', {
                                               required: true, 
                                               validate : (value) => value === contraeña
                                           })}>
                                           </input>
-                                          {errors.password_confirmation ? <p className="p-validacion">{errors.confirm_password}</p> : ""}                
+                                          {errors.password ? <p className="p-validacion">{errors.password}</p> : ""}                
                                       <div className="iconos">
                                           {
                                           (verContraseñaConfirmada === false) ? <AiFillEyeInvisible  onClick={verContraseñaConfirmadaClick}/> : <AiFillEye onClick={verContraseñaConfirmadaClick}/>
@@ -166,16 +169,16 @@ const GeneratePassword = ({enviroment}) =>{
                                       </div>
                                       </div>
                                   </div>
-                                  <br/>
+                                  
                                   <div className="inputs">
                                       <label>Correo Electronico</label>
                                       <input className="input" type="email" readOnly value={user.email}  {...register('email')}></input>
                                   </div>
-                                  <br/>
+                                  
                                   <div className="input-submit">
-                                      <button  type="submit" onClick={()=> onSubmit(getValues())} name="">Registrar</button>
+                                      <button  onClick={()=>onSubmit(getValues())} value="Registrar">Registrar</button>
                                   </div>  
-                              </form>
+                                </form>
                           </div>
                       </div>
                     </div>
@@ -200,7 +203,7 @@ const GeneratePassword = ({enviroment}) =>{
                       <>
                           <div className="body-container">
                             <div className="contenedor-form-registrarse-loading">
-                                <h3>Registro enviado exitosamente</h3>  
+                                <h3 style={{color:"green"}}>Contraseña creada exitosamente</h3>  
                                 <div className="contenedor-p">
                                     <p className="p-volver">Haga click en <Link to={'/Login'}>Inicio</Link> para ingresar con el usuario activado</p>
                                 </div>

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
 import './table.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrashAlt, faEye } from '@fortawesome/free-solid-svg-icons';
+import {  faTrashAlt, faComments} from '@fortawesome/free-solid-svg-icons';
 import AddButton from './add-button';
 import 'bootstrap/dist/css/bootstrap.css';
 import ModalAdd from './modal-add';
@@ -39,6 +39,8 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
     const [rowId, setRowId] = useState(null);
     const [resetSelectBox, setResetSelectBox] = useState(false);
     const [entitiNotFound, setEntitiNotFound] = useState("");
+    const tableRef = useRef(null)
+    const [scroll, setScroll] = useState(0)
     const { id } = useParams();
     
     const location = useLocation();
@@ -105,8 +107,10 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
     const urlLocal = () =>{
       return enviroment.selfUrl
     }
-
+  
     const getData = async () => {
+
+      setItemToEdit(null)
 
       setSpinnerLoadTable(true);
       const entiti = () =>{
@@ -226,34 +230,43 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
       setOpenModal(false);
       setOpenModalEdit(false);
       setOpenModalView(false);
-      setRowId(null);
+      setItemToEdit(null);
+      setTimeout(()=>{
+        setRowId(null);
+      },1000)
       setResetSelectBox(true);
     };
 
     const selectRowOff = (count) =>{
       if(count === 1){
-        setRowId(null);
+        setTimeout(()=>{
+          setRowId(null);
+        },1000)
         setOpenModalEdit(false)
         setItemToEdit(null)
       }
     }
-   console.log(openModalEdit);
 
-    const closeModal = (count) =>{
+    const closeModal = () =>{
     
           setOpenModal(false);
     }
+    
+    useEffect(() => {
 
-    const OpenModalEdit =  (element) =>{
+      if (tableRef.current) {
+        tableRef.current.scrollTop = scroll;
+      } 
+    }, [openModalEdit,rowId]);
+
+    const OpenModalEdit =  (element,event) =>{
       
       setItemToEdit(null);
-      setTimeout(()=>{
-        setItemToEdit(element);
-      },1000)
+      setItemToEdit(element);
+      setScroll(event.currentTarget.offsetTop - 150)
       setRowId(element.id);
-        
-        setOpenModalEdit(true);
-      
+      setOpenModalEdit(true);
+
     };   
       
     const edit =  async (data) =>{
@@ -309,13 +322,11 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                 if(request.status === 200){
                   const response = await request.json();
                     if(response.error){
-                      setTimeout(()=>{
                         console.log(response.error);
-                      },1000);
                     }else{
                       setTimeout(()=>{
                         setRowId(null);
-                      },500)
+                      },1000)
                       setResetSelectBox(true)                      
                       setOpenModalEdit(false);
                       setErrors([]);
@@ -522,6 +533,38 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
           alert("kk")
         };
     };
+   
+    const openWhatsApp = (number) => {
+      setTimeout(()=>{
+        setOpenModalEdit(false);
+        setRowId(null)
+      })
+      setTimeout(()=>{
+        setItemToEdit(null);
+      },2000)
+      
+      const message = encodeURIComponent('¡Hola! Tenemos Informacion sobre la reparacion de tu Celular.');
+      const phoneNumber = number; 
+    
+      const link = `https://web.whatsapp.com/send/?phone=${phoneNumber}&text=${message}`;
+      window.open(link, '_blank');
+    };
+
+    const generateMailLink = (email) => {
+      setTimeout(()=>{
+        setOpenModalEdit(false);
+        setRowId(null)
+      })
+      setTimeout(()=>{
+        setItemToEdit(null);
+      },2000)
+      const subject = encodeURIComponent('Asunto del correo');
+      const body = encodeURIComponent('¡Hola! Tenemos Informacion sobre la reparacion de tu Celular.');
+
+      const link = `https://mail.google.com/mail/?view=cm&to=${email}&su=${subject}&body=${body}`
+    
+      window.open(link, '_blank');
+    };
 
 
     if(dataApi.data && dataColumns && notfound === false){
@@ -586,9 +629,6 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
       tdBodyDiv: uuidv4(),
     };
 
-    const displayDivService = () =>{
-        setOver(!over) 
-    }
 
       return(  
 
@@ -603,38 +643,7 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
             :    
             <>
               <div id='rootTable'>
-                <div className='titulo-tabla'>
-                  <h1>
-                    {
-                    (window.location.href.includes("por-marca") && dataApi.data[0].cellphone)
-                    ?
-                    `Reparaciones por marca: ${dataApi.data[0].cellphone.brand}`
-                    :
-                    (window.location.href.includes("por-cliente") && dataApi.data[0].customer)
-                    ?
-                    `Reparaciones por cliente: ${dataApi.data[0].customer.customer}`
-                    :
-                    (window.location.href.includes("por-celular") && dataApi.data[0].cellphone)
-                    ?
-                    `Reparaciones por celular: ${dataApi.data[0].cellphone.model}`
-                    :
-                    (window.location.href.includes("por-servicio") && dataApi.data[0].service)
-                    ?
-                    `Reparaciones por servicio: ${dataApi.data[0].service.service}`
-                    :
-                    (window.location.href.includes("por-manager") && dataApi.data[0].manager)
-                    ?
-                    `Reparaciones por manager: ${dataApi.data[0].manager}`
-                    :
-                    tables.map((titulo)=>{
-                      if(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${Object.keys(titulo)}`){
-                        return Object.values(titulo)
-                      }
-                    })
-                    }
-                  </h1>
-                </div>
-                
+
                 <div className='contenedor-body'>
 
                   <div className={window.location.href.includes("report") ? 'contenedor-barra-botonagregar-report' : 'contenedor-barra-botonagregar'}>
@@ -654,8 +663,8 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                     ?
                     <>
                       <div className='general-container-table' id='myDiv'>
-                        <div className="contenedor-tabla" key={uniqueKeys.contenedorTabla} >
-                          <table className='tabla' key={uniqueKeys.tabla}>
+                        <div ref={tableRef} style={{ scrollTop: scroll }} className="contenedor-tabla"  key={uniqueKeys.contenedorTabla} >
+                          <table  className='tabla'  key={uniqueKeys.tabla}>
                             <thead className='thead' key={uniqueKeys.thead}>
                               <tr className='tr-column' key={uniqueKeys.trColumn}>
                                 {Object.values(dataColumns).map((column,index)=>(
@@ -678,7 +687,7 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                              
                               dataFilter().map((element,index) =>
                               
-                                    <tr onClick={() => OpenModalEdit(element,index)} id={index} className={rowId ? rowId == element.id ? "tr-active" : "tr-data" : "tr-data"} key={`${uniqueKeys.trBody}-${index}`}>
+                                    <tr onClick={(event) => OpenModalEdit(element,event)}  id={index} className={rowId ? rowId == element.id ? "tr-active" : "tr-data" : "tr-data"} key={`${uniqueKeys.trBody}-${index}`}>
                                     {Object.keys(dataColumns).map((column)=>{
                                       for(let i = 0 ; i < Object.keys(element).length ; i++){
                                         if(Object.keys(element)[i] === column){
@@ -691,8 +700,10 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                                             return <td className='td-cost' key={`${uniqueKeys.tbody}-${i}`}>${item}</td>
                                           }
                                           if(column === "phone_number"){
-                                            
-                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{item} / {element.phhone_number_2}</td>
+                                            return <td className='td-number' key={`${uniqueKeys.tbody}-${i}`}>{item} <FontAwesomeIcon className='icon-chat' icon={faComments} onClick={()=>openWhatsApp(item)}/></td>
+                                          }
+                                          if(column === "number"){
+                                            return <td className='td-number' key={`${uniqueKeys.tbody}-${i}`}>{item} <FontAwesomeIcon className='icon-chat' icon={faComments} onClick={()=>openWhatsApp(item)}/> </td>
                                           }
                                           if(column === "service"  && dataFilter()[index].service){
                                             
@@ -765,7 +776,7 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                                             }
                                           }
                                           if(column === "email" ){
-                                            return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={""} >{item}</a></td>
+                                            return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><p className='td-p-link' onClick={()=>generateMailLink(item)} >{item}</p></td>
                                           }
                                           if(column === "has_security"){
                                             if(Object.values(element)[i] === 1){
@@ -813,6 +824,7 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                         </div>
                         <Paginator
                         dataApi={dataApi}
+                        dataFilter={dataFilter}
                         nextPage={nextPage}
                         previousPage={previousPage}
                         specifyPage={specifyPage}

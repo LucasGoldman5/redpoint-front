@@ -1,6 +1,5 @@
 import React, { useState,useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Await, Link } from "react-router-dom";
 import './formsRegister.css';
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 import { PulseLoader } from "react-spinners";
@@ -8,12 +7,11 @@ import HelperBuildRequest from "../helpers/buildRequest";
 
 
 
-const Login = ({enterAplication,enviroment}) =>{
+const Login = ({enviroment}) =>{
 
 
   const [viewPassword, setViewPassword] = useState(false);       
   const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState(null);
   const [error, setError] = useState(false);
   const [errors, setErrors] = useState([]);
   const [txtError, setTxtError] = useState("");
@@ -24,7 +22,12 @@ const Login = ({enterAplication,enviroment}) =>{
   },[])
 
   
-  const onSubmit = async (data) =>{
+  const onSubmit = async (data, event) =>{
+
+    event.preventDefault()
+
+    const env = enviroment.selfUrl
+    const env2 = enviroment
 
     setLoading(true)
       if(data){
@@ -39,15 +42,13 @@ const Login = ({enterAplication,enviroment}) =>{
                   if(response.error){
                     setTimeout(()=>{
                         setLoading(false)
-                        setResponse(false)
                         setError(true)
                         setTxtError(`${response.error}`)
-                    },1000);
+                    },2000);
                   }else{
                     setError(false)
                     setTimeout( () => {
-                        setLoading(false)
-                        setResponse(true)
+                        window.location.assign(`${env.main}${env.dataTable}${env2.entities.pending}`);
                         localStorage.setItem("user",JSON.stringify(response))
                     },2000);  
                   }  
@@ -63,7 +64,6 @@ const Login = ({enterAplication,enviroment}) =>{
               if(response.error){                
                   setLoading(false)
                   setError(true)
-                  setResponse(false)
                   setTxtError(`El usuario ingresado no es valido`) 
               }              
             }
@@ -74,10 +74,6 @@ const Login = ({enterAplication,enviroment}) =>{
       };
   };
 
-
-  const cleanForm = () =>{
-    document.getElementById("formularioLogin").reset();
-  };
 
   const viewPasswordClick = () =>{
     setViewPassword(!viewPassword)
@@ -105,7 +101,7 @@ const Login = ({enterAplication,enviroment}) =>{
   const { register,  handleSubmit} = useForm ();
   
   
-    if(loading ===false && response === null && error === false){
+    if(loading === false  && error === false){
 
         return(
           <>
@@ -156,7 +152,7 @@ const Login = ({enterAplication,enviroment}) =>{
             
           </>
         )
-    }else if(loading === true && response === null && error === false ){
+    }else if(loading === true  && error === false ){
 
         return(
           <>
@@ -170,24 +166,7 @@ const Login = ({enterAplication,enviroment}) =>{
           </>
         )
 
-    }else if(loading === false && response === true && error === false){
-
-        return(
-          <>
-            
-            <div className="contenedor-body-login">
-                <div className="contenedor-form-registrarse-loading">
-                    <h3 className="h3-encontrado">Usuario Encontrado!</h3>
-                    <p className="p-find">Para iniciar la aplicacion haga click en el siguiente boton:</p>
-                    <div className="input-submit">
-                        <button  onClick={enterAplication}>Ingresar</button>
-                    </div>  
-                </div>
-            </div>
-          </>
-        )
-
-    }else if(loading === false && response === false && error === true){
+    }else if(loading === false  && error === true){
 
         return(
           <>
@@ -195,7 +174,13 @@ const Login = ({enterAplication,enviroment}) =>{
            <div className="contenedor-body-login">
                 <div className="contenedor-form-registrarse-loading">
                     <h3 className="h3-error">{txtError}</h3>
-                    <p>Un super administrador debe activarlo, presione el siguiente boton para ingresar..</p>
+                    {
+                      txtError.includes("activo")
+                      ?
+                      <p>Un super-admin debe activarlo para poder ingresar</p>
+                      :
+                      ""
+                    }
                     <div className="input-submit">
                     <button onClick={returnLogin}>volver</button>
                     </div>

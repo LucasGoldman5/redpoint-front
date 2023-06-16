@@ -192,15 +192,6 @@ import getEnviroment from './helpers/getEnviroment';
     };
   };
   
-  const enterAplication = async () =>{
-
-    const localUrl = urlLocal();
-
-    window.location.assign(`${localUrl.main}${localUrl.dataTable}${localUrl.report}reparaciones-pendientes`);
-
-  };
-
-
   useEffect(()=>{
     changeSon()
   },[dataEnviroment])
@@ -376,7 +367,7 @@ import getEnviroment from './helpers/getEnviroment';
                   dataRolesApp={dataRoles}
                   dataStatusApp={dataStatus}/>
                   }></Route>
-                  <Route path={`${dataEnviroment.selfUrl.login}`} element={<Login enterAplication={enterAplication} enviroment={dataEnviroment} />}  ></Route> 
+                  <Route path={`${dataEnviroment.selfUrl.login}`} element={<Login  enviroment={dataEnviroment} />}  ></Route> 
                   <Route path={`/${dataEnviroment.selfUrl.personalInformation}`} element={<PersonalInformation />}></Route> 
                   <Route path={`/${dataEnviroment.selfUrl.dataTable}/*`} element={<Error404 />}></Route>  
               </Routes>  
@@ -410,7 +401,7 @@ import getEnviroment from './helpers/getEnviroment';
           <BrowserRouter>
             <StartHeader></StartHeader>
                 <Routes>
-                    <Route path={`/${dataEnviroment.selfUrl.login}`}  element={<Login enterAplication={enterAplication} enviroment={dataEnviroment} />}></Route> 
+                    <Route path={`/${dataEnviroment.selfUrl.login}`}  element={<Login enviroment={dataEnviroment} />}></Route> 
                     <Route path={`/${dataEnviroment.selfUrl.generatePassRoute}`} element={<GeneratePassword enviroment={dataEnviroment}/>}></Route> 
                     <Route path='*' element={<NotAuthorized/>}></Route> 
                 </Routes>

@@ -99,10 +99,10 @@ const ModalEditUser = ({openModalEdit, onsubmit, itemToEdit, changeError, errors
                 <br />
                 <br/>
                 <label >Rol</label>
-                <select  className={errors.rol_id ? "form-select  error" : "form-select brand"} defaultValue={itemToEdit ? itemToEdit.rol_id.id : ""}  name="select"  {...register('rol_id',{
+                <select  className={errors.rol_id ? "form-select  error" : "form-select brand"} defaultValue={itemToEdit ? itemToEdit.rol_id ? itemToEdit.rol_id.id : "" : ""}  name="select"  {...register('rol_id',{
                       onChange: () => changeError("rol_id"),
                       })}>
-                      <option value={itemToEdit ? {"id":itemToEdit.rol_id.id,"rol":itemToEdit.rol_id.rol} : null} className="option-selected">{itemToEdit ? dataRolesEdit.map((rol)=>{
+                      <option value={itemToEdit ? itemToEdit.rol_id.rol : null} className="option-selected">{itemToEdit ? dataRolesEdit.map((rol)=>{
                         if(rol.id == itemToEdit.rol_id.id){
                           return rol.description
                         }

@@ -3,9 +3,11 @@
     flex-wrap: wrap;
     user-select: none;
     background: rgb(252, 215, 215);
+    height: 100vh;
 }
 .body{
     background: rgb(252, 215, 215);;
+    
 }
 
 

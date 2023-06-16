@@ -281,7 +281,28 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
     return filteredDataManagers;
   };
 
-  const ent = enviroment.selfUrl.localEntities;  
+  const ent = enviroment.selfUrl.localEntities;
+  const location = window.location.href; 
+  
+  const title = () =>{
+  
+    if(location.includes(ent.reparations)){
+      return "reparaciones"
+    }else if(location.includes(ent.brands)){
+      return "marcas"
+    }
+    else if(location.includes(ent.customers)){
+      return "clientes"
+    }
+    else if(location.includes(ent.cellphones)){
+      return "celulares"
+    }
+    else if(location.includes(ent.services)){
+      return "servicios"
+    }else if(location.includes(ent.users)){
+      return "usuarios"
+    }
+  }
 
   if(enviroment.selfUrl){
     return(
@@ -290,7 +311,7 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
           <Navbar className="contenedor-nav-general" bg="dark" variant="dark">
             <div className="contenedor-general">
               <div className="contenedor-titulo">
-                <Navbar.Brand className="titulo-nav"  href={`${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`}>ClaroApp</Navbar.Brand>
+                <Navbar.Brand className="titulo-nav"><a className="header-title" href={`${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`}>RedPoint</a>/<p className="header-sub-title">{title()}</p></Navbar.Brand>
               </div>
               <div className="contenedor-contenedor-links">
                 <Nav >
