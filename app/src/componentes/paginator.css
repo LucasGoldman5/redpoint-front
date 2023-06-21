@@ -1,0 +1,60 @@
+.paginator-container{
+    display: flex;
+    margin-top: 20px;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+}
+.paginator-container-arrows{
+    width: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: 25px;
+}
+.paginator-container-arrows p{
+    margin: 0;
+    font-weight: 700;
+}
+.paginator-container svg:hover{
+    cursor: pointer;
+    color: red;
+}
+.arrow-left-paginator{
+   margin-right: 10px;
+   font-size: 25px;
+}
+.arrow-right-paginator{
+    margin-left: 10px;
+    font-size: 25px;
+}
+.buttons-paginator{
+    border: none;
+    background: none;
+    margin-right: 2px;
+    color: black;
+    font-weight: 400;
+}
+.buttons-paginator-on{
+    color: red;
+    background: none;
+    border: none;
+    font-weight: 600;
+}
+.buttons-paginator:hover{
+    color: red;
+}
+.p-paginator{
+    margin: 0;
+    margin-left: 25px;
+    font-weight: 700;
+    width: 40%;
+    text-align: start;
+}
+
+.div-spinner-page-none{
+    display: none;
+}
+.div-spinner-page-{
+    width: 30%;
+}

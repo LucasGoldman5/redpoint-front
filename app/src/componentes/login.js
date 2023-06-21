@@ -1,185 +1,194 @@
-import React, {useState} from "react";
+import React, { useState,useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
-import './signUp.css'
-import {AiFillEyeInvisible, AiFillEye} from 'react-icons/ai'
+import './formsRegister.css';
+import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 import { PulseLoader } from "react-spinners";
 import HelperBuildRequest from "../helpers/buildRequest";
-import GetUserData from "../helpers/getUserData";
-
-
-const Login = ({ingresarAplicacion}) =>{
-
- const caca = GetUserData()
-
- console.log(caca)
-
-    const [verContraseña, setVerContraseña] = useState(false)       
-    const [loading, setLoading] = useState(false);
-    const [respuesta, setRespuesta] = useState(null);
-    const [errores, setErrores] = useState(false);
-    const [txtErrores, setTxtErrores] = useState("")
 
 
 
-    const onSubmit = async (data) =>{ 
-    limpiarFormulario();
-    
-    if(data ){
-        
-        setLoading(true) 
-
-            try {
-                const config = HelperBuildRequest("POST", data, 'login');
-                
-                const request = await fetch("http://localhost:8000/api/login", config);
-
-                console.log(request);
-
-                if(request.status === 200){
-                    const response = await request.json();
-                    console.log(response);
-                    if(response.error){
-                        setTimeout(()=>{
-                            setLoading(false)
-                            setRespuesta(false)
-                            setErrores(true)
-                            setTxtErrores(`${response.error}`)
-                        },1000);
-                    }else{
-                       setTimeout( () => {
-                        setLoading(false)
-                        setRespuesta(true)
-                        localStorage.setItem("Usuario",JSON.stringify(response))
-                    }, 2000);  
-                    }  
-                }else{
-                    setLoading(false)
-                    setRespuesta(false)
-                    setErrores(true)
-                    setTxtErrores(`El usuario ingresado no es valido`);
-                }
-           }catch(error){
-            console.log(error)
-           }
-           
-       }
-    }
+const Login = ({enviroment}) =>{
 
 
-    const limpiarFormulario = () =>{
-    document.getElementById("formularioLogin").reset()
-    }
-        
+  const [viewPassword, setViewPassword] = useState(false);       
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [errors, setErrors] = useState([]);
+  const [txtError, setTxtError] = useState("");
 
-    const { register, formState: { errors }, handleSubmit} = useForm ();
+  useEffect(()=>{
+    localStorage.removeItem('user');
+    localStorage.removeItem('column');
+  },[])
+
   
-    const verContraseñaClick = () =>{
-        setVerContraseña(!verContraseña)
+  const onSubmit = async (data, event) =>{
+
+    event.preventDefault()
+
+    const env = enviroment.selfUrl
+    const env2 = enviroment
+
+    setLoading(true)
+      if(data){
+         
+        try{
+
+            const config = await HelperBuildRequest("POST", data, 'login');
+            const request = await fetch(`${enviroment.apiURL.url}login`, config);
+
+            if(request.status === 200){
+                const response = await request.json();
+                  if(response.error){
+                    setTimeout(()=>{
+                        setLoading(false)
+                        setError(true)
+                        setTxtError(`${response.error}`)
+                    },2000);
+                  }else{
+                    setError(false)
+                    setTimeout( () => {
+                        window.location.assign(`${env.main}${env.dataTable}${env2.entities.pending}`);
+                        localStorage.setItem("user",JSON.stringify(response))
+                    },2000);  
+                  }  
+            }else if(request.status === 422){
+              setLoading(false)
+              const response = await request.json();
+                    if(response.errors){
+                      alert("Debe completar o corregir el formulario")
+                      setErrors(response.errors); 
+                    };
+            }else if(request.status === 403){
+              const response = await request.json();
+              if(response.error){                
+                  setLoading(false)
+                  setError(true)
+                  setTxtError(`El usuario ingresado no es valido`) 
+              }              
+            }
+
+        }catch(error){
+            console.log(error);
+        };          
+      };
+  };
+
+
+  const viewPasswordClick = () =>{
+    setViewPassword(!viewPassword)
+  }
+
+  const returnLogin = () =>{
+    window.location.reload()
+  }
+
+  const changeError = (entity,value) =>{
+    if(entity === "name"){
+      setErrors({name:null, password:errors.password, email:errors.email})
     }
-
-    const volverLogin = () =>{
-        window.location.reload()
+    else if(entity === "password"){
+      setErrors({name:errors.name, password:null, email:errors.email})
     }
+    else if(entity === "email"){
+      setErrors({name:errors.name, password:errors.password, email:"El email requiere este formato : xxxx@xx.xx"})
+      if(value.includes("@" && ".")){
+        setErrors({name:errors.name, password:errors.password, email:null})
+      }
+    }
+  }
+        
+  const { register,  handleSubmit} = useForm ();
+  
+  
+    if(loading === false  && error === false){
 
-
-       if(loading ===false && respuesta === null && errores===false){
         return(
-            <>
+          <>
             
             <div className="contenedor-body-login">
-                <div className="contenedor-form-registrarse">
-                    <h4 className="h4-registro">Iniciar</h4>
-                    <div className="form-registrarse">
-                        <form id="formularioLogin" onSubmit={handleSubmit(onSubmit)}>
-                            <div className="inputs">
-                                <label>Nombre de Usuario</label>
-                                <input className="input" type="text"  {...register('name', {
-                                    required: true,
-                                    maxLength: 10
-                                })}></input>
-                                {errors.name?.type === 'required' && <p className="p-validacion">El campo Nombre de Usuario debe ser completado</p>}
-                                {errors.name?.type === 'maxLength' && <p className="p-validacion">El campo Nombre de Usuario debe tener menos de 10 caracteres</p>}
+              <div className="contenedor-form-registrarse">
+                <h4 className="h4-registro">Iniciar</h4>
+                <div className="form-registrarse-container">
+                    <form className="form-login" id="formularioLogin" onSubmit={handleSubmit(onSubmit)}>
+                        <div className="inputs">
+                            <label>Nombre de Usuario</label>
+                            <input className={errors.name ? "input error" : "input"} type="text"  {...register('name', {
+                              onChange: () => changeError("name")
+                                })}>
+                            </input>
+                                {errors.name?<p className="p-validacion">{errors.name}</p> : ""}
+                        </div>
+                        <div className="inputs contraseña">
+                            <label>Contraseña</label>
+                            <div className="label-input-password">
+                              <input className={errors.password ? "input error" : "input"} type={(viewPassword === false)? 'password' : 'text'}  {...register('password', {
+                                onChange: () => changeError("password")
+                                  })}>                                    
+                              </input>
+                                  {errors.password ? <p className="p-validacion">{errors.password}</p> : ""}
+                              <div className="iconos">
+                                  {
+                                  (viewPassword === false) ? <AiFillEyeInvisible  onClick={viewPasswordClick}/> : <AiFillEye onClick={viewPasswordClick}/>
+                                  }
+                              </div>
                             </div>
-                            <div className="inputs contraseña">
-                                <label>Contraseña</label>
-                                <input className="input" type={(verContraseña === false)? 'password' : 'text'}  {...register('password', {
-                                    required: true,
-                                    pattern: /^\S{4,16}$/
-                                })}></input>
-                                {errors.password?.type === 'pattern' && <p className="p-validacion">La contraseña debe tener entre 4 y 16 caracteres.</p>}
-                                {errors.password?.type === 'required' && <p className="p-validacion">El campo contraseña debe completarse.</p>}
-                                <div className="iconos">
-                                    {
-                                        (verContraseña === false) ? <AiFillEyeInvisible  onClick={verContraseñaClick}/> : <AiFillEye onClick={verContraseñaClick}/>
-                                    }
-                                </div>
-                            </div>
-                            <div className="inputs">
-                                <label>Correo Electronico</label>
-                                <input className="input" type="email"  {...register('email',{
-                                    required: true
-                                })}></input>
-                                {errors.email?.type === 'required' && <p className="p-validacion">El campo e-mail debe ser completado</p>}
-                            </div>
-                            <div  className="input-submit">
-                                <button  type="submit" value="Inicio" >Inicio</button>
-                            </div>
-                            <div>
-                                <p className="mensajealerta-p"></p>
-                            </div>
-                            <div className="contenedor-p">
-                            <p>Si no esta registrado haga click en <Link to={'/SignUp'}>Registrarse</Link></p>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div className="inputs">
+                            <label>Correo Electronico</label>
+                            <input className={errors.email ? "input error" : "input"} type="email"  {...register('email',{
+                              onChange: (e) => changeError("email",e.target.value)
+                                })}>                             
+                            </input>
+                                {errors.email ? <p className="p-validacion">{errors.email}</p> : ""}
+                        </div>
+                        <div  className="input-submit">
+                            <button  type="submit" value="Inicio" >Inicio</button>
+                        </div>                                        
+                    </form>
                 </div>
+              </div>
             </div>
             
-            </>
-            )
-       }else if(loading===true && respuesta===null && errores===false){
+          </>
+        )
+    }else if(loading === true  && error === false ){
+
         return(
-            <>
+          <>
             
             <div className="contenedor-body-login">
                 <div className="contenedor-form-registrarse-loading">
                     <h3>Buscando Usuario</h3>
-                <PulseLoader className="animacion-loading" color="#36d7b7" size={20}></PulseLoader>
+                    <PulseLoader className="animacion-loading" color="#36d7b7" size={20}></PulseLoader>
                 </div>
             </div>
-            </>
-        )
-    }else if(loading===false && respuesta===true && errores===false){
-        return(
-            <>
-            
-            <div className="contenedor-body-login">
-                <div className="contenedor-form-registrarse-loading">
-                    <h3 className="h3-encontrado">Usuario Encontrado!</h3>
-                    <p>Para iniciar la aplicacion haga click en el siguiente boton:</p>
-                    <div>
-                        <button onClick={ingresarAplicacion}>Ingresar</button>
-                    </div>  
-                </div>
-            </div>
-            </>
-        )
-    }else if(loading===false && respuesta===false && errores===true){
-        return(
-            <>
-            
-           <div className="contenedor-body-login">
-            <div className="contenedor-form-registrarse-loading">
-                <h3 className="h3-error">{txtErrores}</h3>
-                <p>Presione el siguiente boton para volver a intentarlo</p>
-                <button onClick={volverLogin}>volver</button>
-                </div>
-           </div>
-            </>
+          </>
         )
 
-    }
-}
+    }else if(loading === false  && error === true){
+
+        return(
+          <>
+            
+           <div className="contenedor-body-login">
+                <div className="contenedor-form-registrarse-loading">
+                    <h3 className="h3-error">{txtError}</h3>
+                    {
+                      txtError.includes("activo")
+                      ?
+                      <p>Un super-admin debe activarlo para poder ingresar</p>
+                      :
+                      ""
+                    }
+                    <div className="input-submit">
+                    <button onClick={returnLogin}>volver</button>
+                    </div>
+                </div>
+           </div>
+          </>
+        );
+    };
+};
 
 export default Login;

@@ -1,0 +1,41 @@
+.personal-information-general-container{
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.personal-information-container{
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    border: solid 1px black;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 5px 5px 8px rgb(245, 69, 69);
+}
+.personal-information-header{
+    text-align: center;
+    border-bottom: 1px solid grey;
+}
+.personal-information-header h2{
+    margin: 0;
+}
+.personal-information-body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.personal-information-body label{
+    color: black;
+    font-size: 20px;
+    width: 25%;
+}
+.personal-information-body input{
+    border: none;
+    text-align: center;
+    border-bottom: 0.5px solid gray;
+    color: rgb(245, 69, 69);
+    margin-bottom: 25px;
+}
