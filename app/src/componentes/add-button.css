@@ -6,12 +6,13 @@
     align-items: center;
 }
 .boton-agregar{
-    background: green;
+    background: #4CAF50;
     height: 30px;
     width: 30%;
     font-weight: 700;
     font-size: 15px;
     border: 0.5px solid black;
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s;
 }
