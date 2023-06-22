@@ -1,14 +1,15 @@
 
+import env from '../enviroment.json';
 /* global getEnviroment */
 export default async function getEnviroment(){
 
-    const enviroment = await fetch ('/enviroment.json')
+    /*const enviroment = await fetch('../enviroment.json')
     .then(res  => res.json())
     .then( datos =>{
         return datos
       }) 
     .catch(error => {
-        console.log('Error al obtener el archivo enviroment.json:', error);
-      });
-    return enviroment;
+        return { message: `<p class="error"> Error al obtener el archivo enviroment.json: ${error}</p>`, error};
+      });*/
+    return env;
 }
