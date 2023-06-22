@@ -52,7 +52,7 @@ const ModalEditCellphone = ({openModalEdit, onsubmit, itemToEdit, changeError, c
                     :
                     <option className={errors.brand_id ? "option-selected error" : "option-selected"} value={itemToEdit ? itemToEdit.brand_id ? itemToEdit.brand_id.brand : null : null}>{itemToEdit ? itemToEdit.brand_id ? itemToEdit.brand_id.brand : "Seleccione una Marca" : null}</option>
                   }
-                  {filteredBrands.map((brand)=>{
+                  {filteredBrands().map((brand)=>{
                       return <option  key={brand.id} value={brand.id} >{brand.title}</option>
                   })}
                 </select>

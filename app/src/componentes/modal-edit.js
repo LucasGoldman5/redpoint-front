@@ -444,21 +444,45 @@ const ModalEdit = ({ getOpenModalEdit, selectRowOff, itemToEdit, edit, closeForm
     }
   };
 
-  const filteredCustomers = dataCustomersEdit.filter((customer) =>
-    customer.name.toLowerCase().includes(filterCustomerValue.toLowerCase())
-  );
+  const filteredCustomers = () =>{
+    if(dataCustomersEdit.length >= 1){
+      return dataCustomersEdit.filter((customer) =>
+      customer.name.toLowerCase().includes(filterCustomerValue.toLowerCase())
+    );
+    }else{
+      return []
+    }
+  }
 
-  const filteredCellphones = dataCellphonesEdit.filter((cellphone) =>
-    cellphone.model.toLowerCase().includes(filterCellphoneValue.toLowerCase())
-  );
+  const filteredCellphones = () =>{
+    if(dataCellphonesEdit.length >= 1){
+      return dataCellphonesEdit.filter((cellphone) =>
+      cellphone.model.toLowerCase().includes(filterCellphoneValue.toLowerCase())
+    );
+    }else{
+      return []
+    }
+  }
 
-  const filteredServices = dataServicesEdit.filter((service) =>
-    service.description.toLowerCase().includes(filterServiceValue.toLowerCase())
-  );
+  const filteredServices = () =>{
+    if(dataServicesEdit.length >= 1){
+      return dataServicesEdit.filter((service) =>
+      service.description.toLowerCase().includes(filterServiceValue.toLowerCase())
+    );
+    }else{
+      return []
+    }
+  }
 
-  const filteredBrands = dataBrandsEdit.filter((brand) =>
-    brand.title.toLowerCase().includes(filterBrandValue.toLowerCase())
-  );
+  const filteredBrands = () =>{
+    if(dataBrandsEdit.length >= 1){
+      return dataBrandsEdit.filter((brand) =>
+      brand.title.toLowerCase().includes(filterBrandValue.toLowerCase())
+    );
+    }else{
+      return []
+    }
+  }
 
   const table = enviroment.selfUrl.dataTable;
   const entities = enviroment.selfUrl.localEntities;

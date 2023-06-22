@@ -102,7 +102,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                     :
                     <option >Seleccionar..</option>
                   }
-                  {filteredCustomers.map((customer)=>{   
+                  {filteredCustomers().map((customer)=>{   
                     const customerSelected = itemToEdit && itemToEdit.customer.id == customer.id ?  'selected' : '';   
                       return <option className={itemToEdit && newCustomerSelectedEdit.length < 1 ? itemToEdit.customer.id == customer.id ? "option-selected" :"option-modal" : newCustomerSelectedEdit.length > 0 ? newCustomerSelectedEdit.id == customer.id ? "option-selected" :"option-modal":"option-modal"} 
                                      key={customer.id} 
@@ -144,7 +144,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                     :
                     <option >Seleccionar..</option>
                   }
-                  {filteredCellphones.map((cellphone)=>{
+                  {filteredCellphones().map((cellphone)=>{
                     const cellphoneSelected = itemToEdit && itemToEdit.cellphone.id == cellphone.id ?  'selected' : "";                
                       return <option className={itemToEdit && itemToEdit.cellphone.id == cellphone.id ? "option-selected" :"option-modal"} 
                       key={cellphone.id} 
@@ -197,7 +197,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                     :
                     <option >Seleccionar..</option>
                   }
-                  {filteredServices.map((service)=>{                 
+                  {filteredServices().map((service)=>{                 
                       return <option className={itemToEdit && itemToEdit.service.id == service.id ? "option-selected" :"option-modal"}
                        key={service.id}
                        value={service.id}>{service.description}</option>   

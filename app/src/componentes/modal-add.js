@@ -486,17 +486,35 @@ useEffect(() => {
      }
   };
 
-  const filteredCellphones = dataCellPhones.filter((cellphone) =>
-    cellphone.model.toLowerCase().includes(filterCellphoneValue.toLowerCase())
-  );
+  const filteredCellphones = () =>{
+    if(dataCellPhones.length >=1){
+      return dataCellPhones.filter((cellphone) =>
+    cellphone.model.toLowerCase().includes(filterCellphoneValue.toLowerCase()))
+    }else{
+      return []
+    }
+  } 
+  
 
-  const filteredServices = dataServices.filter((service) =>
-    service.description.toLowerCase().includes(filterServiceValue.toLowerCase())
-  );
+  const filteredServices = () =>{
+    if ( dataServices.length >= 1){
+      return dataServices.filter((service) =>
+      service.description.toLowerCase().includes(filterServiceValue.toLowerCase())
+    );
+    }else{
+      return []
+    }
+  }
 
-  const filteredBrands = dataBrands.filter((brand) =>
-    brand.title.toLowerCase().includes(filterBrandValue.toLowerCase())
-  );
+  const filteredBrands = () =>{
+    if (dataBrands.length >= 1){
+      return dataBrands.filter((brand) =>
+      brand.title.toLowerCase().includes(filterBrandValue.toLowerCase())
+    );
+    }else{
+      return []
+    }
+  }
 
   const table = enviroment.selfUrl.dataTable;
   const entities = enviroment.selfUrl.localEntities;

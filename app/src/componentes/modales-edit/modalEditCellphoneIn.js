@@ -56,7 +56,7 @@ const ModalEditCellphoneIn = ({openModalAddCellphoneEdit, addCellphoneInReparati
                           :
                           <option >Seleccionar..</option>
                         }
-                  {filteredBrands.map((brand)=>{
+                  {filteredBrands().map((brand)=>{
                       return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option>
                   })}
                 </select>

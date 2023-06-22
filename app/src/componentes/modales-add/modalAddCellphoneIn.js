@@ -13,6 +13,7 @@ const ModalAddCellphoneIn = ({openModalAddCellphone, addCellphoneInReparation, e
         console.log("hola");
         if(newBrandSelected.id){
             setValue("brand_id",newBrandSelected.id)
+            changeErrorApi("brand_id")
         }
     }
 
