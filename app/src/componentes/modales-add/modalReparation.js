@@ -50,7 +50,7 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
     const addValues = (id,entity) =>{
 
         if(entity == "customer"){
-          filteredCustomers.map((customer) =>{
+          filteredCustomers().map((customer) =>{
             if(customer.id == id){
                setValue("email", customer.email);
                setValue("number", customer.phone);
@@ -59,14 +59,14 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
           });
         }
         if(entity == "cellphone"){
-          filteredCellphones.map((cellphone) =>{
+          filteredCellphones().map((cellphone) =>{
             if(cellphone.id == id){
                setSelectCellphone(cellphone);
             };
           });
         }
         if(entity == "service"){
-          filteredServices.map((service) =>{
+          filteredServices().map((service) =>{
             if(service.id == id){
                setSelectService(service);
             };
