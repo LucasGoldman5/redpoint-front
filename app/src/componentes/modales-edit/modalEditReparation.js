@@ -42,21 +42,21 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
     const addValues = (id,entity) =>{
 
         if(entity == "customer"){
-            filteredCustomers.map((customer) =>{
+            filteredCustomers().map((customer) =>{
                 if(customer.id == id){
                    setCustomerSelected(customer);
                 };
               });
         }
         if(entity == "cellphone"){
-            filteredCellphones.map((cellphone) =>{
+            filteredCellphones().map((cellphone) =>{
                 if(cellphone.id == id){
                    setCellphoneSelected(cellphone);
                 };
               });
         }
         if(entity == "service"){
-            filteredServices.map((service) =>{
+            filteredServices().map((service) =>{
                 if(service.id == id){
                    setServiceSelected(service);
                 };
