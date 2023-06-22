@@ -478,7 +478,7 @@ useEffect(() => {
   
   const filteredCustomers = () =>{
      if(dataCustomers.length >=1){
-      dataCustomers.filter((customer) =>
+      return dataCustomers.filter((customer) =>
     customer.name.toLowerCase().includes(filterCustomerValue.toLowerCase())
       )
      }else{
