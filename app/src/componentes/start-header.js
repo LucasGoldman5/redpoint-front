@@ -17,7 +17,7 @@ const StartHeader = ({register}) =>{
       <header className={register ? 'header-none' : 'header-inicio' }>
         <Navbar className="contenedor-nav-inicio" bg="dark" variant="dark">
           <Container className="contenedor">
-            <Navbar.Brand className="titulo-nav-inicio" onClick={home} href="#home">ClaroApp</Navbar.Brand>
+            <a className="header-title" onClick={home} href="#home">RedPoint</a>
             <Nav className="contenedor-links-inicio" >
               <li><Link className='nav-li-link-inicio' to={'/login'}>Inicio</Link></li>
             </Nav>

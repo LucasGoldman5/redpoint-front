@@ -13,16 +13,12 @@ const InformationHeader = ({enviroment}) =>{
     window.location.assign(`${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`);
   }
 
-  const home = async () =>{
-    window.location.assign(`${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`);
-  }
-
     return(
         <>
             <header className="header-informacion">
                 <Navbar className="contenedor-nav-informacion" bg="dark" variant="dark">
                     <Container className="contenedor">
-                    <Navbar.Brand className="titulo-nav-informacion" onClick={home} href="#home">ClaroApp</Navbar.Brand>
+                    <a className="header-title" href={`${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`}>RedPoint</a>
                     <Nav  >
                         <Link className='nav-li-link-inicio' onClick={comeBack} >Volver</Link>
                     </Nav>

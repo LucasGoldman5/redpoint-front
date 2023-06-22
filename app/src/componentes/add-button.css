@@ -5,6 +5,13 @@
     justify-content: flex-start;
     align-items: center;
 }
+.container-button-no-results{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+}
 .boton-agregar{
     background: #4CAF50;
     height: 30px;

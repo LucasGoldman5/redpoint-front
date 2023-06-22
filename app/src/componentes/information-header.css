@@ -12,3 +12,10 @@
     width: 100%;
     margin: 0;
 }
+.header-title{
+    font-size: 20px;
+}
+
+.header-title:hover{
+    color: rgb(128, 0, 0);
+}

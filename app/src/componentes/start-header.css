@@ -18,6 +18,17 @@
     flex-direction: flex-start;
 }
 
+.header-title{
+    
+    color: red;
+    cursor: pointer;
+    text-decoration: none;
+}
+.header-title:hover{
+    text-decoration: none;
+    color: rgb(145, 0, 0);
+}
+
 .contenedor.container{
     width: 100%;
 }

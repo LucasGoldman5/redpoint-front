@@ -20,16 +20,17 @@
     display: flex;
     flex-direction: flex-start;
 }
-.header-title{
-    margin: 0;
+.header-title-general{
     color: red;
     margin-right: 2px;
     cursor: pointer;
     text-decoration: none;
+    display: flex;
+    align-items: end;
 }
-.header-title:hover{
+.header-title-general:hover{
     text-decoration: none;
-    color: red;
+    color: rgb(145, 0, 0);
 }
 .header-sub-title{
     margin: 0;
