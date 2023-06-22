@@ -19,6 +19,7 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
             setValue("customer_id",newCustomerSelected.id)
             setValue("number",newCustomerSelected.phone_number)
             setValue("email",newCustomerSelected.email)
+            addEmail("customer")
         }else{
           if(selectCustomer.id && ifChangeModal === true){
             setValue("customer_id",selectCustomer.id)
@@ -29,6 +30,7 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
 
         if(newCellphoneSelected.id){
             setValue("cellphone_id",newCellphoneSelected.id)
+            changeError("cellphone")
         }else if(selectCellphone.id && ifChangeModal === true){
           setValue("cellphone_id",selectCellphone.id)
         }else{
@@ -37,6 +39,7 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
 
         if(newServiceSelected.id){
             setValue("service_id",newServiceSelected.id)
+            changeError("service")
         }else if(selectService.id && ifChangeModal === true){
           setValue("service_id",selectService.id)
         }else{
@@ -144,7 +147,7 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
                       :
                       <option className="option-selected">Seleccionar..</option>
                       }
-                    {filteredCellphones.map((cellphone)=>{
+                    {filteredCellphones().map((cellphone)=>{
                         return <option className="option-modal" key={cellphone.id} value={cellphone.id} >{cellphone.model}</option>
                     })}
                 </select>
@@ -197,7 +200,7 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
                       :
                       <option className="option-selected">Seleccionar..</option>
                       }
-                    {filteredServices.map((service)=>{
+                    {filteredServices().map((service)=>{
                         return <option className="option-modal" key={service.id} value={service.id} >{service.description}</option>
                     })}
                 </select>

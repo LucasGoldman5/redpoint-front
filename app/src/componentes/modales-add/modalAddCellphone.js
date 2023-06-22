@@ -12,6 +12,7 @@ const ModalAddCellphone = ({openModalAdd, create, errors, changeError, dataApi, 
     const changueValue = () =>{
         if(newBrandSelected.id){
             setValue("brand_id",newBrandSelected.id)
+            changeError("brand")
         }
     }
 
@@ -55,7 +56,7 @@ const ModalAddCellphone = ({openModalAdd, create, errors, changeError, dataApi, 
                       :
                       <option className="option-selected" value={"Seleccionar"}>Seleccionar..</option>    
                     }
-                  {filteredBrands.map((brand)=>{
+                  {filteredBrands().map((brand)=>{
                         return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option> 
                   })}
                 </select>
