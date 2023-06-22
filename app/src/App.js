@@ -69,9 +69,6 @@ import getEnviroment from './helpers/getEnviroment';
     setArrowIcon(!arrowIcon);
     const apiURL = urlApi();
     const entitiesUrl = urlEntities();
-    const local = dataEnviroment.selfUrl.main;
-    const table = dataEnviroment.selfUrl.dataTable;
-    const ent = dataEnviroment.selfUrl.localEntities;
     
     if(dataBrands.length < 1){
       try{
@@ -203,9 +200,6 @@ import getEnviroment from './helpers/getEnviroment';
 
       const apiURL = urlApi();
       const entitiesUrl = urlEntities();
-      const local = dataEnviroment.selfUrl.main;
-      const table = dataEnviroment.selfUrl.dataTable;
-      const ent = dataEnviroment.selfUrl.localEntities;
 
         try{
                    
