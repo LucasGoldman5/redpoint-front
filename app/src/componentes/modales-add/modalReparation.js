@@ -103,7 +103,7 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
                         :
                         <option className="option-selected">Seleccionar..</option>
                       }
-                      {filteredCustomers.map((customer)=>{
+                      {filteredCustomers().map((customer)=>{
                           return <option className="option-modal" key={customer.id} value={customer.id} >{customer.name}</option>                              
                       })}
                   </select>

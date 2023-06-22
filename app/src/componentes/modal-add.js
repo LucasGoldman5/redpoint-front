@@ -476,9 +476,13 @@ useEffect(() => {
   };
  
   
-  const filteredCustomers = dataCustomers.filter((customer) =>
+  const filteredCustomers = () =>{
+     if(dataCustomers.length >=1){
+      dataCustomers.filter((customer) =>
     customer.name.toLowerCase().includes(filterCustomerValue.toLowerCase())
-  );
+      )
+     }
+  };
 
   const filteredCellphones = dataCellPhones.filter((cellphone) =>
     cellphone.model.toLowerCase().includes(filterCellphoneValue.toLowerCase())
