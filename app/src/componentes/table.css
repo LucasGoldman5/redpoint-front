@@ -13,8 +13,15 @@ body{
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    height: 300px;
+    height: 200px;
  }
+
+.div-no-results{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
  .div-load-page{
     display: flex;

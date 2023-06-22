@@ -263,7 +263,7 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
       
       setItemToEdit(null);
       setItemToEdit(element);
-      setScroll(event.currentTarget.offsetTop - 150)
+      setScroll(event.currentTarget.offsetTop - 100)
       setRowId(element.id);
       setOpenModalEdit(true);
 
@@ -652,7 +652,7 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                       ?
                       ""
                       :
-                      <AddButton onClick={()=>openModalAdd()}></AddButton>
+                      <AddButton onClick={()=>openModalAdd()} dataApi={dataApi}></AddButton>
                     }
                       <div className='contenedor-barra'>
                         <input type='text' placeholder={`buscar...`} className='barra-busqueda' onChange={(e) => dataFilter(e)}/>
@@ -891,8 +891,32 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
               <div className='div-load-page'><PulseLoader color="#d41c1c" size={20}></PulseLoader></div>
               :
             <>
-              <div>
+              <div className='div-no-results'>
+              {
+                window.location.href.includes("por")
+                ?
+                ""
+                :
+                <AddButton onClick={()=>openModalAdd()} dataApi={dataApi}></AddButton>
+              }
                 <h1 className='h1-no-results'>No hay Resultados</h1>
+                <ModalAdd
+                    create={create}
+                    closeModal={closeModal}
+                    closeForm={closeForm}
+                    dataApi={dataApi}
+                    openModal={openModal}
+                    errorsInTable={errors}
+                    enviroment={enviroment}
+                    dataBrandsApp={dataBrandsApp}
+                    dataCustomersApp={dataCustomersApp}
+                    dataServicesApp={dataServicesApp}
+                    dataCellphonesApp={dataCellphonesApp}
+                    dataRolesApp={dataRolesApp}
+                    dataStatusApp={dataStatusApp}
+                    resetSelectBox={resetSelectBox}
+                    urlTable={urlTable}>
+                  </ModalAdd>
               </div>
             </>
           }

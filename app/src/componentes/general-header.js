@@ -311,7 +311,7 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
           <Navbar className="contenedor-nav-general" bg="dark" variant="dark">
             <div className="contenedor-general">
               <div className="contenedor-titulo">
-                <Navbar.Brand className="titulo-nav"><a className="header-title" href={`${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`}>RedPoint</a>/<p className="header-sub-title">{title()}</p></Navbar.Brand>
+                <Navbar.Brand className="titulo-nav"><a className="header-title-general" href={`${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`}>RedPoint</a>/<p className="header-sub-title">{title()}</p></Navbar.Brand>
               </div>
               <div className="contenedor-contenedor-links">
                 <Nav >

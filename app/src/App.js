@@ -198,7 +198,7 @@ import getEnviroment from './helpers/getEnviroment';
 
   const changeSon = async () =>{
 
-    if(dataEnviroment.selfUrl){
+    if(dataEnviroment.selfUrl && user){
 
       const apiURL = urlApi();
       const entitiesUrl = urlEntities();
