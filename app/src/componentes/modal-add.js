@@ -73,7 +73,7 @@ const ModalAdd =({closeModal, create,dataApi,errorsInTable,openModal,closeForm,e
 
     if(fact === "brand"){
 
-      if(location === `${enviroment.selfUrl.main}${table}${entities.cellphones}`){
+      if(location.includes(`${table}${entities.cellphones}`)){
         setOpenModalAddBrand(true);
         setOpenModalAdd(false);
         setIfchangeModal(true);
@@ -189,7 +189,7 @@ useEffect(() => {
                 setNewBrandSelected(response.data);
                 setErrorsApi({model:errorsApi.model, brand_id:null})
 
-                if(location === `${enviroment.selfUrl.main}${table}${entities.cellphones}`){
+                if(location.includes(`${table}${entities.cellphones}`)){
                   setOpenModalAddBrand(false);
                   setOpenModalAdd(true);
                 }else{
@@ -496,7 +496,7 @@ useEffect(() => {
   const entities = enviroment.selfUrl.localEntities;
 
 
-  if(location === `${enviroment.selfUrl.main}${table}${entities.cellphones}`){
+  if(location.includes(`${table}${entities.cellphones}`)){
 
     return(
 
@@ -525,7 +525,7 @@ useEffect(() => {
 
         </>  
     );
-  }else if(location === `${enviroment.selfUrl.main}${table}${entities.brands}` ){
+  }else if(location.includes(`${table}${entities.brands}`)){
 
     return(
 
@@ -538,7 +538,7 @@ useEffect(() => {
        closeForm={closeForm}/>
 
     )
-  }else if(location === `${enviroment.selfUrl.main}${table}${entities.services}`){
+  }else if(location.includes(`${table}${entities.services}`)){
 
     return(
       <ModalAddService
@@ -549,7 +549,7 @@ useEffect(() => {
        changeError={changeError}
        closeForm={closeForm}/>
     );
-  }else if(location === `${enviroment.selfUrl.main}${table}${entities.customers}`){
+  }else if(location.includes(`${table}${entities.customers}`)){
 
     return(
 
@@ -562,7 +562,7 @@ useEffect(() => {
        closeForm={closeForm}/>
     
     );
-  }else if(location === `${enviroment.selfUrl.main}${table}${entities.reparations}`){
+  }else if(location.includes(`${table}${entities.reparations}`)){
 
     return(
         <>

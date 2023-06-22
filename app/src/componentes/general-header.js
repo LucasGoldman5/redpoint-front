@@ -303,6 +303,9 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
       return "usuarios"
     }
   }
+  const originUrl = window.location.href
+  const parsedUrl = new URL(originUrl);
+  const baseUrl = parsedUrl.origin;
 
   if(enviroment.selfUrl){
     return(
@@ -311,46 +314,46 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
           <Navbar className="contenedor-nav-general" bg="dark" variant="dark">
             <div className="contenedor-general">
               <div className="contenedor-titulo">
-                <Navbar.Brand className="titulo-nav"><a className="header-title-general" href={`${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`}>RedPoint</a>/<p className="header-sub-title">{title()}</p></Navbar.Brand>
+                <Navbar.Brand className="titulo-nav"><a className="header-title-general" href={`${baseUrl}/${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`}>RedPoint</a>/<p className="header-sub-title">{title()}</p></Navbar.Brand>
               </div>
               <div className="contenedor-contenedor-links">
                 <Nav >
                     <div className="container-li-span">
-                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("b")} onMouseLeave={()=>noSeeP("b")} onClick={()=>  changeUrl(`${ent.brands}`)} to={`${enviroment.selfUrl.dataTable}${ent.brands}`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${ent.brands}`)? "icon" : "icon-none"}  icon={faM}></FontAwesomeIcon></Link></li>
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("b")} onMouseLeave={()=>noSeeP("b")} onClick={()=>  changeUrl(`${ent.brands}`)} to={`${enviroment.selfUrl.dataTable}${ent.brands}`}><FontAwesomeIcon className={(window.location.href.includes(`${enviroment.selfUrl.dataTable}${ent.brands}`))? "icon" : "icon-none"}  icon={faM}></FontAwesomeIcon></Link></li>
                       <span className={seeingPBrand ? "span" : "span-none"}><p>Marcas</p></span>
                     </div>
                     <div className="container-li-span">
-                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("ce")} onMouseLeave={()=>noSeeP("ce")}  onClick={()=> changeUrl(`${ent.cellphones}`)} to={`${enviroment.selfUrl.dataTable}${ent.cellphones}`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${ent.cellphones}`)? "icon" : "icon-none"} icon={faMobileRetro}></FontAwesomeIcon></Link></li>
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("ce")} onMouseLeave={()=>noSeeP("ce")}  onClick={()=> changeUrl(`${ent.cellphones}`)} to={`${enviroment.selfUrl.dataTable}${ent.cellphones}`}><FontAwesomeIcon className={(window.location.href.includes(`${enviroment.selfUrl.dataTable}${ent.cellphones}`))? "icon" : "icon-none"} icon={faMobileRetro}></FontAwesomeIcon></Link></li>
                       <span className={seeingPCellphone ? "span" : "span-none"}><p>Celulares</p></span> 
                     </div>
                     <div className="container-li-span">
-                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("s")} onMouseLeave={()=>noSeeP("s")}   onClick={()=>  changeUrl(`${ent.services}`)} to={`${enviroment.selfUrl.dataTable}${ent.services}`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${ent.services}`)? "icon" : "icon-none"} icon={faBuilding}></FontAwesomeIcon></Link></li>
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("s")} onMouseLeave={()=>noSeeP("s")}   onClick={()=>  changeUrl(`${ent.services}`)} to={`${enviroment.selfUrl.dataTable}${ent.services}`}><FontAwesomeIcon className={(window.location.href.includes(`${enviroment.selfUrl.dataTable}${ent.services}`))? "icon" : "icon-none"} icon={faBuilding}></FontAwesomeIcon></Link></li>
                       <span className={seeingPService ? "span" : "span-none"}><p>Servicios</p></span>
                     </div>
                     <div className="container-li-span">
-                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("cu")} onMouseLeave={()=>noSeeP("cu")}  onClick={()=>  changeUrl(`${ent.customers}`)} to={`${enviroment.selfUrl.dataTable}${ent.customers}`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${ent.customers}`)? "icon" : "icon-none"} icon={faUsers}></FontAwesomeIcon></Link></li>
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("cu")} onMouseLeave={()=>noSeeP("cu")}  onClick={()=>  changeUrl(`${ent.customers}`)} to={`${enviroment.selfUrl.dataTable}${ent.customers}`}><FontAwesomeIcon className={(window.location.href.includes(`${enviroment.selfUrl.dataTable}${ent.customers}`))? "icon" : "icon-none"} icon={faUsers}></FontAwesomeIcon></Link></li>
                       <span className={seeingPCustomer ? "span" : "span-none"}><p>Clientes</p></span>
                     </div>
                     <div className="container-li-span">
-                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("rn")} onMouseLeave={()=>noSeeP("rn")}  onClick={()=>  changeUrl(`${ent.reparations}`)} to={`${enviroment.selfUrl.dataTable}${ent.reparations}`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${ent.reparations}`)? "icon" : "icon-none"} icon={faScrewdriverWrench}></FontAwesomeIcon></Link></li>
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("rn")} onMouseLeave={()=>noSeeP("rn")}  onClick={()=>  changeUrl(`${ent.reparations}`)} to={`${enviroment.selfUrl.dataTable}${ent.reparations}`}><FontAwesomeIcon className={(window.location.href.includes(`${enviroment.selfUrl.dataTable}${ent.reparations}`))? "icon" : "icon-none"} icon={faScrewdriverWrench}></FontAwesomeIcon></Link></li>
                       <span className={seeingPReparation ? "span" : "span-none"}><p>Reparaciones</p></span>
                     </div>
                     <div className="div-button-filter">
                             <button className={(window.location.href.includes("por"))? "button-reparation-filter" : "button-reparation-filter-none"} onClick={() => openNavReports()}>Reparaciones filtradas<FontAwesomeIcon icon={arrowIcon ? faCaretDown : faCaretUp}></FontAwesomeIcon></button>   
                     </div>
                     <div className="container-li-span">
-                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("rp")} onMouseLeave={()=>noSeeP("rp")}  onClick={() => changeUrl(`${enviroment.entities.pending}`)} to={`${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`)? "icon" : "icon-none"}  icon={faHourglassHalf} /></Link></li>
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("rp")} onMouseLeave={()=>noSeeP("rp")}  onClick={() => changeUrl(`${enviroment.entities.pending}`)} to={`${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`}><FontAwesomeIcon className={(window.location.href.includes(`${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`))? "icon" : "icon-none"}  icon={faHourglassHalf} /></Link></li>
                       <span className={seeingPReparationPending ? "span" : "span-none"}><p>Reparaciones Pendientes</p></span>
                     </div>
                     <div className="container-li-span">
-                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("rs")} onMouseLeave={()=>noSeeP("rs")}  onClick={() => changeUrl(`${enviroment.entities.success}`)} to={`${enviroment.selfUrl.dataTable}${enviroment.entities.success}`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${enviroment.entities.success}`)? "icon" : "icon-none"} icon={faCheck}></FontAwesomeIcon></Link></li>
+                      <li className='nav-li-link'><Link onMouseOver={()=>seeP("rs")} onMouseLeave={()=>noSeeP("rs")}  onClick={() => changeUrl(`${enviroment.entities.success}`)} to={`${enviroment.selfUrl.dataTable}${enviroment.entities.success}`}><FontAwesomeIcon className={(window.location.href.includes(`${enviroment.selfUrl.dataTable}${enviroment.entities.success}`))? "icon" : "icon-none"} icon={faCheck}></FontAwesomeIcon></Link></li>
                       <span className={seeingPReparationSuccess ? "span" : "span-none"}><p>Reparaciones Finalizadas</p></span>
                     </div>
                     {
                       (superAdmin === true)
                       ?
                       <div className="container-li-span">
-                        <li className='nav-li-link'><Link onMouseOver={()=>seeP("us")} onMouseLeave={()=>noSeeP("us")}  onClick={() => changeUrl(`${ent.users}`)} to={`${enviroment.selfUrl.dataTable}${ent.users}`}><FontAwesomeIcon className={(window.location.href === `${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${ent.users}`)? "icon" : "icon-none"} icon={faUserGear}></FontAwesomeIcon></Link></li>
+                        <li className='nav-li-link'><Link onMouseOver={()=>seeP("us")} onMouseLeave={()=>noSeeP("us")}  onClick={() => changeUrl(`${ent.users}`)} to={`${enviroment.selfUrl.dataTable}${ent.users}`}><FontAwesomeIcon className={(window.location.href.includes(`${enviroment.selfUrl.dataTable}${ent.users}`))? "icon" : "icon-none"} icon={faUserGear}></FontAwesomeIcon></Link></li>
                         <span className={seeingPUsers ? "span" : "span-none"}><p>Usuarios</p></span>
                       </div>
                       :
