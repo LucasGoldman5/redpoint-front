@@ -576,7 +576,7 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
           setChain(e.target.value.toLowerCase());
         }
       
-        if (chain.length >= 1) {
+        if (chain.length > 1) {
           filteredData = filteredData.filter((fact) => {
          
             for (let property in fact) {
@@ -597,6 +597,16 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                     return true
                    }
                   }
+                  if(value.customer != undefined && typeof value.customer !== "object"){
+                    if(value.customer.toLowerCase().includes(chain)){
+                     return true
+                    }
+                   }
+                   if(value.description != undefined && typeof value.description !== "object"){
+                    if(value.description.toLowerCase().includes(chain)){
+                     return true
+                    }
+                   }
                   if(value.service != undefined && typeof value.service !== "object"){
                     if(value.service.toLowerCase().includes(chain)){
                      return true
