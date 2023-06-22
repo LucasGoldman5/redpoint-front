@@ -9,8 +9,12 @@ import {  Link } from 'react-router-dom';
 const InformationHeader = ({enviroment}) =>{
   
 
+  const originUrl = window.location.href
+  const parsedUrl = new URL(originUrl);
+  const baseUrl = parsedUrl.origin;
+
   const comeBack = async () =>{
-    window.location.assign(`${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`);
+    window.location.assign(`${baseUrl}/${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`);
   }
 
     return(
@@ -18,7 +22,7 @@ const InformationHeader = ({enviroment}) =>{
             <header className="header-informacion">
                 <Navbar className="contenedor-nav-informacion" bg="dark" variant="dark">
                     <Container className="contenedor">
-                    <a className="header-title" href={`${enviroment.selfUrl.main}${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`}>RedPoint</a>
+                    <a className="header-title" href={`${baseUrl}/${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`}>RedPoint</a>
                     <Nav  >
                         <Link className='nav-li-link-inicio' onClick={comeBack} >Volver</Link>
                     </Nav>

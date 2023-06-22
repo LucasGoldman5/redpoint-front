@@ -465,7 +465,7 @@ const ModalEdit = ({ getOpenModalEdit, selectRowOff, itemToEdit, edit, closeForm
   
 
 
-  if(location === `${enviroment.selfUrl.main}${table}${entities.brands}` ){
+  if(location.includes(`${table}${entities.brands}`)){
 
     return(
       <ModalEditBrand
@@ -478,7 +478,7 @@ const ModalEdit = ({ getOpenModalEdit, selectRowOff, itemToEdit, edit, closeForm
        closeForm={closeForm}/>
     )
 
-  }else if(location === `${enviroment.selfUrl.main}${table}${entities.cellphones}`){
+  }else if(location.includes(`${table}${entities.cellphones}`)){
 
     return(
 
@@ -506,7 +506,7 @@ const ModalEdit = ({ getOpenModalEdit, selectRowOff, itemToEdit, edit, closeForm
          closeFormAdd={closeFormAdd}/>
       </>
     )
-  }else if(location === `${enviroment.selfUrl.main}${table}${entities.services}`){
+  }else if(location.includes(`${table}${entities.services}`)){
 
     return(
       <ModalEditService
@@ -519,7 +519,7 @@ const ModalEdit = ({ getOpenModalEdit, selectRowOff, itemToEdit, edit, closeForm
         closeForm={closeForm}/>
     );
 
-  }else if(location === `${enviroment.selfUrl.main}${table}${entities.customers}`){
+  }else if(location.includes(`${table}${entities.customers}`)){
 
     return(
       <ModalEditCustomer

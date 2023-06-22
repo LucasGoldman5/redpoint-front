@@ -7,8 +7,11 @@ import { useForm } from "react-hook-form";
 
 const ModalEditUser = ({openModalEdit, onsubmit, itemToEdit, changeError, errors, edit, closeForm, enviroment, dataRolesEdit}) =>{
 
+    const originUrl = window.location.href
+    const parsedUrl = new URL(originUrl);
+    const baseUrl = parsedUrl.origin;
+    const local = baseUrl;
     
-    const local = enviroment.selfUrl.main;
     const [newHash, setNewHash] = useState(true);
 
     const changePass = async (data) =>{
@@ -28,7 +31,7 @@ const ModalEditUser = ({openModalEdit, onsubmit, itemToEdit, changeError, errors
                       console.log(response.error);
                     },1000);
                 }else{
-                  setValue("pass",local+enviroment.selfUrl.generatePass+"#"+response.data.hash)
+                  setValue("pass",local+"/"+enviroment.selfUrl.generatePass+"#"+response.data.hash)
                   setNewHash(false);
                 };
             };
@@ -60,7 +63,7 @@ const ModalEditUser = ({openModalEdit, onsubmit, itemToEdit, changeError, errors
                   {errors.name? <p className="p-errores">{errors.name}</p>: ""}
                 <br />
                 <label>Generar contraseña en:</label>
-                <input className="form-control" type="text" readOnly defaultValue={itemToEdit ? itemToEdit.hash ? local+enviroment.selfUrl.generatePass+"#"+itemToEdit.hash : `La contraseña ya fue creada para ${itemToEdit.name}` : ""} {...register('pass',{ shouldUnregister:true })}></input>
+                <input className="form-control" type="text" readOnly defaultValue={itemToEdit ? itemToEdit.hash ? local+"/"+enviroment.selfUrl.generatePass+"#"+itemToEdit.hash : `La contraseña ya fue creada para ${itemToEdit.name}` : ""} {...register('pass',{ shouldUnregister:true })}></input>
                 <br/>
                 {
                   itemToEdit
