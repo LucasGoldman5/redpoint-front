@@ -38,6 +38,7 @@ import getEnviroment from './helpers/getEnviroment';
   const setEnviroment = async () =>{
     setDataEnviromet( await getEnviroment())
   }
+ 
 
   const urlApi = () =>{
       return  dataEnviroment.apiURL 
