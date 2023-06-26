@@ -34,8 +34,11 @@ export default async function  HelperBuildRequest ( method, data = {}, type = nu
     const tokenDecode =  JSON.parse( atob(tokenArr[1]) );
  
     const expired = tokenDecode.exp * 1000;
-    const now = Date.now();
+    console.log("expired:::",expired);
+    const now = new Date().getTime();
+    console.log("now:::",now);
     const limit = (expired - 600000) - now;
+    console.log("limit:::",limit);
 
     if( limit > 2222222 ) {      
         return buildCallServer(method, data, type);
@@ -57,13 +60,11 @@ export default async function  HelperBuildRequest ( method, data = {}, type = nu
             localStorage.setItem('user', JSON.stringify(datos));
             return buildCallServer(method, data, type);  
             }else if(response.status === 401){
-                console.log("fallo");
                 localStorage.removeItem('user');
                 localStorage.removeItem('column');
-                window.location.reload()
-                setTimeout(()=>{
-                    console.log("fallo 2");
-                    
+                console.log("fallo 2");
+                setTimeout(()=>{ 
+                    window.location.reload()
                 },1500)
             }
           } catch (error) {
@@ -73,9 +74,11 @@ export default async function  HelperBuildRequest ( method, data = {}, type = nu
             // Manejar el error según sea necesario
             return <NotAuthorized/>; // O cualquier otro valor que desees devolver en caso de error
           }
+
         await fetch(`http://localhost:8000/api/refresh`, config)
           .then( res  => res.json())
-          .then( datos =>{           
+          .then( datos =>{
+            console.log("refrescado2");           
             //setear datos nuevos
             localStorage.setItem("user",JSON.stringify(datos)) 
           });
