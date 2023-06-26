@@ -14,6 +14,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
     const [cellphoneSelected, setCellphoneSelected] = useState({});
     const [serviceSelected, setServiceSelected] = useState({});
 
+
     const changeValue = () =>{
 
         if(newCustomerSelectedEdit.id){
@@ -89,7 +90,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
               <div className="div-container-select-button">
               <input type="search" onChange={(e)=>handleInputChange(e,"customer")} placeholder="buscar.." className={selectCustomerActive ? "input-search" : "input-search-none"}></input>
               <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"customer")} className="icon-search" icon={faMagnifyingGlass} />
-                <select  className={errors.customer_id ? "form-select error" : "form-select"} defaultValue={itemToEdit && newCustomerSelectedEdit.length < 1 ? itemToEdit.customer.id ? itemToEdit.customer.id : "" : newCustomerSelectedEdit.length > 0 ? newCustomerSelectedEdit.id : null}{...register('customer_id',{
+                <select  className={errors.customer_id ? "form-select error" : "form-select"} defaultValue={itemToEdit && newCustomerSelectedEdit == [] ? itemToEdit.customer.id ? itemToEdit.customer.id : "" : newCustomerSelectedEdit.length > 0 ? newCustomerSelectedEdit.id : null}{...register('customer_id',{
                    onChange: (e) =>{ 
                    addEmail(e.target.value,"customer")
                    addValues(e.target.value,"customer")
@@ -99,6 +100,10 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                     (newCustomerSelectedEdit.id)
                     ?
                      <option value={newCustomerSelectedEdit.id}>{newCustomerSelectedEdit.name}</option>
+                    :
+                    itemToEdit.customer.customer
+                    ?
+                    <option value={itemToEdit.customer.id}>{itemToEdit.customer.customer}</option>
                     :
                     <option >Seleccionar..</option>
                   }
@@ -131,7 +136,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
               <div className="div-container-select-button">
               <input type="search" onChange={(e)=>handleInputChange(e,"cellphone")} placeholder="buscar.." className={selectCellphoneActive ? "input-search" : "input-search-none"}></input>
               <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"cellphone")} className="icon-search" icon={faMagnifyingGlass} />
-                <select  className={errors.cellphone_id ? "form-select error" : "form-select"} type="text" name="email" id="email"  defaultValue={itemToEdit && newCellphoneSelectedEdit.length < 1 ? itemToEdit.cellphone.id ? itemToEdit.cellphone.id : "": newCellphoneSelectedEdit.length > 0 ? newCellphoneSelectedEdit.id : null}{...register('cellphone_id',{
+                <select  className={errors.cellphone_id ? "form-select error" : "form-select"} type="text" name="email" id="email"  defaultValue={itemToEdit && newCellphoneSelectedEdit == [] ? itemToEdit.cellphone.id ? itemToEdit.cellphone.id : "": newCellphoneSelectedEdit.length > 0 ? newCellphoneSelectedEdit.id : null}{...register('cellphone_id',{
                    onChange: (e) => {
                    changeError("cellphone")
                    addValues(e.target.value,"cellphone")
@@ -141,6 +146,10 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                     (newCellphoneSelectedEdit.id)
                     ?
                      <option value={newCellphoneSelectedEdit.id}>{newCellphoneSelectedEdit.model}</option>
+                    :
+                    itemToEdit.cellphone.model
+                    ?
+                    <option value={itemToEdit.cellphone.id}>{itemToEdit.cellphone.model}</option>
                     :
                     <option >Seleccionar..</option>
                   }
@@ -184,7 +193,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
               <div className="div-container-select-button">
               <input type="search" onChange={(e)=>handleInputChange(e,"service")} placeholder="buscar.." className={selectServiceActive ? "input-search" : "input-search-none"}></input>
               <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"service")} className="icon-search" icon={faMagnifyingGlass} />
-                <select  className={errors.service_id ? "form-select error" : "form-select"} type="text" name="service" id="service"  defaultValue={itemToEdit && newServiceSelectedEdit.length < 1 ? itemToEdit.service.id ? itemToEdit.service.id : "" : newServiceSelectedEdit.length > 0 ? newServiceSelectedEdit.id : null}{...register('service_id',{
+                <select  className={errors.service_id ? "form-select error" : "form-select"} type="text" name="service" id="service"  defaultValue={itemToEdit && newServiceSelectedEdit == [] ? itemToEdit.service.id ? itemToEdit.service.id : "" : newServiceSelectedEdit.length > 0 ? newServiceSelectedEdit.id : null}{...register('service_id',{
                    onChange: (e) =>{
                     changeError("service")
                     addValues(e.target.value,"service")
@@ -194,6 +203,10 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                     (newServiceSelectedEdit.id)
                     ?
                      <option value={newServiceSelectedEdit.id}>{newServiceSelectedEdit.description}</option>
+                    :
+                    itemToEdit.service.service
+                    ?
+                    <option value={itemToEdit.service.id}>{itemToEdit.service.service}</option>
                     :
                     <option >Seleccionar..</option>
                   }
@@ -241,7 +254,13 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
             
             <div className="div-inputs">
               <label >Cantidad de notificacionesr</label>
-              <input className="form-control" type="number"   defaultValue={itemToEdit ? itemToEdit.notice_quantity : ''}{...register('notice_quantity')} />
+              <input className="form-control" type="text"   defaultValue={itemToEdit ? itemToEdit.notice_quantity : ''}{...register('notice_quantity',{
+                setValueAs : value =>{
+                  if(value == ""){
+                    return undefined
+                  }
+                }
+              })} />
             </div>
             
             <div className="div-inputs">

@@ -21,15 +21,14 @@ const ModalEditCellphone = ({openModalEdit, onsubmit, itemToEdit, changeError, c
         <Modal isOpen={openModalEdit} onOpened={() => changeValue()}>
           <ModalHeader style={{display: 'block'}}>
             <div>
-              <h5 style={{float: 'center', color:'gold'}} >Editar Modelo</h5> 
+              <h5 style={{float: 'center', color:'gold'}} >{`Editar Modelo #${itemToEdit.id}`}</h5> 
             </div>
           </ModalHeader>
           <ModalBody>
             <form className="form-group" onSubmit={handleSubmit(onsubmit)}>
-              <input className="form-control" type="text"  id="modelo" readOnly defaultValue={itemToEdit ? itemToEdit.id : ''} {...register('id',{ shouldUnregister: true,})} />
-              <br/>
+              <input  type="text"  style={{visibility:"hidden", position:"absolute"}} readOnly defaultValue={itemToEdit ? itemToEdit.id : ''} {...register('id',{ shouldUnregister: true,})} />
               <label >Modelo</label>
-              <input className={errors.model ? "form-control error" : "form-control"} type="text" name="modelo" id="modelo"  defaultValue={itemToEdit ? itemToEdit.model : ''} {...register('model',{
+              <input className={errors.model ? "form-control error" : "form-control"} type="text"   defaultValue={itemToEdit ? itemToEdit.model : ''} {...register('model',{
                  onChange: () => changeError("model"),
                  })} />
                 {errors.model? <p className="p-errores">El campo Modelo debe ser definido</p> : ""}
@@ -41,7 +40,7 @@ const ModalEditCellphone = ({openModalEdit, onsubmit, itemToEdit, changeError, c
               <div className="div-container-select-button">
               <input type="search" onChange={(e)=>handleInputChange(e,"brand")} placeholder="buscar.." className={selectBrandActive ? "input-search brand" : "input-search-none"}></input>
               <FontAwesomeIcon onClick={()=>activeInputSearch(getValues(),"brand")} className="icon-search" icon={faMagnifyingGlass} />
-                <select  className="form-select" name="select"  defaultValue={itemToEdit && itemToEdit.brand_id && newBrandSelectedEdit.length < 1 ? itemToEdit.brand_id.id : newBrandSelectedEdit.length > 0 ? newBrandSelectedEdit.id : null} {...register('brand_id',{ 
+                <select  className="form-select"  defaultValue={itemToEdit && itemToEdit.brand_id && newBrandSelectedEdit == [] ? itemToEdit.brand_id.id : newBrandSelectedEdit.length > 0 ? newBrandSelectedEdit.id : null} {...register('brand_id',{ 
                   shouldUnregister:true,
                   onChange: () => changeError("brand"),
                   })}>
@@ -50,10 +49,14 @@ const ModalEditCellphone = ({openModalEdit, onsubmit, itemToEdit, changeError, c
                     ?
                     <option className={errors.brand_id ? "option-selected error" : "option-selected"} value={newBrandSelectedEdit.id}>{newBrandSelectedEdit.title}</option>
                     :
-                    <option className={errors.brand_id ? "option-selected error" : "option-selected"} value={itemToEdit ? itemToEdit.brand_id ? itemToEdit.brand_id.brand : null : null}>{itemToEdit ? itemToEdit.brand_id ? itemToEdit.brand_id.brand : "Seleccione una Marca" : null}</option>
+                    itemToEdit.model
+                    ?
+                    <option value={itemToEdit.brand_id}>{itemToEdit.model}</option>
+                    :
+                    <option className={errors.brand_id ? "option-selected error" : "option-selected"} value={null}>Seleccionar</option>
                   }
                   {filteredBrands().map((brand)=>{
-                      return <option  key={brand.id} value={brand.id} >{brand.title}</option>
+                      return <option className="option-modal"  key={brand.id} value={brand.id} >{brand.title}</option>
                   })}
                 </select>
                 <h1 className="h1-add" onClick={()=>changeModal("brand")}>+</h1>

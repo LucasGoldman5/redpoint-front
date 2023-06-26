@@ -49,7 +49,7 @@ const ModalEdit = ({ getOpenModalEdit, selectRowOff, itemToEdit, edit, closeForm
     setOpenModalEdit(getOpenModalEdit);
   },[getOpenModalEdit]);
 
-
+  
   useEffect(()=>{
     setDataBrandsEdit(dataBrandsApp);
     setDataCellPhonesEdit(dataCellphonesApp);

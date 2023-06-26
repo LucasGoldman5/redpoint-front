@@ -13,15 +13,13 @@ const ModalEditBrand = ({openModalEdit, onsubmit, itemToEdit, changeError, error
         <Modal isOpen={openModalEdit}>
         <ModalHeader style={{display: 'block', color:'gold'}}>
           <div>
-            <h5  style={{float: 'center'}} >Editar Marca</h5> 
+            <h5  style={{float: 'center'}} >{`Editar Marca #${itemToEdit.id}`}</h5> 
           </div>
         </ModalHeader>
         <ModalBody>
           <form className="form-group" onSubmit={handleSubmit(onsubmit)}>
-            <label >Numero identificador</label>
-            <input className="form-control" type="number" name="id" id="id" readOnly  defaultValue={itemToEdit ? itemToEdit.id : ''} {...register('id',{ shouldUnregister: true})} />
+            <input style={{ visibility: 'hidden', position: 'absolute' }} type="number" name="id" id="id" readOnly  defaultValue={itemToEdit ? itemToEdit.id : ''} {...register('id',{ shouldUnregister: true})} />
             <input  style={{ visibility: 'hidden', position: 'absolute' }} defaultValue={itemToEdit ? itemToEdit.created_at : ""} {...register("created_at")}></input>
-            <br />
             <label >Marca</label>
             <input className={errors.title ? "form-control error" : "form-control"} type="text" name="marca" id="marca"  defaultValue={itemToEdit ? itemToEdit.title : ''}{...register('title',{
                shouldUnregister: true,

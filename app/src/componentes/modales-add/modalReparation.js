@@ -74,8 +74,6 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
         }
     }
 
-    
-
     const { register, handleSubmit, getValues, setValue} = useForm ();
    
     return(
@@ -250,7 +248,7 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
             
             <div className="div-inputs">
               <label >Cantidad de Notificaciones</label>
-              <input className="form-control" type="text" name="phone_2" {...register('notice_quantity',{
+              <input className="form-control" type="text" {...register('notice_quantity',{
                 value:0,
                 shouldUnregister: ifChangeModal ? false : true,
                 })} />
@@ -258,7 +256,7 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
             
             <div className="div-inputs">
             <label >Fecha de entrega</label>
-              <input className="form-control" type="date" name="phone_2" {...register('delivery_date',{
+              <input className="form-control" type="date"  {...register('delivery_date',{
                 value:  null,
                 shouldUnregister: ifChangeModal ? false : true,
                 setValueAs : v =>{
@@ -281,7 +279,7 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
             
             <div className="div-inputs">
               <label >Fecha de inicio del servicio</label>
-              <input className="form-control" type="date" name="phone_2" {...register('service_start_date',{
+              <input className="form-control" type="date"  {...register('service_start_date',{
                 value:  null,
                 shouldUnregister: ifChangeModal ? false : true,
                 setValueAs : v =>{
@@ -304,7 +302,7 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
             
             <div className="div-inputs">
               <label >Fecha de servicio terminado</label>
-              <input className="form-control" type="date" name="phone_2" {...register('service_end_date',{
+              <input className="form-control" type="date"  {...register('service_end_date',{
                 value:  null,
                 shouldUnregister: ifChangeModal ? false : true,
                 setValueAs : v =>{
@@ -335,13 +333,13 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
             
             <div className="div-inputs security">
               <label >Tiene seguridad</label>
-              <input onClick={checkBoxTrue} type="checkbox" name="phone_2" {...register('has_security',{
+              <input onClick={checkBoxTrue}  type="checkbox" name="phone_2" {...register('has_security',{
                 value:0,
                 shouldUnregister: ifChangeModal ? false : true,
                 })} />
               
               {
-                (checkbox)
+                checkbox
                 ?
                 <div className="div-security">
                   <div className="div-inputs pattern">
@@ -366,7 +364,7 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
             
             <div className="contenedor-boton-modal-dentro-reparations">
               <button type="submit" className="btn btn-success"  >Crear</button>
-              <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1>
+              <h1 className="btn btn-cancelar" onClick={()=>closeForm(openModalAdd)}>Cancelar</h1>
             </div>
           </form>
         </ModalBody>

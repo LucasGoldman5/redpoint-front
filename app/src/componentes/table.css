@@ -45,7 +45,7 @@ body{
     flex-direction: column;
     align-items: center;
     background: rgb(255, 190, 212);
-    box-shadow: 6px 6px 6px rgb(141, 90, 108);
+    box-shadow: 6px 6px 6px  rgb(141, 90, 108);
     border: 0.5px solid black;
     border-radius: 6px;
     padding-bottom: 10px;
@@ -114,7 +114,7 @@ body{
 }
 
 .thead{
-    background: rgb(46, 46, 46);
+    background: rgb(0, 0, 0);
     color: white;
     font-size: 100%;
     text-align: center;
@@ -328,7 +328,9 @@ body{
 
   .td-service{
     position: relative;
+    
   }
+
 .td-failure p{
     margin: 0;
     white-space: nowrap;
@@ -373,7 +375,7 @@ body{
 }
 
 .ultima-celda{
-    background: rgb(46, 46, 46);
+    background: rgb(0, 0, 0);
     justify-content: center;
     align-items: center;
     border-left: 1px solid white;
@@ -398,7 +400,7 @@ body{
 /*Table buttons style*/
 
 .boton-eliminar{
-   background: red;
+   background: rgb(143, 0, 0);
    justify-content: center;
    align-items: center;
    color: white;
@@ -409,7 +411,7 @@ body{
 }
 
 .boton-eliminar:hover{
-    background: rgb(124, 0, 0);
+    background: rgb(255, 0, 0);
 }
 
 .boton-editar{

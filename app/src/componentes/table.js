@@ -31,7 +31,6 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
     const [itemToSee, setItemToSee] = useState(null);
     const [chain,setChain] = useState("");
     const [errors, setErrors] = useState([]);
-    const [over, setOver] = useState(false);
     const [changePage,setChangePage] = useState(false);
     const [spinnerLoadTable, setSpinnerLoadTable] = useState(false);
     const [spinnerLoadPage, setSpinnerLoadPage] = useState(false);
@@ -39,6 +38,8 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
     const [rowId, setRowId] = useState(null);
     const [resetSelectBox, setResetSelectBox] = useState(false);
     const [entitiNotFound, setEntitiNotFound] = useState("");
+    const [checkBox, setCheckBox] = useState(null);
+    const [modalClosed, setModalClosed] = useState(null);
     const tableRef = useRef(null)
     const [scroll, setScroll] = useState(0)
     const { id } = useParams();
@@ -225,15 +226,22 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
 
     
     const closeForm = () =>{
-       
+
       setErrors([]);
-      setOpenModal(false);
+      setOpenModal(true)
+      setTimeout(()=>{
+        setOpenModal(false);
+        setCheckBox(false);
+        setModalClosed(false);
+      },200)
+      setCheckBox(true)
+      setModalClosed(true);
       setOpenModalEdit(false);
       setOpenModalView(false);
       setItemToEdit(null);
       setTimeout(()=>{
         setRowId(null);
-      },1000)
+      },500)
       setResetSelectBox(true);
     };
 
@@ -248,7 +256,6 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
     }
 
     const closeModal = () =>{
-    
           setOpenModal(false);
     }
     
@@ -883,7 +890,9 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                     dataRolesApp={dataRolesApp}
                     dataStatusApp={dataStatusApp}
                     resetSelectBox={resetSelectBox}
-                    urlTable={urlTable}>
+                    urlTable={urlTable}
+                    checkBox={checkBox}
+                    modalClosed={modalClosed}>
                   </ModalAdd>
 
                   <ModalView
@@ -925,7 +934,9 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                     dataRolesApp={dataRolesApp}
                     dataStatusApp={dataStatusApp}
                     resetSelectBox={resetSelectBox}
-                    urlTable={urlTable}>
+                    urlTable={urlTable}
+                    checkBox={checkBox}
+                    modalClosed={modalClosed}>
                   </ModalAdd>
               </div>
             </>
