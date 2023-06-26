@@ -63,9 +63,6 @@ export default async function  HelperBuildRequest ( method, data = {}, type = nu
                 localStorage.removeItem('user');
                 localStorage.removeItem('column');
                 console.log("fallo 2");
-                setTimeout(()=>{ 
-                    window.location.reload()
-                },1500)
             }
           } catch (error) {
             localStorage.removeItem('user');
