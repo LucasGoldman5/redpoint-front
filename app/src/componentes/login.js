@@ -111,14 +111,6 @@ const Login = ({enviroment}) =>{
                 <h4 className="h4-registro">Iniciar</h4>
                 <div className="form-registrarse-container">
                     <form className="form-login" id="formularioLogin" onSubmit={handleSubmit(onSubmit)}>
-                        <div className="inputs">
-                            <label>Nombre de Usuario</label>
-                            <input className={errors.name ? "input error" : "input"} type="text"  {...register('name', {
-                              onChange: () => changeError("name")
-                                })}>
-                            </input>
-                                {errors.name?<p className="p-validacion">{errors.name}</p> : ""}
-                        </div>
                         <div className="inputs contraseña">
                             <label>Contraseña</label>
                             <div className="label-input-password">

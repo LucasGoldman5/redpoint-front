@@ -12,13 +12,12 @@ const ModalEditService = ({openModalEdit, onsubmit, itemToEdit, changeError, err
         <Modal isOpen={openModalEdit}>
         <ModalHeader style={{display: 'block'}}>
           <div>
-            <h5  style={{float: 'center', color:'gold'}} >Editar Servicio</h5> 
+            <h5  style={{float: 'center', color:'gold'}} >{`Editar Servicio #${itemToEdit.id}`}</h5> 
           </div>
         </ModalHeader>
         <ModalBody>
           <form className="form-group" onSubmit={handleSubmit(onsubmit)}>
-            <input className="form-control" type="text" readOnly name="id" defaultValue={itemToEdit ? itemToEdit.id : ""} {...register('id',{ shouldUnregister: true,})} />
-            <br/>
+            <input style={{visibility:"hidden", position:"absolute"}} type="text" readOnly  defaultValue={itemToEdit ? itemToEdit.id : ""} {...register('id',{ shouldUnregister: true,})} />
             <label >Nombre del Servicio</label>
             <input className={errors.description ? "form-control error" : "form-control"} type="text" name="modelo" id="modelo"  defaultValue={itemToEdit ? itemToEdit.description : ''} {...register('description',{
                shouldUnregister: true,

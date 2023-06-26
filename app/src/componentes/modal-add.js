@@ -15,7 +15,7 @@ import './modales.css'
 import HelperBuildRequest from "../helpers/buildRequest";
 
 
-const ModalAdd =({closeModal, create,dataApi,errorsInTable,openModal,closeForm,enviroment,dataBrandsApp,dataCellphonesApp,dataCustomersApp,dataServicesApp,dataRolesApp,dataStatusApp,resetSelectBox, urlTable}) =>{
+const ModalAdd =({closeModal, create,dataApi,errorsInTable,openModal,closeForm,enviroment,dataBrandsApp,dataCellphonesApp,dataCustomersApp,dataServicesApp,dataRolesApp,dataStatusApp,resetSelectBox,urlTable,checkBox,modalClosed}) =>{
   
   const [errorsApi, setErrorsApi] = useState([]);
   const [errors, setErrors] = useState([]);
@@ -49,6 +49,14 @@ const ModalAdd =({closeModal, create,dataApi,errorsInTable,openModal,closeForm,e
   useEffect(() =>{
     setOpenModalAdd(openModal);
   },[openModal])
+
+  useEffect(()=>{
+    setCheckBox(checkBox);
+  },[checkBox])
+
+  useEffect(()=>{
+    setIfchangeModal(modalClosed);
+  },[modalClosed])
 
   useEffect(() =>{
     setErrors(errorsInTable);
@@ -117,6 +125,7 @@ const ModalAdd =({closeModal, create,dataApi,errorsInTable,openModal,closeForm,e
           setOpenModalAddBrand(false);
           setOpenModalAddCellphone(true);
           setOpenModalAdd(false);
+          setIfchangeModal(true)
         }else{
           setOpenModalAddBrand(false);
           setOpenModalAdd(true);
@@ -125,7 +134,6 @@ const ModalAdd =({closeModal, create,dataApi,errorsInTable,openModal,closeForm,e
           setOpenModalAdd(false)
           closeModal()
           setIfchangeModal(false);
-          setCheckBox(false);
       }
       // Realizar la lógica deseada cuando se presiona la tecla Escape
       
@@ -139,7 +147,7 @@ useEffect(() => {
   } else if (openModalAdd === false && count === 0){
     document.removeEventListener('keyup', handleKeyUp);
     setIfchangeModal(false);
-    closeModal(count)
+    closeModal()
   }
   
 }, [openModalAddCellphone, openModalAddCustomer, openModalAddService, openModalAddBrand, openModalAdd]);
