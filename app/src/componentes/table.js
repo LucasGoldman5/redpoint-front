@@ -241,7 +241,7 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
       setItemToEdit(null);
       setTimeout(()=>{
         setRowId(null);
-      },500)
+      },300)
       setResetSelectBox(true);
     };
 
@@ -249,7 +249,7 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
       if(count === 1){
         setTimeout(()=>{
           setRowId(null);
-        },1000)
+        },300)
         setOpenModalEdit(false)
         setItemToEdit(null)
       }
@@ -260,7 +260,6 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
     }
     
     useEffect(() => {
-
       if (tableRef.current) {
         tableRef.current.scrollTop = scroll;
       } 
@@ -333,12 +332,13 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                     }else{
                       setTimeout(()=>{
                         setRowId(null);
-                      },1000)
+                      },300)
                       setResetSelectBox(true)                      
                       setOpenModalEdit(false);
                       setErrors([]);
                       setItemToEdit(null)
                       const result = dataApi.data.map((row) => row.id == response.data.id ? response.data : row);
+                      console.log(result);
                       setDataApi({...dataApi,data:result})  
                     }  
                 }
