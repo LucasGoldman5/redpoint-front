@@ -103,12 +103,11 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                     :
                     itemToEdit.customer.customer
                     ?
-                    <option value={itemToEdit.customer.id}>{itemToEdit.customer.customer}</option>
+                    <option style={{visibility:"hidden", display:"none"}} value={itemToEdit.customer.id}>{itemToEdit.customer.customer}</option>
                     :
                     <option >Seleccionar..</option>
                   }
-                  {filteredCustomers().map((customer)=>{   
-                    const customerSelected = itemToEdit && itemToEdit.customer.id == customer.id ?  'selected' : '';   
+                  {filteredCustomers().map((customer)=>{     
                       return <option className={itemToEdit && newCustomerSelectedEdit.length < 1 ? itemToEdit.customer.id == customer.id ? "option-selected" :"option-modal" : newCustomerSelectedEdit.length > 0 ? newCustomerSelectedEdit.id == customer.id ? "option-selected" :"option-modal":"option-modal"} 
                                      key={customer.id} 
                                      value={customer.id} 
@@ -149,12 +148,11 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                     :
                     itemToEdit.cellphone.model
                     ?
-                    <option value={itemToEdit.cellphone.id}>{itemToEdit.cellphone.model}</option>
+                    <option style={{visibility:"hidden", display:"none"}} value={itemToEdit.cellphone.id}>{itemToEdit.cellphone.model}</option>
                     :
                     <option >Seleccionar..</option>
                   }
-                  {filteredCellphones().map((cellphone)=>{
-                    const cellphoneSelected = itemToEdit && itemToEdit.cellphone.id == cellphone.id ?  'selected' : "";                
+                  {filteredCellphones().map((cellphone)=>{           
                       return <option className={itemToEdit && itemToEdit.cellphone.id == cellphone.id ? "option-selected" :"option-modal"} 
                       key={cellphone.id} 
                       value={cellphone.id} 
@@ -206,7 +204,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                     :
                     itemToEdit.service.service
                     ?
-                    <option value={itemToEdit.service.id}>{itemToEdit.service.service}</option>
+                    <option style={{visibility:"hidden", display:"none"}} value={itemToEdit.service.id}>{itemToEdit.service.service}</option>
                     :
                     <option >Seleccionar..</option>
                   }
