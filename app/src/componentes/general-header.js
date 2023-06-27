@@ -39,9 +39,15 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
   const [seeingPUsers, setSeeingPUsers] = useState(false);
   const [seeingPReport, setSeeingPReport] = useState(false);
   const [superAdmin, setSuperAdmin] = useState(null);
+  const [loadElements, setLoadElements] = useState(true);
 
   useEffect(() => {
     admin()
+    const timer = setTimeout(()=>{
+      setLoadElements(false);
+    },3000)
+
+    return () => clearTimeout(timer);
   }, []);
 
   const getUser = localStorage.getItem("user");
@@ -385,7 +391,11 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
                             )
                         })
                         :
+                        loadElements
+                        ?
                         <p>Cargando Marcas...</p>
+                        :
+                        <p>No hay resultados</p>
                         }
                     </div>
                   </div>
@@ -409,7 +419,11 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
                                 )
                             })
                             :
+                            loadElements
+                            ?
                             <p>Cargando Celulares...</p>
+                            :
+                            <p>No hay resultados</p>
                         }
                     </div>
                   </div>
@@ -433,7 +447,11 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
                                 )
                             })
                             :
+                            loadElements
+                            ?
                             <p>Cargando Clientes...</p>
+                            :
+                            <p>No hay resultados</p>
                           }
                       </div>
                   </div>
@@ -457,7 +475,11 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
                                 )
                             })
                             :
+                            loadElements
+                            ?
                             <p>Cargando Servicios...</p>
+                            :
+                            <p>No hay resultados</p>
                           }
                       </div>
                 </div>
@@ -481,7 +503,11 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
                                 )
                             })
                             :
+                            loadElements
+                            ?
                             <p>Cargando Managers...</p>
+                            :
+                            <p>No hay resultados</p>
                           }
                       </div>
                 </div>

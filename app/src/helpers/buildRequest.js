@@ -36,11 +36,8 @@ export default async function  HelperBuildRequest ( method, data = {}, type = nu
     const tokenDecode =  JSON.parse( atob(tokenArr[1]) );
  
     const expired = tokenDecode.exp * 1000;
-    console.log("expired:::",expired);
     const now = new Date().getTime();
-    console.log("now:::",now);
     const limit = (expired - 600000) - now;
-    console.log("limit:::",limit);
 
     if( limit > 2222222 ) {      
         return buildCallServer(method, data, type);
@@ -66,7 +63,7 @@ export default async function  HelperBuildRequest ( method, data = {}, type = nu
                     localStorage.removeItem('user');
                     localStorage.removeItem('column');
                     setTimeout(()=>{
-                        window.location.reload()
+                      window.location.reload()
                     },1000)
                 }
               } catch (error) {
