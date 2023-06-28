@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
 
 
-const ModalAddCellphone = ({openModalAdd, create, errors, changeError, dataApi, handleInputChange, activeInputSearch, filteredBrands, newBrandSelected, closeForm, changeModal, selectBrandActive}) =>{
+const ModalAddCellphone = ({openModalAdd, create, errors, ifChangeModal, changeError, dataApi, handleInputChange, activeInputSearch, filteredBrands, newBrandSelected, closeForm, changeModal, selectBrandActive}) =>{
 
 
     const changueValue = () =>{
@@ -34,12 +34,14 @@ const ModalAddCellphone = ({openModalAdd, create, errors, changeError, dataApi, 
                 <input className={errors.model ? "form-control error" : "form-control"} type="text" name="modelo" {...register('model',{
                   onChange: () => changeError("model"),
                   value:null,
+                  shouldUnregister:ifChangeModal ? false : true,
                   })}/>
                   {errors.model? <p className="p-errores">El campo Modelo debe ser completado</p> : ""}
                 <br />
                 <label >Url</label>
                 <input className="form-control" type="text" name="url" {...register('url',{
                   value:null,
+                  shouldUnregister:ifChangeModal ? false : true,
                   })} />
                 <br/>
                 <label >Marca</label>

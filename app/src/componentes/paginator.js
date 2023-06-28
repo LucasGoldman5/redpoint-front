@@ -4,7 +4,7 @@ import { PulseLoader } from "react-spinners";
 import {faLeftLong,faRightLong } from '@fortawesome/free-solid-svg-icons';
 import './paginator.css';
 
-const Paginator = ({dataApi,dataFilter,nextPage,previousPage,specifyPage,changePage}) =>{
+const Paginator = ({dataApi,nextPage,previousPage,specifyPage,changePage}) =>{
 
 
     const totalPages = dataApi.paginator.lastPage;
@@ -14,7 +14,6 @@ const Paginator = ({dataApi,dataFilter,nextPage,previousPage,specifyPage,changeP
       arrayNumberPages.push(i);
     }
 
-    
     return (
       <>
         <div className="paginator-container">
