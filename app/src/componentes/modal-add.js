@@ -1,6 +1,5 @@
 
 import React, { useState,useEffect } from "react"
-import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
 import ModalAddBrand from "./modales-add/modalAddBrand";
 import ModalAddCustomer from "./modales-add/modalAddCustomer";
 import ModalAddService from "./modales-add/modalAddService";
@@ -15,7 +14,7 @@ import './modales.css'
 import HelperBuildRequest from "../helpers/buildRequest";
 
 
-const ModalAdd =({closeModal, create,dataApi,errorsInTable,openModal,closeForm,enviroment,dataBrandsApp,dataCellphonesApp,dataCustomersApp,dataServicesApp,dataRolesApp,dataStatusApp,resetSelectBox,urlTable,checkBox,modalClosed}) =>{
+const ModalAdd =({closeModal,actionModal, create,dataApi,errorsInTable,openModal,closeForm,enviroment,dataBrandsApp,dataCellphonesApp,dataCustomersApp,dataServicesApp,dataRolesApp,dataStatusApp,resetSelectBox,urlTable,checkBox,modalClosed}) =>{
   
   const [errorsApi, setErrorsApi] = useState([]);
   const [errors, setErrors] = useState([]);
@@ -58,6 +57,7 @@ const ModalAdd =({closeModal, create,dataApi,errorsInTable,openModal,closeForm,e
     setIfchangeModal(modalClosed);
   },[modalClosed])
 
+
   useEffect(() =>{
     setErrors(errorsInTable);
   },[errorsInTable])
@@ -75,7 +75,8 @@ const ModalAdd =({closeModal, create,dataApi,errorsInTable,openModal,closeForm,e
     setNewCellphoneSelected([]);
     setNewBrandSelected([]);
     setNewServiceSelected([]);
-  },[resetSelectBox, urlTable])
+    setCheckBox(false);
+  },[resetSelectBox, urlTable, actionModal])
 
   const changeModal = (fact) =>{
 
@@ -158,19 +159,24 @@ useEffect(() => {
       if(window.location.href.includes("reparaciones")){
         setOpenModalAddBrand(false);
         setOpenModalAddCellphone(true);
+        setIfchangeModal(false);
       }else{
         setOpenModalAddBrand(false);
         setOpenModalAdd(true);
+        setIfchangeModal(false);
       } 
     }else if(entity === "customer"){
       setOpenModalAddCustomer(false);
       setOpenModalAdd(true);
+      setIfchangeModal(false);
     }else if(entity === "cellphone"){
       setOpenModalAddCellphone(false);
       setOpenModalAdd(true);
+      setIfchangeModal(false);
     }else if(entity === "service"){
       setOpenModalAddService(false);
       setOpenModalAdd(true);
+      setIfchangeModal(false);
     };
   };
 
@@ -251,6 +257,7 @@ useEffect(() => {
                 setErrors({ customer_id:null, cellphone_id:errors.cellphone_id, service_id:errors.service_id}) 
                 setOpenModalAddCustomer(false);
                 setOpenModalAdd(true);
+                setIfchangeModal(false);
                   if(dataCustomers.length > 0){
                     setDataCustomers(dataCustomers.concat(response.data))             
                   }else{
@@ -296,6 +303,7 @@ useEffect(() => {
                 setErrors({ customer_id:errors.customer_id, cellphone_id:errors.cellphone_id, service_id:null })
                 setOpenModalAddService(false);
                 setOpenModalAdd(true);
+                setIfchangeModal(false);
 
                 if(dataServices.length > 0){
                   setDataServices(dataServices.concat(response.data)) 
@@ -340,6 +348,7 @@ useEffect(() => {
                 setNewCellphoneSelected(response.data)
                 setOpenModalAddCellphone(false);
                 setOpenModalAdd(true);
+                setIfchangeModal(false);
                 setErrors({ customer_id:errors.customer_id, cellphone_id:null, service_id:errors.service_id })
 
                 if(dataCellPhones.length > 0){
@@ -619,7 +628,8 @@ useEffect(() => {
            selectServiceActive={selectServiceActive}
            checkBoxTrue={checkBoxTrue}
            checkbox={checkbox}
-           ifChangeModal={ifChangeModal}/>  
+           ifChangeModal={ifChangeModal}
+           actionModal={actionModal}/>  
 
           <ModalAddCustomerIn
            openModalAddCustomer={openModalAddCustomer}
