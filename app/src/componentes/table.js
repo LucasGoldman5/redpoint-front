@@ -377,8 +377,7 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
 
     const eliminate= async (element)=>{
 
-      console.log(element);
-      
+      setItemToEdit(null)
       setTimeout(()=>{
         setOpenModalEdit(false);
       })
