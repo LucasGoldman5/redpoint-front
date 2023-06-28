@@ -428,6 +428,7 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
               console.log(error)
             };
           }else{
+            setItemToEdit(null)
             setRowId(null);
           }
         });

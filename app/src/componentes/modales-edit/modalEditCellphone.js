@@ -14,7 +14,7 @@ const ModalEditCellphone = ({openModalEdit, onsubmit, itemToEdit, changeError, c
             setValue("brand_id",newBrandSelectedEdit.id)
         }
     }
-    
+
     const { register, handleSubmit, setValue, getValues} = useForm ();
 
     return(
@@ -59,7 +59,7 @@ const ModalEditCellphone = ({openModalEdit, onsubmit, itemToEdit, changeError, c
                     filteredBrands().length >= 1
                     ?
                     filteredBrands().map((brand)=>{
-                      return <option className={itemToEdit && itemToEdit.brand_id.id == brand.id ? "option-selected" :"option-modal"}   key={brand.id} value={brand.id} >{brand.title}</option>
+                      return <option className={itemToEdit ? itemToEdit.brand_id ? itemToEdit.brand_id.id  == brand.id ? "option-selected" :"option-modal" : "option-modal" : "option-modal"}   key={brand.id} value={brand.id} >{brand.title}</option>
                     })
                     :
                     ""
