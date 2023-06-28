@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../modales.css";
 import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
 import { useForm } from "react-hook-form";
@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
 
 
-const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleInputChange, activeInputSearch, newCustomerSelected, newCellphoneSelected, newServiceSelected, filteredCellphones, filteredCustomers, filteredServices, closeForm, changeModal, addEmail, selectCellphoneActive, selectCustomerActive, selectServiceActive, checkbox, checkBoxTrue, ifChangeModal}) =>{
+const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeError, handleInputChange, activeInputSearch, newCustomerSelected, newCellphoneSelected, newServiceSelected, filteredCellphones, filteredCustomers, filteredServices, closeForm, changeModal, addEmail, selectCellphoneActive, selectCustomerActive, selectServiceActive, checkbox, checkBoxTrue, ifChangeModal}) =>{
 
 
   const [selectCustomer, setSelectCustomer] = useState({})
@@ -14,24 +14,32 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
   const [selectService, setSelectService] = useState({})
 
 
+  useEffect(()=>{
+    setSelectCustomer({})
+    setSelectCellphone({})
+    setSelectService({})
+  },[actionModal])
+
     const changueValue = () =>{
+
         if(newCustomerSelected.id){
             setValue("customer_id",newCustomerSelected.id)
             setValue("number",newCustomerSelected.phone_number)
             setValue("email",newCustomerSelected.email)
             addEmail("customer")
-        }else{
-          if(selectCustomer.id && ifChangeModal === true){
+        }else if(selectCustomer.id && ifChangeModal === true){
             setValue("customer_id",selectCustomer.id)
             setValue("number",selectCustomer.phone)
             setValue("email",selectCustomer.email)
-          }
+        }else{
+          setValue(("customer_id","Seleccionar"))
         }
 
         if(newCellphoneSelected.id){
             setValue("cellphone_id",newCellphoneSelected.id)
             changeError("cellphone")
-        }else if(selectCellphone.id && ifChangeModal === true){
+        }else if(selectCellphone.id && ifChangeModal === false){
+          console.log("esta raro");
           setValue("cellphone_id",selectCellphone.id)
         }else{
             setValue("cellphone_id","Seleccionar..")
@@ -40,7 +48,7 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
         if(newServiceSelected.id){
             setValue("service_id",newServiceSelected.id)
             changeError("service")
-        }else if(selectService.id && ifChangeModal === true){
+        }else if(selectService.id && ifChangeModal === false){
           setValue("service_id",selectService.id)
         }else{
             setValue("service_id","Seleccionar..")
@@ -93,7 +101,7 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
                 <select  className={errors.customer_id ? "form-select error" : "form-select"} name="select" defaultValue={newCustomerSelected.id ? newCustomerSelected.id : ""} {...register('customer_id',{
                   shouldUnregister: ifChangeModal ? false : true,
                   onChange: (e) => {
-                    addEmail(e.target.value,"customer");
+                    addEmail("customer");
                     addValues(e.target.value, "customer")
                   },
                       })}>
@@ -226,10 +234,10 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
             <div className="div-inputs">
               <label >Fecha de notificacion al cliente</label>
               <input className="form-control" type="date" name="phone_2" {...register('notice_date',{
-                value:  null,
                 shouldUnregister: ifChangeModal ? false : true,
                 setValueAs : value =>{
                   if(value != null && value){
+                    
                     let dateInput = new Date(value)
                   dateInput = dateInput.getUTCFullYear() + '-' +
                   ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
@@ -242,6 +250,7 @@ const ModalAddReparation = ({openModalAdd, create, errors, changeError, handleIn
                   }else{
                     return null
                   } 
+                
                 } 
                 })} />
             </div>

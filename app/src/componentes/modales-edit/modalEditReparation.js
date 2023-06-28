@@ -14,7 +14,6 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
     const [cellphoneSelected, setCellphoneSelected] = useState({});
     const [serviceSelected, setServiceSelected] = useState({});
 
-
     const changeValue = () =>{
 
         if(newCustomerSelectedEdit.id){
@@ -39,6 +38,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
             }
         }
     }
+    
 
     const addValues = (id,entity) =>{
 
@@ -179,9 +179,9 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
               <select  className="form-select" defaultValue={itemToEdit ? itemToEdit.state_id.id : null}{...register("state_id",{
                 required:true,
               })}>
-                <option className="option-selected" value={itemToEdit ? itemToEdit.state_id.id : null}>{itemToEdit ? itemToEdit.state_id.description : null}</option>
+                <option style={{visibility:"hidden", display:"none"}}  value={itemToEdit ? itemToEdit.state_id.id : null}>{itemToEdit ? itemToEdit.state_id.description : null}</option>
                 {dataStatesEdit.map((state) => {
-                  return <option value={state.id} key={state.id}>{state.description}</option>
+                  return <option className={itemToEdit ? itemToEdit.state_id.id ? itemToEdit.state_id.id == state.id ? "option-selected" :"option-modal" : "option-modal" : "option-modal"}  value={state.id} key={state.id}>{state.description}</option>
                 })}
               </select>
             </div>
@@ -221,19 +221,19 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
             
             <div className="div-inputs">
               <label >Valor de la reparacion</label>
-              <input className="form-control" type="text"   defaultValue={itemToEdit ? itemToEdit.cost : ''}{...register('cost')} />
+              <input className="form-control cost" type="text"   defaultValue={itemToEdit ? itemToEdit.cost : ''}{...register('cost')} />
             </div>
             
             <div className="div-inputs">
               <label >Precio a cobrar</label>
-              <input className="form-control" type="text"   defaultValue={itemToEdit ? itemToEdit.amount : ''}{...register('amount')} />
+              <input className="form-control value" type="text"   defaultValue={itemToEdit ? itemToEdit.amount : ''}{...register('amount')} />
             </div>
             
             <div className="div-inputs">
               <label >Fecha de notificacion al cliente</label>
               <input className="form-control" type="date"  defaultValue={itemToEdit && itemToEdit.notice_date  ? new Date(itemToEdit.notice_date).getFullYear() + "-" + ("00" + (new Date (itemToEdit.notice_date).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(itemToEdit.notice_date).getUTCDate()).slice(-2)  : null}{...register('notice_date',{
                 setValueAs : value =>{
-                  if(value != 0){
+                  if(value != null && value){
                     let dateInput = new Date(value)
                     dateInput = dateInput.getUTCFullYear() + '-' +
                     ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
@@ -265,7 +265,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
               <label >Fecha de entrega</label>
               <input className="form-control" type="date"  defaultValue={itemToEdit && itemToEdit.delivery_date !=null ? new Date(itemToEdit.delivery_date).getFullYear() + "-" + ("00" + (new Date (itemToEdit.delivery_date).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(itemToEdit.delivery_date).getUTCDate()).slice(-2)  : null}{...register('delivery_date',{
                 setValueAs : value =>{
-                  if(value != 0){
+                  if(value != null && value){
                     let dateInput = new Date(value)
                     dateInput = dateInput.getUTCFullYear() + '-' +
                     ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
@@ -286,7 +286,8 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
               <label >Fecha de Inicio del Servicio</label>
               <input className="form-control" type="date"  defaultValue={itemToEdit && itemToEdit.service_start_date != null ? new Date(itemToEdit.service_start_date).getFullYear() + "-" + ("00" + (new Date (itemToEdit.service_start_date).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(itemToEdit.service_start_date).getUTCDate()).slice(-2)  : null}{...register('service_start_date',{
                 setValueAs : value =>{
-                  if(value != 0){
+                  console.log();
+                  if(value != null && value){
                     let dateInput = new Date(value)
                     dateInput = dateInput.getUTCFullYear() + '-' +
                     ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
@@ -307,7 +308,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
               <label >Fecha de Servicio terminado</label>
               <input className="form-control" type="date"  defaultValue={(itemToEdit && itemToEdit.service_end_date != null)  ? new Date(itemToEdit.service_end_date).getFullYear() + "-" + ("00" + (new Date (itemToEdit.service_end_date).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(itemToEdit.service_end_date).getUTCDate()).slice(-2)  : null} {...register('service_end_date',{
                 setValueAs : value =>{
-                  if(value != 0){
+                  if(value != null && value){
                     let dateInput = new Date(value)
                     dateInput = dateInput.getUTCFullYear() + '-' +
                     ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +

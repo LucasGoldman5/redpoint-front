@@ -40,6 +40,7 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
     const [entitiNotFound, setEntitiNotFound] = useState("");
     const [checkBox, setCheckBox] = useState(null);
     const [modalClosed, setModalClosed] = useState(null);
+    const [actionModal, setActionModal] = useState(false);
     const tableRef = useRef(null)
     const [scroll, setScroll] = useState(0)
     const { id } = useParams();
@@ -171,12 +172,14 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
 
     const openModalAdd = () =>{
       setOpenModal(true);
+      setActionModal(true);
+      setTimeout(()=>{
+        setActionModal(false);
+      },300)
     }
 
     const create = async (data) =>{
     
-      console.log(data);
-
         if(data){
   
             try {
@@ -195,7 +198,10 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                         console.log(response.error);
                       },1000);
                     }else{               
-                      setOpenModal(false);
+                      setOpenModal(true);
+                      setTimeout(()=>{
+                        setOpenModal(false);
+                      },300)
                       setErrors([]);
                       if(window.location.href.includes("users")){
                         const hash = response.data.hash
@@ -205,6 +211,11 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                         setDataApi({...dataApi,data:dataApi.data.concat(response.data)});
                       }else{
                         setDataApi({...dataApi,data:dataApi.data.concat(response.data)});
+                        setActionModal(true);
+                        setCheckBox(false);
+                        setTimeout(()=>{
+                          setActionModal(false);
+                        },500)
                         setResetSelectBox(true);
                       }    
                     };  
@@ -239,8 +250,10 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
       setOpenModalEdit(false);
       setOpenModalView(false);
       setItemToEdit(null);
+      setActionModal(true);
       setTimeout(()=>{
         setRowId(null);
+        setActionModal(false)
       },300)
       setResetSelectBox(true);
     };
@@ -276,8 +289,6 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
     };   
       
     const edit =  async (data) =>{
-
-      console.log(data);
 
       const urlEdit = () =>{
 
@@ -317,8 +328,6 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
               return data
             }
           }
-
-          console.log(newData());
   
           try {
                 const config =await HelperBuildRequest("PUT", newData(), "dataTablePut");
@@ -338,8 +347,12 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                       setErrors([]);
                       setItemToEdit(null)
                       const result = dataApi.data.map((row) => row.id == response.data.id ? response.data : row);
-                      console.log(result);
-                      setDataApi({...dataApi,data:result})  
+                      setDataApi({...dataApi,data:result}) 
+                      setActionModal(true);
+                      setCheckBox(false);
+                        setTimeout(()=>{
+                          setActionModal(false);
+                        },200) 
                     }  
                 }
 
@@ -457,11 +470,11 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
             if(response.error){
               setTimeout(()=>{
                 console.log(response.error);
-              },1000);
+              },500);
             }else{
               setTimeout(()=>{
                 setRowId(null)
-              },500)
+              },300)
               const result = dataApi.data.map((row) => row.id == newData().id ? newData() : row);                      
               setDataApi({...dataApi, data:result})
             }  
@@ -892,7 +905,8 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                     resetSelectBox={resetSelectBox}
                     urlTable={urlTable}
                     checkBox={checkBox}
-                    modalClosed={modalClosed}>
+                    modalClosed={modalClosed}
+                    actionModal={actionModal}>
                   </ModalAdd>
 
                   <ModalView
@@ -936,7 +950,8 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                     resetSelectBox={resetSelectBox}
                     urlTable={urlTable}
                     checkBox={checkBox}
-                    modalClosed={modalClosed}>
+                    modalClosed={modalClosed}
+                    actionModal={actionModal}>
                   </ModalAdd>
               </div>
             </>
