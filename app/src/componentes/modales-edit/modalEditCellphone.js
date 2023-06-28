@@ -51,13 +51,19 @@ const ModalEditCellphone = ({openModalEdit, onsubmit, itemToEdit, changeError, c
                     :
                     itemToEdit.brand_id.brand
                     ?
-                    <option style={{visibility:"hidden", display:"none"}} value={itemToEdit.brand_id.id}>{itemToEdit.brand_id.brand}</option>
+                    <option style={{visibility:"hidden", display:"none"}} value={itemToEdit.brand_id.id}>{itemToEdit.brand_id.brand ? itemToEdit.brand_id.brand : ""}</option>
                     :
                     <option className={errors.brand_id ? "option-selected error" : "option-selected"} value={null}>Seleccionar</option>
                   }
-                  {filteredBrands().map((brand)=>{
+                  {
+                    filteredBrands().length >= 1
+                    ?
+                    filteredBrands().map((brand)=>{
                       return <option className={itemToEdit && itemToEdit.brand_id.id == brand.id ? "option-selected" :"option-modal"}   key={brand.id} value={brand.id} >{brand.title}</option>
-                  })}
+                    })
+                    :
+                    ""
+                  }
                 </select>
                 <h1 className="h1-add" onClick={()=>changeModal("brand")}>+</h1>
               </div>

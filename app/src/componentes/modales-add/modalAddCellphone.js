@@ -58,9 +58,15 @@ const ModalAddCellphone = ({openModalAdd, create, errors, ifChangeModal, changeE
                       :
                       <option className="option-selected" value={"Seleccionar"}>Seleccionar..</option>    
                     }
-                  {filteredBrands().map((brand)=>{
-                        return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option> 
-                  })}
+                  {
+                    filteredBrands().length >= 1
+                    ?
+                    filteredBrands().map((brand)=>{
+                        return <option className="option-modal" key={brand.id} value={brand.id} >{brand.title}</option>    
+                    })
+                    :
+                    ""
+                }
                 </select>
                 <h1 className="h1-add" onClick={()=>changeModal("brand")}>+</h1>
                 </div>
