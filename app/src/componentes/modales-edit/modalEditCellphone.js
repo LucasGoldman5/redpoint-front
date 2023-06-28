@@ -49,7 +49,7 @@ const ModalEditCellphone = ({openModalEdit, onsubmit, itemToEdit, changeError, c
                     ?
                     <option className={errors.brand_id ? "option-selected error" : "option-selected"} value={newBrandSelectedEdit.id}>{newBrandSelectedEdit.title}</option>
                     :
-                    itemToEdit.brand_id.brand
+                    itemToEdit.brand_id
                     ?
                     <option style={{visibility:"hidden", display:"none"}} value={itemToEdit.brand_id.id}>{itemToEdit.brand_id.brand ? itemToEdit.brand_id.brand : ""}</option>
                     :
