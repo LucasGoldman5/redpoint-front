@@ -48,7 +48,6 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
     const location = useLocation();
     const getUser = localStorage.getItem("user");
   
-
     const tables = [
       
         {"marcas":"Marcas"},

@@ -7,7 +7,7 @@ import { faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
 
 
 
-const ModalAddCellphoneIn = ({openModalAddCellphone, addCellphoneInReparation, errorsApi, changeErrorApi, changeModal, closeFormAdd, handleInputChange, activeInputSearch, dataCellPhones, newBrandSelected, selectBrandActive, filteredBrands}) =>{
+const ModalAddCellphoneIn = ({openModalAddCellphone, addCellphoneInReparation, ifChangeModal, errorsApi, changeErrorApi, changeModal, closeFormAdd, handleInputChange, activeInputSearch, dataCellPhones, newBrandSelected, selectBrandActive, filteredBrands}) =>{
 
     const changeValue = () =>{
         if(newBrandSelected.id){
@@ -34,14 +34,14 @@ const ModalAddCellphoneIn = ({openModalAddCellphone, addCellphoneInReparation, e
             <input className={errorsApi.model ? "form-control error" : "form-control"} type="text" name="modelo" {...register('model',{
               onChange: () => changeErrorApi("model"),
               value:null,
-              shouldUnregister:true,
+              shouldUnregister:ifChangeModal ? false : true,
               })}/>
               {errorsApi.model? <p className="p-errores">El campo Modelo debe ser completado</p> : ""}
             <br />
             <label >Url</label>
             <input className="form-control" type="text" name="url" {...register('url',{
               value:null,
-              shouldUnregister:true,
+              shouldUnregister:ifChangeModal ? false : true,
               })} />
             <br/>
             <label >Marca</label>

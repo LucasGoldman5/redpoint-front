@@ -555,7 +555,7 @@ useEffect(() => {
           changeError={changeError}
           closeForm={closeForm}
           selectBrandActive={selectBrandActive}
-          />
+          ifChangeModal={ifChangeModal}/>
 
          <ModalAddBrandIn
           openModalAddBrand={openModalAddBrand}
@@ -650,7 +650,8 @@ useEffect(() => {
            selectBrandActive={selectBrandActive}
            filteredBrands={filteredBrands}
            newBrandSelected={newBrandSelected}
-           dataCellPhones={dataCellPhones}/>
+           dataCellPhones={dataCellPhones}
+           ifChangeModal={ifChangeModal}/>
 
           <ModalAddBrandIn
           openModalAddBrand={openModalAddBrand}
