@@ -1,6 +1,8 @@
 import React from "react";
 import "../modales.css";
-import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
+import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons'; 
 import { useForm } from "react-hook-form";
 
 
@@ -10,9 +12,10 @@ const ModalEditService = ({openModalEdit, onsubmit, itemToEdit, changeError, err
 
     return(
         <Modal isOpen={openModalEdit}>
-        <ModalHeader style={{display: 'block'}}>
-          <div>
-            <h5  style={{float: 'center', color:'gold'}} >{`Editar Servicio #${itemToEdit.id}`}</h5> 
+        <ModalHeader style={{display: 'block', color:'gold'}}>
+          <div className="div-title-modal">
+            <h5  style={{float: 'center'}} >{`Editar Servicio #${itemToEdit.id}`}</h5>
+            <FontAwesomeIcon className="icon-close-modal"  onClick={closeForm} icon={faXmark} /> 
           </div>
         </ModalHeader>
         <ModalBody>
@@ -23,14 +26,14 @@ const ModalEditService = ({openModalEdit, onsubmit, itemToEdit, changeError, err
                shouldUnregister: true,
                onChange: () => changeError("description"),
                })} />
-              {errors.description? <p className="p-errores">{errors.description}</p>: ""}
+              {errors.description? <p className="p-errores">El campo "Nombre del Servicio" es requerido</p>: ""}
             <br />
             <label >Numero de Telefono</label>
             <input className={errors.phone_number ? "form-control error" : "form-control"} type="text" name="number" id="number"  defaultValue={itemToEdit ? itemToEdit.phone_number : ''}{...register('phone_number',{
                shouldUnregister: true,
                onChange: () => changeError("phone_number"),
                })} />
-              {errors.phone_number? <p className="p-errores">{errors.phone_number}</p> : ""}
+              {errors.phone_number? <p className="p-errores">El campo "Numero de Telefono" es requerido</p> : ""}
             <br />
             <label htmlFor="direccion">Direccion</label>
             <input className="form-control" type="text" name="direccion" id="direccion"  defaultValue={itemToEdit ? itemToEdit.address : ''}{...register('address',{ shouldUnregister: true,})} />

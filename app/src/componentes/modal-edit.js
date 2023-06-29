@@ -48,8 +48,7 @@ const ModalEdit = ({ getOpenModalEdit, selectRowOff, itemToEdit, edit, closeForm
   useEffect(() =>{
     setOpenModalEdit(getOpenModalEdit);
   },[getOpenModalEdit]);
-
-  
+ 
   useEffect(()=>{
     setDataBrandsEdit(dataBrandsApp);
     setDataCellPhonesEdit(dataCellphonesApp);
@@ -57,7 +56,7 @@ const ModalEdit = ({ getOpenModalEdit, selectRowOff, itemToEdit, edit, closeForm
     setDataServicesEdit(dataServicesApp);
     setDataStatesEdit(dataStatusApp);
     setDataRolesEdit(dataRolesApp);
-  },[dataBrandsApp,dataRolesApp,dataStatusApp])
+  },[dataBrandsApp,dataRolesApp,dataStatusApp,dataCustomersApp,dataRolesApp,dataServicesApp,dataCellphonesApp])
 
   useEffect(() =>{
     setErrors(errorsInTable);
@@ -455,10 +454,14 @@ const ModalEdit = ({ getOpenModalEdit, selectRowOff, itemToEdit, edit, closeForm
   }
 
   const filteredCellphones = () =>{
-    if(dataCellphonesEdit.length >= 1){
-      return dataCellphonesEdit.filter((cellphone) =>
-      cellphone.model.toLowerCase().includes(filterCellphoneValue.toLowerCase())
-    );
+    if(dataCellphonesEdit.data){
+      if(dataCellphonesEdit.data.length >= 1){
+        return dataCellphonesEdit.data.filter((cellphone) =>
+        cellphone.model.toLowerCase().includes(filterCellphoneValue.toLowerCase())
+        );
+      } else{
+        return []
+      }
     }else{
       return []
     }

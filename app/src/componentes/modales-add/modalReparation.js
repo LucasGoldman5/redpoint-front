@@ -3,7 +3,7 @@ import "../modales.css";
 import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
 import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass,faXmark } from '@fortawesome/free-solid-svg-icons';
 
 
 const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeError, handleInputChange, activeInputSearch, newCustomerSelected, newCellphoneSelected, newServiceSelected, filteredCellphones, filteredCustomers, filteredServices, closeForm, changeModal, addEmail, selectCellphoneActive, selectCustomerActive, selectServiceActive, checkbox, checkBoxTrue, ifChangeModal}) =>{
@@ -39,7 +39,6 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
             setValue("cellphone_id",newCellphoneSelected.id)
             changeError("cellphone")
         }else if(selectCellphone.id && ifChangeModal === false){
-          console.log("esta raro");
           setValue("cellphone_id",selectCellphone.id)
         }else{
             setValue("cellphone_id","Seleccionar..")
@@ -87,8 +86,9 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
     return(
         <Modal isOpen={openModalAdd} className="modal-reparations" onOpened={()=>changueValue()}>
         <ModalHeader style={{display: 'block'}}>
-          <div>
-            <h5  style={{float: 'center', color: 'green'}} >Crear Reparacion</h5> 
+          <div className="div-title-modal">
+            <h5  className="h5-modal-add" >Crear Reparacion</h5>
+            <FontAwesomeIcon className="icon-close-modal" onClick={()=>closeForm(openModalAdd)} icon={faXmark} /> 
           </div>
         </ModalHeader>
         <ModalBody className="contenedor-modal-body">
@@ -154,7 +154,7 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
                       <option className="option-selected">Seleccionar..</option>
                       }
                     {filteredCellphones().map((cellphone)=>{
-                        return <option className="option-modal" key={cellphone.id} value={cellphone.id} >{cellphone.model}</option>
+                        return <option className="option-modal" key={cellphone.id} value={cellphone.id} >{cellphone.brand_id ? cellphone.brand_id.brand + "-" : ""}{cellphone.model}</option>
                     })}
                 </select>
                 <h1 className="h1-add" onClick={()=>changeModal("cellphone")}>+</h1>

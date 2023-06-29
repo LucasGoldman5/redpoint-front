@@ -2,6 +2,8 @@ import React, {useState} from "react";
 import "../modales.css";
 import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
 import HelperBuildRequest from "../../helpers/buildRequest";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons'; 
 import { useForm } from "react-hook-form";
 
 
@@ -46,9 +48,10 @@ const ModalEditUser = ({openModalEdit, onsubmit, itemToEdit, changeError, errors
 
     return(
         <Modal isOpen={openModalEdit}>
-            <ModalHeader style={{display: 'block'}}>
-              <div>
-                <h5  style={{float: 'center', color:'gold'}} >Editar Usuario</h5> 
+            <ModalHeader style={{display: 'block', color:'gold'}}>
+              <div className="div-title-modal">
+                <h5  style={{float: 'center'}} >{`Editar Usuario #${itemToEdit.id}`}</h5>
+                <FontAwesomeIcon className="icon-close-modal"  onClick={closeForm} icon={faXmark} /> 
               </div>
             </ModalHeader>
             <ModalBody>
@@ -64,7 +67,6 @@ const ModalEditUser = ({openModalEdit, onsubmit, itemToEdit, changeError, errors
                 <br />
                 <label>Generar contraseña en:</label>
                 <input className="form-control" type="text" readOnly defaultValue={itemToEdit ? itemToEdit.hash ? local+"/"+enviroment.selfUrl.generatePass+"#"+itemToEdit.hash : `La contraseña ya fue creada para ${itemToEdit.name}` : ""} {...register('pass',{ shouldUnregister:true })}></input>
-                <br/>
                 {
                   itemToEdit
                   ?
@@ -73,7 +75,6 @@ const ModalEditUser = ({openModalEdit, onsubmit, itemToEdit, changeError, errors
                   <>
                   <div className={newHash ? "container-button-change-pass" : "container-button-change-pass-none" }>
                     <button className="button-change-pass" onClick={()=>changePass(getValues())} type="button">Cambiar contraseña</button>
-                    <br/>
                   </div>
                   </>
                   :
@@ -81,6 +82,7 @@ const ModalEditUser = ({openModalEdit, onsubmit, itemToEdit, changeError, errors
                   :
                   ""
                 }
+                <br/>
                 <label >Email</label>
                 <input className={errors.email ? "form-control error" : "form-control"} type="text" name="email" id="email"  defaultValue={itemToEdit ? itemToEdit.email : ''}{...register('email',{
                   shouldUnregister: true,

@@ -1,6 +1,8 @@
 import React from "react";
 import "../modales.css";
-import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
+import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons'; 
 import { useForm } from "react-hook-form";
 
 
@@ -11,16 +13,15 @@ const ModalEditCustomer = ({openModalEdit, onsubmit, itemToEdit, changeError, er
 
     return(
         <Modal isOpen={openModalEdit}>
-        <ModalHeader style={{display: 'block'}}>
-          <div>
-            <h5  style={{float: 'center', color:'gold'}} >Editar Cliente</h5> 
+        <ModalHeader style={{display: 'block', color:'gold'}}>
+          <div className="div-title-modal">
+            <h5  style={{float: 'center'}} >{`Editar Cliente #${itemToEdit.id}`}</h5>
+            <FontAwesomeIcon className="icon-close-modal"  onClick={closeForm} icon={faXmark} /> 
           </div>
         </ModalHeader>
         <ModalBody>
           <form className="form-group" onSubmit={handleSubmit(onsubmit)}>
-            <label>Numero de Cliente</label>
-            <input className="form-control" type="text" readOnly name="id" defaultValue={itemToEdit ? itemToEdit.id : ""} {...register('id',{ shouldUnregister: true,})} />
-            <br/>
+            <input style={{ visibility: 'hidden', position: 'absolute' }} type="text" readOnly name="id" defaultValue={itemToEdit ? itemToEdit.id : ""} {...register('id',{ shouldUnregister: true,})} />
             <label >Nombre</label>
             <input className={errors.name ? "form-control error" : "form-control"} type="text" name="name" id="name"  defaultValue={itemToEdit ? itemToEdit.name : ''} {...register('name',{
                shouldUnregister: true,

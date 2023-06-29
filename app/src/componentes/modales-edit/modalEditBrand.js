@@ -1,6 +1,8 @@
 import React from "react";
 import "../modales.css";
-import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
+import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons'; 
 import { useForm } from "react-hook-form";
 
 
@@ -12,8 +14,9 @@ const ModalEditBrand = ({openModalEdit, onsubmit, itemToEdit, changeError, error
     return(
         <Modal isOpen={openModalEdit}>
         <ModalHeader style={{display: 'block', color:'gold'}}>
-          <div>
-            <h5  style={{float: 'center'}} >{`Editar Marca #${itemToEdit.id}`}</h5> 
+          <div className="div-title-modal">
+            <h5  style={{float: 'center'}} >{`Editar Marca #${itemToEdit.id}`}</h5>
+            <FontAwesomeIcon className="icon-close-modal"  onClick={closeForm} icon={faXmark} /> 
           </div>
         </ModalHeader>
         <ModalBody>

@@ -222,7 +222,7 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
 
 
   const dataCellphonesFilter = (e) => {
-    let filteredDataCellphone = dataCellphones;
+    let filteredDataCellphone = dataCellphones.data ? dataCellphones.data : dataCellphones;
   
     if (e) {
       setChainCellphones(e.target.value.toUpperCase());
@@ -236,7 +236,6 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
   
     return filteredDataCellphone;
   };
-
 
   const dataCustomersFilter = (e) => {
     let filteredDataCustomers = dataCustomers;
@@ -288,25 +287,33 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
   };
 
   const ent = enviroment.selfUrl.localEntities;
+  const table = enviroment.selfUrl.dataTable;
   const location = window.location.href; 
+  const entitie = enviroment.entities
   
   const title = () =>{
   
-    if(location.includes(ent.reparations)){
-      return "reparaciones"
+    if(location.includes(`${table}${ent.reparations}`)){
+      return "Reparaciones"
     }else if(location.includes(ent.brands)){
-      return "marcas"
+      return "Marcas"
     }
     else if(location.includes(ent.customers)){
-      return "clientes"
+      return "Clientes"
     }
     else if(location.includes(ent.cellphones)){
-      return "celulares"
+      return "Celulares"
     }
     else if(location.includes(ent.services)){
-      return "servicios"
+      return "Servicios"
     }else if(location.includes(ent.users)){
-      return "usuarios"
+      return "Usuarios"
+    }else if(location.includes(entitie.pending)){
+      return "R-Pendientes"
+    }else if(location.includes(entitie.success)){
+      return "R-Entregadas"
+    }else if(location.includes("por")){
+      return "R-Filtrada"
     }
   }
   const originUrl = window.location.href
@@ -345,7 +352,7 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
                       <span className={seeingPReparation ? "span" : "span-none"}><p>Reparaciones</p></span>
                     </div>
                     <div className="div-button-filter">
-                            <button className={(window.location.href.includes("por"))? "button-reparation-filter" : "button-reparation-filter-none"} onClick={() => openNavReports()}>Reparaciones filtradas<FontAwesomeIcon icon={arrowIcon ? faCaretDown : faCaretUp}></FontAwesomeIcon></button>   
+                            <button className={(window.location.href.includes("por"))? "button-reparation-filter" : "button-reparation-filter-none"} onClick={() => openNavReports()}>Filtrar por..<FontAwesomeIcon icon={arrowIcon ? faCaretDown : faCaretUp}></FontAwesomeIcon></button>   
                     </div>
                     <div className="container-li-span">
                       <li className='nav-li-link'><Link onMouseOver={()=>seeP("rp")} onMouseLeave={()=>noSeeP("rp")}  onClick={() => changeUrl(`${enviroment.entities.pending}`)} to={`${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`}><FontAwesomeIcon className={(window.location.href.includes(`${enviroment.selfUrl.dataTable}${enviroment.entities.pending}`))? "icon" : "icon-none"}  icon={faHourglassHalf} /></Link></li>
@@ -484,7 +491,7 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
                       </div>
                 </div>
                 <div className="div-li-hover">
-                  <li onMouseEnter={() => mouseOverLi("manager")} className={(window.location.href.includes("por-manager")) ? "li-nav-report" : "li-nav-report-none"}>Manager <FontAwesomeIcon icon={arrowManager ? faCaretDown : faCaretUp} /></li>
+                  <li onMouseEnter={() => mouseOverLi("manager")} className={(window.location.href.includes("por-manager")) ? "li-nav-report" : "li-nav-report-none"}>Usuario <FontAwesomeIcon icon={arrowManager ? faCaretDown : faCaretUp} /></li>
                   </div>
                 <div className={liManagerHover ? "container-reparations-filter" : "container-reparations-filter-none"}>
                   <div className="header-nav-reparations">
@@ -505,7 +512,7 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
                             :
                             loadElements
                             ?
-                            <p>Cargando Managers...</p>
+                            <p>Cargando Usuarios...</p>
                             :
                             <p>No hay resultados</p>
                           }

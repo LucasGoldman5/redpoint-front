@@ -3,7 +3,7 @@ import "../modales.css";
 import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
 import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass,faXmark } from '@fortawesome/free-solid-svg-icons';
 
 
 const ModalEditCellphone = ({openModalEdit, onsubmit, itemToEdit, changeError, changeModal, errors, edit, closeForm, handleInputChange, selectBrandActive, newBrandSelectedEdit, filteredBrands, activeInputSearch}) =>{
@@ -19,23 +19,15 @@ const ModalEditCellphone = ({openModalEdit, onsubmit, itemToEdit, changeError, c
 
     return(
         <Modal isOpen={openModalEdit} onOpened={() => changeValue()}>
-          <ModalHeader style={{display: 'block'}}>
-            <div>
-              <h5 style={{float: 'center', color:'gold'}} >{`Editar Modelo #${itemToEdit.id}`}</h5> 
+          <ModalHeader style={{display: 'block', color:'gold'}}>
+            <div className="div-title-modal">
+              <h5  style={{float: 'center'}} >{`Editar Modelo #${itemToEdit.id}`}</h5>
+              <FontAwesomeIcon className="icon-close-modal"  onClick={closeForm} icon={faXmark} /> 
             </div>
           </ModalHeader>
           <ModalBody>
             <form className="form-group" onSubmit={handleSubmit(onsubmit)}>
               <input  type="text"  style={{visibility:"hidden", position:"absolute"}} readOnly defaultValue={itemToEdit ? itemToEdit.id : ''} {...register('id',{ shouldUnregister: true,})} />
-              <label >Modelo</label>
-              <input className={errors.model ? "form-control error" : "form-control"} type="text"   defaultValue={itemToEdit ? itemToEdit.model : ''} {...register('model',{
-                 onChange: () => changeError("model"),
-                 })} />
-                {errors.model? <p className="p-errores">El campo Modelo debe ser definido</p> : ""}
-              <br />
-              <label >Url</label>
-              <input className="form-control" type="text"   defaultValue={itemToEdit ? itemToEdit.url : ''}{...register('url')} />
-              <br />
               <label >Marca</label>
               <div className="div-container-select-button">
               <input type="search" onChange={(e)=>handleInputChange(e,"brand")} placeholder="buscar.." className={selectBrandActive ? "input-search brand" : "input-search-none"}></input>
@@ -69,6 +61,15 @@ const ModalEditCellphone = ({openModalEdit, onsubmit, itemToEdit, changeError, c
               </div>
                 {errors.brand_id?<p className="p-errores">Haga click en una marca</p> : ""}
               <br/>
+              <label >Modelo</label>
+              <input className={errors.model ? "form-control error" : "form-control"} type="text"   defaultValue={itemToEdit ? itemToEdit.model : ''} {...register('model',{
+                 onChange: () => changeError("model"),
+                 })} />
+                {errors.model? <p className="p-errores">El campo Modelo debe ser definido</p> : ""}
+              <br />
+              <label >Url</label>
+              <input className="form-control" type="text"   defaultValue={itemToEdit ? itemToEdit.url : ''}{...register('url')} />
+              <br />
               <div className="contenedor-boton-modal-dentro">
                 <button className="btn btn-edit" type="submit" onClick={edit}>Editar</button>
                 <h1 className="btn btn-cancelar" onClick={closeForm}>Cancelar</h1> 

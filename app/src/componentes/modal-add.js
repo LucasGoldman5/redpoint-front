@@ -68,7 +68,7 @@ const ModalAdd =({closeModal,actionModal, create,dataApi,errorsInTable,openModal
     setDataCustomers(dataCustomersApp);
     setDataServices(dataServicesApp);
     setDataRoles(dataRolesApp);
-  },[dataBrandsApp,dataRolesApp,dataStatusApp])
+  },[dataCustomersApp,dataCellphonesApp,dataBrandsApp,dataServicesApp,dataRolesApp,dataStatusApp])
 
   useEffect(() => {
     setNewCustomerSelected([]);
@@ -504,9 +504,13 @@ useEffect(() => {
   };
 
   const filteredCellphones = () =>{
-    if(dataCellPhones.length >=1){
-      return dataCellPhones.filter((cellphone) =>
-    cellphone.model.toLowerCase().includes(filterCellphoneValue.toLowerCase()))
+    if(dataCellPhones.data){
+      if(dataCellPhones.data.length >= 1){
+        return dataCellPhones.data.filter((cellphone) =>
+        cellphone.model.toLowerCase().includes(filterCellphoneValue.toLowerCase()))
+      }else{
+        return[]
+      }
     }else{
       return []
     }
