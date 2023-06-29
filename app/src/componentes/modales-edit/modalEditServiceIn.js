@@ -1,6 +1,8 @@
 import React from "react";
 import "../modales.css";
-import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
+import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';  
 import { useForm } from "react-hook-form";
 
 
@@ -13,22 +15,20 @@ const ModalEditServiceIn = ({openModalAddServiceEdit, addServiceInReparationEdit
     return(
         <Modal isOpen={openModalAddServiceEdit}>
             <ModalHeader style={{display: 'block'}}>
-              <div>
-                <h5  style={{float: 'center', color: 'green'}} >Crear Servicio</h5> 
+              <div className="div-title-modal">
+                <h5  className="h5-modal-add" >Crear Servicio</h5>
+                <FontAwesomeIcon className="icon-close-modal" onClick={()=>closeFormAdd("service",getValues())} icon={faXmark} /> 
               </div>
             </ModalHeader>
             <ModalBody className="contenedor-modal-body">
               <form className="form-group" onSubmit={handleSubmit(addServiceInReparationEdit)}>
-                <label >Numero de Servicio</label>
-                <input className="form-control" type="number" name="id" id="id" readOnly value={dataServicesEdit.length + 1} ></input>
-                <br />
-                <label >Descripcion</label>
+                <label >Nombre del Servicio</label>
                 <input className={errorsApi.description ? "form-control error" : "form-control"} type="text" name="marca"  {...register('description',{
                   value:null,
                   shouldUnregister:true,
                   onChange: () => changeErrorApi("description"),
                   })} />
-                  {errorsApi.description? <p className="p-errores">El campo Descripcion debe ser completado</p> : ""} 
+                  {errorsApi.description? <p className="p-errores">El campo "Nombre del Servicio" debe ser completado</p> : ""} 
                 <br />
                 <label >Numero de Telefono</label>
                 <input className={errorsApi.phone_number ? "form-control error" : "form-control"} type="text" name="numero de telefono" {...register('phone_number',{

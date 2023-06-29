@@ -111,6 +111,14 @@ const Login = ({enviroment}) =>{
                 <h4 className="h4-registro">Iniciar</h4>
                 <div className="form-registrarse-container">
                     <form className="form-login" id="formularioLogin" onSubmit={handleSubmit(onSubmit)}>
+                        <div className="inputs">
+                            <label>Correo Electronico</label>
+                            <input className={errors.email ? "input error" : "input"} type="email"  {...register('email',{
+                              onChange: (e) => changeError("email",e.target.value)
+                                })}>                             
+                            </input>
+                                {errors.email ? <p className="p-validacion">{errors.email}</p> : ""}
+                        </div>
                         <div className="inputs contraseña">
                             <label>Contraseña</label>
                             <div className="label-input-password">
@@ -125,14 +133,6 @@ const Login = ({enviroment}) =>{
                                   }
                               </div>
                             </div>
-                        </div>
-                        <div className="inputs">
-                            <label>Correo Electronico</label>
-                            <input className={errors.email ? "input error" : "input"} type="email"  {...register('email',{
-                              onChange: (e) => changeError("email",e.target.value)
-                                })}>                             
-                            </input>
-                                {errors.email ? <p className="p-validacion">{errors.email}</p> : ""}
                         </div>
                         <div  className="input-submit">
                             <button  type="submit" value="Inicio" >Inicio</button>

@@ -1,5 +1,7 @@
 import React from "react";
 import "../modales.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
 import { useForm } from "react-hook-form";
 
@@ -13,8 +15,9 @@ const ModalAddBrandIn = ({openModalAddBrand, onSubmitBrand, errorsApi, changeErr
     return(
             <Modal isOpen={openModalAddBrand}>
                 <ModalHeader style={{display: 'block'}}>
-                <div>
-                <h5  className="h5-modal-add" >Crear Marca</h5> 
+                <div className="div-title-modal">
+                    <h5  className="h5-modal-add" >Crear Marca</h5>
+                    <FontAwesomeIcon className="icon-close-modal"  onClick={()=>closeFormAdd("brand")} icon={faXmark} /> 
                 </div>
                 </ModalHeader>
                 <ModalBody className="contenedor-modal-body">

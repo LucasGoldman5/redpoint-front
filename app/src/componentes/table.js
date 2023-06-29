@@ -18,7 +18,7 @@ import { PulseLoader } from "react-spinners";
 import Error404 from './page404';
 
 
-function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCustomersApp,dataServicesApp,dataRolesApp,dataStatusApp}) {
+function Table  ({urlTable, enviroment}) {
 
 
     const [dataApi, setDataApi] = useState([]);
@@ -41,24 +41,46 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
     const [checkBox, setCheckBox] = useState(null);
     const [modalClosed, setModalClosed] = useState(null);
     const [actionModal, setActionModal] = useState(false);
+    const [dataBrandsApp, setDataBrandsApp] = useState([])
+    const [dataCustomersApp, setDataCustomersApp] = useState([])
+    const [dataCellphonesApp, setDataCellphonesApp] = useState([])
+    const [dataServicesApp, setDataServicesApp] = useState([])
+    const [dataStatusApp, setDataStatusApp] = useState([])
+    const [dataRolesApp, setDataRolesApp] = useState([])
     const tableRef = useRef(null)
     const [scroll, setScroll] = useState(0)
     const { id } = useParams();
     
-    const location = useLocation();
     const getUser = localStorage.getItem("user");
-  
-    const tables = [
+
+    const ent = enviroment.selfUrl.localEntities;
+    const table = enviroment.selfUrl.dataTable;
+    const entitie = enviroment.entities
+    const location = window.location.href
+
+    const titleTable = () =>{
       
-        {"marcas":"Marcas"},
-        {"celulares":"Celulares"},
-        {"servicios":"Servicios"},
-        {"clientes":"Clientes"},
-        {"reparaciones":"Reparaciones"},
-        {"reporte/reparaciones-pendientes":"Reparaciones Pendientes"},
-        {"reporte/reparaciones-entregadas":"Reparaciones Entregadas"},
-        {"usuarios":"Usuarios"}    
-    ];
+      if(location.includes(`${table}${ent.reparations}`)){
+        return "Reparaciones"
+      }else if(location.includes(ent.brands)){
+        return "Marcas"
+      }
+      else if(location.includes(ent.customers)){
+        return "Clientes"
+      }
+      else if(location.includes(ent.cellphones)){
+        return "Celulares"
+      }
+      else if(location.includes(ent.services)){
+        return "Servicios"
+      }else if(location.includes(ent.users)){
+        return "Usuarios"
+      }else if(location.includes(entitie.pending)){
+        return "Reparaciones Pendientes"
+      }else if(location.includes(entitie.success)){
+        return "Reparaciones Entregadas"
+      }
+    }
 
     const title = {
       "marcas":"Marca",
@@ -84,6 +106,7 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
         getData();
         admin();
         setChain("")
+        setSpinnerLoadTable(true);
     }, [urlTable]);
 
     const urlApi = () =>{
@@ -112,8 +135,6 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
     const getData = async () => {
 
       setItemToEdit(null)
-
-      setSpinnerLoadTable(true);
       const entiti = () =>{
         const result = window.location.href.split("-").slice(2).join("/");
         const url = result.split("/")[0];
@@ -144,9 +165,8 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
             }else{
               const data = await response
               setDataApi(data)
-              setTimeout(()=>{
-                setSpinnerLoadTable(false);
-              },2000) 
+              setSpinnerLoadTable(false);
+              setRowId(null);
             }
           }else if(request.status === 404){
             setEntitiNotFound(entiti());
@@ -169,13 +189,155 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
       }   
     };
 
-    const openModalAdd = () =>{
+    const urlApiBack = () =>{
+      return  enviroment.apiURL 
+  }
+
+  const urlEntities = () =>{
+    return enviroment.entities
+  }
+
+    const openModalAdd = async () =>{
       setOpenModal(true);
       setActionModal(true);
       setTimeout(()=>{
         setActionModal(false);
       },300)
+
+      const apiURL = urlApiBack();
+      const entitiesUrl = urlEntities();
+    
+    if(window.location.href.includes("reparaciones")){
+      try{
+                   
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.brand}`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                    
+                    setDataBrandsApp(response);
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+    
+    
+      try{
+                    
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.cellphone}`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                      
+                    setDataCellphonesApp(response);
+                    
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+    
+    
+      try{
+                    
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.customer}`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                      
+                    setDataCustomersApp(response);
+                    
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+    
+    
+      try{
+                    
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.service}`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                      
+                    setDataServicesApp(response);
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+
+    }else if(window.location.href.includes("celulares")){
+
+      try{
+                   
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.brand}`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                    
+                    setDataBrandsApp(response);
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+    }else if(window.location.href.includes("usuarios")){
+
+      try{
+                 
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.roles}`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                    
+                    setDataRolesApp(response);
+                }  
+          };
+
+       }catch(error){
+         console.log(error)
+       }
     }
+    
+  }
 
     const create = async (data) =>{
     
@@ -207,9 +369,9 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                         setTimeout(() =>{
                           alert(`El usuario a sido creado con exito, para ingresar a la aplicacion debe ingresar a la siguiente url: ${localUrl.main}${localUrl.generatePass}#${hash}`)
                         },1000)
-                        setDataApi({...dataApi,data:dataApi.data.concat(response.data)});
+                        getData()
                       }else{
-                        setDataApi({...dataApi,data:dataApi.data.concat(response.data)});
+                        getData();
                         setActionModal(true);
                         setCheckBox(false);
                         setTimeout(()=>{
@@ -243,7 +405,7 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
         setOpenModal(false);
         setCheckBox(false);
         setModalClosed(false);
-      },200)
+      },100)
       setCheckBox(true)
       setModalClosed(true);
       setOpenModalEdit(false);
@@ -253,7 +415,7 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
       setTimeout(()=>{
         setRowId(null);
         setActionModal(false)
-      },300)
+      },200)
       setResetSelectBox(true);
     };
 
@@ -275,15 +437,169 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
       if (tableRef.current) {
         tableRef.current.scrollTop = scroll;
       } 
-    }, [openModalEdit,rowId]);
+    }, [rowId]);
 
-    const OpenModalEdit =  (element,event) =>{
+
+
+    const OpenModalEdit = async (element,event) =>{
       
       setItemToEdit(null);
       setItemToEdit(element);
       setScroll(event.currentTarget.offsetTop - 100)
       setRowId(element.id);
       setOpenModalEdit(true);
+
+      const apiURL = urlApiBack();
+      const entitiesUrl = urlEntities();
+    
+    if(window.location.href.includes("reparaciones")){
+      try{
+                   
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.brand}`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{            
+                    setDataBrandsApp(response);
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+    
+    
+      try{
+                    
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.cellphone}`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{               
+                    setDataCellphonesApp(response); 
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+    
+    
+      try{
+                    
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.customer}`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                  
+                    setDataCustomersApp(response);
+                    
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+    
+    
+      try{
+                    
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.service}`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                 
+                    setDataServicesApp(response);
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+
+      try{
+                 
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.status}`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                    
+                    setDataStatusApp(response);
+                }  
+          };
+      }catch(error){
+        console.log(error)
+      }
+
+    }else if(window.location.href.includes("celulares")){
+
+      try{
+                   
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.brand}`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{  
+                  setDataBrandsApp(response);
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+
+    }else if(window.location.href.includes("usuarios")){
+
+      try{
+                 
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.roles}`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                  
+                    setDataRolesApp(response);
+                }  
+          };
+
+       }catch(error){
+         console.log(error)
+       }
+    }
 
     };   
       
@@ -338,20 +654,14 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                     if(response.error){
                         console.log(response.error);
                     }else{
-                      setTimeout(()=>{
-                        setRowId(null);
-                      },300)
                       setResetSelectBox(true)                      
                       setOpenModalEdit(false);
                       setErrors([]);
                       setItemToEdit(null)
-                      const result = dataApi.data.map((row) => row.id == response.data.id ? response.data : row);
-                      setDataApi({...dataApi,data:result}) 
+                      getData()
                       setActionModal(true);
                       setCheckBox(false);
-                        setTimeout(()=>{
-                          setActionModal(false);
-                        },200) 
+                      setActionModal(false)
                     }  
                 }
 
@@ -417,8 +727,7 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                           console.log(response.error);
                         },1000);
                       }else{         
-                      const result =  dataApi.data.filter(object => object !== element);
-                      setDataApi({...dataApi,data:result});
+                      getData()
                       setErrors([]);
                       setItemToEdit(null)
                       };
@@ -471,11 +780,7 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                 console.log(response.error);
               },500);
             }else{
-              setTimeout(()=>{
-                setRowId(null)
-              },300)
-              const result = dataApi.data.map((row) => row.id == newData().id ? newData() : row);                      
-              setDataApi({...dataApi, data:result})
+              getData()
             }  
         }
 
@@ -704,7 +1009,7 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                                   ?
                                   ""
                                   :
-                                  <th className='ultima-columna' key={uniqueKeys.thColumnActions} >Eliminar</th>
+                                  <th className='ultima-columna' key={uniqueKeys.thColumnActions} >Acciones</th>
                                 }
                               </tr>
                             </thead>
@@ -924,14 +1229,8 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
               :
             <>
               <div className='div-no-results'>
-              {
-                window.location.href.includes("por")
-                ?
-                ""
-                :
-                <AddButton onClick={()=>openModalAdd()} dataApi={dataApi}></AddButton>
-              }
-                <h1 className='h1-no-results'>No hay Resultados</h1>
+              
+                <h1 className='h1-no-results'>No hay {titleTable()}</h1>
                 <ModalAdd
                     create={create}
                     closeModal={closeModal}
@@ -952,6 +1251,14 @@ function Table  ({urlTable, enviroment,dataBrandsApp,dataCellphonesApp,dataCusto
                     modalClosed={modalClosed}
                     actionModal={actionModal}>
                   </ModalAdd>
+
+                {
+                  window.location.href.includes("por")
+                  ?
+                  ""
+                  :
+                  <AddButton onClick={()=>openModalAdd()} dataApi={dataApi}></AddButton>
+                }
               </div>
             </>
           }

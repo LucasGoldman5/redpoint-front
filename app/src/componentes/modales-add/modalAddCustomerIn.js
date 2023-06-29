@@ -1,6 +1,8 @@
 import React from "react";
 import "../modales.css";
-import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
+import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons'; 
 import { useForm } from "react-hook-form";
 
  
@@ -14,8 +16,9 @@ const ModalAddCustomerIn = ({openModalAddCustomer, addCustomerInReparation, erro
     return(
         <Modal isOpen={openModalAddCustomer}  >
         <ModalHeader style={{display: 'block'}}>
-          <div>
-            <h5  style={{float: 'center', color: 'green'}} >Crear Cliente</h5> 
+          <div className="div-title-modal">
+            <h5  className="h5-modal-add" >Crear Cliente</h5>
+            <FontAwesomeIcon className="icon-close-modal" onClick={()=>closeFormAdd("customer")} icon={faXmark} /> 
           </div>
         </ModalHeader>
         <ModalBody className="contenedor-modal-body">

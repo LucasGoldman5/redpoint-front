@@ -3,7 +3,7 @@ import "../modales.css";
 import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
 import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass,faXmark } from '@fortawesome/free-solid-svg-icons';
 
 
 const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, changeModal, errors, edit, closeForm, handleInputChange, selectCellphoneActive, selectCustomerActive, selectServiceActive, newCellphoneSelectedEdit, newCustomerSelectedEdit, newServiceSelectedEdit, filteredCellphones, filteredCustomers, filteredServices, activeInputSearch, dataStatesEdit, addEmail}) =>{
@@ -75,11 +75,13 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
 
     const { register, handleSubmit, setValue, getValues} = useForm ();
 
+
     return(
         <Modal id="elementModal" isOpen={openModalEdit} onOpened={() => changeValue()} className="modal-reparations">
-        <ModalHeader style={{display: 'block'}}>
-          <div>
-            <h5  style={{float: 'center', color: 'gold'}} >{`Editar Reparacion #${itemToEdit ? itemToEdit.id : ""}`}</h5> 
+        <ModalHeader style={{display: 'block', color: 'gold'}}>
+          <div className="div-title-modal">
+            <h5  style={{float: 'center'}} >{`Editar Reparacion #${itemToEdit.id}`}</h5>
+            <FontAwesomeIcon className="icon-close-modal"  onClick={closeForm} icon={faXmark} /> 
           </div>
         </ModalHeader>
         <ModalBody className="contenedor-modal-body">
@@ -148,7 +150,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                     :
                     itemToEdit.cellphone.model
                     ?
-                    <option style={{visibility:"hidden", display:"none"}} value={itemToEdit.cellphone.id}>{itemToEdit.cellphone.model}</option>
+                    <option style={{visibility:"hidden", display:"none"}} value={itemToEdit.cellphone.id}>{itemToEdit.cellphone.brand ? itemToEdit.cellphone.brand + "-" : ""}{itemToEdit.cellphone.model}</option>
                     :
                     <option >Seleccionar..</option>
                   }
@@ -156,7 +158,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                       return <option className={itemToEdit && itemToEdit.cellphone.id == cellphone.id ? "option-selected" :"option-modal"} 
                       key={cellphone.id} 
                       value={cellphone.id} 
-                      >{cellphone.model}</option>   
+                      >{cellphone.brand_id ? cellphone.brand_id.brand + "-" : ""}{cellphone.model}</option>   
                   })}
                 </select>
                 <h1 className="h1-add" onClick={()=>changeModal("cellphone")}>+</h1>

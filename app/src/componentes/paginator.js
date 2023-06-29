@@ -17,7 +17,7 @@ const Paginator = ({dataApi,nextPage,previousPage,specifyPage,changePage}) =>{
     return (
       <>
         <div className="paginator-container">
-          <p className="p-paginator">Items {dataApi.paginator.firstItem}-{dataApi.paginator.lastItem} de {dataApi.paginator.total} </p>
+          <p className="p-paginator">Del {dataApi.paginator.firstItem} al {dataApi.paginator.lastItem} de {dataApi.paginator.total} </p>
           <div className= "div-spinner-page" >
             {(changePage === true)
             ?

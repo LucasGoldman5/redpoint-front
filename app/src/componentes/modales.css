@@ -3,7 +3,18 @@
     width: 90%;
     max-width: 90%;
 }
-
+.div-title-modal{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.icon-close-modal{
+    cursor: pointer;
+    color: black;
+}
+.icon-close-modal:hover{
+    color: red;
+}
 .h5-modal-add{
     color: green;
 }
@@ -142,9 +153,9 @@
 .container-button-change-pass-none{
     display: none;
 }
-
-
-
+.container-button-change-pass{
+  margin-top: 7px;
+}
 .p-errores{
     color: red;
     margin-bottom: 0px;

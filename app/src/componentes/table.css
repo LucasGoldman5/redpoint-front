@@ -95,12 +95,10 @@ body{
 }
 .contenedor-barra-botonagregar{
     display: flex;
-    max-width: 1500px;
     width: 98%;
 }
 .contenedor-barra-botonagregar-report{
     display: flex;
-    max-width: 1500px;
     justify-content: start;
     padding-bottom: 5px;
     width: 98%;

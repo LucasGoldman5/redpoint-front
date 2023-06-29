@@ -3,7 +3,7 @@ import "../modales.css";
 import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
 import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass,faXmark } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -21,29 +21,13 @@ const ModalAddCellphoneIn = ({openModalAddCellphone, addCellphoneInReparation, i
     return(
         <Modal isOpen={openModalAddCellphone} onOpened={()=> changeValue()}>
         <ModalHeader style={{display: 'block'}}>
-          <div>
-            <h5  style={{float: 'center', color: 'green'}} >Crear celular</h5> 
+          <div className="div-title-modal">
+            <h5  className="h5-modal-add" >Crear Celular</h5>
+            <FontAwesomeIcon className="icon-close-modal"  onClick={()=>closeFormAdd("cellphone",getValues())} icon={faXmark} /> 
           </div>
         </ModalHeader>
         <ModalBody className="contenedor-modal-body">
           <form className="form-group" onSubmit={handleSubmit(addCellphoneInReparation)}>
-            <label >Numero de Celular</label>
-            <input className="form-control" type="number" name="id" readOnly value={`${dataCellPhones.length+1}`}  />
-            <br/>
-            <label >Modelo</label>
-            <input className={errorsApi.model ? "form-control error" : "form-control"} type="text" name="modelo" {...register('model',{
-              onChange: () => changeErrorApi("model"),
-              value:null,
-              shouldUnregister:ifChangeModal ? false : true,
-              })}/>
-              {errorsApi.model? <p className="p-errores">El campo Modelo debe ser completado</p> : ""}
-            <br />
-            <label >Url</label>
-            <input className="form-control" type="text" name="url" {...register('url',{
-              value:null,
-              shouldUnregister:ifChangeModal ? false : true,
-              })} />
-            <br/>
             <label >Marca</label>
             <div className="div-container-select-button">
             <input type="search" onChange={(e)=>handleInputChange(e,"brand")} placeholder="buscar.." className={selectBrandActive ? "input-search brand" : "input-search-none"}></input>
@@ -66,6 +50,20 @@ const ModalAddCellphoneIn = ({openModalAddCellphone, addCellphoneInReparation, i
             <h1 className="h1-add" onClick={()=>changeModal("brand")}>+</h1>
             </div>
               {errorsApi.brand_id? <p className="p-errores">Haga click en una marca</p> : ""}
+            <br/>
+            <label >Modelo</label>
+            <input className={errorsApi.model ? "form-control error" : "form-control"} type="text" name="modelo" {...register('model',{
+              onChange: () => changeErrorApi("model"),
+              value:null,
+              shouldUnregister:ifChangeModal ? false : true,
+              })}/>
+              {errorsApi.model? <p className="p-errores">El campo Modelo debe ser completado</p> : ""}
+            <br />
+            <label >Url</label>
+            <input className="form-control" type="text" name="url" {...register('url',{
+              value:null,
+              shouldUnregister:ifChangeModal ? false : true,
+              })} />
             <br/>  
             <div className="contenedor-boton-modal-dentro-reparations">
               <button type="button" className="btn btn-success" onClick={()=>addCellphoneInReparation(getValues())} >Crear</button>

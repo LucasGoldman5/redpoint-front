@@ -1,6 +1,8 @@
 import React from "react";
 import "../modales.css";
-import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
+import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';  
 import { useForm } from "react-hook-form";
 
 
@@ -12,13 +14,13 @@ const ModalEditBrandIn = ({openModalAddBrandEdit, onSubmitBrand, changeErrorApi,
     return(
         <Modal isOpen={openModalAddBrandEdit}>
         <ModalHeader style={{display: 'block'}}>
-          <div>
-          <h5  className="h5-modal-add" >Crear Marca</h5> 
+          <div className="div-title-modal">
+            <h5  className="h5-modal-add" >Crear Marca</h5>
+            <FontAwesomeIcon className="icon-close-modal"  onClick={()=>closeFormAdd("brand")} icon={faXmark} /> 
           </div>
         </ModalHeader>
         <ModalBody className="contenedor-modal-body">
           <form className="form-group" onSubmit={handleSubmit(onSubmitBrand)}>
-            <br />
             <label >Marca</label>
             <input className={errorsApi.title ? "form-control error" : "form-control"} type="text" name="marca"  {...register('title',{
               shouldUnregister:true,
