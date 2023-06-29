@@ -1,10 +1,12 @@
 import React from "react";
 import "../modales.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
 import { useForm } from "react-hook-form";
 
 
-const ModalAddBrand = ({openModalAdd, create, dataApi, errors, changeError, closeForm}) =>{
+const ModalAddBrand = ({openModalAdd, create, errors, changeError, closeForm}) =>{
 
 
     const { register, handleSubmit} = useForm ();
@@ -12,15 +14,13 @@ const ModalAddBrand = ({openModalAdd, create, dataApi, errors, changeError, clos
     return(
         <Modal isOpen={openModalAdd}>
         <ModalHeader style={{display: 'block'}}>
-          <div>
-          <h5  className="h5-modal-add" >Crear Marca</h5> 
+          <div className="div-title-modal">
+            <h5  className="h5-modal-add" >Crear Marca</h5>
+            <FontAwesomeIcon className="icon-close-modal"  onClick={closeForm} icon={faXmark} /> 
           </div>
         </ModalHeader>
         <ModalBody className="contenedor-modal-body">
           <form className="form-group" onSubmit={handleSubmit(create)}>
-            <label >Cantidad de marcas actuales</label>
-            <input className="form-control" type="number" name="id" id="id" readOnly value={dataApi.data.length} ></input>
-            <br />
             <label >Marca</label>
             <input className={errors.title ? "form-control error" : "form-control"} type="text" name="marca"  {...register('title',{
               onChange: () => changeError("title"),
