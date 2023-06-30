@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
 import './table.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {  faTrashAlt, faComments} from '@fortawesome/free-solid-svg-icons';
+import {  faTrashAlt, faComments, faPrint} from '@fortawesome/free-solid-svg-icons';
 import AddButton from './add-button';
 import 'bootstrap/dist/css/bootstrap.css';
 import ModalAdd from './modal-add';
@@ -240,6 +240,7 @@ function Table  ({urlTable, enviroment, dataTotal}) {
   }
 
     const openModalAdd = async () =>{
+
       setOpenModal(true);
       setActionModal(true);
       setTimeout(()=>{
@@ -784,7 +785,16 @@ function Table  ({urlTable, enviroment, dataTotal}) {
         });
     };
 
-    
+    const print = (element,event) =>{
+
+      event.stopPropagation()
+      setItemToEdit(null)
+      setTimeout(()=>{
+        setOpenModalEdit(false);
+      })
+      setRowId(null)
+      console.log(element);
+    }
 
     const actionUser = async (data,id) => {
 
@@ -1179,8 +1189,15 @@ function Table  ({urlTable, enviroment, dataTotal}) {
                                       :
                                       <td className='ultima-celda' key={uniqueKeys.tdBody}>
                                       {
-                                        <div className='botones-acciones' >                                        
-                                          <button className='boton-eliminar' onClick={() => eliminate(element)}><FontAwesomeIcon icon={faTrashAlt} /></button> 
+                                        <div className='botones-acciones' >      
+                                          {
+                                            window.location.href.includes("reparaciones")
+                                            ?
+                                            <button className='boton-imprimir' onClick={(event) => print(element,event)}><FontAwesomeIcon icon={faPrint} /></button>
+                                            :
+                                            ""
+                                          }                                   
+                                          <button className='boton-eliminar' onClick={() => eliminate(element)}><FontAwesomeIcon icon={faTrashAlt} /></button>
                                         </div>
                                       }
                                     </td>
