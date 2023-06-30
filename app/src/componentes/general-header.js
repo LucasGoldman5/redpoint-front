@@ -45,7 +45,7 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
     admin()
     const timer = setTimeout(()=>{
       setLoadElements(false);
-    },3000)
+    },5000)
 
     return () => clearTimeout(timer);
   }, []);

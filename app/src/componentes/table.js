@@ -11,14 +11,13 @@ import ModalEdit from './modal-edit';
 import ModalView from './modal-view';
 import Paginator from './paginator';
 import HelperBuildRequest from "../helpers/buildRequest";
-import {  useLocation } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import getManualColumns from '../helpers/getManualColumns';
 import { PulseLoader } from "react-spinners";
 import Error404 from './page404';
 
 
-function Table  ({urlTable, enviroment}) {
+function Table  ({urlTable, enviroment, dataTotal}) {
 
 
     const [dataApi, setDataApi] = useState([]);
@@ -78,7 +77,50 @@ function Table  ({urlTable, enviroment}) {
       }else if(location.includes(entitie.pending)){
         return "Reparaciones Pendientes"
       }else if(location.includes(entitie.success)){
-        return "Reparaciones Entregadas"
+        return "Reparaciones Finalizadas"
+      }else if (dataTotal[4]){
+
+          if(location.includes(entitie.reparationsBrand) && dataTotal[0]){
+            const id = window.location.href.split("/").slice(6).join('/');
+            const title = dataTotal[0].brands.map((element)=>{
+              if(element.id == id){
+                return `Reparaciones de ${element.title}`
+              }
+            })
+            return title
+          }else if(location.includes(entitie.reparationsCustomer)){
+            const id = window.location.href.split("/").slice(6).join('/');
+            const title = dataTotal[2].customers.map((element)=>{
+              if(element.id == id){
+                return `Reparaciones de ${element.name}`
+              }
+            })
+            return title
+          }else if(location.includes(entitie.reparationsService)){
+            const id = window.location.href.split("/").slice(6).join('/');
+            const title = dataTotal[3].service.map((element)=>{
+              if(element.id == id){
+                return `Reparaciones de ${element.description}`
+              }
+            })
+            return title
+          }else if(location.includes(entitie.reparationsCellphone)){
+            const id = window.location.href.split("/").slice(6).join('/');
+            const title = dataTotal[1].cellphones.data.map((element)=>{
+              if(element.id == id){
+                return `Reparaciones de ${element.model}`
+              }
+            })
+            return title
+          }else if(location.includes(entitie.reparationsManager)){
+            const id = window.location.href.split("/").slice(6).join('/');
+            const title = dataTotal[4].managers.map((element)=>{
+              if(element.id == id){
+                return `Reparaciones de ${element.name}`
+              }
+            })
+            return title
+          }
       }
     }
 
@@ -103,10 +145,10 @@ function Table  ({urlTable, enviroment}) {
     };
     
     useEffect(() => {
+        setSpinnerLoadTable(true);
         getData();
         admin();
         setChain("")
-        setSpinnerLoadTable(true);
     }, [urlTable]);
 
     const urlApi = () =>{
@@ -692,7 +734,6 @@ function Table  ({urlTable, enviroment}) {
         setOpenModalEdit(false);
       })
       const include = element.title ? element.title : element.model ? element.model : element.name ? element.name : element.description ? element.description : "";
-      console.log(include);
       const id = element.id;
       const location = window.location.href;
       const ent = enviroment.selfUrl.localEntities;
