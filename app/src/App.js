@@ -27,9 +27,8 @@ import getEnviroment from './helpers/getEnviroment';
   const [dataCustomers, setDataCustomers] = useState([]);
   const [dataCellphones, setDataCellPhones] = useState([]);
   const [dataServices, setDataServices] = useState([]);
-  const [dataRoles, setDataRoles] = useState([]);
-  const [dataStatus, setDataStatus] = useState([]);
   const [dataManagers, setDataManagers] = useState([]);
+  const [dataTotal, setDataTotal] = useState([]);
   const [seeNavReport, setSeeNavReport] = useState(false);
   const [arrowIcon, setArrowIcon] = useState(true);
   const [error404, setError404] = useState(false)
@@ -80,6 +79,10 @@ import getEnviroment from './helpers/getEnviroment';
                     },1000);
                 }else{                    
                     setDataBrands(response);
+                    setDataTotal((prevDataTotal) => [
+                      ...prevDataTotal,
+                      { brands: response },
+                    ]);
                 }  
           };
 
@@ -101,7 +104,10 @@ import getEnviroment from './helpers/getEnviroment';
                     },1000);
                 }else{                      
                     setDataCellPhones(response);
-                    
+                    setDataTotal((prevDataTotal) => [
+                      ...prevDataTotal,
+                      { cellphones: response },
+                    ]);
                 }  
           };
 
@@ -123,7 +129,10 @@ import getEnviroment from './helpers/getEnviroment';
                     },1000);
                 }else{                      
                     setDataCustomers(response);
-                    
+                    setDataTotal((prevDataTotal) => [
+                      ...prevDataTotal,
+                      { customers: response },
+                    ]);
                 }  
           };
 
@@ -145,6 +154,10 @@ import getEnviroment from './helpers/getEnviroment';
                     },1000);
                 }else{                      
                     setDataServices(response);
+                    setDataTotal((prevDataTotal) => [
+                      ...prevDataTotal,
+                      { service: response },
+                    ]);
                 }  
           };
 
@@ -166,6 +179,10 @@ import getEnviroment from './helpers/getEnviroment';
                     },1000);
                 }else{                      
                     setDataManagers(response);
+                    setDataTotal((prevDataTotal) => [
+                      ...prevDataTotal,
+                      { managers: response },
+                    ]);
                 }  
           };
 
@@ -212,6 +229,7 @@ import getEnviroment from './helpers/getEnviroment';
                   <Table 
                   urlTable={urlTable} 
                   enviroment={dataEnviroment} 
+                  dataTotal={dataTotal}
                   />
                   }></Route>
                   <Route path={`${dataEnviroment.selfUrl.login}`} element={<Login  enviroment={dataEnviroment} />}  ></Route> 
