@@ -404,7 +404,7 @@ body{
    color: white;
    border: none;
    cursor: pointer;
-   margin-left: 2px;
+   margin-left: 4px;
    border-radius: 8px;
 }
 
@@ -412,29 +412,16 @@ body{
     background: rgb(255, 0, 0);
 }
 
-.boton-editar{
-    background: rgb(141, 141, 0);
-    cursor: pointer;
-    border: none;
-    color: white;
+.boton-imprimir{
+    background: rgb(7, 0, 105);
     justify-content: center;
     align-items: center;
-    margin-right: 2px;
-}
-.boton-editar:hover{
-    background: rgb(78, 78, 0);
-}
-
-.boton-ver{
-    background: blue;
-    cursor: pointer;
-    border: none;
     color: white;
-    justify-content: center;
-    align-items: center;
-    margin-left: 4px;
+    border: none;
+    cursor: pointer;
+    margin-right: 4px;
+    border-radius: 8px; 
 }
-
-.boton-ver:hover{
-    background: rgb(0, 0, 119);
+.boton-imprimir:hover{
+    background: rgb(17, 0, 255);
 }
