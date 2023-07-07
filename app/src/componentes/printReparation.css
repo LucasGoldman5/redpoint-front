@@ -1,0 +1,46 @@
+.App{
+    height:max-content;
+}
+.general-container-print{
+    width: 100%;
+    display: flex;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.repair-data-container{
+    width: 85%;
+}
+.destiny{
+    width: 15%;
+}
+.destiny h2{
+    font-size: 25px;
+}
+.sub-container{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-row-gap: 20px;
+}
+.information-div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.information-div p{
+    margin: 0;
+    font-size: 15px;
+}
+.information-div.pattern{
+    grid-column: 3;
+}
+.pattern-container{
+    width: 25%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+.pattern-container p{
+    margin: 0;
+    text-align: center;
+    font-weight: 900;
+    font-size: 20px;
+}

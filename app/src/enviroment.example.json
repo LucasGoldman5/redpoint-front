@@ -35,6 +35,7 @@
         "login" : "login",
         "notFound" : "pagina-no-encontrada",
         "dataTable": "Tabla/",
+        "print":"imprimir-reparacion",
         "report": "reporte/",
         "personalInformation": "informacion-personal",
         "generatePassRoute": "generar-contraseña/*",

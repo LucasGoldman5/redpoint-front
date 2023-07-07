@@ -398,7 +398,7 @@ body{
 /*Table buttons style*/
 
 .boton-eliminar{
-   background: rgb(143, 0, 0);
+   background: rgb(87, 0, 0);
    justify-content: center;
    align-items: center;
    color: white;
@@ -412,8 +412,14 @@ body{
     background: rgb(255, 0, 0);
 }
 
+.icon-print{
+   width: 26px; 
+}
+.icon-print:hover{
+    color: white;
+}
 .boton-imprimir{
-    background: rgb(7, 0, 105);
+    background: rgb(6, 0, 88);
     justify-content: center;
     align-items: center;
     color: white;
@@ -424,4 +430,5 @@ body{
 }
 .boton-imprimir:hover{
     background: rgb(17, 0, 255);
+    color: white;
 }

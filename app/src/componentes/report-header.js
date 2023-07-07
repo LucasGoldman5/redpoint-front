@@ -20,6 +20,7 @@ const ReportHeader = () =>{
   const signOff = ( ) =>{
     localStorage.removeItem('user');
     localStorage.removeItem('column');
+    localStorage.removeItem('reparation');
     setDropdown(false);
     window.location.assign('/Login');
   };

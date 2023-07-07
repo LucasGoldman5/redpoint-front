@@ -23,6 +23,7 @@ const GeneratePassword = ({enviroment}) =>{
   useEffect(()=>{
     localStorage.removeItem('user');
     localStorage.removeItem('column');
+    localStorage.removeItem('reparation');
     setTimeout(()=>{
         setSpinner(false);
     },2000)
