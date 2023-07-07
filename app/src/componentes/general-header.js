@@ -73,6 +73,7 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
   const signOff = ( ) =>{
     localStorage.removeItem('user');
     localStorage.removeItem('column');
+    localStorage.removeItem('reparation');
     setDropdown(false);
     window.location.assign('/login');
   };
@@ -314,6 +315,8 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
       return "R-Entregadas"
     }else if(location.includes("por")){
       return "R-Filtrada"
+    }else if(location.includes("imprimir")){
+      return "Imprimir"
     }
   }
   const originUrl = window.location.href

@@ -8,16 +8,16 @@ import AddButton from './add-button';
 import 'bootstrap/dist/css/bootstrap.css';
 import ModalAdd from './modal-add';
 import ModalEdit from './modal-edit';
-import ModalView from './modal-view';
 import Paginator from './paginator';
 import HelperBuildRequest from "../helpers/buildRequest";
 import { v4 as uuidv4 } from 'uuid';
 import getManualColumns from '../helpers/getManualColumns';
 import { PulseLoader } from "react-spinners";
+import { Link } from 'react-router-dom';
 import Error404 from './page404';
 
 
-function Table  ({urlTable, enviroment, dataTotal}) {
+function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
 
 
     const [dataApi, setDataApi] = useState([]);
@@ -25,9 +25,7 @@ function Table  ({urlTable, enviroment, dataTotal}) {
     const [superAdmin, setSuperAdmin] = useState(null);
     const [openModal, setOpenModal] = useState(false);
     const [openModalEdit, setOpenModalEdit] = useState(false);
-    const [openModalView, setOpenModalView] = useState(false);
     const [itemToEdit, setItemToEdit] = useState(null);
-    const [itemToSee, setItemToSee] = useState(null);
     const [chain,setChain] = useState("");
     const [errors, setErrors] = useState([]);
     const [changePage,setChangePage] = useState(false);
@@ -222,6 +220,7 @@ function Table  ({urlTable, enviroment, dataTotal}) {
          }else if(request.status === 500){
           localStorage.removeItem('user');
           localStorage.removeItem('column');
+          localStorage.removeItem('reparation');
          }
       }catch(error){
         console.log(error);
@@ -452,7 +451,6 @@ function Table  ({urlTable, enviroment, dataTotal}) {
       setCheckBox(true)
       setModalClosed(true);
       setOpenModalEdit(false);
-      setOpenModalView(false);
       setItemToEdit(null);
       setActionModal(true);
       setTimeout(()=>{
@@ -793,7 +791,8 @@ function Table  ({urlTable, enviroment, dataTotal}) {
         setOpenModalEdit(false);
       })
       setRowId(null)
-      console.log(element);
+      pagePrint(element)
+      window.open(`${enviroment.selfUrl.main}${enviroment.selfUrl.print}`)
     }
 
     const actionUser = async (data,id) => {
@@ -1193,7 +1192,7 @@ function Table  ({urlTable, enviroment, dataTotal}) {
                                           {
                                             window.location.href.includes("reparaciones")
                                             ?
-                                            <button className='boton-imprimir' onClick={(event) => print(element,event)}><FontAwesomeIcon icon={faPrint} /></button>
+                                            <button className='boton-imprimir'  onClick={(event) => print(element,event)}><FontAwesomeIcon  icon={faPrint} /></button>
                                             :
                                             ""
                                           }                                   
@@ -1270,12 +1269,6 @@ function Table  ({urlTable, enviroment, dataTotal}) {
                     modalClosed={modalClosed}
                     actionModal={actionModal}>
                   </ModalAdd>
-
-                  <ModalView
-                    openModalView={openModalView}
-                    closeForm={closeForm}
-                    itemToSee={itemToSee}>
-                  </ModalView>
 
                 </div>
               </div>

@@ -19,6 +19,7 @@ const Login = ({enviroment}) =>{
   useEffect(()=>{
     localStorage.removeItem('user');
     localStorage.removeItem('column');
+    localStorage.removeItem('reparation');
   },[])
 
   

@@ -62,6 +62,7 @@ export default async function  HelperBuildRequest ( method, data = {}, type = nu
                 }else if(response.status === 401){
                     localStorage.removeItem('user');
                     localStorage.removeItem('column');
+                    localStorage.removeItem('reparation');
                     setTimeout(()=>{
                       window.location.reload()
                     },1000)
@@ -69,6 +70,7 @@ export default async function  HelperBuildRequest ( method, data = {}, type = nu
               } catch (error) {
                 localStorage.removeItem('user');
                 localStorage.removeItem('column');
+                localStorage.removeItem('reparation');
                 console.error('Error en la solicitud:', error);
                 // Manejar el error según sea necesario
                 return <NotAuthorized/>; // O cualquier otro valor que desees devolver en caso de error

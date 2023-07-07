@@ -2,6 +2,7 @@ import StartHeader from './componentes/start-header';
 import GeneralHeader from './componentes/general-header';
 import InformationHeader from './componentes/information-header';
 import Table from './componentes/table';
+import PrintRearation from './componentes/PrintReparation'
 import GeneratePassword from './componentes/generateUserPassword';
 import PersonalInformation from './componentes/personal-information';
 import Error404 from './componentes/page404';
@@ -202,6 +203,10 @@ import getEnviroment from './helpers/getEnviroment';
      return setUrlTable(url)
     };
   };
+
+  const pagePrint = (element) =>{
+    localStorage.setItem("reparation",JSON.stringify(element))
+  }
   
 
   if(user && window.location.href.includes("Tabla") && dataEnviroment.selfUrl){
@@ -230,6 +235,7 @@ import getEnviroment from './helpers/getEnviroment';
                   urlTable={urlTable} 
                   enviroment={dataEnviroment} 
                   dataTotal={dataTotal}
+                  pagePrint={pagePrint}
                   />
                   }></Route>
                   <Route path={`${dataEnviroment.selfUrl.login}`} element={<Login  enviroment={dataEnviroment} />}  ></Route> 
@@ -259,7 +265,21 @@ import getEnviroment from './helpers/getEnviroment';
         </>
 
       );
-  }else if(dataEnviroment.selfUrl){
+  }else if(user && window.location.href.includes("imprimir") && dataEnviroment.selfUrl ){
+
+    return(
+      <>
+        <div className="App">
+        <BrowserRouter>
+              <Routes>
+              <Route path={`${dataEnviroment.selfUrl.print}`} element={<PrintRearation></PrintRearation>}></Route>
+              </Routes>
+            </BrowserRouter>
+        </div>
+      </>
+
+    );
+}else if(dataEnviroment.selfUrl){
     return(
         <>
           <div className="App">
