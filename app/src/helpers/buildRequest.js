@@ -39,7 +39,7 @@ export default async function  HelperBuildRequest ( method, data = {}, type = nu
     const now = new Date().getTime();
     const limit = (expired - 600000) - now;
 
-    if( limit > 2222222 ) {      
+    if( limit > 500000) {  
         return buildCallServer(method, data, type);
     } else {
         const config ={ 
