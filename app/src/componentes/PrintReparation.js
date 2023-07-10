@@ -3,8 +3,6 @@ import './printReparation.css'
 
 const PrintRearation = () =>{
 
- 
-
   const getReparation = localStorage.getItem("reparation");
   let reparation = JSON.parse(getReparation);
     console.log(reparation);
