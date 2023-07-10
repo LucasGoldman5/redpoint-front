@@ -2,7 +2,7 @@
 
 export default function GetUserData() {
 
-    if(localStorage.length >= 1){
+    if(localStorage.getItem('user') !== null){
 
         let user = JSON.parse(localStorage.getItem('user')).user;
 
