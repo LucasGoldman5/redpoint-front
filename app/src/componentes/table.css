@@ -40,12 +40,12 @@ body{
 .general-container-table{
     width: 98%;
     height: max-content;
-    max-height: 540px;
+    max-height: 520px;
     display: flex;
     flex-direction: column;
     align-items: center;
     background: rgb(255, 190, 212);
-    box-shadow: 6px 6px 6px  rgb(141, 90, 108);
+    box-shadow: 7px 7px 5px  rgb(129, 82, 99);
     border: 0.5px solid black;
     border-radius: 6px;
     padding-bottom: 10px;

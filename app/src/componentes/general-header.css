@@ -201,7 +201,7 @@
     border-radius: 7px;
     z-index: 20;
     display: flex;
-    box-shadow: 5px 5px 5px 5px rgb(119, 66, 66);
+    box-shadow: 5px 5px 5px  rgb(119, 66, 66);
     flex-direction: column;
     background: rgb(206, 141, 141);
     width: 90%;
