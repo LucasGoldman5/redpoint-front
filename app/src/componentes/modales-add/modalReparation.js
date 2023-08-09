@@ -12,6 +12,9 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
   const [selectCustomer, setSelectCustomer] = useState({})
   const [selectCellphone, setSelectCellphone] = useState({})
   const [selectService, setSelectService] = useState({})
+  const [changeSecurity, setChangeSecurity] = useState(true);
+
+  const actualityDate = new Date()
 
 
   useEffect(()=>{
@@ -52,6 +55,8 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
         }else{
             setValue("service_id","Seleccionar..")
         }
+
+        setChangeSecurity(true);
     }
 
     const addValues = (id,entity) =>{
@@ -79,6 +84,16 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
             };
           });
         }
+    }
+
+    const securityChange = (e) =>{
+      const value = e.target.value;
+
+      if(value.length >= 1){
+        setChangeSecurity(false);
+      }else{
+        setChangeSecurity(true);
+      }
     }
 
     const { register, handleSubmit, getValues, setValue} = useForm ();
@@ -184,6 +199,7 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
                 value:1,  
                 })}>
                 <option className="option-modal" value={1}>Recibido</option>
+                <option className="option-modal" value={8}>A presupuestar</option>
               </select>
             </div>
             
@@ -214,26 +230,34 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
               </div>
               {errors.service_id ? <p className="p-errores">Debe seleccionar un Servicio</p> : ""}
             </div>
-            
+
             <div className="div-inputs">
-              <label >Valor de la reparacion</label>
-              <input className="form-control cost" type="text" name="phone_2" {...register('cost',{
+              <label >Numero de Orden</label>
+              <input className="form-control" type="text" name="phone_2" {...register('service_order',{
                 value:null,
                 shouldUnregister: ifChangeModal ? false : true,
                 })} />
             </div>
             
             <div className="div-inputs">
-              <label >Precio a cobrar<span>*</span> </label>
-              <input className="form-control value" type="text" name="phone_2" {...register('amount',{
-                value:null,
+              <label style={{color:"red", fontSize:"18px"}}>Costo del Servicio</label>
+              <input className="form-control cost" type="text" name="phone_2" defaultValue={0} {...register('cost',{
+                
                 shouldUnregister: ifChangeModal ? false : true,
                 })} />
             </div>
             
             <div className="div-inputs">
-              <label >Fecha de notificacion al cliente</label>
-              <input className="form-control" type="date" name="phone_2" {...register('notice_date',{
+              <label  style={{color:"green", fontSize:"18px"}}>Precio a cobrar</label>
+              <input className="form-control value" type="text" name="phone_2" defaultValue={0} {...register('amount',{
+                
+                shouldUnregister: ifChangeModal ? false : true,
+                })} />
+            </div>
+            
+            <div className="div-inputs">
+              <label >Fecha de Recepcion</label>
+              <input className="form-control" type="date" name="phone_2" defaultValue={actualityDate.getUTCFullYear() + '-' + ('00' + (actualityDate.getUTCMonth()+1)).slice(-2) + '-' + ('00' +  actualityDate.getUTCDate()).slice(-2)} {...register('reception_date',{
                 shouldUnregister: ifChangeModal ? false : true,
                 setValueAs : value =>{
                   if(value != null && value){
@@ -255,13 +279,6 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
                 })} />
             </div>
             
-            <div className="div-inputs">
-              <label >Cantidad de Notificaciones</label>
-              <input className="form-control" type="text" {...register('notice_quantity',{
-                value:0,
-                shouldUnregister: ifChangeModal ? false : true,
-                })} />
-            </div>
             
             <div className="div-inputs">
             <label >Fecha de entrega</label>
@@ -342,33 +359,34 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
             
             <div className="div-inputs security">
               <label >Tiene seguridad</label>
-              <input onClick={checkBoxTrue}  type="checkbox" name="phone_2" {...register('has_security',{
+              <input onClick={checkBoxTrue}  type="checkbox" name="phone_2" defaultChecked={checkbox} {...register('has_security',{
                 value:0,
                 shouldUnregister: ifChangeModal ? false : true,
                 })} />
-              
-              {
-                checkbox
-                ?
-                <div className="div-security">
-                  <div className="div-inputs pattern">
-                  <label>Patron</label>
-                  <input className="form-control" type="text" name="phone_2" {...register('pattern',{
-                    value:null,
-                    shouldUnregister: ifChangeModal ? false : true,
-                    })} />
+                {
+                  (checkbox)
+                  ?
+                  <div className="div-security">
+                    <div className="div-inputs pattern">
+                      <label>Patron</label>
+                      <input className="form-control" type="text" name="phone_2" required={changeSecurity} {...register('pattern',{
+                        value:null,
+                        onChange: (event) => securityChange(event),
+                        shouldUnregister: ifChangeModal ? false : true,
+                        })} />
+                    </div>
+                    <div className="div-inputs pin">
+                      <label>Pin</label>
+                      <input className="form-control" type="text" name="phone_2" required={changeSecurity} {...register('pin',{
+                        value:null,
+                        onChange: (event) => securityChange(event),
+                        shouldUnregister: ifChangeModal ? false : true,
+                        })} />
+                      </div> 
                   </div>
-                  
-                  <div className="div-inputs pin">
-                  <label>Pin</label>
-                  <input className="form-control" type="text" name="phone_2" {...register('pin',{
-                    value:null,
-                    shouldUnregister: ifChangeModal ? false : true,
-                    })} /> </div> 
-                </div>
-                :
-                ""
-              }  
+                  :
+                  ""
+                }
             </div>                                    
             
             <div className="contenedor-boton-modal-dentro-reparations">

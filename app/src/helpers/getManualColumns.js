@@ -14,7 +14,7 @@ export default async function getManualColumns (url,urlLocal){
           "email":"Email",
           "state_id":"Estado",
           "failure":"Falla",
-          "notice_date":"Recibido el",
+          "reception_date":"Recibido el",
         }
         localStorage.setItem("column",JSON.stringify(columns));
 
@@ -64,7 +64,7 @@ export default async function getManualColumns (url,urlLocal){
           "email":"Email",
           "state_id":"Estado",
           "failure":"Falla",
-          "notice_date":"Recibido el",
+          "reception_date":"Recibido el",
         }
         localStorage.setItem("column",JSON.stringify(columns));
 

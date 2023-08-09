@@ -63,9 +63,9 @@ export default async function  HelperBuildRequest ( method, data = {}, type = nu
                     localStorage.removeItem('user');
                     localStorage.removeItem('column');
                     localStorage.removeItem('reparation');
-                    setTimeout(()=>{
+                    
                       window.location.reload()
-                    },1000)
+                    
                 }
               } catch (error) {
                 localStorage.removeItem('user');

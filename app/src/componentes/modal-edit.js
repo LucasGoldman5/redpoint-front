@@ -13,7 +13,7 @@ import HelperBuildRequest from "../helpers/buildRequest";
 import './modales.css'
 
 
-const ModalEdit = ({ getOpenModalEdit, selectRowOff, itemToEdit, edit, closeForm,onsubmit,errorsInTable,enviroment,dataBrandsApp,dataCellphonesApp,dataCustomersApp,dataServicesApp,dataStatusApp,dataRolesApp}) => {
+const ModalEdit = ({ getOpenModalEdit, selectRowOff, itemToEdit, edit, closeForm,onsubmit,errorsInTable,enviroment}) => {
 
 
   const location = window.location.href;
@@ -47,22 +47,192 @@ const ModalEdit = ({ getOpenModalEdit, selectRowOff, itemToEdit, edit, closeForm
 
   useEffect(() =>{
     setOpenModalEdit(getOpenModalEdit);
+    setFilterBrandValue("")
+    setFilterCustomerValue("")
+    setFilterCellphoneValue("")
+    setFilterServiceValue("")
+    setSelectBrandActive(false);
+    setSelectCustomerActive(false);
+    setSelectServiceActive(false);
+    setSelectCellphoneActive(false);
   },[getOpenModalEdit]);
+
+
  
   useEffect(()=>{
-    setDataBrandsEdit(dataBrandsApp);
-    setDataCellPhonesEdit(dataCellphonesApp);
-    setDataCustomersEdit(dataCustomersApp);
-    setDataServicesEdit(dataServicesApp);
-    setDataStatesEdit(dataStatusApp);
-    setDataRolesEdit(dataRolesApp);
-  },[dataBrandsApp,dataRolesApp,dataStatusApp,dataCustomersApp,dataRolesApp,dataServicesApp,dataCellphonesApp])
+    if(getOpenModalEdit == true){
+
+      const getSelectors = async () =>{
+      const apiURL = enviroment.apiURL;
+      const entitiesUrl = enviroment.entities;
+    
+        if(window.location.href.includes("reparaciones")){
+          try{
+                      
+            const config = await HelperBuildRequest("GET",null, "dataTable");
+            const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.brand}`, config);
+
+              if(request.status === 200){
+                  const response = await request.json();
+                    if(response.error){
+                        setTimeout(()=>{
+                          console.log(response.error);
+                        },1000);
+                    }else{            
+                        setDataBrandsEdit(response);
+                    }  
+              };
+
+          }catch(error){
+            console.log(error)
+          }
+        
+        
+          try{
+                        
+            const config = await HelperBuildRequest("GET",null, "dataTable");
+            const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.cellphone}`, config);
+
+              if(request.status === 200){
+                  const response = await request.json();
+                    if(response.error){
+                        setTimeout(()=>{
+                          console.log(response.error);
+                        },1000);
+                    }else{               
+                        setDataCellPhonesEdit(response); 
+                    }  
+              };
+
+          }catch(error){
+            console.log(error)
+          }
+        
+        
+          try{
+                        
+            const config = await HelperBuildRequest("GET",null, "dataTable");
+            const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.customer}`, config);
+
+              if(request.status === 200){
+                  const response = await request.json();
+                    if(response.error){
+                        setTimeout(()=>{
+                          console.log(response.error);
+                        },1000);
+                    }else{                  
+                        setDataCustomersEdit(response);
+                        
+                    }  
+              };
+
+          }catch(error){
+            console.log(error)
+          }
+        
+        
+          try{
+                        
+            const config = await HelperBuildRequest("GET",null, "dataTable");
+            const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.service}`, config);
+
+              if(request.status === 200){
+                  const response = await request.json();
+                    if(response.error){
+                        setTimeout(()=>{
+                          console.log(response.error);
+                        },1000);
+                    }else{                 
+                        setDataServicesEdit(response);
+                    }  
+              };
+
+          }catch(error){
+            console.log(error)
+          }
+
+          try{
+                    
+            const config = await HelperBuildRequest("GET",null, "dataTable");
+            const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.status}`, config);
+
+              if(request.status === 200){
+                  const response = await request.json();
+                    if(response.error){
+                        setTimeout(()=>{
+                          console.log(response.error);
+                        },1000);
+                    }else{                    
+                        setDataStatesEdit(response);
+                    }  
+              };
+          }catch(error){
+            console.log(error)
+          }
+
+        }else if(window.location.href.includes("celulares")){
+
+          try{
+                      
+            const config = await HelperBuildRequest("GET",null, "dataTable");
+            const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.brand}`, config);
+
+              if(request.status === 200){
+                  const response = await request.json();
+                    if(response.error){
+                        setTimeout(()=>{
+                          console.log(response.error);
+                        },1000);
+                    }else{  
+                      setDataBrandsEdit(response);
+                    }  
+              };
+
+          }catch(error){
+            console.log(error)
+          }
+
+        }else if(window.location.href.includes("usuarios")){
+
+          try{
+                    
+            const config = await HelperBuildRequest("GET",null, "dataTable");
+            const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.roles}`, config);
+
+              if(request.status === 200){
+                  const response = await request.json();
+                    if(response.error){
+                        setTimeout(()=>{
+                          console.log(response.error);
+                        },1000);
+                    }else{                  
+                        setDataRolesEdit(response);
+                    }  
+              };
+
+          }catch(error){
+            console.log(error)
+          }
+        }
+      }
+      getSelectors()
+    }
+  },[getOpenModalEdit])
 
   useEffect(() =>{
     setErrors(errorsInTable);
   },[errorsInTable]);
 
   const changeModal = (fact) =>{
+
+    setFilterBrandValue("")
+    setFilterCustomerValue("")
+    setFilterCellphoneValue("")
+    setFilterServiceValue("")
+    setSelectBrandActive(false);
+    setSelectCustomerActive(false);
+    setSelectServiceActive(false);
+    setSelectCellphoneActive(false);
 
     if(fact === "brand"){
       if(window.location.href.includes("reparaciones" || "reporte")){
