@@ -81,10 +81,12 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
         return "Usuarios"
       }else if(location.includes(entitie.pending)){
         return "Reparaciones En Service"
-      }else if(location.includes(entitie.success)){
-        return "Reparaciones Finalizadas"
+      }else if(location.includes(entitie.finished)){
+        return "Reparaciones Para Entregar"
       }else if(location.includes(entitie.quote)){
         return "Reparaciones a presupuestar"
+      }else if(location.includes(entitie.delivered)){
+        return "Reparaciones Entregadas"
       }else if (dataTotal[4]){
 
           if(location.includes(entitie.reparationsBrand) && dataTotal[0]){
