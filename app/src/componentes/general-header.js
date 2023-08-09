@@ -321,8 +321,10 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
       return "Usuarios"
     }else if(location.includes(entitie.pending)){
       return "R-En Service"
-    }else if(location.includes(entitie.success)){
+    }else if(location.includes(entitie.delivered)){
       return "R-Entregadas"
+    }else if(location.includes(entitie.finished)){
+      return "R-Por-Entregar"
     }else if(location.includes("por")){
       return "R-Filtrada"
     }else if(location.includes("imprimir")){
