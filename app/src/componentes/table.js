@@ -3,18 +3,19 @@ import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
 import './table.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {  faTrashAlt, faComments, faPrint} from '@fortawesome/free-solid-svg-icons';
+import {  faTrashCan,faWrench, faComments, faPrint, faFileLines} from '@fortawesome/free-solid-svg-icons';
 import AddButton from './add-button';
 import 'bootstrap/dist/css/bootstrap.css';
 import ModalAdd from './modal-add';
 import ModalEdit from './modal-edit';
+import ModalProfits from './modal-profits';
 import Paginator from './paginator';
 import HelperBuildRequest from "../helpers/buildRequest";
 import { v4 as uuidv4 } from 'uuid';
 import getManualColumns from '../helpers/getManualColumns';
 import { PulseLoader } from "react-spinners";
-import { Link } from 'react-router-dom';
 import Error404 from './page404';
+import ModalNotification from './notifications-modal';
 
 
 function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
@@ -38,15 +39,13 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
     const [checkBox, setCheckBox] = useState(null);
     const [modalClosed, setModalClosed] = useState(null);
     const [actionModal, setActionModal] = useState(false);
-    const [dataBrandsApp, setDataBrandsApp] = useState([])
-    const [dataCustomersApp, setDataCustomersApp] = useState([])
-    const [dataCellphonesApp, setDataCellphonesApp] = useState([])
-    const [dataServicesApp, setDataServicesApp] = useState([])
-    const [dataStatusApp, setDataStatusApp] = useState([])
-    const [dataRolesApp, setDataRolesApp] = useState([])
-    const tableRef = useRef(null)
-    const [scroll, setScroll] = useState(0)
+    const [openModalProfit, setOpenModalProfit] = useState(false);
+    const [openModalNoti, setOpenModalNoti] = useState(false);
+    const tableRef = useRef(null);
+    const scrollPositionRef = useRef(0);
+    const [scroll, setScroll] = useState(0);
     const { id } = useParams();
+
     
     const getUser = localStorage.getItem("user");
 
@@ -54,6 +53,14 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
     const table = enviroment.selfUrl.dataTable;
     const entitie = enviroment.entities
     const location = window.location.href
+
+
+    const handleScroll = () => {
+      // Actualizar la posición del scroll en el ref
+      if (tableRef.current) {
+        scrollPositionRef.current = tableRef.current.scrollTop;
+      }
+    };
 
     const titleTable = () =>{
       
@@ -73,9 +80,11 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
       }else if(location.includes(ent.users)){
         return "Usuarios"
       }else if(location.includes(entitie.pending)){
-        return "Reparaciones Pendientes"
+        return "Reparaciones En Service"
       }else if(location.includes(entitie.success)){
         return "Reparaciones Finalizadas"
+      }else if(location.includes(entitie.quote)){
+        return "Reparaciones a presupuestar"
       }else if (dataTotal[4]){
 
           if(location.includes(entitie.reparationsBrand) && dataTotal[0]){
@@ -230,13 +239,6 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
       }   
     };
 
-    const urlApiBack = () =>{
-      return  enviroment.apiURL 
-  }
-
-  const urlEntities = () =>{
-    return enviroment.entities
-  }
 
     const openModalAdd = async () =>{
 
@@ -245,139 +247,6 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
       setTimeout(()=>{
         setActionModal(false);
       },300)
-
-      const apiURL = urlApiBack();
-      const entitiesUrl = urlEntities();
-    
-    if(window.location.href.includes("reparaciones")){
-      try{
-                   
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.brand}`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                    
-                    setDataBrandsApp(response);
-                }  
-          };
-
-      }catch(error){
-        console.log(error)
-      }
-    
-    
-      try{
-                    
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.cellphone}`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                      
-                    setDataCellphonesApp(response);
-                    
-                }  
-          };
-
-      }catch(error){
-        console.log(error)
-      }
-    
-    
-      try{
-                    
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.customer}`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                      
-                    setDataCustomersApp(response);
-                    
-                }  
-          };
-
-      }catch(error){
-        console.log(error)
-      }
-    
-    
-      try{
-                    
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.service}`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                      
-                    setDataServicesApp(response);
-                }  
-          };
-
-      }catch(error){
-        console.log(error)
-      }
-
-    }else if(window.location.href.includes("celulares")){
-
-      try{
-                   
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.brand}`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                    
-                    setDataBrandsApp(response);
-                }  
-          };
-
-      }catch(error){
-        console.log(error)
-      }
-    }else if(window.location.href.includes("usuarios")){
-
-      try{
-                 
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.roles}`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                    
-                    setDataRolesApp(response);
-                }  
-          };
-
-       }catch(error){
-         console.log(error)
-       }
-    }
     
   }
 
@@ -389,8 +258,6 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
 
               const apiURL = urlApi()
               const localUrl = urlLocal()
-              const ent = enviroment.selfUrl.localEntities;
-              const location = window.location.href;
               const config = await HelperBuildRequest("POST", data, "dataTablePost");                    
               const request = await fetch(apiURL, config);
   
@@ -449,6 +316,8 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
         setModalClosed(false);
       },100)
       setCheckBox(true)
+      setOpenModalProfit(false);
+      setOpenModalNoti(false)
       setModalClosed(true);
       setOpenModalEdit(false);
       setItemToEdit(null);
@@ -476,7 +345,7 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
     
     useEffect(() => {
       if (tableRef.current) {
-        tableRef.current.scrollTop = scroll;
+        tableRef.current.scrollTop = scrollPositionRef.current;
       } 
     }, [rowId]);
 
@@ -486,163 +355,15 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
       
       setItemToEdit(null);
       setItemToEdit(element);
-      setScroll(event.currentTarget.offsetTop - 100)
+      //setScroll(event.currentTarget.offsetTop - 100)
       setRowId(element.id);
       setOpenModalEdit(true);
 
-      const apiURL = urlApiBack();
-      const entitiesUrl = urlEntities();
-    
-    if(window.location.href.includes("reparaciones")){
-      try{
-                   
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.brand}`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{            
-                    setDataBrandsApp(response);
-                }  
-          };
-
-      }catch(error){
-        console.log(error)
-      }
-    
-    
-      try{
-                    
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.cellphone}`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{               
-                    setDataCellphonesApp(response); 
-                }  
-          };
-
-      }catch(error){
-        console.log(error)
-      }
-    
-    
-      try{
-                    
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.customer}`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                  
-                    setDataCustomersApp(response);
-                    
-                }  
-          };
-
-      }catch(error){
-        console.log(error)
-      }
-    
-    
-      try{
-                    
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.service}`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                 
-                    setDataServicesApp(response);
-                }  
-          };
-
-      }catch(error){
-        console.log(error)
-      }
-
-      try{
-                 
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.status}`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                    
-                    setDataStatusApp(response);
-                }  
-          };
-      }catch(error){
-        console.log(error)
-      }
-
-    }else if(window.location.href.includes("celulares")){
-
-      try{
-                   
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.brand}`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{  
-                  setDataBrandsApp(response);
-                }  
-          };
-
-      }catch(error){
-        console.log(error)
-      }
-
-    }else if(window.location.href.includes("usuarios")){
-
-      try{
-                 
-        const config = await HelperBuildRequest("GET",null, "dataTable");
-        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.roles}`, config);
-
-          if(request.status === 200){
-              const response = await request.json();
-                if(response.error){
-                    setTimeout(()=>{
-                      console.log(response.error);
-                    },1000);
-                }else{                  
-                    setDataRolesApp(response);
-                }  
-          };
-
-       }catch(error){
-         console.log(error)
-       }
-    }
-
     };   
+
+    const openModalProfits = () =>{
+      setOpenModalProfit(true);
+    }
       
     const edit =  async (data) =>{
 
@@ -847,6 +568,71 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
       }; 
     };
 
+    const sendService = async (data, event) =>{
+      event.stopPropagation()
+      setRowId(data.id)
+      //setScroll(event.currentTarget.offsetTop - 100)
+      const id = data.id
+      const newData = () =>{
+        
+        if(data.state_id.id != 2){
+          return {
+            ...data,
+            "customer_id":data.customer.id,
+            "cellphone_id":data.cellphone.id,
+            "service_id":data.service.id,
+            "state_id":2
+          }
+        }return {
+          ...data,
+          "customer_id":data.customer.id,
+          "cellphone_id":data.cellphone.id,
+          "service_id":data.service.id,
+          "state_id":2
+        }
+      }
+
+      try {
+        
+        const config =await HelperBuildRequest("PUT", newData(), "dataTablePut");
+        const apiURL = urlApi()
+        const request = await fetch(`${enviroment.apiURL.url}${enviroment.entities.reparations}/${id}`, config);
+
+        if(request.status === 200){
+          const response = await request.json();
+            if(response.error){
+              setTimeout(()=>{
+                console.log(response.error);
+              },500);
+            }else{
+              getData()
+              setRowId("")
+            }  
+        }
+
+        if(request.status === 422){
+          const response = await request.json();
+            if(response.errors){
+              alert("Los datos de la Reparacion no estan completos")
+              setRowId("")
+              console.log(response.errors);
+            };
+        };
+     
+      }catch(error){
+        console.log(error);
+        
+      }; 
+
+    }
+
+    const openModalNotification = (e,element) =>{
+      e.stopPropagation();
+      setItemToEdit(element);
+      setRowId(element.id);
+      setOpenModalNoti(true);
+    }
+
     const nextPage = async (url) =>{
 
       const config = await HelperBuildRequest('GET', null, 'dataTable');
@@ -943,6 +729,7 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
 
     if(dataApi.data && dataColumns && notfound === false){
 
+
       const dataFilter = (e) => {
         let filteredData = dataApi.data;
       
@@ -950,7 +737,7 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
           setChain(e.target.value.toLowerCase());
         }
       
-        if (chain.length > 1) {
+        if (chain.length >= 1) {
           filteredData = filteredData.filter((fact) => {
          
             for (let property in fact) {
@@ -990,13 +777,11 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                   
                 }
             
-      
             return false;
           });
         }
         return filteredData;
       };
-
 
     const uniqueKeys = {
       contenedorTabla: uuidv4(),
@@ -1038,6 +823,17 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                       :
                       <AddButton onClick={()=>openModalAdd()} dataApi={dataApi}></AddButton>
                     }
+                    {
+                      (superAdmin == false)
+                      ?
+                      <div className='ganancias-container'>
+                  
+                          <button className='button-ganancias' onClick={() => openModalProfits()}>Calcular Ganacias</button>
+                        
+                    </div>
+                    :
+                    ""
+                    }
                       <div className='contenedor-barra'>
                         <input type='text' placeholder={`buscar...`} className='barra-busqueda' onChange={(e) => dataFilter(e)}/>
                       </div>      
@@ -1047,7 +843,7 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                     ?
                     <>
                       <div className='general-container-table' id='myDiv'>
-                        <div ref={tableRef} style={{ scrollTop: scroll }} className="contenedor-tabla"  key={uniqueKeys.contenedorTabla} >
+                        <div ref={tableRef} onScroll={handleScroll} style={{ scrollTop: scroll }} className="contenedor-tabla"  key={uniqueKeys.contenedorTabla} >
                           <table  className='tabla'  key={uniqueKeys.tabla}>
                             <thead className='thead' key={uniqueKeys.thead}>
                               <tr className='tr-column' key={uniqueKeys.trColumn}>
@@ -1125,7 +921,7 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                                           if(column === "amount"){
                                             return <td className='td-amount' key={`${uniqueKeys.tbody}-${i}`}>${item}</td>
                                           }
-                                          if(column === "notice_date"){
+                                          if(column === "reception_date"){
                                             if(Object.values(element)[i] === null){
                                               return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
                                             }else{
@@ -1191,12 +987,28 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                                         <div className='botones-acciones' >      
                                           {
                                             window.location.href.includes("reparaciones")
+                                            ?                                           
+                                            (element.state_id)
                                             ?
-                                            <button className='boton-imprimir'  onClick={(event) => print(element,event)}><FontAwesomeIcon  icon={faPrint} /></button>
+                                            (element.state_id.id != 2)
+                                            ?
+                                            <>
+                                              <button className='boton-service'  onClick={(event) => sendService(element,event)}><FontAwesomeIcon  icon={faWrench} /></button>
+                                              <button className='boton-notificaciones' onClick={(event)=> openModalNotification(event,element)}><FontAwesomeIcon icon={faFileLines} /></button>
+                                              <button className='boton-imprimir'  onClick={(event) => print(element,event)}><FontAwesomeIcon  icon={faPrint} /></button>
+                                            </>
+                                            :
+                                            <>
+                                              <button className='boton-notificaciones' onClick={(event)=> openModalNotification(event,element)}><FontAwesomeIcon icon={faFileLines} /></button>
+                                              <button className='boton-imprimir'  onClick={(event) => print(element,event)}><FontAwesomeIcon  icon={faPrint} /></button>
+                                            </>
                                             :
                                             ""
-                                          }                                   
-                                          <button className='boton-eliminar' onClick={() => eliminate(element)}><FontAwesomeIcon icon={faTrashAlt} /></button>
+                                            :
+                                            ""
+                                          }
+                                                                             
+                                          <button className='boton-eliminar' onClick={() => eliminate(element)}><FontAwesomeIcon icon={faTrashCan} /></button>
                                         </div>
                                       }
                                     </td>
@@ -1237,13 +1049,7 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                     onsubmit={edit}
                     closeForm={closeForm}
                     errorsInTable={errors}
-                    enviroment={enviroment}
-                    dataBrandsApp={dataBrandsApp}
-                    dataCustomersApp={dataCustomersApp}
-                    dataServicesApp={dataServicesApp}
-                    dataCellphonesApp={dataCellphonesApp}
-                    dataStatusApp={dataStatusApp}
-                    dataRolesApp={dataRolesApp}>
+                    enviroment={enviroment}>
                   </ModalEdit>
                   :
                   ""
@@ -1257,18 +1063,37 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                     openModal={openModal}
                     errorsInTable={errors}
                     enviroment={enviroment}
-                    dataBrandsApp={dataBrandsApp}
-                    dataCustomersApp={dataCustomersApp}
-                    dataServicesApp={dataServicesApp}
-                    dataCellphonesApp={dataCellphonesApp}
-                    dataRolesApp={dataRolesApp}
-                    dataStatusApp={dataStatusApp}
                     resetSelectBox={resetSelectBox}
                     urlTable={urlTable}
                     checkBox={checkBox}
                     modalClosed={modalClosed}
                     actionModal={actionModal}>
                   </ModalAdd>
+
+                  {
+                    (openModalProfit)
+                    ?
+                    <ModalProfits
+                      openModalProfits={openModalProfit}
+                      closeForm={closeForm}
+                      enviroment={enviroment}>
+                    </ModalProfits>
+                    : 
+                    ""
+                  }
+
+                  {
+                    (openModalNoti && itemToEdit)
+                    ?
+                    <ModalNotification
+                    openModalNoti={openModalNoti}
+                    itemToEdit={itemToEdit}
+                    closeForm={closeForm}
+                    enviroment={enviroment}>
+                    </ModalNotification>
+                    :
+                    ""
+                  }
 
                 </div>
               </div>
@@ -1290,18 +1115,13 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                     openModal={openModal}
                     errorsInTable={errors}
                     enviroment={enviroment}
-                    dataBrandsApp={dataBrandsApp}
-                    dataCustomersApp={dataCustomersApp}
-                    dataServicesApp={dataServicesApp}
-                    dataCellphonesApp={dataCellphonesApp}
-                    dataRolesApp={dataRolesApp}
-                    dataStatusApp={dataStatusApp}
                     resetSelectBox={resetSelectBox}
                     urlTable={urlTable}
                     checkBox={checkBox}
                     modalClosed={modalClosed}
                     actionModal={actionModal}>
                   </ModalAdd>
+
 
                 {
                   window.location.href.includes("por")

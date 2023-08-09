@@ -1,0 +1,199 @@
+.general-container{
+    max-width: 90%;
+}
+
+.div-header{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+.profits-title{
+    color: blue;
+}
+.close-modal-x:hover{
+    color: red;
+    cursor: pointer;
+}
+
+.modal-body-container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dates-container{
+    width: 50%;
+    display: flex;
+    margin-top: 10px;
+}
+.date-container-from{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    font-weight: 500;
+}
+.date-container-until{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    font-weight: 500;
+}
+.date{
+    width: 70%;
+    text-align: center;
+    border-radius: 8px;
+    border: 1px solid gray;
+}
+.date-error{
+    border:1px solid red;
+    outline: red;
+}
+.p-error{
+    text-align: center;
+    color: red;
+    margin: 0;
+    margin-top: 5px;
+}
+
+.select-container{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: 500;
+    margin-top: 20px;
+}
+.select{
+    width: 70%;
+    height: 40px;
+    outline: none;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.buttons-container{
+    width: 100%;
+    display: flex;
+    margin-top: 40px;
+}
+.button-div{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.button-calculate-profits{
+    width: 50%;
+    border-radius: 10px;
+    border: 1px solid black;
+    color: black;
+    font-weight: 500;
+    background: rgb(85, 85, 255);
+    transition: all 0.3s;
+}
+.button-calculate-profits:hover{
+    background: blue;
+    color: white;
+}
+.button-close-modal{
+    width: 50%;
+    border-radius: 10px;
+    border: 1px solid black;
+    color: black;
+    font-weight: 500;
+    background: rgb(255, 70, 70);
+    transition: all 0.3s;
+}
+.button-close-modal:hover{
+    background: red;
+    color: white;
+}
+
+.spinner-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.table-profits-container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    max-height: 200px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+.table-profits{
+    margin-bottom: 15px;
+    min-width: max-content;
+    min-width: 70%;
+    max-height: 100px;
+}
+thead.thead-profits{
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: rgb(173, 173, 173);
+}
+tbody.tbody-scroll{
+    z-index: 1;
+}
+.tr-body-profits{
+    border-bottom: 1px dotted black;
+}
+.td-body-profits{
+    padding-right: 20px;
+}
+.th-head-profits{
+    padding-right: 10px;
+}
+.td-body-profits.cost{
+    color: red;
+}
+.td-body-profits.amount{
+    color: green;
+}
+.td-profits-positive{
+    color: green;
+}
+.td-profits-negative{
+    color: red;
+}
+
+.total-profits-div{
+    display: flex;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 20px;
+    margin-top: 10px;
+}
+.total-profits-div p{
+    margin: 0;
+    margin-left: 5px;
+}
+.total-profits-positive{
+    color: green;
+}
+.total-profits-negative{
+    color: red;
+}
+
+.no-results-div{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-top: 15px;
+}
+.no-results{
+    margin: 0;
+}
+

@@ -220,20 +220,25 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
               </div>
                 {errors.service_id? <p className="p-errores">Debe seleccionar un Servicio</p> : ""}
             </div>
-            
+
             <div className="div-inputs">
-              <label >Valor de la reparacion</label>
-              <input className="form-control cost" type="text"   defaultValue={itemToEdit ? itemToEdit.cost : ''}{...register('cost')} />
+              <label >Numero de Orden</label>
+              <input className="form-control" type="text"   defaultValue={itemToEdit ? itemToEdit.order_number : ''}{...register('service_order')} />
             </div>
             
             <div className="div-inputs">
-              <label >Precio a cobrar</label>
-              <input className="form-control value" type="text"   defaultValue={itemToEdit ? itemToEdit.amount : ''}{...register('amount')} />
+              <label style={{color:"red", fontSize:"18px"}}>Costo del Servicio</label>
+              <input className="form-control cost" type="text"   defaultValue={itemToEdit ? itemToEdit.cost ? itemToEdit.cost : 0 : 0}{...register('cost')} />
             </div>
             
             <div className="div-inputs">
-              <label >Fecha de notificacion al cliente</label>
-              <input className="form-control" type="date"  defaultValue={itemToEdit && itemToEdit.notice_date  ? new Date(itemToEdit.notice_date).getFullYear() + "-" + ("00" + (new Date (itemToEdit.notice_date).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(itemToEdit.notice_date).getUTCDate()).slice(-2)  : null}{...register('notice_date',{
+              <label style={{color:"green", fontSize:"18px"}}>Precio a cobrar</label>
+              <input className="form-control value" type="text"   defaultValue={itemToEdit ? itemToEdit.amount ? itemToEdit.amount : 0 : 0}{...register('amount')} />
+            </div>
+            
+            <div className="div-inputs">
+              <label >Fecha de recepcion</label>
+              <input className="form-control" type="date"  defaultValue={itemToEdit && itemToEdit.notice_date  ? new Date(itemToEdit.notice_date).getFullYear() + "-" + ("00" + (new Date (itemToEdit.notice_date).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(itemToEdit.notice_date).getUTCDate()).slice(-2)  : null}{...register('reception_date',{
                 setValueAs : value =>{
                   if(value != null && value){
                     let dateInput = new Date(value)
@@ -252,16 +257,6 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
               })} />
             </div>
             
-            <div className="div-inputs">
-              <label >Cantidad de notificacionesr</label>
-              <input className="form-control" type="text"   defaultValue={itemToEdit ? itemToEdit.notice_quantity : ''}{...register('notice_quantity',{
-                setValueAs : value =>{
-                  if(value == ""){
-                    return undefined
-                  }
-                }
-              })} />
-            </div>
             
             <div className="div-inputs">
               <label >Fecha de entrega</label>

@@ -18,7 +18,9 @@
 .h5-modal-add{
     color: green;
 }
-
+.contenedor-modal-body{
+    padding: 10px;
+}
 .div-inputs{
     width: 30%;
     margin-bottom: 30px;
@@ -50,10 +52,12 @@
 .form-group.reparations{
     width: 100%;
     display: flex;
+    padding: 10px;
     justify-content: space-between;
 }
 .form-group{
     width: 100%;
+    padding: 10px;
 }
 .form-group label{
     font-weight: 600;
@@ -211,6 +215,7 @@
     color: white;
     font-weight: 600;
     margin-right: 5px;
+    width: 30%;
 }
 
 .btn-edit:hover{
@@ -224,10 +229,17 @@
     height: 40px;
     color: white;
     margin-left: 5px;
+    width: 30%;
 }
 .btn-cancelar:hover{
     color: white;
-    background: rgb(148, 18, 18);
+    background: rgb(136, 16, 16);
+}
+.btn-success{
+    width: 30%;
+}
+.btn-success:hover{
+    background: #115837;
 }
 
 .h1-add{
@@ -237,6 +249,7 @@
     margin: 0;
     font-weight: 700;
     color: rgb(1, 112, 1);
+    
 }
 .h1-add:hover{
     color: rgb(0, 255, 0);
