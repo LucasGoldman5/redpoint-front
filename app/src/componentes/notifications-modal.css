@@ -21,6 +21,9 @@
 .close-modal-x{
     font-size: 25px;
 }
+.general-container.modal-dialog{
+    max-width: 90%;
+}
 .close-modal-x:hover{
     color: red;
     cursor: pointer;
