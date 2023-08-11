@@ -88,7 +88,7 @@
     justify-content: center;
     align-items: center;
 }
-.button-calculate-profits{
+.btn.button-calculate-profits{
     width: 50%;
     border-radius: 10px;
     border: 1px solid black;
@@ -97,11 +97,11 @@
     background: rgb(85, 85, 255);
     transition: all 0.3s;
 }
-.button-calculate-profits:hover{
+.btn.button-calculate-profits:hover{
     background: blue;
     color: white;
 }
-.button-close-modal{
+.btn.button-close-modal{
     width: 50%;
     border-radius: 10px;
     border: 1px solid black;
@@ -110,7 +110,7 @@
     background: rgb(255, 70, 70);
     transition: all 0.3s;
 }
-.button-close-modal:hover{
+.btn.button-close-modal:hover{
     background: red;
     color: white;
 }

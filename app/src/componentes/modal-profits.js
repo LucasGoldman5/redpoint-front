@@ -147,6 +147,8 @@ const ModalProfits = ({openModalProfits,closeForm,enviroment}) =>{
 
     const { register, getValues} = useForm ();
 
+    const day1=('00' +  actualityDate.getUTCDate()).slice(-2) - actualityDate.getUTCDate() + 1
+
     return(
         <Modal className='general-container' isOpen={openModalProfits}>
         <ModalHeader style={{display: 'block'}}>
@@ -161,7 +163,7 @@ const ModalProfits = ({openModalProfits,closeForm,enviroment}) =>{
                    <div className='dates-container'>
                         <div className='date-container-from'>
                             <label>Desde:</label>
-                            <input className={errors.dateFromError ? "date-error" : "date"} type='date' {...register('dateFrom',{
+                            <input className={errors.dateFromError ? "date-error" : "date"} type='date' defaultValue={actualityDate.getUTCFullYear() + '-' + ('00' + (actualityDate.getUTCMonth()+1)).slice(-2) + '-' + "0" + day1} {...register('dateFrom',{
                                 shouldUnregister:true,
                                 onChange: (event) => changeDateFrom(event),
                                 setValueAs : value =>{
@@ -291,7 +293,7 @@ const ModalProfits = ({openModalProfits,closeForm,enviroment}) =>{
                     }
                     <div className='buttons-container'>
                         <div className='button-div'>
-                            <button type="button" disabled={buttonDisabled} onClick={() => calculateProfits(getValues())} className='btn button-calculate-profits'>Calcular</button>
+                            <button type="button"  onClick={() => calculateProfits(getValues())} className='btn button-calculate-profits'>Calcular</button>
                         </div>
                         <div className='button-div'>
                             <button type="button" className='btn button-close-modal' onClick={closeForm}>Cancelar</button>
