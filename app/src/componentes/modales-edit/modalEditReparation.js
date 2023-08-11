@@ -14,7 +14,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
     const [cellphoneSelected, setCellphoneSelected] = useState({});
     const [serviceSelected, setServiceSelected] = useState({});
 
-    const changeValue = () =>{
+    const changeValue = (values) =>{
 
         if(newCustomerSelectedEdit.id){
             setValue("customer_id",newCustomerSelectedEdit.id)
@@ -37,8 +37,12 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                 setValue("service_id",serviceSelected.id)
             }
         }
+
+        if(values.reception_date){
+          setValue("reception_date",new Date(itemToEdit.reception_date).getFullYear() + "-" + ("00" + (new Date (itemToEdit.reception_date).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(itemToEdit.reception_date).getUTCDate()).slice(-2) )
+        }
+
     }
-    
 
     const addValues = (id,entity) =>{
 
@@ -77,7 +81,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
 
 
     return(
-        <Modal id="elementModal" isOpen={openModalEdit} onOpened={() => changeValue()} className="modal-reparations">
+        <Modal id="elementModal" isOpen={openModalEdit} onOpened={() => changeValue(getValues())} className="modal-reparations">
         <ModalHeader style={{display: 'block', color: 'gold'}}>
           <div className="div-title-modal">
             <h5  style={{float: 'center'}} >{`Editar Reparacion #${itemToEdit.id}`}</h5>
@@ -244,7 +248,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
             
             <div className="div-inputs">
               <label >Fecha de recepcion</label>
-              <input className="form-control" type="date"  defaultValue={itemToEdit && itemToEdit.notice_date  ? new Date(itemToEdit.notice_date).getFullYear() + "-" + ("00" + (new Date (itemToEdit.notice_date).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(itemToEdit.notice_date).getUTCDate()).slice(-2)  : null}{...register('reception_date',{
+              <input className="form-control" type="date"  defaultValue={itemToEdit && itemToEdit.reception_date  ? new Date(itemToEdit.reception_date).getFullYear() + "-" + ("00" + (new Date (itemToEdit.reception_date).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(itemToEdit.reception_date).getUTCDate()).slice(-2)  : null}{...register('reception_date',{
                 setValueAs : value =>{
                   if(value != null && value){
                     let dateInput = new Date(value)
@@ -289,7 +293,6 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
               <label >Fecha de Inicio del Servicio</label>
               <input className="form-control" type="date"  defaultValue={itemToEdit && itemToEdit.service_start_date != null ? new Date(itemToEdit.service_start_date).getFullYear() + "-" + ("00" + (new Date (itemToEdit.service_start_date).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(itemToEdit.service_start_date).getUTCDate()).slice(-2)  : null}{...register('service_start_date',{
                 setValueAs : value =>{
-                  console.log();
                   if(value != null && value){
                     let dateInput = new Date(value)
                     dateInput = dateInput.getUTCFullYear() + '-' +

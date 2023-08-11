@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass,faXmark } from '@fortawesome/free-solid-svg-icons';
 
 
-const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeError, handleInputChange, activeInputSearch, newCustomerSelected, newCellphoneSelected, newServiceSelected, filteredCellphones, filteredCustomers, filteredServices, closeForm, changeModal, addEmail, selectCellphoneActive, selectCustomerActive, selectServiceActive, checkbox, checkBoxTrue, ifChangeModal}) =>{
+const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeError, handleInputChange, activeInputSearch, newCustomerSelected, newCellphoneSelected, newServiceSelected, filteredCellphones, filteredCustomers, filteredServices,dataStates, closeForm, changeModal, addEmail, selectCellphoneActive, selectCustomerActive, selectServiceActive, checkbox, checkBoxTrue, ifChangeModal}) =>{
 
 
   const [selectCustomer, setSelectCustomer] = useState({})
@@ -23,7 +23,7 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
     setSelectService({})
   },[actionModal])
 
-    const changueValue = () =>{
+    const changueValue = (values) =>{
 
         if(newCustomerSelected.id){
             setValue("customer_id",newCustomerSelected.id)
@@ -56,7 +56,13 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
             setValue("service_id","Seleccionar..")
         }
 
-        setChangeSecurity(true);
+        if(values.pin === null && values.patterns === null){
+          setChangeSecurity(true);
+        }
+
+        if(values.reception_date){
+          setValue("reception_date",actualityDate.getUTCFullYear() + '-' + ('00' + (actualityDate.getUTCMonth()+1)).slice(-2) + '-' + ('00' +  actualityDate.getUTCDate()).slice(-2))
+        }
     }
 
     const addValues = (id,entity) =>{
@@ -96,10 +102,14 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
       }
     }
 
+    const filteredStates = () => {
+      return dataStates.filter(item => item.description === 'Recibido' || item.description === 'A presupuestar')
+      };
+
     const { register, handleSubmit, getValues, setValue} = useForm ();
    
     return(
-        <Modal isOpen={openModalAdd} className="modal-reparations" onOpened={()=>changueValue()}>
+        <Modal isOpen={openModalAdd} className="modal-reparations" onOpened={()=>changueValue(getValues())}>
         <ModalHeader style={{display: 'block'}}>
           <div className="div-title-modal">
             <h5  className="h5-modal-add" >Crear Reparacion</h5>
@@ -198,8 +208,11 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
               <select className="form-select" type="text" name="phone_2" {...register('state_id',{
                 value:1,  
                 })}>
-                <option className="option-modal" value={1}>Recibido</option>
-                <option className="option-modal" value={8}>A presupuestar</option>
+                {
+                  filteredStates().map((state) => {
+                    return <option className="option-modal" key={state.id} value={state.id}>{state.description}</option>
+                  })
+                }
               </select>
             </div>
             
