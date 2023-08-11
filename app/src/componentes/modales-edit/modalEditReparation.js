@@ -228,12 +228,18 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
             
             <div className="div-inputs">
               <label style={{color:"red", fontSize:"18px"}}>Costo del Servicio</label>
-              <input className="form-control cost" type="text"   defaultValue={itemToEdit ? itemToEdit.cost ? itemToEdit.cost : 0 : 0}{...register('cost')} />
+              <input className={errors.cost ? "form-control error cost" : "form-control cost"} type="text"   defaultValue={itemToEdit ? itemToEdit.cost ? itemToEdit.cost : 0 : 0}{...register('cost',{
+                onChange: (event) => changeError("cost",event),
+              })} />
+              {errors.cost ? <p className="p-errores">Solo se permiten numeros</p> : ""}
             </div>
             
             <div className="div-inputs">
               <label style={{color:"green", fontSize:"18px"}}>Precio a cobrar</label>
-              <input className="form-control value" type="text"   defaultValue={itemToEdit ? itemToEdit.amount ? itemToEdit.amount : 0 : 0}{...register('amount')} />
+              <input className={errors.amount ? "form-control error value" : "form-control value"} type="text" defaultValue={itemToEdit ? itemToEdit.amount ? itemToEdit.amount : 0 : 0}{...register('amount',{
+                onChange: (event) => changeError("amount",event)
+              })} />
+              {errors.amount ? <p className="p-errores">Solo se permiten numeros</p> : ""}
             </div>
             
             <div className="div-inputs">
