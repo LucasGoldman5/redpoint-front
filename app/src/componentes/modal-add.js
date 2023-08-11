@@ -24,6 +24,7 @@ const ModalAdd =({closeModal,actionModal, create,dataApi,errorsInTable,openModal
   const [dataCustomers, setDataCustomers] = useState([]);
   const [dataCellPhones, setDataCellPhones] = useState([]);
   const [dataServices, setDataServices] = useState([]);
+  const [dataStates, setDataStates] = useState([]);
   const [dataRoles, setDataRoles] = useState([]);
   const [openModalAddBrand, setOpenModalAddBrand] = useState(false);
   const [openModalAddCustomer, setOpenModalAddCustomer] = useState(false);
@@ -75,6 +76,26 @@ const ModalAdd =({closeModal,actionModal, create,dataApi,errorsInTable,openModal
         const entitiesUrl = enviroment.entities;
     
           if(window.location.href.includes("reparaciones")){
+
+            try{
+                    
+              const config = await HelperBuildRequest("GET",null, "dataTable");
+              const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.status}`, config);
+  
+                if(request.status === 200){
+                    const response = await request.json();
+                      if(response.error){
+                          setTimeout(()=>{
+                            console.log(response.error);
+                          },1000);
+                      }else{                    
+                          setDataStates(response);
+                      }  
+                };
+            }catch(error){
+              console.log(error)
+            }
+            
           try{
                       
             const config = await HelperBuildRequest("GET",null, "dataTable");
@@ -159,6 +180,7 @@ const ModalAdd =({closeModal,actionModal, create,dataApi,errorsInTable,openModal
           }catch(error){
             console.log(error)
           }
+
 
         }else if(window.location.href.includes("celulares")){
 
@@ -786,6 +808,7 @@ useEffect(() => {
            filteredCustomers={filteredCustomers}
            filteredCellphones={filteredCellphones}
            filteredServices={filteredServices}
+           dataStates={dataStates}
            addEmail={addEmail}
            changeError={changeError}
            closeForm={closeForm}
