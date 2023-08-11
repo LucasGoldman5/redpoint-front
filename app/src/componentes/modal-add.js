@@ -525,24 +525,40 @@ useEffect(() => {
     setSelectCustomerActive(false);
 
     if(entity === "customer"){
-      setErrors({customer_id:null, cellphone_id:errors.cellphone_id, service_id:errors.service_id})
+      setErrors({...errors, customer_id:null})
     };
   };
 
   const changeError = (entity,value) =>{
 
+    function contieneSoloNumeros(value) {
+      return /^[0-9]+$/.test(value);
+    }
+
     if(entity === "customer"){
-      setErrors({customer_id:null, cellphone_id:errors.cellphone_id, service_id:errors.service_id})
+      setErrors({...errors, customer_id:null})
     }
     else if(entity === "cellphone"){
       setFilterCellphoneValue('');
       setSelectCellphoneActive(false);
-      setErrors({customer_id:errors.customer_id, cellphone_id:null, service_id:errors.service_id});
+      setErrors({...errors,cellphone_id:null});
     }
     else if(entity === "service"){
       setFilterServiceValue('');
       setSelectServiceActive(false);
-      setErrors({customer_id:errors.customer_id, cellphone_id:errors.cellphone_id, service_id:null});
+      setErrors({...errors, service_id:null});
+    }
+    else if(entity === "cost"){
+      let text = value.target.value;
+      if (contieneSoloNumeros(text)) {
+        setErrors({ ...errors, cost: null });
+      }
+    }
+    else if(entity === "amount"){
+      let text = value.target.value;
+      if (contieneSoloNumeros(text)) {
+        setErrors({ ...errors, amount: null });
+      }
     }
     else if(entity === "brand"){
       setFilterBrandValue('');
