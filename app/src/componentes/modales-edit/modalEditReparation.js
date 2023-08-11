@@ -223,7 +223,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
 
             <div className="div-inputs">
               <label >Numero de Orden</label>
-              <input className="form-control" type="text"   defaultValue={itemToEdit ? itemToEdit.order_number : ''}{...register('service_order')} />
+              <input className="form-control" type="text"   defaultValue={itemToEdit ? itemToEdit.service_order ? itemToEdit.service_order : '' : ''}{...register('service_order')} />
             </div>
             
             <div className="div-inputs">
