@@ -56,11 +56,16 @@
     justify-content: start;
     align-items: center;
 }
+.div-container-noti{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
 .notification-send{
     background: rgba(17, 102, 17, 0.747);
-    text-align: end;
-    padding: 5px;
-    width: 40%;
+    text-align: start;
+    padding: 8px;
+    width: 100%;
     color: white;
     font-weight: 600;
     font-size: 18px;
@@ -75,9 +80,9 @@
 }
 .notification-receive{
     background: rgba(71, 71, 71, 0.877);
-    width: 40%;
+    width: 100%;
     color: white;
-    padding: 5px;
+    padding: 8px;
     font-weight: 600;
     font-size: 18px;
     border-radius: 8px 8px 8px 0px;
@@ -91,13 +96,15 @@
 }
 .div-info-noti-left{
     display: flex;
-    flex-direction: column;
     margin-left: 5px;
+    margin-right: 5px;
+    justify-content: space-between;
 }
 .div-info-noti-right{
     display: flex;
-    flex-direction: column;
     margin-right: 5px;
+    justify-content: space-between;
+    margin-left: 5px;
 }
 .info-noti{
     color: black;
@@ -133,6 +140,7 @@
     font-size: 18px;
     font-weight: 700;
     margin: 0;
+    color: rgb(179, 179, 0);
 }
 .button-add-notification{
     background: rgb(30, 151, 30);
@@ -174,11 +182,13 @@
     height: 40px;
     margin-right: 10px;
     border-radius: 8px;
+    border: 2px solid rgb(248, 100, 100);
 }
 .notification-edit-container textarea{
     width: 90%;
     border-radius: 8px;
     display: flex;
+    border: 2px solid rgb(248, 100, 100);
 }
 .button-action-container{
     width: 100%;
