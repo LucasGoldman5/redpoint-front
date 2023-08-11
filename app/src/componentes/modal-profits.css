@@ -11,9 +11,6 @@
 .profits-title{
     color: blue;
 }
-.modal-dialog{
-    max-width: 90%;
-}
 .close-modal-x:hover{
     color: red;
     cursor: pointer;
