@@ -6,6 +6,9 @@
     align-items: center;
     border-bottom: 1px solid gray;
 }
+.modal-dialog{
+    max-width: 90%;
+}
 .quantity-notifications{
     display: flex;
     align-items: center;
