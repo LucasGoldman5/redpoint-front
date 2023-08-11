@@ -324,7 +324,9 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
     }else if(location.includes(entitie.delivered)){
       return "R-Entregadas"
     }else if(location.includes(entitie.finished)){
-      return "R-Por-Entregar"
+      return "R-Por Entregar"
+    }else if(location.includes(entitie.quote)){
+      return "R-A Presupuestar"
     }else if(location.includes("por")){
       return "R-Filtrada"
     }else if(location.includes("imprimir")){

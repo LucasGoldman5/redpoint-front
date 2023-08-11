@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark,faPencil,faTrashCan,faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { useForm } from "react-hook-form";
 import { PulseLoader } from "react-spinners";
+import swal from 'sweetalert';
 import HelperBuildRequest from '../helpers/buildRequest';
 import AddNotification from "./add-notification";
 
@@ -16,9 +17,13 @@ const ModalNotification = ({openModalNoti,itemToEdit,closeForm,enviroment}) =>{
     const [notificationId, setNotificationId] = useState(null);
     const [notificationSelected, setNotificationSelected] = useState(null);
     const [closeModalCreate, setCloseModalCreate] = useState(null);
+    const [spinnerLoad, setSpinnerLoad] = useState(false);
+    const [user, setUser] = useState(null);
 
     const apiURL = enviroment.apiURL;
     const entitiesUrl = enviroment.entities;
+
+    const getUser = localStorage.getItem('user');
 
     useEffect(()=>{
 
@@ -39,6 +44,8 @@ const ModalNotification = ({openModalNoti,itemToEdit,closeForm,enviroment}) =>{
     const getNotifications = async () =>{
 
         const idReparations = itemToEdit.id
+        setSpinnerLoad(true);
+        setUser(JSON.parse(getUser));
 
         try{
                 
@@ -53,6 +60,7 @@ const ModalNotification = ({openModalNoti,itemToEdit,closeForm,enviroment}) =>{
                         },1000);
                     }else{                      
                        setNotifications(response.data);
+                       setSpinnerLoad(false);
                     }  
               };
 
@@ -74,31 +82,28 @@ const ModalNotification = ({openModalNoti,itemToEdit,closeForm,enviroment}) =>{
     }
    
     const selectNotification = (noti) =>{
-        setNotificationId(noti.id);
-        setNotificationSelected(noti);
-        setValue('notification',`${noti.notification}`)
-        setValue('type',`${noti.type}`)
-        setValue('contact_type',`${noti.contact_type}`)
-        setValue('contact',`${noti.contact}`)
-        setValue('id',`${noti.id}`)
-        setValue('reparation_id',`${noti.reparation_id}`)
+
+        console.log(noti);
+
+        if(user.user.id == noti.user_id){
+            setNotificationId(noti.id);
+            setNotificationSelected(noti);
+            setValue('notification',`${noti.notification}`)
+            setValue('type',`${noti.type}`)
+            setValue('contact_type',`${noti.contact_type}`)
+            setValue('contact',`${noti.contact}`)
+            setValue('id',`${noti.id}`)
+            setValue('reparation_id',`${noti.reparation_id}`)
+        }else{
+            alert("Solo el usuario que creo esta notificacion puede editarla o eliminarla")
+        }
     }
 
-    const changeMessaje = (newValue) => {
-        
-    }
-
-    const changeResponse = (newValue) =>{
-       
-    }
-
-    const changeNumber = (newValue) =>{
-        
-     }
 
     const editNotification = async (values) => {
 
         const id = values.id
+        setSpinnerLoad(true);
 
         try{
                         
@@ -127,6 +132,47 @@ const ModalNotification = ({openModalNoti,itemToEdit,closeForm,enviroment}) =>{
     const deselectedNoti = () =>{
         setNotificationId(null);
         setNotificationSelected(null);
+    }
+
+    const deleteNotification = async (values) => {
+
+        const id = values.id;
+
+        swal({
+            title:"Eliminar",
+            text: `¿Seguro que desea eliminar la notificacion "${values.notification}"?`,
+            buttons: ["No","Si"]
+          }).then(async response0 =>{
+  
+            if(response0){
+
+                setSpinnerLoad(true);
+              
+             try{
+  
+                  
+                    const config = await HelperBuildRequest("DELETE", "dataTable");
+                    const request = await fetch(`${apiURL.url}${entitiesUrl.notifications}/${id}`, config);
+    
+                    if(request.status === 200){
+                      const response = await request.json();
+                        if(response.error){
+                          setTimeout(()=>{
+                            console.log(response.error);
+                          },1000);
+                        }else{         
+                        getNotifications()
+                        setNotificationSelected(null);
+                        setNotifications([]); 
+                        setNotificationId(null); 
+                        };
+                    };
+                
+              }catch(error){
+                console.log(error)
+              };
+            }
+          });
     }
 
     const { register, getValues, setValue} = useForm ();
@@ -158,22 +204,31 @@ const ModalNotification = ({openModalNoti,itemToEdit,closeForm,enviroment}) =>{
                                       noti.type == "Enviar"
                                       ?
                                       <div key={index} className={noti.type == "Enviar" ? "notification-container-rigth" : "notification-container-left"}>
-                                        <div className={noti.type == "Enviar" ? "div-info-noti-right" : "" }>
-                                            <p className="info-noti">{('00' + (dateNoti.getUTCMonth()+1)).slice(-2) + '-' + ('00' +  dateNoti.getUTCDate()).slice(-2) + '-' + dateNoti.getUTCFullYear() }</p>
-                                            <p className="info-noti">{noti.contact_type}</p>
+                                        <div className="div-container-noti">
+                                            <div className={noti.type == "Enviar" ? "div-info-noti-right" : "" }>
+                                                <p className="info-noti">{noti.contact_type}</p>
+                                                <p className="info-noti">{ ('00' +  dateNoti.getUTCDate()).slice(-2) + '-' +('00' + (dateNoti.getUTCMonth()+1)).slice(-2) + '-' + dateNoti.getUTCFullYear() }</p>  
+                                            </div>
+                                            <textarea className={noti.type == "Enviar" ?` notification-send ${noti.id == notificationId ? "notification-send-selected" : ""}` : ""} onClick={()=> selectNotification(noti)} readOnly defaultValue={noti.notification}></textarea>
                                         </div>
-                                        <textarea className={noti.type == "Enviar" ?` notification-send ${noti.id == notificationId ? "notification-send-selected" : ""}` : ""} onClick={()=> selectNotification(noti)} readOnly defaultValue={noti.notification}></textarea>
                                       </div>
                                       :
                                       <div key={index} className={noti.type == "Enviar" ? "notification-container-rigth" : "notification-container-left"}>
-                                        <textarea className={noti.type == "Enviar" ? "" : `notification-receive ${noti.id == notificationId ? "notification-receive-selected" : ""}`} onClick={()=> selectNotification(noti)} readOnly defaultValue={noti.notification}></textarea>
-                                        <div className={noti.type == "Recibir" ? "div-info-noti-left" : "" }>
-                                            <p className="info-noti">{('00' + (dateNoti.getUTCMonth()+1)).slice(-2) + '-' + ('00' +  dateNoti.getUTCDate()).slice(-2) + '-' + dateNoti.getUTCFullYear() }</p>
-                                            <p className="info-noti">{noti.contact_type}</p>
+                                        <div className="div-container-noti">
+                                            <div className={noti.type == "Recibir" ? "div-info-noti-left" : "" }>
+                                                <p className="info-noti">{ ('00' +  dateNoti.getUTCDate()).slice(-2) + '-' +('00' + (dateNoti.getUTCMonth()+1)).slice(-2) + '-' + dateNoti.getUTCFullYear()}</p><p className="info-noti">{noti.contact_type}</p>
+                                            </div>
+                                            <textarea className={noti.type == "Enviar" ? "" : `notification-receive ${noti.id == notificationId ? "notification-receive-selected" : ""}`} onClick={()=> selectNotification(noti)} readOnly defaultValue={noti.notification}></textarea>  
                                         </div>
                                       </div>
                                     )
                                 })   
+                            :
+                            spinnerLoad
+                            ?
+                            <div className='no-notification-container'>
+                                <PulseLoader color="#d41c1c" size={12}></PulseLoader>
+                            </div>
                             :
                             <div className="no-notification-container">
                                 <h4>No hay Notificaciones</h4>
@@ -208,7 +263,7 @@ const ModalNotification = ({openModalNoti,itemToEdit,closeForm,enviroment}) =>{
                                         <button className="button-edit" onClick={() => editNotification(getValues())}><FontAwesomeIcon icon={faPencil} /></button>
                                     </div>
                                     <div  className="button-action-container">
-                                        <button className="button-delete"><FontAwesomeIcon icon={faTrashCan} /></button>
+                                        <button className="button-delete" onClick={() => deleteNotification(getValues())}><FontAwesomeIcon icon={faTrashCan} /></button>
                                     </div>
                                 </div>
                             </div>

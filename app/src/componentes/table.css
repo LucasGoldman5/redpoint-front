@@ -409,7 +409,11 @@ body{
     width: 100%;
     justify-content: flex-end;
 }
-
+.boton-accion{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
 .div-service-complete-none{
     display: none;
     

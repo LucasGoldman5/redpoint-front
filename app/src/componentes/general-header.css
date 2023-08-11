@@ -200,6 +200,7 @@
     margin-top: 50px;
     border-radius: 7px;
     z-index: 20;
+    padding: 8px;
     display: flex;
     box-shadow: 5px 5px 5px  rgb(119, 66, 66);
     flex-direction: column;
@@ -224,12 +225,14 @@
     margin-left: 8px;
     outline: none;
     width: 100%;
-    border: none;
     background: none;
-    border-bottom: 1px solid black;
+    border: 1px solid black;
+    border-radius: 8px;
+    padding-left: 15px;
 }
 .search-reparations-input::placeholder{
     color: black;
+    font-weight: 600;
 }
 .div-x{
     width: 50%;

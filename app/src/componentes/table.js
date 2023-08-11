@@ -986,7 +986,7 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                                       :
                                       <td className='ultima-celda' key={uniqueKeys.tdBody}>
                                       {
-                                        <div className='botones-acciones' >      
+                                        <div className={window.location.href.includes("reparaciones") ? 'botones-acciones' : 'boton-accion'} >      
                                           {
                                             window.location.href.includes("reparaciones")
                                             ?                                           

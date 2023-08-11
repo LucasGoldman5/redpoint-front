@@ -95,8 +95,6 @@ const AddNotification = ({closeModal,openModalCreateNoti,itemToEdit,enviroment,n
 
     const { register, getValues} = useForm ();
 
-      console.log(lastNotification);
-
 
     return(
 
@@ -124,7 +122,7 @@ const AddNotification = ({closeModal,openModalCreateNoti,itemToEdit,enviroment,n
                     </div>
                     <div>
                         <label>Contacto:</label> 
-                        <input type="text" className={errors.contact ? "input-error" : "input-contact"} defaultValue={lastNotification ? lastNotification.contact : ""} placeholder={placeHolder} {...register('contact',{
+                        <input type="text" className={errors.contact ? "input-error" : "input-contact"} defaultValue={lastNotification ? lastNotification.contact : itemToEdit.number ? itemToEdit.number : ""} placeholder={placeHolder} {...register('contact',{
                             onChange: (event) => changeContact(event)
                         })}></input>
                         <p className="p-error">{errors.contact ? errors.contact[0] : ""}</p>

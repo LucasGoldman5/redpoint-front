@@ -368,8 +368,8 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
                   ?
                   <div className="div-security">
                     <div className="div-inputs pattern">
-                      <label>Patron</label>
-                      <input className="form-control" type="text" name="phone_2" required={changeSecurity} {...register('pattern',{
+                      <label>Orden de patron</label>
+                      <input className="form-control pattern" type="text" name="phone_2" required={changeSecurity} {...register('pattern',{
                         value:null,
                         onChange: (event) => securityChange(event),
                         shouldUnregister: ifChangeModal ? false : true,
@@ -377,7 +377,7 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
                     </div>
                     <div className="div-inputs pin">
                       <label>Pin</label>
-                      <input className="form-control" type="text" name="phone_2" required={changeSecurity} {...register('pin',{
+                      <input className="form-control pin" type="text" name="phone_2" required={changeSecurity} {...register('pin',{
                         value:null,
                         onChange: (event) => securityChange(event),
                         shouldUnregister: ifChangeModal ? false : true,

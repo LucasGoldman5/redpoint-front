@@ -342,12 +342,12 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                  <div className="div-security">
                     <div className="div-inputs pin">
                     <label>Pin:</label>
-                    <input className="form-control" type="text"    defaultValue={itemToEdit.pin}{...register('pin')}></input>
+                    <input className="form-control pin" type="text"    defaultValue={itemToEdit.pin}{...register('pin')}></input>
                     </div>
                     
                     <div className="div-inputs pattern">
-                    <label>Patron:</label>
-                    <input className="form-control" type="text"    defaultValue={itemToEdit.pattern}{...register('pattern')}></input>
+                    <label>Orden de patron:</label>
+                    <input className="form-control pattern" type="text"    defaultValue={itemToEdit.pattern}{...register('pattern')}></input>
                     </div>
                  </div>
                 </> 
@@ -363,12 +363,12 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                     
                     <div className="div-inputs pin">
                         <label>Pin:</label>
-                        <input className="form-control" type="text" defaultValue={itemToEdit.pin ? itemToEdit.pin : ""}  {...register('pin')}></input>
+                        <input className="form-control pin" type="text" defaultValue={itemToEdit.pin ? itemToEdit.pin : ""}  {...register('pin')}></input>
                     </div>
                     
                     <div className="div-inputs pattern">
-                        <label>Patron:</label>
-                        <input className="form-control" type="text" defaultValue={itemToEdit.pattern ? itemToEdit.pattern : ""} {...register('pattern')}></input>
+                        <label>Orden de patron:</label>
+                        <input className="form-control pattern" type="text" defaultValue={itemToEdit.pattern ? itemToEdit.pattern : ""} {...register('pattern')}></input>
                     </div>
                  </div>
                   :
