@@ -5,7 +5,8 @@ import './general-header.css';
 import { Link } from 'react-router-dom';
 import GetUserData from '../helpers/getUserData';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faM,faTruckRampBox, faHandHoldingDollar,faMobileRetro,faBuilding,faUsers,faScrewdriverWrench, faCaretDown, faCaretUp, faCircleXmark, faHourglassHalf, faCheck, faUserGear } from '@fortawesome/free-solid-svg-icons';
+import ModalProfits from "./modal-profits";
+import { faM,faTruckRampBox, faHandHoldingDollar,faMobileRetro,faBuilding,faUsers,faScrewdriverWrench, faCaretDown, faCaretUp, faCircleXmark, faHourglassHalf, faCheck, faUserGear, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 
 
 const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,dataCellphones,dataServices,dataManagers,arrowIcon,seeNavReport,enviroment,urlTable} ) =>{
@@ -40,8 +41,10 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
   const [seeingPReparationSuccess, setSeeingPReparationSuccess] = useState(false);
   const [seeingPUsers, setSeeingPUsers] = useState(false);
   const [seeingPReport, setSeeingPReport] = useState(false);
+  const [seeingProfits, setSeeingProfits] = useState(false);
   const [superAdmin, setSuperAdmin] = useState(null);
   const [loadElements, setLoadElements] = useState(true);
+  const [openModalProfit, setOpenModalProfit] = useState(false);
 
   useEffect(() => {
     admin()
@@ -104,7 +107,9 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
       setSeeingPReparationMoney(true)
     } else if(e === "rd"){
       setSeeingPReparationToDeliver(true)
-    }    
+    }  else if(e === "cg"){
+      setSeeingProfits(true)
+    }  
   }
 
   const noSeeP = (e) =>{
@@ -130,7 +135,9 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
       setSeeingPReparationMoney(false)
     } else if(e === "rd"){
       setSeeingPReparationToDeliver(false)
-    }   
+    } else if(e === "cg"){
+      setSeeingProfits(false)
+    }  
   }
   
 
@@ -337,6 +344,14 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
   const parsedUrl = new URL(originUrl);
   const baseUrl = parsedUrl.origin;
 
+  const openModalProfits = () =>{
+    setOpenModalProfit(true);
+  }
+
+  const closeForm = () =>{
+    setOpenModalProfit(false);
+  };
+
   if(enviroment.selfUrl){
     return(
       <>
@@ -390,10 +405,16 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
                     {
                       (superAdmin === true)
                       ?
+                      <>
+                      <div className="container-li-span" onMouseOver={()=>seeP("cg")} onMouseLeave={()=>noSeeP("cg")}>
+                        <FontAwesomeIcon className="icon-profits" icon={faDollarSign} onClick={() => openModalProfits()}></FontAwesomeIcon>
+                        <span className={seeingProfits ? "span" : "span-none"}><p>Calcular Ganancias</p></span>
+                      </div>
                       <div className="container-li-span" onMouseOver={()=>seeP("us")} onMouseLeave={()=>noSeeP("us")}>
                         <li className='nav-li-link'><Link   onClick={() => changeUrl(`${ent.users}`)} to={`${enviroment.selfUrl.dataTable}${ent.users}`}><FontAwesomeIcon className={(window.location.href.includes(`${enviroment.selfUrl.dataTable}${ent.users}`))? "icon" : "icon-none"} icon={faUserGear}></FontAwesomeIcon></Link></li>
                         <span className={seeingPUsers ? "span" : "span-none"}><p>Usuarios</p></span>
                       </div>
+                      </>
                       :
                       ""
                     } 
@@ -556,7 +577,20 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
             </div>
           </Navbar>
         </header>
+
+        {
+        (openModalProfit)
+        ?
+        <ModalProfits
+          openModalProfits={openModalProfit}
+          closeForm={closeForm}
+          enviroment={enviroment}>
+        </ModalProfits>
+        : 
+        ""
+        }
       </>
+      
     );
   }
 };

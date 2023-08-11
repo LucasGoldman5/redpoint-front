@@ -39,7 +39,6 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
     const [checkBox, setCheckBox] = useState(null);
     const [modalClosed, setModalClosed] = useState(null);
     const [actionModal, setActionModal] = useState(false);
-    const [openModalProfit, setOpenModalProfit] = useState(false);
     const [openModalNoti, setOpenModalNoti] = useState(false);
     const tableRef = useRef(null);
     const scrollPositionRef = useRef(0);
@@ -318,7 +317,6 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
         setModalClosed(false);
       },100)
       setCheckBox(true)
-      setOpenModalProfit(false);
       setOpenModalNoti(false)
       setModalClosed(true);
       setOpenModalEdit(false);
@@ -362,10 +360,6 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
       setOpenModalEdit(true);
 
     };   
-
-    const openModalProfits = () =>{
-      setOpenModalProfit(true);
-    }
       
     const edit =  async (data) =>{
 
@@ -825,17 +819,6 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                       :
                       <AddButton onClick={()=>openModalAdd()} dataApi={dataApi}></AddButton>
                     }
-                    {
-                      (superAdmin == false)
-                      ?
-                      <div className='ganancias-container'>
-                  
-                          <button className='button-ganancias' onClick={() => openModalProfits()}>Calcular Ganacias</button>
-                        
-                    </div>
-                    :
-                    ""
-                    }
                       <div className='contenedor-barra'>
                         <input type='text' placeholder={`buscar...`} className='barra-busqueda' onChange={(e) => dataFilter(e)}/>
                       </div>      
@@ -1071,18 +1054,6 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                     modalClosed={modalClosed}
                     actionModal={actionModal}>
                   </ModalAdd>
-
-                  {
-                    (openModalProfit)
-                    ?
-                    <ModalProfits
-                      openModalProfits={openModalProfit}
-                      closeForm={closeForm}
-                      enviroment={enviroment}>
-                    </ModalProfits>
-                    : 
-                    ""
-                  }
 
                   {
                     (openModalNoti && itemToEdit)
