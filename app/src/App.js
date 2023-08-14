@@ -233,7 +233,7 @@ import { Helmet } from 'react-helmet';
     }else if(location.includes("login")){
       return "RedPoint/Login"
     }else if(location.includes("imprimir")){
-      return "RedPoint/Imprimir  "
+      return "RedPoint/Imprimir"
     }else if(location.includes("personal")){
       return "RedPoint/Info-Usuario"
     }else{
