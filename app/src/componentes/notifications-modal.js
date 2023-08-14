@@ -8,8 +8,9 @@ import { PulseLoader } from "react-spinners";
 import swal from 'sweetalert';
 import HelperBuildRequest from '../helpers/buildRequest';
 import AddNotification from "./add-notification";
+import NotAuthorized from "./pageNotAuthorized";
 
-const ModalNotification = ({openModalNoti,itemToEdit,closeForm,enviroment}) =>{
+const ModalNotification = ({openModalNoti,itemToEdit,closeForm,enviroment,selectRowOff}) =>{
 
     const [notifications, setNotifications] = useState([]);
     const [modalCreateNotification, setModalCreateNotification] = useState(false);
@@ -19,19 +20,58 @@ const ModalNotification = ({openModalNoti,itemToEdit,closeForm,enviroment}) =>{
     const [closeModalCreate, setCloseModalCreate] = useState(null);
     const [spinnerLoad, setSpinnerLoad] = useState(false);
     const [user, setUser] = useState(null);
+    const [count, setCount] = useState(0);
 
     const apiURL = enviroment.apiURL;
     const entitiesUrl = enviroment.entities;
 
-    const getUser = localStorage.getItem('user');
+    const getUser = () =>{
+        if(localStorage.user){
+          return localStorage.getItem("user");
+        }else{
+            window.location.reload()
+        }
+      } 
 
     useEffect(()=>{
 
+        setModalNotification(openModalNoti);
         if(openModalNoti == true && itemToEdit){
             getNotifications()
         }
-        setModalNotification(true);
     },[openModalNoti])
+
+
+    useEffect(()=>{
+        setModalNotification(true);
+    },[modalCreateNotification])
+
+
+    const handleKeyUp = (event) => {
+        if (event.key === "Escape") {
+
+          if(modalCreateNotification === true){
+            setModalCreateNotification(false);
+            setModalNotification(true);
+            setCount(1)
+          }else{
+            setModalNotification(false);
+            setCount(1)
+         }
+        }
+    };
+    
+    useEffect(() => {
+
+      if (ModalNotification === true || modalCreateNotification === true) {
+        document.addEventListener('keyup', handleKeyUp);
+      } else{
+        document.removeEventListener('keyup', handleKeyUp);
+        selectRowOff(count)
+      }
+      
+    }, [modalCreateNotification,ModalNotification]);
+      
 
     useEffect(()=>{
 
@@ -45,7 +85,7 @@ const ModalNotification = ({openModalNoti,itemToEdit,closeForm,enviroment}) =>{
 
         const idReparations = itemToEdit.id
         setSpinnerLoad(true);
-        setUser(JSON.parse(getUser));
+        setUser(JSON.parse(getUser()));
 
         try{
                 
@@ -75,7 +115,7 @@ const ModalNotification = ({openModalNoti,itemToEdit,closeForm,enviroment}) =>{
         setCloseModalCreate(false)
     }
 
-    const closeModal = () =>{
+    const closeModalAdd = () =>{
         setModalCreateNotification(false);
         setModalNotification(true);
         setCloseModalCreate(true)
@@ -286,7 +326,7 @@ const ModalNotification = ({openModalNoti,itemToEdit,closeForm,enviroment}) =>{
               (modalCreateNotification)
               ?
                <AddNotification
-               closeModal={closeModal}
+               closeModalAdd={closeModalAdd}
                openModalCreateNoti={modalCreateNotification}
                notifications={notifications}
                itemToEdit={itemToEdit}

@@ -7,6 +7,7 @@ import GetUserData from '../helpers/getUserData';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ModalProfits from "./modal-profits";
 import { faM,faTruckRampBox, faHandHoldingDollar,faMobileRetro,faBuilding,faUsers,faScrewdriverWrench, faCaretDown, faCaretUp, faCircleXmark, faHourglassHalf, faCheck, faUserGear, faDollarSign } from '@fortawesome/free-solid-svg-icons';
+import NotAuthorized from "./pageNotAuthorized";
 
 
 const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,dataCellphones,dataServices,dataManagers,arrowIcon,seeNavReport,enviroment,urlTable} ) =>{
@@ -55,16 +56,27 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
     return () => clearTimeout(timer);
   }, []);
 
-  const getUser = localStorage.getItem("user");
+  
+  const getUser = () =>{
+    if(localStorage.user){
+      return localStorage.getItem("user");
+    }else{
+      window.location.reload()
+    }
+  } 
 
   const admin = () =>{
-    let usuario = JSON.parse(getUser);
+    if(localStorage.user){
+      let usuario = JSON.parse(getUser());
       if(usuario.user.rol_id.rol === "admin"){
         setSuperAdmin(false)
 
       }else if(usuario.user.rol_id.rol  === "super-admin"){
         setSuperAdmin(true)
       };
+    }else{
+      window.location.reload()
+    }
   };
 
   const menuDropdown = () =>{
@@ -327,15 +339,15 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
     }else if(location.includes(ent.users)){
       return "Usuarios"
     }else if(location.includes(entitie.pending)){
-      return "R-En Service"
+      return "En Service"
     }else if(location.includes(entitie.delivered)){
-      return "R-Entregadas"
+      return "Entregadas"
     }else if(location.includes(entitie.finished)){
-      return "R-Por Entregar"
+      return "Por Entregar"
     }else if(location.includes(entitie.quote)){
-      return "R-A Presupuestar"
+      return "A Presupuestar"
     }else if(location.includes("por")){
-      return "R-Filtrada"
+      return "Filtrada"
     }else if(location.includes("imprimir")){
       return "Imprimir"
     }
@@ -352,6 +364,14 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
     setOpenModalProfit(false);
   };
 
+  const handleKeyUp = (event) => {
+    if (event.key === "Escape") {
+      setOpenModalProfit(false);
+    }
+  };
+  
+  document.addEventListener('keyup', handleKeyUp);
+  
   if(enviroment.selfUrl){
     return(
       <>

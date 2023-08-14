@@ -2,18 +2,18 @@
 
 export default function GetUserData() {
 
-    if(localStorage.getItem('user') !== null){
+
+    if(localStorage.user){
 
         let user = JSON.parse(localStorage.getItem('user')).user;
 
         if(user){
-            return user
-        }else{
+            return user    
+        }else{    
             return false
         }
-
     }else{
-
+        
         return false;
 
     }

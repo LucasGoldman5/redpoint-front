@@ -14,6 +14,7 @@ import './App.css';
 import GetUserData from './helpers/getUserData';
 import HelperBuildRequest from './helpers/buildRequest';
 import getEnviroment from './helpers/getEnviroment';
+import { Helmet } from 'react-helmet';
 
 
 
@@ -207,6 +208,38 @@ import getEnviroment from './helpers/getEnviroment';
   const pagePrint = (element) =>{
     localStorage.setItem("reparation",JSON.stringify(element))
   }
+
+  const location = window.location.href;
+
+  const title = () =>{
+    if(location.includes("pendientes")){
+      return "RedPoint/En-Service"
+    }else if(location.includes("presupuestar")){
+      return "RedPoint/A-Presupuestar"
+    }else if(location.includes("entregar")){
+      return "RedPoint/Entregar"
+    }else if(location.includes("entregadas")){
+      return "RedPoint/Ya-Entregadas"
+    }else if(location.includes("marcas")){
+      return "RedPoint/Marcas"
+    }else if(location.includes("celulares")){
+      return "RedPoint/Celulares"
+    }else if(location.includes("servicios")){
+      return "RedPoint/Servicios"
+    }else if(location.includes("clientes")){
+      return "RedPoint/Clientes"
+    }else if(location.includes("usuarios")){
+      return "RedPoint/Usuarios"
+    }else if(location.includes("login")){
+      return "RedPoint/Login"
+    }else if(location.includes("imprimir")){
+      return "RedPoint/Imprimir  "
+    }else if(location.includes("personal")){
+      return "RedPoint/Info-Usuario"
+    }else{
+      return "RedPoint/Reparaciones"
+    }
+  }
   
 
   if(user && window.location.href.includes("Tabla") && dataEnviroment.selfUrl){
@@ -215,6 +248,9 @@ import getEnviroment from './helpers/getEnviroment';
       <>
         <div className='App' >
         <BrowserRouter>
+        <Helmet>
+          <title>{title()}</title>
+        </Helmet>
           <GeneralHeader
            changeUrl={changeUrl}
            urlTable={urlTable} 
@@ -252,6 +288,9 @@ import getEnviroment from './helpers/getEnviroment';
       return(
         <>
           <div className="App">
+          <Helmet>
+            <title>{title()}</title>
+          </Helmet>
           <BrowserRouter>
             <InformationHeader enviroment={dataEnviroment}/>
                 <Routes>
@@ -270,6 +309,9 @@ import getEnviroment from './helpers/getEnviroment';
     return(
       <>
         <div className="App">
+        <Helmet>
+            <title>{title()}</title>
+        </Helmet>
         <BrowserRouter>
               <Routes>
               <Route path={`${dataEnviroment.selfUrl.print}`} element={<PrintRearation></PrintRearation>}></Route>
@@ -283,6 +325,9 @@ import getEnviroment from './helpers/getEnviroment';
     return(
         <>
           <div className="App">
+          <Helmet>
+            <title>{title()}</title>
+          </Helmet>
           <BrowserRouter>
             <StartHeader></StartHeader>
                 <Routes>
