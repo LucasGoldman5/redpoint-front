@@ -486,7 +486,7 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                 const urlDelete = () =>{
 
                   if(window.location.href.includes("report")){
-                    return enviroment.apiUrl.url + "reparations"
+                    return enviroment.apiURL.url + "reparations"
                   }else{
                     return  urlApi()
                   }
