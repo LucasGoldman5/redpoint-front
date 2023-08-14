@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Component } from "react";
 import './add-notification.css'
 import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,7 +6,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useForm } from "react-hook-form";
 import HelperBuildRequest from '../helpers/buildRequest';
 
-const AddNotification = ({closeModal,openModalCreateNoti,itemToEdit,enviroment,notifications}) =>{
+const AddNotification = ({closeModalAdd,openModalCreateNoti,itemToEdit,enviroment,notifications}) =>{
 
     const actualityDate = new Date();
     const [placeHolder, setPlaceHolder] = useState("Ej: 3425857245")
@@ -28,7 +28,7 @@ const AddNotification = ({closeModal,openModalCreateNoti,itemToEdit,enviroment,n
                       console.log(response.error);
                     },1000);
                   }else{               
-                    closeModal()
+                    closeModalAdd()
                     sendNotification(values);
                   };  
               };
@@ -89,7 +89,6 @@ const AddNotification = ({closeModal,openModalCreateNoti,itemToEdit,enviroment,n
         })
     }
 
-
         const lastNotification = notifications[notifications.length - 1];
     
 
@@ -103,7 +102,7 @@ const AddNotification = ({closeModal,openModalCreateNoti,itemToEdit,enviroment,n
             <ModalHeader style={{display: 'block'}}>
             <div className='div-header'>     
                     <h3 style={{color:"green"}}>{itemToEdit.customer ? itemToEdit.customer.customer ? `Crear Notificacion para ${itemToEdit.customer.customer}` : "Crear Notificacion" : "Crear Notificacion"}</h3>
-                    <FontAwesomeIcon className='close-modal-x' onClick={closeModal} icon={faXmark} />
+                    <FontAwesomeIcon className='close-modal-x' onClick={closeModalAdd} icon={faXmark} />
             </div>
             </ModalHeader>
             <ModalBody >
@@ -150,7 +149,7 @@ const AddNotification = ({closeModal,openModalCreateNoti,itemToEdit,enviroment,n
                         <button type="button" onClick={() => create(getValues())} className='btn button-create-noti'>Crear</button>
                     </div>
                     <div className='button-div'>
-                        <button type="button" className='btn button-close-modal' onClick={closeModal}>Cancelar</button>
+                        <button type="button" className='btn button-close-modal' onClick={()=>closeModalAdd()}>Cancelar</button>
                     </div>
                 </div>
             </form>

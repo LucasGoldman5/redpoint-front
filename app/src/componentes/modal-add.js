@@ -69,6 +69,7 @@ const ModalAdd =({closeModal,actionModal, create,dataApi,errorsInTable,openModal
   },[errorsInTable])
 
   useEffect(()=>{
+    
     if(openModalAdd == true){
        
       const getSelectors = async () =>{
@@ -95,7 +96,7 @@ const ModalAdd =({closeModal,actionModal, create,dataApi,errorsInTable,openModal
             }catch(error){
               console.log(error)
             }
-            
+
           try{
                       
             const config = await HelperBuildRequest("GET",null, "dataTable");

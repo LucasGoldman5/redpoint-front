@@ -13,6 +13,9 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
   const [selectCellphone, setSelectCellphone] = useState({})
   const [selectService, setSelectService] = useState({})
   const [changeSecurity, setChangeSecurity] = useState(true);
+  const [endDateSelected, setEndDateSelected] = useState(null);
+  const [startDateSelected, setStartDateSelected] = useState(null);
+  const [deliveryDateSelected, setDeliveryDateSelected] = useState(null);
 
   const actualityDate = new Date()
 
@@ -21,6 +24,9 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
     setSelectCustomer({})
     setSelectCellphone({})
     setSelectService({})
+    setEndDateSelected(null)
+    setStartDateSelected(null)
+    setDeliveryDateSelected(null)
   },[actionModal])
 
     const changueValue = (values) =>{
@@ -63,6 +69,16 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
         if(values.reception_date){
           setValue("reception_date",actualityDate.getUTCFullYear() + '-' + ('00' + (actualityDate.getUTCMonth()+1)).slice(-2) + '-' + ('00' +  actualityDate.getUTCDate()).slice(-2))
         }
+
+        if(endDateSelected){
+          setValue("service_end_date",new Date(endDateSelected).getFullYear() + "-" + ("00" + (new Date (endDateSelected).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(endDateSelected).getUTCDate()).slice(-2) )
+        }
+        if(startDateSelected){
+          setValue("service_start_date",new Date(startDateSelected).getFullYear() + "-" + ("00" + (new Date (startDateSelected).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(startDateSelected).getUTCDate()).slice(-2) )
+        }
+        if(deliveryDateSelected){
+          setValue("delivery_date",new Date(deliveryDateSelected).getFullYear() + "-" + ("00" + (new Date (deliveryDateSelected).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(deliveryDateSelected).getUTCDate()).slice(-2) )
+        }
     }
 
     const addValues = (id,entity) =>{
@@ -90,6 +106,17 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
             };
           });
         }
+    }
+
+    const changeDates = (entity,e) =>{
+      let value = e.target.value
+      if(entity == "service_end_date"){
+        setEndDateSelected(value);
+      }else if(entity == "service_start_date"){
+        setStartDateSelected(value);
+      }else if(entity == "delivery_date"){
+        setDeliveryDateSelected(value);
+      }
     }
 
     const securityChange = (e) =>{
@@ -298,7 +325,7 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
             <div className="div-inputs">
             <label >Fecha de entrega</label>
               <input className="form-control" type="date"  {...register('delivery_date',{
-                value:  null,
+                onChange: (event) => changeDates("delivery_date",event),
                 shouldUnregister: ifChangeModal ? false : true,
                 setValueAs : v =>{
                   if(v != null && v){
@@ -321,7 +348,7 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
             <div className="div-inputs">
               <label >Fecha de inicio del servicio</label>
               <input className="form-control" type="date"  {...register('service_start_date',{
-                value:  null,
+                onChange: (event) => changeDates("service_start_date",event),
                 shouldUnregister: ifChangeModal ? false : true,
                 setValueAs : v =>{
                   if(v != null && v){
@@ -344,7 +371,7 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
             <div className="div-inputs">
               <label >Fecha de servicio terminado</label>
               <input className="form-control" type="date"  {...register('service_end_date',{
-                value:  null,
+                onChange: (event) => changeDates("service_end_date",event),
                 shouldUnregister: ifChangeModal ? false : true,
                 setValueAs : v =>{
                   if(v != null && v){

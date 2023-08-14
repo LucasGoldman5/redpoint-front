@@ -13,6 +13,9 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
     const [customerSelected, setCustomerSelected] = useState({});
     const [cellphoneSelected, setCellphoneSelected] = useState({});
     const [serviceSelected, setServiceSelected] = useState({});
+    const [endDateSelected, setEndDateSelected] = useState(null);
+    const [startDateSelected, setStartDateSelected] = useState(null);
+    const [deliveryDateSelected, setDeliveryDateSelected] = useState(null);
 
     const changeValue = (values) =>{
 
@@ -41,7 +44,23 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
         if(values.reception_date){
           setValue("reception_date",new Date(itemToEdit.reception_date).getFullYear() + "-" + ("00" + (new Date (itemToEdit.reception_date).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(itemToEdit.reception_date).getUTCDate()).slice(-2) )
         }
+        if(endDateSelected){
+          setValue("service_end_date",new Date(endDateSelected).getFullYear() + "-" + ("00" + (new Date (endDateSelected).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(endDateSelected).getUTCDate()).slice(-2) )
+        }else if(values.service_end_date){
+          setValue("service_end_date",new Date(values.service_end_date).getFullYear() + "-" + ("00" + (new Date (values.service_end_date).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(values.service_end_date).getUTCDate()).slice(-2) )
+        }
 
+        if(startDateSelected){
+          setValue("service_start_date",new Date(startDateSelected).getFullYear() + "-" + ("00" + (new Date (startDateSelected).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(startDateSelected).getUTCDate()).slice(-2) )
+        }else if(values.service_start_date){
+          setValue("service_start_date",new Date(values.service_start_date).getFullYear() + "-" + ("00" + (new Date (values.service_start_date).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(values.service_start_date).getUTCDate()).slice(-2) )
+        }
+
+        if(deliveryDateSelected){
+          setValue("delivery_date",new Date(deliveryDateSelected).getFullYear() + "-" + ("00" + (new Date (deliveryDateSelected).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(deliveryDateSelected).getUTCDate()).slice(-2) )
+        }else if(values.delivery_date){
+          setValue("delivery_date",new Date(values.delivery_date).getFullYear() + "-" + ("00" + (new Date (values.delivery_date).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(values.delivery_date).getUTCDate()).slice(-2) )
+        }
     }
 
     const addValues = (id,entity) =>{
@@ -67,6 +86,17 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                 };
               });
         }
+    }
+
+    const changeDates = (entity,e) =>{
+      let value = e.target.value
+      if(entity == "service_end_date"){
+        setEndDateSelected(value);
+      }else if(entity == "service_start_date"){
+        setStartDateSelected(value);
+      }else if(entity == "delivery_date"){
+        setDeliveryDateSelected(value);
+      }
     }
 
     const checkBoxChange = () =>{
@@ -271,6 +301,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
             <div className="div-inputs">
               <label >Fecha de entrega</label>
               <input className="form-control" type="date"  defaultValue={itemToEdit && itemToEdit.delivery_date !=null ? new Date(itemToEdit.delivery_date).getFullYear() + "-" + ("00" + (new Date (itemToEdit.delivery_date).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(itemToEdit.delivery_date).getUTCDate()).slice(-2)  : null}{...register('delivery_date',{
+                onChange: (event) => changeDates("delivery_date",event),
                 setValueAs : value =>{
                   if(value != null && value){
                     let dateInput = new Date(value)
@@ -291,7 +322,8 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
             
             <div className="div-inputs">
               <label >Fecha de Inicio del Servicio</label>
-              <input className="form-control" type="date"  defaultValue={itemToEdit && itemToEdit.service_start_date != null ? new Date(itemToEdit.service_start_date).getFullYear() + "-" + ("00" + (new Date (itemToEdit.service_start_date).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(itemToEdit.service_start_date).getUTCDate()).slice(-2)  : null}{...register('service_start_date',{
+              <input className="form-control" type="date"  defaultValue={itemToEdit.service_start_date ? new Date(itemToEdit.service_start_date).getFullYear() + "-" + ("00" + (new Date (itemToEdit.service_start_date).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(itemToEdit.service_start_date).getUTCDate()).slice(-2)  : null}{...register('service_start_date',{
+                onChange: (event) => changeDates("service_start_date",event),
                 setValueAs : value =>{
                   if(value != null && value){
                     let dateInput = new Date(value)
@@ -313,6 +345,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
             <div className="div-inputs">
               <label >Fecha de Servicio terminado</label>
               <input className="form-control" type="date"  defaultValue={(itemToEdit && itemToEdit.service_end_date != null)  ? new Date(itemToEdit.service_end_date).getFullYear() + "-" + ("00" + (new Date (itemToEdit.service_end_date).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(itemToEdit.service_end_date).getUTCDate()).slice(-2)  : null} {...register('service_end_date',{
+                onChange: (event) => changeDates("service_end_date",event),
                 setValueAs : value =>{
                   if(value != null && value){
                     let dateInput = new Date(value)

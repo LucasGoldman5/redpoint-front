@@ -1,6 +1,7 @@
 import NotAuthorized from "../componentes/pageNotAuthorized";
 import getEnviroment from "./getEnviroment";
 
+
 /* global HelperBuildRequest */
 export default async function  HelperBuildRequest ( method, data = {}, type = null ) {
 
@@ -29,10 +30,16 @@ export default async function  HelperBuildRequest ( method, data = {}, type = nu
         };
     }
         
-    const userData = JSON.parse( localStorage.getItem('user') );
-    const tokenType = userData.token_type[0].toUpperCase() + userData.token_type.slice(1, userData.token_type.length );
+    const userData = () =>{
+        if(localStorage.user){
+            return JSON.parse( localStorage.getItem('user') );
+        }else{
+            window.location.reload()
+        }
+    } 
+    const tokenType = userData().token_type[0].toUpperCase() + userData().token_type.slice(1, userData().token_type.length );
 
-    const tokenArr = userData.access_token.split('.');
+    const tokenArr = userData().access_token.split('.');
     const tokenDecode =  JSON.parse( atob(tokenArr[1]) );
  
     const expired = tokenDecode.exp * 1000;
@@ -47,7 +54,7 @@ export default async function  HelperBuildRequest ( method, data = {}, type = nu
             "headers": {
             'Accept':'application/json',
             'Content-Type':'application/json',
-            'Authorization': tokenType + ' ' + userData.access_token
+            'Authorization': tokenType + ' ' + userData().access_token
             }
         };
 
@@ -89,10 +96,17 @@ export default async function  HelperBuildRequest ( method, data = {}, type = nu
 
 }
 
-function buildCallServer( method, data = {}, type = null) {
+async function buildCallServer( method, data = {}, type = null) {
 
-    const userData = JSON.parse( localStorage.getItem('user') );
-    const tokenType = userData.token_type[0].toUpperCase() + userData.token_type.slice(1, userData.token_type.length );
+
+    const userData = () =>{
+        if(localStorage.user){
+            return JSON.parse( localStorage.getItem('user') );
+        }else{
+            window.location.reload()
+        }
+    } 
+    const tokenType = userData().token_type[0].toUpperCase() + userData().token_type.slice(1, userData().token_type.length );
 
           
     if(type === 'dataTable'){
@@ -101,7 +115,7 @@ function buildCallServer( method, data = {}, type = null) {
             headers:{
                 'Accept':'application/json',
                 'Content-Type':'application/json',
-                'Authorization': tokenType + ' ' + userData.access_token
+                'Authorization': tokenType + ' ' + userData().access_token
             },
         };
     }
@@ -112,7 +126,7 @@ function buildCallServer( method, data = {}, type = null) {
         headers:{
             'Accept':'application/json',
             'Content-Type':'application/json',
-            'Authorization': tokenType + ' ' + userData.access_token
+            'Authorization': tokenType + ' ' + userData().access_token
         },
         body: JSON.stringify(data) 
         };
@@ -124,7 +138,7 @@ function buildCallServer( method, data = {}, type = null) {
         headers:{
             'Accept':'application/json',
             'Content-Type':'application/json',
-            'Authorization': tokenType + ' ' + userData.access_token
+            'Authorization': tokenType + ' ' + userData().access_token
         },
         body: JSON.stringify(data)
         };
@@ -135,7 +149,7 @@ function buildCallServer( method, data = {}, type = null) {
         headers:{
             'Accept':'application/json',
             'Content-Type':'application/json',
-            'Authorization': tokenType + ' ' + userData.access_token
+            'Authorization': tokenType + ' ' + userData().access_token
         },
         body: JSON.stringify(data) 
     };  

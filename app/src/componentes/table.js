@@ -8,7 +8,6 @@ import AddButton from './add-button';
 import 'bootstrap/dist/css/bootstrap.css';
 import ModalAdd from './modal-add';
 import ModalEdit from './modal-edit';
-import ModalProfits from './modal-profits';
 import Paginator from './paginator';
 import HelperBuildRequest from "../helpers/buildRequest";
 import { v4 as uuidv4 } from 'uuid';
@@ -16,6 +15,7 @@ import getManualColumns from '../helpers/getManualColumns';
 import { PulseLoader } from "react-spinners";
 import Error404 from './page404';
 import ModalNotification from './notifications-modal';
+import NotAuthorized from './pageNotAuthorized';
 
 
 function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
@@ -46,7 +46,13 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
     const { id } = useParams();
 
     
-    const getUser = localStorage.getItem("user");
+    const getUser = () =>{
+      if(localStorage.user){
+        return localStorage.getItem("user");
+      }else{
+        window.location.reload()
+      }
+    } 
 
     const ent = enviroment.selfUrl.localEntities;
     const table = enviroment.selfUrl.dataTable;
@@ -143,13 +149,17 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
     }
 
     const admin = () =>{
-      let usuario = JSON.parse(getUser);
+      if(localStorage.user){
+        let usuario = JSON.parse(getUser());
         if(usuario.user.rol_id.rol  === "admin"){
           setSuperAdmin(true)
 
         }else if(usuario.user.rol_id.rol  === "super-admin"){
           setSuperAdmin(false)
         };
+      }else{
+        window.location.reload()
+      }
     };
     
     useEffect(() => {
@@ -199,7 +209,13 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
 
       try{
         await getManualColumns(window.location.href,enviroment.selfUrl);
-        setDataColumns(JSON.parse(localStorage.getItem('column')));
+        
+          if(localStorage.column){
+            setDataColumns(JSON.parse(localStorage.getItem('column')));
+          }else{
+            window.location.reload()
+          }
+        
         const config = await HelperBuildRequest('GET', null, 'dataTable');
         const apiURL = urlApi()
 
@@ -311,14 +327,15 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
 
       setErrors([]);
       setOpenModal(true)
+      setModalClosed(true);
+      setOpenModalNoti(true)
       setTimeout(()=>{
         setOpenModal(false);
         setCheckBox(false);
         setModalClosed(false);
+        setOpenModalNoti(false);
       },100)
       setCheckBox(true)
-      setOpenModalNoti(false)
-      setModalClosed(true);
       setOpenModalEdit(false);
       setItemToEdit(null);
       setActionModal(true);
@@ -334,7 +351,8 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
         setTimeout(()=>{
           setRowId(null);
         },300)
-        setOpenModalEdit(false)
+        setOpenModalEdit(false);
+        setOpenModalNoti(false);
         setItemToEdit(null)
       }
     }
@@ -624,9 +642,9 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
 
     const openModalNotification = (e,element) =>{
       e.stopPropagation();
+      setOpenModalNoti(true);
       setItemToEdit(element);
       setRowId(element.id);
-      setOpenModalNoti(true);
     }
 
     const nextPage = async (url) =>{
@@ -1062,7 +1080,8 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                     openModalNoti={openModalNoti}
                     itemToEdit={itemToEdit}
                     closeForm={closeForm}
-                    enviroment={enviroment}>
+                    enviroment={enviroment}
+                    selectRowOff={selectRowOff}>
                     </ModalNotification>
                     :
                     ""

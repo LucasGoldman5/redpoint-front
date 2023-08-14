@@ -1,11 +1,21 @@
 import React from "react";
 import './printReparation.css'
+import NotAuthorized from "./pageNotAuthorized";
 
-const PrintRearation = () =>{
+const PrintRearation = async () =>{
 
-  const getReparation = localStorage.getItem("reparation");
-  let reparation = JSON.parse(getReparation);
-    console.log(reparation);
+
+  const getReparation = () =>{
+    if(localStorage.reparation){
+      return localStorage.getItem("reparation");
+    }else{
+      return (
+        <NotAuthorized></NotAuthorized>
+      )
+    }
+  } 
+  let reparation = JSON.parse(getReparation());
+    
   if(reparation){
 
      const date = reparation.notice_date;
