@@ -213,41 +213,41 @@ import { Helmet } from 'react-helmet';
 
   const title = () =>{
     if(location.includes("pendientes")){
-      return "RedPoint/En-Service"
+      return "RedPoint | En Service"
     }else if(location.includes("presupuestar")){
-      return "RedPoint/A-Presupuestar"
+      return "RedPoint | A Presupuestar"
     }else if(location.includes("entregar")){
-      return "RedPoint/Entregar"
+      return "RedPoint | Entregar"
     }else if(location.includes("entregadas")){
-      return "RedPoint/Ya-Entregadas"
+      return "RedPoint | Ya Entregadas"
     }else if(location.includes("marcas")){
-      return "RedPoint/Marcas"
+      return "RedPoint | Marcas"
     }else if(location.includes("celulares")){
-      return "RedPoint/Celulares"
+      return "RedPoint | Celulares"
     }else if(location.includes("servicios")){
-      return "RedPoint/Servicios"
+      return "RedPoint | Servicios"
     }else if(location.includes("clientes")){
-      return "RedPoint/Clientes"
+      return "RedPoint | Clientes"
     }else if(location.includes("usuarios")){
-      return "RedPoint/Usuarios"
+      return "RedPoint | Usuarios"
     }else if(location.includes("login")){
-      return "RedPoint/Login"
+      return "RedPoint | Login"
     }else if(location.includes("imprimir")){
-      return "RedPoint/Imprimir"
+      return "RedPoint | Imprimir"
     }else if(location.includes("personal")){
-      return "RedPoint/Info-Usuario"
+      return "RedPoint | Info Usuario"
     }else if(location.includes("por-marca")){
-      return "RedPoint/Filtro-Marca"
+      return "RedPoint | Filtro Marca"
     }else if(location.includes("por-cliente")){
-      return "RedPoint/Filtro-Cliente"
+      return "RedPoint | Filtro Cliente"
     }else if(location.includes("por-servicio")){
-      return "RedPoint/Filtro-Servicio"
+      return "RedPoint | Filtro Servicio"
     }else if(location.includes("por-celular")){
-      return "RedPoint/Filtro-Celular"
+      return "RedPoint | Filtro Celular"
     }else if(location.includes("por-manager")){
-      return "RedPoint/Filtro-Usuario"
+      return "RedPoint | Filtro Usuario"
     }else{
-      return "RedPoint/Reparaciones"
+      return "RedPoint | Reparaciones"
     }
   }
   
