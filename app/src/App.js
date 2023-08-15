@@ -236,6 +236,16 @@ import { Helmet } from 'react-helmet';
       return "RedPoint/Imprimir"
     }else if(location.includes("personal")){
       return "RedPoint/Info-Usuario"
+    }else if(location.includes("por-marca")){
+      return "RedPoint/Filtro-Marca"
+    }else if(location.includes("por-cliente")){
+      return "RedPoint/Filtro-Cliente"
+    }else if(location.includes("por-servicio")){
+      return "RedPoint/Filtro-Servicio"
+    }else if(location.includes("por-celular")){
+      return "RedPoint/Filtro-Celular"
+    }else if(location.includes("por-manager")){
+      return "RedPoint/Filtro-Usuario"
     }else{
       return "RedPoint/Reparaciones"
     }
