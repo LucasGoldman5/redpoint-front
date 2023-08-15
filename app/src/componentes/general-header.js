@@ -346,8 +346,16 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
       return "Por Entregar"
     }else if(location.includes(entitie.quote)){
       return "A Presupuestar"
-    }else if(location.includes("por")){
-      return "Filtrada"
+    }else if(location.includes("por-marca")){
+      return "R-Filtrada-Marca"
+    }else if(location.includes("por-servicio")){
+      return "R-Filtrada-Servicio"
+    }else if(location.includes("por-celular")){
+      return "R-Filtrada-Celular"
+    }else if(location.includes("por-cliente")){
+      return "R-Filtrada-Cliente"
+    }else if(location.includes("por-manager")){
+      return "R-Filtrada-Usuario"
     }else if(location.includes("imprimir")){
       return "Imprimir"
     }
