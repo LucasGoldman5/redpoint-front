@@ -2,7 +2,7 @@ import React from "react";
 import './printReparation.css'
 import NotAuthorized from "./pageNotAuthorized";
 
-const PrintRearation = async () =>{
+const PrintRearation =  () =>{
 
 
   const getReparation = () =>{
@@ -15,10 +15,12 @@ const PrintRearation = async () =>{
     }
   } 
   let reparation = JSON.parse(getReparation());
+
+  console.log(reparation);
     
   if(reparation){
 
-     const date = reparation.notice_date;
+     const date = reparation.reception_date     ;
      const newDate = new Date()
      const formatDate = () =>{
       if(date){
