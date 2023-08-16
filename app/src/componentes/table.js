@@ -15,7 +15,6 @@ import getManualColumns from '../helpers/getManualColumns';
 import { PulseLoader } from "react-spinners";
 import Error404 from './page404';
 import ModalNotification from './notifications-modal';
-import NotAuthorized from './pageNotAuthorized';
 
 
 function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {

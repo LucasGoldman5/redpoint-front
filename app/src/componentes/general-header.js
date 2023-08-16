@@ -7,7 +7,6 @@ import GetUserData from '../helpers/getUserData';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ModalProfits from "./modal-profits";
 import { faM,faTruckRampBox, faHandHoldingDollar,faMobileRetro,faBuilding,faUsers,faScrewdriverWrench, faCaretDown, faCaretUp, faCircleXmark, faHourglassHalf, faCheck, faUserGear, faDollarSign } from '@fortawesome/free-solid-svg-icons';
-import NotAuthorized from "./pageNotAuthorized";
 
 
 const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,dataCellphones,dataServices,dataManagers,arrowIcon,seeNavReport,enviroment,urlTable} ) =>{
