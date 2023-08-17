@@ -67,17 +67,17 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
         }
 
         if(values.reception_date){
-          setValue("reception_date",actualityDate.getUTCFullYear() + '-' + ('00' + (actualityDate.getUTCMonth()+1)).slice(-2) + '-' + ('00' +  actualityDate.getUTCDate()).slice(-2))
+          setValue("reception_date",actualityDate.getFullYear() + '-' + ('00' + (actualityDate.getMonth()+1)).slice(-2) + '-' + ('00' +  actualityDate.getDate()).slice(-2))
         }
 
         if(endDateSelected){
-          setValue("service_end_date",new Date(endDateSelected).getFullYear() + "-" + ("00" + (new Date (endDateSelected).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(endDateSelected).getUTCDate()).slice(-2) )
+          setValue("service_end_date",new Date(endDateSelected).getFullYear() + "-" + ("00" + (new Date (endDateSelected).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(endDateSelected).getDate()).slice(-2) )
         }
         if(startDateSelected){
-          setValue("service_start_date",new Date(startDateSelected).getFullYear() + "-" + ("00" + (new Date (startDateSelected).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(startDateSelected).getUTCDate()).slice(-2) )
+          setValue("service_start_date",new Date(startDateSelected).getFullYear() + "-" + ("00" + (new Date (startDateSelected).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(startDateSelected).getDate()).slice(-2) )
         }
         if(deliveryDateSelected){
-          setValue("delivery_date",new Date(deliveryDateSelected).getFullYear() + "-" + ("00" + (new Date (deliveryDateSelected).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(deliveryDateSelected).getUTCDate()).slice(-2) )
+          setValue("delivery_date",new Date(deliveryDateSelected).getFullYear() + "-" + ("00" + (new Date (deliveryDateSelected).getMonth()+1)).slice(-2) + "-" + ("00" + new Date(deliveryDateSelected).getDate()).slice(-2) )
         }
     }
 
@@ -299,18 +299,18 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
             
             <div className="div-inputs">
               <label >Fecha de Recepcion</label>
-              <input className="form-control" type="date" name="phone_2" defaultValue={actualityDate.getUTCFullYear() + '-' + ('00' + (actualityDate.getUTCMonth()+1)).slice(-2) + '-' + ('00' +  actualityDate.getUTCDate()).slice(-2)} {...register('reception_date',{
+              <input className="form-control" type="date" name="phone_2" defaultValue={actualityDate.getUTCFullYear() + '-' + ('00' + (actualityDate.getUTCMonth()+1)).slice(-2) + '-' + ('00' +  actualityDate.getDate()).slice(-2)} {...register('reception_date',{
                 shouldUnregister: ifChangeModal ? false : true,
                 setValueAs : value =>{
                   if(value != null && value){
                     
                     let dateInput = new Date(value)
-                  dateInput = dateInput.getUTCFullYear() + '-' +
-                  ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
-                  ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
-                  ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
-                  ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
-                  ('00' + dateInput.getUTCSeconds()).slice(-2);
+                  dateInput = dateInput.getFullYear() + '-' +
+                  ('00' + (dateInput.getMonth()+1)).slice(-2) + '-' +
+                  ('00' + dateInput.getDate()).slice(-2) + ' ' + 
+                  ('00' + dateInput.getHours()).slice(-2) + ':' + 
+                  ('00' + dateInput.getMinutes()).slice(-2) + ':' + 
+                  ('00' + dateInput.getSeconds()).slice(-2);
 
                   return dateInput
                   }else{
@@ -330,12 +330,12 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
                 setValueAs : v =>{
                   if(v != null && v){
                     let dateInput = new Date(v)
-                  dateInput = dateInput.getUTCFullYear() + '-' +
-                  ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
-                  ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
-                  ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
-                  ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
-                  ('00' + dateInput.getUTCSeconds()).slice(-2);
+                  dateInput = dateInput.getFullYear() + '-' +
+                  ('00' + (dateInput.getMonth()+1)).slice(-2) + '-' +
+                  ('00' + dateInput.getDate()).slice(-2) + ' ' + 
+                  ('00' + dateInput.getHours()).slice(-2) + ':' + 
+                  ('00' + dateInput.getMinutes()).slice(-2) + ':' + 
+                  ('00' + dateInput.getSeconds()).slice(-2);
 
                   return dateInput
                   }else{
@@ -353,12 +353,12 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
                 setValueAs : v =>{
                   if(v != null && v){
                     let dateInput = new Date(v)
-                  dateInput = dateInput.getUTCFullYear() + '-' +
-                  ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
-                  ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
-                  ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
-                  ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
-                  ('00' + dateInput.getUTCSeconds()).slice(-2);
+                  dateInput = dateInput.getFullYear() + '-' +
+                  ('00' + (dateInput.getMonth()+1)).slice(-2) + '-' +
+                  ('00' + dateInput.getDate()).slice(-2) + ' ' + 
+                  ('00' + dateInput.getHours()).slice(-2) + ':' + 
+                  ('00' + dateInput.getMinutes()).slice(-2) + ':' + 
+                  ('00' + dateInput.getSeconds()).slice(-2);
 
                   return dateInput
                   }else{
@@ -376,12 +376,12 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
                 setValueAs : v =>{
                   if(v != null && v){
                     let dateInput = new Date(v)
-                  dateInput = dateInput.getUTCFullYear() + '-' +
-                  ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
-                  ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
-                  ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
-                  ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
-                  ('00' + dateInput.getUTCSeconds()).slice(-2);
+                  dateInput = dateInput.getFullYear() + '-' +
+                  ('00' + (dateInput.getMonth()+1)).slice(-2) + '-' +
+                  ('00' + dateInput.getDate()).slice(-2) + ' ' + 
+                  ('00' + dateInput.getHours()).slice(-2) + ':' + 
+                  ('00' + dateInput.getMinutes()).slice(-2) + ':' + 
+                  ('00' + dateInput.getSeconds()).slice(-2);
 
                   return dateInput
                   }else{
