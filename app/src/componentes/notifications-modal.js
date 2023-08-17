@@ -42,14 +42,8 @@ const ModalNotification = ({openModalNoti,itemToEdit,closeForm,enviroment,select
     },[openModalNoti])
 
 
-    useEffect(()=>{
-        setModalNotification(true);
-    },[modalCreateNotification])
-
-
     const handleKeyUp = (event) => {
         if (event.key === "Escape") {
-
           if(modalCreateNotification === true){
             setModalCreateNotification(false);
             setModalNotification(true);
