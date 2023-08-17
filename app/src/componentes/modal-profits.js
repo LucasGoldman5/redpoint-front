@@ -147,7 +147,7 @@ const ModalProfits = ({openModalProfits,closeForm,enviroment}) =>{
 
     const { register, getValues} = useForm ();
 
-    const day1=('00' +  actualityDate.getUTCDate()).slice(-2) - actualityDate.getUTCDate() + 1
+    const day1=('00' +  actualityDate.getDate()).slice(-2) - actualityDate.getDate() + 1
 
     return(
         <Modal className='general-container' isOpen={openModalProfits}>
@@ -163,19 +163,19 @@ const ModalProfits = ({openModalProfits,closeForm,enviroment}) =>{
                    <div className='dates-container'>
                         <div className='date-container-from'>
                             <label>Desde:</label>
-                            <input className={errors.dateFromError ? "date-error" : "date"} type='date' defaultValue={actualityDate.getUTCFullYear() + '-' + ('00' + (actualityDate.getUTCMonth()+1)).slice(-2) + '-' + "0" + day1} {...register('dateFrom',{
+                            <input className={errors.dateFromError ? "date-error" : "date"} type='date' defaultValue={actualityDate.getFullYear() + '-' + ('00' + (actualityDate.getMonth()+1)).slice(-2) + '-' + "0" + day1} {...register('dateFrom',{
                                 shouldUnregister:true,
                                 onChange: (event) => changeDateFrom(event),
                                 setValueAs : value =>{
                                     if(value != null && value){
                                       
                                       let dateInput = new Date(value)
-                                    dateInput = dateInput.getUTCFullYear() + '-' +
-                                    ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
-                                    ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
-                                    ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
-                                    ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
-                                    ('00' + dateInput.getUTCSeconds()).slice(-2);
+                                    dateInput = dateInput.getFullYear() + '-' +
+                                    ('00' + (dateInput.getMonth()+1)).slice(-2) + '-' +
+                                    ('00' + dateInput.getDate()).slice(-2) + ' ' + 
+                                    ('00' + dateInput.getHours()).slice(-2) + ':' + 
+                                    ('00' + dateInput.getMinutes()).slice(-2) + ':' + 
+                                    ('00' + dateInput.getSeconds()).slice(-2);
                   
                                     return dateInput
                                     }else{
@@ -187,19 +187,19 @@ const ModalProfits = ({openModalProfits,closeForm,enviroment}) =>{
                         </div>
                         <div className='date-container-until'>
                             <label>Hasta:</label>
-                            <input className={errors.dateUntilError ? "date-error" : "date"} type='date' defaultValue={actualityDate.getUTCFullYear() + '-' + ('00' + (actualityDate.getUTCMonth()+1)).slice(-2) + '-' + ('00' +  actualityDate.getUTCDate()).slice(-2)} {...register('dateUntil',{
+                            <input className={errors.dateUntilError ? "date-error" : "date"} type='date' defaultValue={actualityDate.getFullYear() + '-' + ('00' + (actualityDate.getMonth()+1)).slice(-2) + '-' + ('00' +  actualityDate.getDate()).slice(-2)} {...register('dateUntil',{
                                 shouldUnregister:true,
                                 onChange: (event) => changeDateUntil(event),
                                 setValueAs : value =>{
                                     if(value != null && value){
                                       
                                       let dateInput = new Date(value)
-                                    dateInput = dateInput.getUTCFullYear() + '-' +
-                                    ('00' + (dateInput.getUTCMonth()+1)).slice(-2) + '-' +
-                                    ('00' + dateInput.getUTCDate()).slice(-2) + ' ' + 
-                                    ('00' + dateInput.getUTCHours()).slice(-2) + ':' + 
-                                    ('00' + dateInput.getUTCMinutes()).slice(-2) + ':' + 
-                                    ('00' + dateInput.getUTCSeconds()).slice(-2);
+                                    dateInput = dateInput.getFullYear() + '-' +
+                                    ('00' + (dateInput.getMonth()+1)).slice(-2) + '-' +
+                                    ('00' + dateInput.getDate()).slice(-2) + ' ' + 
+                                    ('00' + dateInput.getHours()).slice(-2) + ':' + 
+                                    ('00' + dateInput.getMinutes()).slice(-2) + ':' + 
+                                    ('00' + dateInput.getSeconds()).slice(-2);
                   
                                     return dateInput
                                     }else{

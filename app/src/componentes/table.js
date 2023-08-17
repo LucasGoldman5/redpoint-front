@@ -878,9 +878,6 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                                           if(column === "url"){
                                             return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><a href={item} >{item}</a></td>
                                           }
-                                          if(column === "cost"){
-                                            return <td className='td-cost' key={`${uniqueKeys.tbody}-${i}`}>${item}</td>
-                                          }
                                           if(column === "phone_number"){
                                             return <td className='td-number' key={`${uniqueKeys.tbody}-${i}`}>{item} <FontAwesomeIcon className='icon-chat' icon={faComments} onClick={()=>openWhatsApp(item)}/></td>
                                           }
@@ -920,9 +917,6 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                                               <span className="tooltiptext-failure">{item}</span> 
                                             </td>
                                           }
-                                          if(column === "amount"){
-                                            return <td className='td-amount' key={`${uniqueKeys.tbody}-${i}`}>${item}</td>
-                                          }
                                           if(column === "reception_date"){
                                             if(Object.values(element)[i] === null){
                                               return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
@@ -930,27 +924,7 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                                               return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
                                             }
                                           }
-                                          if(column === "delivery_date"){
-                                            if(Object.values(element)[i] === null){
-                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
-                                            }else{
-                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
-                                            }
-                                          }
-                                          if(column === "service_start_date"){
-                                            if(Object.values(element)[i] === null){
-                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
-                                            }else{
-                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
-                                            }
-                                          }
-                                          if(column === "service_end_date"){
-                                            if(Object.values(element)[i] === null){
-                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
-                                            }else{
-                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{new Date(item).getDate()+"/"+(new Date(item).getMonth()+1)+"/"+new Date(item).getFullYear()}</td>
-                                            }
-                                          }if(column === "last_connection"){
+                                          if(column === "last_connection"){
                                             if(Object.values(element)[i] === null || Object.values(element)[i] === ""){
                                               return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>--/--/--</td>
                                             }else{
@@ -959,13 +933,6 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                                           }
                                           if(column === "email" ){
                                             return <td className='td-a' key={`${uniqueKeys.tbody}-${i}`}><p className='td-p-link' onClick={()=>generateMailLink(item)} >{item}</p></td>
-                                          }
-                                          if(column === "has_security"){
-                                            if(Object.values(element)[i] === 1){
-                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>Si</p></td>
-                                            }else{
-                                              return <td className='td' key={`${uniqueKeys.tbody}-${i}`}><p>No</p></td>
-                                            }
                                           }
                                           if(column === "active"){
                                             if(Object.values(element)[i] == 1){
