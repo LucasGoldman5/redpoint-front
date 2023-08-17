@@ -235,6 +235,7 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
               <select className="form-select" type="text" name="phone_2" {...register('state_id',{ 
                 onChange: (Event) => addValues(Event)
               })}>
+                <option value={filteredStates().length >= 1 ? filteredStates()[0].id : 1}>Seleccionar</option>
                 {
                   filteredStates().map((state) => {
                     return <option className="option-modal" key={state.id} value={state.id}>{state.description}</option>
