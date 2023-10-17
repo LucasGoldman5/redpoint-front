@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../modales.css";
 import { Modal, ModalHeader, ModalBody } from 'reactstrap'; 
 import { useForm } from "react-hook-form";
@@ -6,6 +6,212 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass,faXmark } from '@fortawesome/free-solid-svg-icons';
 
 
+
+  class Pattern {
+
+    points = new Array();
+      selection = Array();
+      verticalCount = 0;
+      horizontalCount = 0;
+      mousePressed = false;
+      context = null;
+      canvas = null;
+      font = null;
+      metrics = null;
+      accumulatedIndex = "";
+
+      constructor(canvas, setPattern, horizontalCount = 3, verticalCount = 3, radio = 6, font = "10px Arial", accumulatedIndex = "") {
+          this.canvas = canvas;
+          this.setPattern = setPattern;
+          this.context = canvas.getContext("2d");
+          this.metrics = { height: canvas.height, width: canvas.width };
+          this.radio = radio;
+          this.font = font;
+          this.horizontalCount = horizontalCount;
+          this.verticalCount = verticalCount;
+          this.accumulatedIndex = accumulatedIndex;
+
+          for (let i = 0; i < verticalCount * horizontalCount; i++) {
+              this.points.push(new PatternPoint(this.context, this.getPointData(i), this.font))
+          }
+
+          this.registerEvents();
+          this.draw();
+      }
+      setSequence(sequence) {
+          sequence.split(",").forEach((i) => this.addPoint(this.points[i - 1]))
+          this.draw();
+      }
+      getSequence() {
+          const values = this.points.filter((p) => p.hasPosition()).sort((p1, p2) => p1.getPosition() - p2.getPosition());
+          return values.map((p) => p.getIndex() + 1).join(",");
+      }
+      draw() {
+          this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          this.selection.forEach((p, i, a) => {
+              if (i > 0) {
+                  p.drawConnection(a[i - 1]);
+              }
+          });
+          this.points.forEach((p) => p.draw());
+      }
+
+      updatePattern() {
+        this.selection.forEach((p, i, a) => {
+          if (i > 0) {
+            p.drawConnection(a[i - 1]);
+          }
+        });
+    
+        // Obtener la secuencia y actualizar el estado pattern
+        const newPattern = this.accumulatedIndex;
+        this.setPattern(newPattern); // Aquí usamos setPattern para actualizar el estado
+      }
+
+      getPointData(index) {
+          const margin = this.radio
+          const width = (this.metrics.width - (margin * 2)) / (this.horizontalCount - 1);
+          const height = (this.metrics.height - (margin * 2)) / (this.verticalCount - 1);
+          const horizontalIndex = index % this.horizontalCount;
+          const verticalIndex = Math.floor(index / this.horizontalCount);
+          const x = margin + (horizontalIndex * width);
+          const y = this.metrics.height - margin - (verticalIndex * height);
+
+          const newIndex = (verticalIndex * this.horizontalCount) + horizontalIndex + 1;
+          
+          return { x, y, radio: this.radio, index: newIndex };
+      }
+      registerEvents() {
+          this.canvas.addEventListener("mousedown", (e) => this.onMouseDownEvent(e));
+          this.canvas.addEventListener("mouseup", (e) => this.onMouseUpEvent(e));
+          this.canvas.addEventListener("mousemove", (e) => this.onMouseMoveEvent(e));
+      }
+      onMouseUpEvent(event) {
+        console.log(this.accumulatedIndex);
+          this.mousePressed = false;
+          this.draw();
+          this.updatePattern();
+      }
+      onMouseDownEvent(event) {
+        this.accumulatedIndex = ""
+          if (!this.mousePressed) {
+              this.mousePressed = true;
+              this.selection = new Array();
+              this.points.forEach((p) => p.setPosition(0));
+          }
+          const point = this.findAndAddPoint(event.offsetX, event.offsetY);
+
+          if (point) {
+              this.draw();
+          }
+      }
+      onMouseMoveEvent(event) {
+          if (this.mousePressed) {
+              const point = this.findAndAddPoint(event.offsetX, event.offsetY);
+
+              if (point) {
+                  this.draw();
+              }
+          }
+      }
+      addPoint(point) {
+          if (!point) {
+              return null;
+          }
+          if (this.selection.findIndex((p) => point.getIndex() == p.getIndex()) != -1) {
+              return null;
+          }
+          this.accumulatedIndex += point.data.index.toString();
+          this.selection.push(point);
+
+          point.setPosition(this.selection.length);
+
+          return point;
+      }
+      findPoint(x, y) {
+          return this.points.find((p) => p.inArea(x, y));
+      }
+      findAndAddPoint(x, y) {
+          return this.addPoint(this.findPoint(x, y));
+      }
+      getPattern() {
+          return this.selection.reduce((p, c, i, a) => p.push(c.position), []);
+      }
+  }
+
+  class PatternPoint {
+    // ... (código de PatternPoint)
+
+    // Resto del código de PatternPoint
+    font = "5px Arial";
+      data = { x: 0, y: 0, radio: 0, index: 0 };
+      position = 0;
+      context = null;
+      circle = null;
+
+      constructor(context, data, font) {
+          this.context = context;
+
+          this.data = data;
+          this.font = font;
+
+          this.createCircle();
+      }
+      createCircle() {
+          this.circle = new Path2D();
+          this.circle.arc(this.data.x, this.data.y, this.data.radio, 0, 2 * Math.PI);
+      }
+      draw() {
+          if (this.position) {
+              this.drawFilled();
+          } else {
+              this.drawEmpty();
+          }
+      }
+      drawEmpty() {
+          this.context.fillStyle = "black";
+          this.context.fill(this.circle);
+      }
+      drawFilled() {
+          this.context.fillStyle = "green";
+          this.context.fill(this.circle);
+
+          this.drawText();
+      }
+      drawText() {
+          this.context.fillStyle = "white";
+          this.context.textAlign = "center";
+          this.context.textBaseline = "middle";
+          this.context.font = this.font;
+
+          this.context.fillText(this.position.toString(), this.data.x, this.data.y);
+      }
+      drawConnection(point) {
+          this.context.lineWidth = this.data.radio * .5;
+          this.context.strokeStyle = "gray";
+
+          this.context.beginPath();
+          this.context.moveTo(this.data.x, this.data.y);
+          this.context.lineTo(point.data.x, point.data.y);
+          this.context.stroke();
+      }
+      setPosition(position) {
+          this.position = position;
+      }
+      getPosition() {
+          return this.position;
+      }
+      hasPosition() {
+          return this.position != 0;
+      }
+      getIndex() {
+          return this.data.index;
+      }
+      inArea(x, y) {
+          const inPath = this.context.isPointInPath(this.circle, x, y);
+          return inPath;
+      }
+  }
 const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, changeModal, errors, edit, closeForm, handleInputChange, selectCellphoneActive, selectCustomerActive, selectServiceActive, newCellphoneSelectedEdit, newCustomerSelectedEdit, newServiceSelectedEdit, filteredCellphones, filteredCustomers, filteredServices, activeInputSearch, dataStatesEdit, addEmail}) =>{
 
     const [checkboxOn, setCheckboxOn] = useState(false);
@@ -16,6 +222,28 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
     const [endDateSelected, setEndDateSelected] = useState(null);
     const [startDateSelected, setStartDateSelected] = useState(null);
     const [deliveryDateSelected, setDeliveryDateSelected] = useState(null);
+    const patternRef = useRef(null);
+    const [pattern, setPattern] = useState(null);
+
+    console.log();
+    useEffect(() => {
+      setTimeout(() => {
+        if (patternRef.current) {
+          console.log("hola");
+          const patternInstance = new Pattern(patternRef.current, setPattern);
+          setPattern(patternInstance);
+    
+          // Puedes setear la secuencia aquí, si es necesario
+           patternInstance.setSequence(itemToEdit.pattern.toString().split('').join(','));
+        }
+      },2000)
+    }, [openModalEdit]);
+
+    useEffect(() => {
+      if (typeof pattern === 'string') {
+        setValue('pattern', pattern);
+      }
+    }, [pattern]);
 
     const changeValue = (values) =>{
 
@@ -112,7 +340,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
 
     return(
         <Modal id="elementModal" isOpen={openModalEdit} onOpened={() => changeValue(getValues())} className="modal-reparations">
-        <ModalHeader style={{display: 'block', color: 'gold'}}>
+        <ModalHeader style={{display: 'block', color: 'rgb(0, 0, 255)'}}>
           <div className="div-title-modal">
             <h5  style={{float: 'center'}} >{`Editar Reparacion #${itemToEdit.id}`}</h5>
             <FontAwesomeIcon className="icon-close-modal"  onClick={closeForm} icon={faXmark} /> 
@@ -388,8 +616,14 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                     </div>
                     
                     <div className="div-inputs pattern">
-                    <label>Orden de patron:</label>
-                    <input className="form-control pattern" type="text"    defaultValue={itemToEdit.pattern}{...register('pattern')}></input>
+                    <label style={{marginBottom:"10px"}}>Orden de patron:</label>
+                    <canvas
+                          ref={patternRef}
+                          id="pattern"
+                          height="100px"
+                          width="100px"
+                          ></canvas>
+                    <input style={{position:"absolute", visibility:"hidden"}} type="text"    defaultValue={itemToEdit.pattern}{...register('pattern')}></input>
                     </div>
                  </div>
                 </> 

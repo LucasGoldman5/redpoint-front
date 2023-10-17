@@ -48,6 +48,11 @@
 .div-inputs.pattern label{
     margin: 0;
 }
+.div-inputs.pattern canvas{
+    width: 100px;
+    height: 100px;
+    margin: auto;
+}
 .div-inputs.pin{
     margin: 0;
     width: 30%;
@@ -73,6 +78,7 @@
     border: 1px solid black;
     width: 100%;
     margin: 0;
+    margin-top: 15px;
 }
 .form-control.pin{
     border: 1px solid black;
@@ -263,4 +269,66 @@
 }
 .h1-add:hover{
     color: rgb(0, 255, 0);
+}
+
+.information-pattern{
+    margin: 0;
+}
+.pattern{
+    margin: 0;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.pattern-container-reparation{
+    width: 100%;
+    height: max-content;
+    display: grid;
+    grid-template-columns: repeat(3, 2fr);
+    margin-bottom: 20px;
+    column-gap: 25px;
+    row-gap: 30px;
+    user-select: none;
+    padding: 5px;
+}
+.pattern-container-reparation-selected{
+    width: 100%;
+    height: max-content;
+    display: grid;
+    grid-template-columns: repeat(3, 2fr);
+    margin-bottom: 20px;
+    column-gap: 25px;
+    padding: 5px;
+    row-gap: 30px;
+    border: 1px solid rgb(1, 163, 1);
+    border-radius: 10px;
+    user-select: none;
+}
+.point-container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 10px;
+}
+.point-of-patterns{
+    font-weight: 900;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 8px;
+    height: 8px;
+}
+.icon-circle{
+    width: 10px;
+}
+.icon-circle-selected{
+    color: rgb(0, 207, 0);
+}
+.point-of-patterns-selected{
+    margin: 0;
+    color: rgb(0, 207, 0);
+    text-align: center;
+    font-weight: 900;
+    font-size: 20px;
 }
