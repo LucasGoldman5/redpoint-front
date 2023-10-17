@@ -13,7 +13,7 @@ const ModalEditCustomer = ({openModalEdit, onsubmit, itemToEdit, changeError, er
 
     return(
         <Modal isOpen={openModalEdit}>
-        <ModalHeader style={{display: 'block', color:'gold'}}>
+        <ModalHeader style={{display: 'block', color: 'rgb(0, 0, 255)'}}>
           <div className="div-title-modal">
             <h5  style={{float: 'center'}} >{`Editar Cliente #${itemToEdit.id}`}</h5>
             <FontAwesomeIcon className="icon-close-modal"  onClick={closeForm} icon={faXmark} /> 

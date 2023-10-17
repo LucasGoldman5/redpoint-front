@@ -268,7 +268,7 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
 
     const create = async (data) =>{
 
-    
+    console.log(data);
         if(data){
   
             try {
