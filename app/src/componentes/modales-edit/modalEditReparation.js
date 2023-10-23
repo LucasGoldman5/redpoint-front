@@ -234,7 +234,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
           setPattern(patternInstance);
     
           // Puedes setear la secuencia aquí, si es necesario
-           patternInstance.setSequence(itemToEdit.pattern.toString().split('').join(','));
+           patternInstance.setSequence(itemToEdit.pattern ? itemToEdit.pattern.toString().split('').join(',') : "");
         }
       },2000)
     }, [openModalEdit]);
@@ -598,11 +598,8 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
             </div>      
             
             <div className="div-inputs security">
-              <label>Tiene Seguridad:</label>
               {
-                (itemToEdit)
-                ?
-                (itemToEdit.has_security == 1 && firstCheckboxOn === false)
+                (itemToEdit.pattern || itemToEdit.pin)
                 ?
                 <>
                 <input style={{ marginLeft:"5px"}} type="checkbox" defaultChecked={itemToEdit.has_security == 1 ? true : false} defaultValue={itemToEdit.has_security == 1 ? 1 : 0}  {...register('has_security',{
@@ -626,36 +623,12 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                     <input style={{position:"absolute", visibility:"hidden"}} type="text"    defaultValue={itemToEdit.pattern}{...register('pattern')}></input>
                     </div>
                  </div>
-                </> 
+               </>
                 :
                 <>
-                <input style={{ marginLeft:"5px"}} type="checkbox" {...register('has_security',{
-                     onChange:()=> checkBoxChange()
-                    })}></input>
-                {
-                  checkboxOn === true
-                  ?
-                  <div className="div-security">
-                    
-                    <div className="div-inputs pin">
-                        <label>Pin:</label>
-                        <input className="form-control pin" type="text" defaultValue={itemToEdit.pin ? itemToEdit.pin : ""}  {...register('pin')}></input>
-                    </div>
-                    
-                    <div className="div-inputs pattern">
-                        <label>Orden de patron:</label>
-                        <input className="form-control pattern" type="text" defaultValue={itemToEdit.pattern ? itemToEdit.pattern : ""} {...register('pattern')}></input>
-                    </div>
-                 </div>
-                  :
-                  <>
                   <input style={{visibility:"hidden", position:"absolute"}} {...register('pin')}></input>
                   <input style={{visibility:"hidden", position:"absolute"}} {...register('pattern')}></input>
-                  </>
-                }    
                 </>
-                :
-                ""
               }     
             </div>            
                
