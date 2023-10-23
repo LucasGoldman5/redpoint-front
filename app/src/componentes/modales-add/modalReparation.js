@@ -213,7 +213,7 @@ class PatternPoint {
 }
 
 
-const ModalAddReparation = ({openModal, actionModal, create, errors, changeError, handleInputChange, activeInputSearch, newCustomerSelected, newCellphoneSelected, newServiceSelected, filteredCellphones, filteredCustomers, filteredServices,dataStates, closeForm, changeModal, addEmail, selectCellphoneActive, selectCustomerActive, selectServiceActive, checkbox, checkBoxTrue, ifChangeModal}) =>{
+const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeError, handleInputChange, activeInputSearch, newCustomerSelected, newCellphoneSelected, newServiceSelected, filteredCellphones, filteredCustomers, filteredServices,dataStates, closeForm, changeModal, addEmail, selectCellphoneActive, selectCustomerActive, selectServiceActive, checkbox, checkBoxTrue, ifChangeModal}) =>{
 
 
   const [selectCustomer, setSelectCustomer] = useState({})
@@ -234,7 +234,7 @@ const ModalAddReparation = ({openModal, actionModal, create, errors, changeError
       // Puedes setear la secuencia aquí, si es necesario
       // patternInstance.setSequence("8,4,9,1,6,5,2,3,7");
     }
-  }, [openModal]);
+  }, [openModalAdd]);
 
   const actualityDate = new Date()
 
@@ -362,11 +362,11 @@ const ModalAddReparation = ({openModal, actionModal, create, errors, changeError
     const { register, handleSubmit, getValues, setValue} = useForm ();
    
     return(
-        <Modal isOpen={openModal} className="modal-reparations" onOpened={()=>changueValue(getValues())}>
+        <Modal isOpen={openModalAdd} className="modal-reparations" onOpened={()=>changueValue(getValues())}>
         <ModalHeader style={{display: 'block'}}>
           <div className="div-title-modal">
             <h5  className="h5-modal-add" >Crear Reparacion</h5>
-            <FontAwesomeIcon className="icon-close-modal" onClick={()=>closeForm(openModal)} icon={faXmark} /> 
+            <FontAwesomeIcon className="icon-close-modal" onClick={()=>closeForm(openModalAdd)} icon={faXmark} /> 
           </div>
         </ModalHeader>
         <ModalBody className="contenedor-modal-body">
@@ -666,7 +666,7 @@ const ModalAddReparation = ({openModal, actionModal, create, errors, changeError
             
             <div className="contenedor-boton-modal-dentro-reparations">
               <button type="submit" className="btn btn-success"  >Crear</button>
-              <h1 className="btn btn-cancelar" onClick={()=>closeForm(openModal)}>Cancelar</h1>
+              <h1 className="btn btn-cancelar" onClick={()=>closeForm(openModalAdd)}>Cancelar</h1>
             </div>
           </form>
         </ModalBody>

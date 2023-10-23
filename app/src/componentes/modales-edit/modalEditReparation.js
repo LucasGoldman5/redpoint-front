@@ -626,8 +626,23 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                </>
                 :
                 <>
-                  <input style={{visibility:"hidden", position:"absolute"}} {...register('pin')}></input>
-                  <input style={{visibility:"hidden", position:"absolute"}} {...register('pattern')}></input>
+                  <div className="div-security">
+                    <div className="div-inputs pin">
+                    <label>Pin:</label>
+                    <input className="form-control pin" type="text" {...register('pin')}></input>
+                    </div>
+                    
+                    <div className="div-inputs pattern">
+                    <label style={{marginBottom:"10px"}}>Orden de patron:</label>
+                    <canvas
+                          ref={patternRef}
+                          id="pattern"
+                          height="100px"
+                          width="100px"
+                          ></canvas>
+                    <input style={{position:"absolute", visibility:"hidden"}} type="text" {...register('pattern')}></input>
+                    </div>
+                 </div>
                 </>
               }     
             </div>            
