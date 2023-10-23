@@ -33,7 +33,7 @@ const ModalAddCustomerIn = ({openModalAddCustomer, addCustomerInReparation, erro
             <br />
             <label >Documento</label>
             <input className={errorsApi.dni ? "form-control error" : "form-control"} type="text" name="name"  {...register('dni',{
-              onChange: () => changeErrorApi("dni",e.target.value),
+              onChange: (e) => changeErrorApi("dni",e.target.value),
               value:null,
               shouldUnregister:true
               })} />
