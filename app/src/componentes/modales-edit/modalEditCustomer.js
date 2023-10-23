@@ -29,6 +29,13 @@ const ModalEditCustomer = ({openModalEdit, onsubmit, itemToEdit, changeError, er
                })} />
               {errors.name? <p className="p-errores">{errors.name}</p>: ""}
             <br />
+            <label >Documento</label>
+            <input className={errors.dni ? "form-control error" : "form-control"} type="text" name="name" id="name"  defaultValue={itemToEdit ? itemToEdit.dni : ''} {...register('dni',{
+               shouldUnregister: true,
+               onChange: () => changeError("dni"),
+               })} />
+              {errors.dni? <p className="p-errores">{errors.dni}</p>: ""}
+            <br />
             <label >Email</label>
             <input className={errors.email ? "form-control error" : "form-control"} type="text" name="email" id="email"  defaultValue={itemToEdit ? itemToEdit.email : ''}{...register('email',{
                shouldUnregister: true,

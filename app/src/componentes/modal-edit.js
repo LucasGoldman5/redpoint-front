@@ -553,16 +553,19 @@ const ModalEdit = ({ getOpenModalEdit, selectRowOff, itemToEdit, edit, closeForm
       setErrors({description:null})
     }
     else if(entity === "name"){
-      setErrors({name:null, email:errors.email, phone_number:errors.phone_number})
+      setErrors({name:null, email:errors.email, phone_number:errors.phone_number, rol_id:errors.rol_id, dni: errors.dni})
+    }
+    else if(entity === "dni"){
+      setErrors({name:errors.name, email:errors.email, phone_number:errors.phone_number, rol_id:errors.rol_id, dni:null})
     }
     else if(entity === "email"){
-      setErrors({name:errors.name, email:"El email requiere este formato : xxxx@xx.xx", phone_number:errors.phone_number})
+      setErrors({name:errors.name, email:"El email requiere este formato : xxxx@xx.xx", phone_number:errors.phone_number, dni: errors.dni})
       if(value.includes("@" && ".")){
-        setErrors({name:errors.name, email:null, phone_number:errors.phone_number})
+        setErrors({name:errors.name, email:null, phone_number:errors.phone_number, rol_id:errors.rol_id})
       }
     }
     else if(entity === "phone_number"){
-      setErrors({name:errors.name, email:errors.email, phone_number:null})
+      setErrors({name:errors.name, email:errors.email, phone_number:null, rol_id:errors.rol_id, dni: errors.dni})
     }
   };
 
@@ -572,16 +575,19 @@ const ModalEdit = ({ getOpenModalEdit, selectRowOff, itemToEdit, edit, closeForm
       setErrorsApi({title:null})
     }
     else if(entity === "name"){
-      setErrorsApi({name:null, email:errorsApi.email, phone_number:errorsApi.phone_number})
+      setErrorsApi({name:null, email:errorsApi.email, phone_number:errorsApi.phone_number, dni:errorsApi.dni})
+    }
+    else if(entity === "dni"){
+      setErrorsApi({name:errorsApi.dni, email:errorsApi.email, phone_number:errorsApi.phone_number, dni:null})
     }
     else if(entity === "email"){
       setErrorsApi({name:errorsApi.name, email:"El email requiere este formato : xxxx@xx.xx", phone_number:errorsApi.phone_number})
       if(value.includes("@" && ".")){
-        setErrorsApi({name:errorsApi.name, email:null, phone_number:errorsApi.phone_number})
+        setErrorsApi({name:errorsApi.name, email:null, phone_number:errorsApi.phone_number, dni:errorsApi.dni})
       }
     }
     else if(entity === "phone_number"){
-      setErrorsApi({name:errorsApi.name, email:errorsApi.email, phone_number:null})
+      setErrorsApi({name:errorsApi.name, email:errorsApi.email, phone_number:null, dni:errorsApi.dni})
     }
     else if(entity === "model"){
       setErrorsApi({model:null, brand_id:errorsApi.brand_id})

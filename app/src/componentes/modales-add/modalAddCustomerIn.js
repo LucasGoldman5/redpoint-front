@@ -31,6 +31,14 @@ const ModalAddCustomerIn = ({openModalAddCustomer, addCustomerInReparation, erro
               })} />
               {errorsApi.name? <p className="p-errores">{errorsApi.name}</p> : ""} 
             <br />
+            <label >Documento</label>
+            <input className={errorsApi.dni ? "form-control error" : "form-control"} type="text" name="name"  {...register('dni',{
+              onChange: () => changeErrorApi("dni",e.target.value),
+              value:null,
+              shouldUnregister:true
+              })} />
+              {errorsApi.dni? <p className="p-errores">{errorsApi.dni}</p> : ""} 
+            <br />
             <label >Email</label>
             <input className={errorsApi.email ? "form-control error" : "form-control"} type="text" id="email2"{...register('email',{
               onChange: (e) => changeErrorApi("email",e.target.value),

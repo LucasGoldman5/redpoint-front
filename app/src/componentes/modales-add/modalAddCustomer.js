@@ -29,6 +29,14 @@ const ModalAddCustomer = ({openModalAdd, create, errors, changeError, closeForm}
               })} />
               {errors.name? <p className="p-errores">{errors.name}</p> : ""} 
             <br />
+            <label >Documento</label>
+            <input className={errors.dni ? "form-control error" : "form-control"} type="text" name="name"  {...register('dni',{
+              onChange: () => changeError("dni"),
+              value:null,
+              shouldUnregister:true
+              })} />
+              {errors.dni? <p className="p-errores">{errors.dni}</p> : ""} 
+            <br />
             <label >Email</label>
             <input className={errors.email ? "form-control error" : "form-control"} type="text" name="email" {...register('email',{
               onChange: (e) => changeError("email",e.target.value),

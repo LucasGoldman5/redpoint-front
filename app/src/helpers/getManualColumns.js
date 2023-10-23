@@ -42,6 +42,7 @@ export default async function getManualColumns (url,urlLocal){
             'name' : 'Cliente',
             'email' : 'Email',
             'phone_number':'Telefono' ,
+            'dni':'Documento',
         }
         localStorage.setItem("column",JSON.stringify(columns));
 
