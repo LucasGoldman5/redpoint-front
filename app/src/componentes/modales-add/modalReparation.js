@@ -227,7 +227,6 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
   const [pattern, setPattern] = useState(null);
 
   useEffect(() => {
-    console.log(openModalAdd);
     setTimeout(()=>{
       if (patternRef.current) {
         console.log("hola");
@@ -239,8 +238,6 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
       }
     },2000)
   }, [openModalAdd]);
-
-  console.log(pattern);
 
   const actualityDate = new Date()
 
@@ -659,7 +656,7 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
                     </div>
                     <div className="div-inputs pin">
                       <label>Pin</label>
-                      <input className="form-control pin" type="text"   required={changeSecurity == false && !typeof pattern === 'string'}{...register('pin',{
+                      <input className="form-control pin" type="text" {...register('pin',{
                         onChange: (event) => securityChange(event),
                         shouldUnregister: ifChangeModal ? false : true,
                         })} />
