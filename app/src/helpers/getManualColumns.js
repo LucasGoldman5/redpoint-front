@@ -7,6 +7,7 @@ export default async function getManualColumns (url,urlLocal){
     if(url === `${urlLocal.main}${urlLocal.dataTable}reparaciones`){
         const columns = 
         {
+          "id":"Orden",
           "customer":"Cliente",
           "service":"Servicio",
           "cellphone":"Celular",
@@ -15,7 +16,6 @@ export default async function getManualColumns (url,urlLocal){
           "state_id":"Estado",
           "failure":"Falla",
           "reception_date":"Recibido el",
-          "id":"Orden",
         }
         localStorage.setItem("column",JSON.stringify(columns));
 

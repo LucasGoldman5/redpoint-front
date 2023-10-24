@@ -895,7 +895,7 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                                             return <td className='td-number' key={`${uniqueKeys.tbody}-${i}`}>{item} <FontAwesomeIcon className='icon-chat' icon={faComments} onClick={()=>openWhatsApp(item)}/> </td>
                                           }
                                           if(column === "id"){
-                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>#{item}</td>
+                                            return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{item}</td>
                                           }
                                           if(column === "service"  && dataFilter()[index].service){
                                             
