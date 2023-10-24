@@ -602,9 +602,6 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                 (itemToEdit.pattern || itemToEdit.pin)
                 ?
                 <>
-                <input style={{ marginLeft:"5px"}} type="checkbox" defaultChecked={itemToEdit.has_security == 1 ? true : false} defaultValue={itemToEdit.has_security == 1 ? 1 : 0}  {...register('has_security',{
-                    onChange:()=> firstCheckBoxChange()
-                    })}></input>
                 
                  <div className="div-security">
                     <div className="div-inputs pin">

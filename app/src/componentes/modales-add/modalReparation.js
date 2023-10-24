@@ -227,7 +227,8 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
   const [pattern, setPattern] = useState(null);
 
   useEffect(() => {
-    if (patternRef.current) {
+    if (patternRef.current && openModalAdd === true) {
+      console.log("hola");
       const patternInstance = new Pattern(patternRef.current, setPattern);
       setPattern(patternInstance);
 
