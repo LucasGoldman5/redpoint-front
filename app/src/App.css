@@ -2,7 +2,6 @@
     width: 100%;
     flex-wrap: wrap;
     user-select: none;
-    height: 100vh;
     background: rgb(252, 215, 215);
 }
 .body{

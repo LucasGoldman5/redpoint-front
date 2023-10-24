@@ -227,14 +227,17 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
   const [pattern, setPattern] = useState(null);
 
   useEffect(() => {
-    if (patternRef.current && openModalAdd === true) {
-      console.log("hola");
-      const patternInstance = new Pattern(patternRef.current, setPattern);
-      setPattern(patternInstance);
-
-      // Puedes setear la secuencia aquí, si es necesario
-      // patternInstance.setSequence("8,4,9,1,6,5,2,3,7");
-    }
+    console.log(openModalAdd);
+    setTimeout(()=>{
+      if (patternRef.current) {
+        console.log("hola");
+        const patternInstance = new Pattern(patternRef.current, setPattern);
+        setPattern(patternInstance);
+  
+        // Puedes setear la secuencia aquí, si es necesario
+        // patternInstance.setSequence("8,4,9,1,6,5,2,3,7");
+      }
+    },2000)
   }, [openModalAdd]);
 
   const actualityDate = new Date()
