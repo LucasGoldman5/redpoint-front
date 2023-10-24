@@ -271,7 +271,7 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
     console.log(data);
         if(data){
 
-          if(data.pattern && data.pin && data.has_security){
+          if(data.has_security){
             console.log("y");
             if(data.pattern == "" && data.pin == "" && data.has_security === true){
               console.log("o");
