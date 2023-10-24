@@ -1,5 +1,5 @@
 .App{
-    height: max-content;
+    height: max-content !important; 
 }
 .general-container-print{
     width: 100%;
@@ -28,7 +28,7 @@
 }
 .information-div p{
     margin: 0;
-    font-size: 15px;
+    font-size: 12px;
 }
 .information-div.pattern{
     grid-column: 3;
