@@ -820,6 +820,7 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
       tdBodyDiv: uuidv4(),
     };
 
+    console.log(dataFilter());
 
       return(  
 
