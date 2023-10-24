@@ -657,7 +657,7 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
                     </div>
                     <div className="div-inputs pin">
                       <label>Pin</label>
-                      <input className="form-control pin" type="text"   required={changeSecurity == false}{...register('pin',{
+                      <input className="form-control pin" type="text"   required={changeSecurity == false && !pattern}{...register('pin',{
                         onChange: (event) => securityChange(event),
                         shouldUnregister: ifChangeModal ? false : true,
                         })} />
