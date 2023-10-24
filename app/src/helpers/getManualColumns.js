@@ -15,6 +15,7 @@ export default async function getManualColumns (url,urlLocal){
           "state_id":"Estado",
           "failure":"Falla",
           "reception_date":"Recibido el",
+          "id":"Orden",
         }
         localStorage.setItem("column",JSON.stringify(columns));
 
