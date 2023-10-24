@@ -274,7 +274,7 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
           if(data.pattern && data.pin && data.has_security){
             console.log("y");
             if(data.pattern == "" && data.pin == "" && data.has_security === true){
-              "o"
+              console.log("o");
               alert("Recuerde ingresar el 'Pin' o el 'Patron' de desbloqueo")
             }
           }
