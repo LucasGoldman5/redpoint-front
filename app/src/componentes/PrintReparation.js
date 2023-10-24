@@ -16,8 +16,7 @@ const PrintRearation =  () =>{
   } 
   let reparation = JSON.parse(getReparation());
 
-  console.log(reparation);
-    
+  
   if(reparation){
 
      const date = reparation.reception_date     ;

@@ -268,13 +268,10 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
 
     const create = async (data) =>{
 
-    console.log(data);
         if(data){
 
           if(data.has_security){
-            console.log("y");
             if(data.pattern == "" && data.pin == "" && data.has_security === true){
-              console.log("o");
               alert("Recuerde ingresar el 'Pin' o el 'Patron' de desbloqueo")
             }
           }
@@ -819,8 +816,6 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
       tdBodyNd: uuidv4(),
       tdBodyDiv: uuidv4(),
     };
-
-    console.log(dataFilter());
 
       return(  
 

@@ -87,7 +87,7 @@ import { faMagnifyingGlass,faXmark } from '@fortawesome/free-solid-svg-icons';
           this.canvas.addEventListener("mousemove", (e) => this.onMouseMoveEvent(e));
       }
       onMouseUpEvent(event) {
-        console.log(this.accumulatedIndex);
+        
           this.mousePressed = false;
           this.draw();
           this.updatePattern();
@@ -225,11 +225,11 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
     const patternRef = useRef(null);
     const [pattern, setPattern] = useState(null);
 
-    console.log();
+   
     useEffect(() => {
       setTimeout(() => {
         if (patternRef.current) {
-          console.log("hola");
+          
           const patternInstance = new Pattern(patternRef.current, setPattern);
           setPattern(patternInstance);
     

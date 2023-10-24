@@ -603,8 +603,6 @@ const ModalEdit = ({ getOpenModalEdit, selectRowOff, itemToEdit, edit, closeForm
   };
 
   const activeInputSearch = (data,entity) =>{
-
-    console.log(data);
     
     if(entity === "customer"){
       setSelectCustomerActive(!selectCustomerActive);

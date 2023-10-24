@@ -56,9 +56,6 @@ const GeneratePassword = ({enviroment}) =>{
 
   const onSubmit = async (data) =>{
 
-    console.log("hola");
-    
-    console.log(data);
     setLoading(true);
     
       if(data){

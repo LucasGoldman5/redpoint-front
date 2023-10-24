@@ -86,7 +86,7 @@ class Pattern {
         this.canvas.addEventListener("mousemove", (e) => this.onMouseMoveEvent(e));
     }
     onMouseUpEvent(event) {
-      console.log(this.accumulatedIndex);
+      
         this.mousePressed = false;
         this.draw();
         this.updatePattern();
@@ -229,7 +229,7 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
   useEffect(() => {
     setTimeout(()=>{
       if (patternRef.current) {
-        console.log("hola");
+       
         const patternInstance = new Pattern(patternRef.current, setPattern);
         setPattern(patternInstance);
   
@@ -348,7 +348,6 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
 
     const securityChange = (e) =>{
       const value = e.target.value;
-      console.log(value);
       if(value.length > 1){
         setChangeSecurity(true);
       }else{

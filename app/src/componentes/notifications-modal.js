@@ -117,8 +117,6 @@ const ModalNotification = ({openModalNoti,itemToEdit,closeForm,enviroment,select
    
     const selectNotification = (noti) =>{
 
-        console.log(noti);
-
         if(user.user.id == noti.user_id){
             setNotificationId(noti.id);
             setNotificationSelected(noti);
