@@ -650,14 +650,14 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
                           width="100px"
                         ></canvas>
                       </div>
-                      <input style={{position:"absolute", visibility:"hidden"}} type="text" required={changeSecurity == false} defaultValue={typeof pattern === 'string' ? pattern : ""} {...register('pattern',{
+                      <input style={{position:"absolute", visibility:"hidden"}} type="text"  defaultValue={typeof pattern === 'string' ? pattern : ""} {...register('pattern',{
                         onChange: (event) => securityChange(event),
                         shouldUnregister: ifChangeModal ? false : true,
                         })} />
                     </div>
                     <div className="div-inputs pin">
                       <label>Pin</label>
-                      <input className="form-control pin" type="text"   {...register('pin',{
+                      <input className="form-control pin" type="text"   required={changeSecurity == false}{...register('pin',{
                         onChange: (event) => securityChange(event),
                         shouldUnregister: ifChangeModal ? false : true,
                         })} />
