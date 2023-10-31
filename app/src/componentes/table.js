@@ -364,6 +364,7 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
 
     const closeModal = () =>{
           setOpenModal(false);
+          setErrors([]);
     }
     
     useEffect(() => {

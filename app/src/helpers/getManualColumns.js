@@ -59,15 +59,16 @@ export default async function getManualColumns (url,urlLocal){
     }else if(url.includes("report")){
         const columns = 
         {
-          "customer":"Cliente",
-          "service":"Servicio",
-          "cellphone":"Celular",
-          "number":"Numero",
-          "email":"Email",
-          "state_id":"Estado",
-          "failure":"Falla",
-          "reception_date":"Recibido el",
-        }
+            "id":"Orden",
+            "customer":"Cliente",
+            "service":"Servicio",
+            "service_order":"Orden Serv",
+            "cellphone":"Celular",
+            "number":"Numero",
+            "state_id":"Estado",
+            "failure":"Falla",
+            "reception_date":"Recibido el",
+          }
         localStorage.setItem("column",JSON.stringify(columns));
 
     }else if(url === `${urlLocal.main}${urlLocal.dataTable}usuarios`){
