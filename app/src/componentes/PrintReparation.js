@@ -321,21 +321,21 @@ const PrintRearation =  () =>{
         <hr></hr>
         <div className="general-container-print">
           <div className="repair-data-container">
-            <div className="header-container-print">
-              <div className="title-and-adress">
-                <h5  style={{ margin: '0px', fontSize: '14px'}}>Red Point</h5>
-                <p style={{ fontSize: '12px'}}>Julio A. Roca 269 - Villa General Belgrano | <b>3546406188</b></p>
-              </div>
-              <div className="information-div">
-                <p>Fecha</p>
-                <b>{formatDate()}</b>
-              </div>
-              <h2 style={{fontSize: '20px' }}>Cliente</h2>  
-            </div>
-            <div >
-              <div className="sub-container">
+            <div className="sub-container-registro">
+                <div className="title-and-adress">
+                  <h5  style={{ margin: '0px', fontSize: '14px'}}>Red Point</h5>
+                  <p style={{ fontSize: '12px'}}>Julio A. Roca 269 - Villa General Belgrano | <b>3546406188</b></p>
+                </div>
                 <div className="information-div">
-                  <p>Cliente</p>
+                  <p>Fecha</p>
+                  <b>{formatDate()}</b>
+                </div>
+                <div className="information-div">
+                  <h2 style={{fontSize: '20px' }}>Cliente</h2>
+                </div>  
+
+                <div className="information-div">
+                  <p>Registro</p>
                   <b>{reparation.customer ? reparation.customer.customer : ""}</b>
                 </div>
                 <div className="information-div">
@@ -346,9 +346,7 @@ const PrintRearation =  () =>{
                   <p>Orden</p>
                   <b>{reparation.id ? reparation.id : "..."}</b>
                 </div>
-              </div>
-              <br/>
-              <div className="sub-container">
+              
                 <div className="information-div">
                   <p>IMEI</p>
                   <b>{reparation.imei ? reparation.imei : "---"}</b>
@@ -366,18 +364,16 @@ const PrintRearation =  () =>{
                     width="100px"
                   ></canvas>
                 </div>
-              </div>
-              <br/>
-              <div className="sub-container-failure">
-                <div className="information-div">
-                  <p>Falla</p>
-                  <b>{reparation.failure ? reparation.failure : ""}</b>
+                
+                <div className="sub-container-failure">
+                  <div className="information-div">
+                    <p>Falla</p>
+                    <b>{reparation.failure ? reparation.failure : ""}</b>
+                  </div>
                 </div>
-              </div>
             </div>
           </div>
         </div>
-        <hr></hr>
       </>
     )
   }
