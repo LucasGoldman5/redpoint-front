@@ -20,9 +20,11 @@
     margin-bottom: 15px;
 }
 .sub-container-registro{
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     row-gap: 15px;
+    align-items: center;
 }
 .sub-container-failure{
     width: 100%;
@@ -37,6 +39,9 @@
     display: flex;
     flex-direction: column;
     align-items: start;
+}
+.chip-memoria{
+    display: flex;
 }
 .information-div p{
     margin: 0;
