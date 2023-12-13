@@ -1,25 +1,30 @@
 
 .general-container-print{
     width: 100%;
-    display: flex;
     padding-left: 10px;
     padding-right: 10px;
 }
 .header-container-print{
     display: flex;
+    width: 100%;
+    justify-content: space-between;
 }
 .title-and-adress{
     display: flex;
     flex-direction: column;
 }
+.sub-container{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.sub-container-failure{
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+}
 .repair-data-container{
     width: 85%;
-}
-.destiny{
-    width: 15%;
-}
-.destiny h2{
-    font-size: 25px;
 }
 
 .information-div{
