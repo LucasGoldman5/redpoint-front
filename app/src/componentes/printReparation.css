@@ -5,6 +5,13 @@
     padding-left: 10px;
     padding-right: 10px;
 }
+.header-container-print{
+    display: flex;
+}
+.title-and-adress{
+    display: flex;
+    flex-direction: column;
+}
 .repair-data-container{
     width: 85%;
 }
@@ -14,19 +21,19 @@
 .destiny h2{
     font-size: 25px;
 }
-.sub-container{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-row-gap: 20px;
-}
+
 .information-div{
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: start;
 }
 .information-div p{
     margin: 0;
     font-size: 12px;
+}
+.information-div b{
+    margin: 0;
+    font-size: 14px;
 }
 .information-div.pattern{
     grid-column: 3;
