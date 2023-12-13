@@ -17,6 +17,7 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+    margin-bottom: 15px;
 }
 .sub-container-failure{
     width: 100%;
@@ -24,7 +25,7 @@
     justify-content: flex-start;
 }
 .repair-data-container{
-    width: 85%;
+    width: 100%;
 }
 
 .information-div{
@@ -38,15 +39,11 @@
 }
 .information-div b{
     margin: 0;
-    font-size: 14px;
+    font-size: 13px;
 }
-.information-div.pattern{
-    grid-column: 3;
-}
+
 .pattern-container{
     width: 25%;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
 }
 .pattern-container p{
     margin: 0;
