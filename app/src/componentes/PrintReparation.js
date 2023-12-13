@@ -295,7 +295,7 @@ const PrintRearation =  () =>{
                 <b>{reparation.pin ? reparation.pin : "---"}</b>
               </div>
               <div className="chip-memoria">
-                <h5 style={{ fontSize: '14px', marginRight: '10px'}}>{"[Chip]"}</h5>
+                <h5 style={{ fontSize: '14px', marginRight: '20px'}}>{"[Chip]"}</h5>
                 <h5 style={{ fontSize: '14px' }}>{"[Memoria]"}</h5>
               </div>
               
@@ -327,7 +327,7 @@ const PrintRearation =  () =>{
                   <b>{formatDate()}</b>
                 </div>
                 <div className="information-div">
-                  <h2 style={{fontSize: '20px' }}>Cliente</h2>
+                  <h2 style={{fontSize: '20px' }}>Registro</h2>
                 </div>  
 
                 <div className="information-div">

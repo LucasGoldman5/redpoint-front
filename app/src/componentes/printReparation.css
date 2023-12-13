@@ -51,7 +51,9 @@
     margin: 0;
     font-size: 13px;
 }
-
+.information-div pattern{
+    margin: 0;
+}
 .pattern-container{
     width: 25%;
 }
