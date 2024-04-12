@@ -48,6 +48,8 @@ body{
     border-radius: 6px;
     padding-bottom: 10px;
     overflow: auto;
+    display: flex;
+    justify-content: space-between;
 }
 
 .contenedor-tabla{
@@ -56,7 +58,7 @@ body{
     border-radius: 10px;
     flex-direction: column;
     height: max-content;
-    overflow: scroll;
+    overflow-y: scroll;
     border-radius: 6px;
 }
 ::-webkit-scrollbar {
