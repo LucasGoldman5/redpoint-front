@@ -38,8 +38,7 @@ body{
 
 .general-container-table{
     width: 98%;
-    height: max-content;
-    max-height: 520px;
+    height: 85vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -57,7 +56,6 @@ body{
     border-radius: 10px;
     flex-direction: column;
     height: max-content;
-    max-height: 500px;
     overflow: scroll;
     border-radius: 6px;
 }
