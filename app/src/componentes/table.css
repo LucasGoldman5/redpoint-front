@@ -1,0 +1,489 @@
+body{
+    background: rgb(252, 215, 215);
+    z-index: 1;
+}
+
+.titulo-tabla h1{
+    text-align: center;
+    height: 30px;
+    margin-top: 20px;
+ }
+
+ .h1-no-results{
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 200px;
+ }
+
+.div-no-results{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+ .div-load-page{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+ }
+
+.contenedor-body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.general-container-table{
+    width: 98%;
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgb(255, 190, 212);
+    box-shadow: 5px 5px 5px  rgb(129, 82, 99);
+    border: 0.5px solid black;
+    border-radius: 6px;
+    padding-bottom: 10px;
+    overflow: auto;
+}
+
+.contenedor-tabla{
+    width: 100%;
+    display: flex;
+    border-radius: 10px;
+    flex-direction: column;
+    height: max-content;
+    overflow: scroll;
+    border-radius: 6px;
+}
+::-webkit-scrollbar {
+    width: 10px;
+    background-color: #d8d8d8;
+    border-radius: 20px;
+  }
+::-webkit-scrollbar-thumb {
+    background-color: #919191;
+    border-radius: 15px;
+    
+  }
+.contenedor-barra{
+    width: 40%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.barra-busqueda{
+    width: 100%;
+    border: 0px;
+    border-radius: 5px;
+    border: 1px solid  rgb(46, 46, 46);
+    background: transparent;
+    outline: none;
+    align-self: center;
+    margin-top: 10px;
+    padding-left: 20px;
+    box-shadow: 3px 3px 5px rgb(134, 95, 110);
+}
+.barra-busqueda::placeholder{
+    color: rgb(46, 46, 46);
+    font-weight: 700;
+}
+.contenedor-barra-botonagregar{
+    display: flex;
+    justify-content: space-between;
+    width: 98%;
+}
+.contenedor-barra-botonagregar-report{
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 5px;
+    width: 98%;
+}
+.ganancias-container{
+    width: 30%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.button-ganancias{
+    background: rgb(85, 85, 255);
+    height: 30px;
+    width: 70%;
+    font-weight: 700;
+    font-size: 15px;
+    border: 0.5px solid black;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.button-ganancias:hover{
+    background: blue;
+    border:1px solid white;
+    color: white;
+}
+/*Styles for Table*/
+
+
+.tabla{
+   width: 100%;
+}
+
+.thead{
+    background: rgb(0, 0, 0);
+    color: white;
+    font-size: 100%;
+    text-align: center;
+    position: sticky;
+    top: 0;
+}
+
+.th-columnas{
+    border-right: 1px solid rgb(255, 255, 255);
+    width: max-content;
+    padding-right: 5px;
+    padding-left: 5px;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+.ultima-columna{
+    width: 100px;
+}
+
+.tbody{
+    text-align: center;
+    font-size: 16px;
+    color: black;
+    
+}
+.tr-coincidence{
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+}
+
+.p-no-coincidence {
+    position: absolute;
+    margin-bottom: 0px;
+    width: 100%;
+    font-weight: 500;
+}
+.div-no-coincidence{
+    position: absolute;
+    margin-bottom: 0px;
+    width: 100%;
+}
+/*Table row style*/
+
+.tr-data{
+    border-bottom: 1px solid black;
+    cursor: pointer;
+    transition: all 0.3s;
+    background:rgb(255, 190, 212) ;
+    height: 32px;
+}
+
+.tr-data:nth-child(even){
+    background: rgb(221, 165, 184);
+}
+.tr-data:hover{
+    background: rgb(161, 119, 133);
+}
+
+.tr-active{
+    background: rgb(161, 119, 133);
+    border-bottom: 1px solid black;
+    height: 32px;
+}
+
+.no-match{
+    color: black;
+}
+
+.no-match-none{
+    display: none;
+}
+/*Table cell style*/
+
+.td{
+    padding-right: 5px;
+    padding-left: 5px;
+    white-space: nowrap;
+    text-align: start;
+}
+.td-active{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 39px;
+}
+.td-active button{
+    border: none;
+    color: rgb(247, 247, 247);
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 8px;
+    width: 85px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 25px;
+    margin-left: 8px;
+}
+
+.button-active{
+  background: rgba(255, 0, 0, 0.767);
+}
+.button-desactive{
+    background: rgba(0, 128, 0, 0.767);
+}
+.button-active:hover{
+    transition: all 0.2s;
+    background: rgb(150, 0, 0);
+  }
+  .button-desactive:hover{
+    transition: all 0.2s;
+    background: rgb(0, 92, 0);
+  }
+.p-active-yes{
+    margin: 0;
+    font-weight: 700;
+    color: green;
+}
+.p-active-no{
+    margin: 0;
+    font-weight: 700;
+    color: red;
+}
+
+.td-number{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 32px;
+    padding-right: 4px;
+}
+
+.icon-chat{
+    color: green;
+}
+.icon-chat:hover{
+    color: rgb(10, 201, 10);
+}
+
+.td p{
+    margin: 0;
+    text-align: start;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 5px;
+}
+
+.td-service  p{
+    margin: 0;
+    white-space: nowrap;
+    text-align: start;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 5px;
+}
+
+  
+  .tooltiptext-service {
+    visibility: hidden;
+    width: max-content;
+    background-color: #333;
+    bottom: 10%;  
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    font-size: 13px;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .td-service:hover .tooltiptext-service {
+    visibility: visible;
+    opacity: 1;
+    z-index: 1;
+  }
+
+  .tooltiptext-failure {
+    visibility: hidden;
+    right: 60%;
+    bottom: 10%;   
+    width: max-content;
+    background-color: #333;
+    color: #fff;
+    text-align: start;
+    font-size: 13px;
+    border-radius: 6px;
+    padding: 5px;
+    z-index: 1;
+    position: absolute;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .td-failure:hover .tooltiptext-failure {
+    visibility: visible;
+    opacity: 1;
+    z-index: 1;
+  }
+
+  .td-failure{
+    position: relative;
+  }
+
+  .td-service{
+    position: relative;
+    
+  }
+
+.td-failure p{
+    margin: 0;
+    white-space: nowrap;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 5px;
+}
+
+.td-a p{
+    padding-left: 5px;
+    padding-right: 5px;
+    margin: 0;
+    overflow: hidden;
+    display: inline-block;
+    color: red;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-decoration: none;
+    max-width: 200px;
+}
+
+.td-a a{
+    text-decoration: none;
+    color: red;
+}
+
+.td-a :hover{
+    color: rgb(90, 1, 1);
+    font-weight: 400;
+}
+
+.td-cost{
+    padding-left: 5px;
+    padding-right: 5px;
+    color: red;
+}
+.td-amount{
+    padding-left: 5px;
+    padding-right: 5px;
+    color: green;
+}
+
+.ultima-celda{
+    background: rgb(0, 0, 0);
+    justify-content: center;
+    align-items: center;
+    border-left: 1px solid white;
+    width: max-content;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.botones-acciones{
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+}
+.boton-accion{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+.div-service-complete-none{
+    display: none;
+    
+}
+.div-service-complete{
+    position: absolute;
+    z-index: 999;
+}
+
+/*Table buttons style*/
+
+.boton-eliminar{
+   background: rgb(87, 0, 0);
+   justify-content: center;
+   align-items: center;
+   color: white;
+   border: none;
+   cursor: pointer;
+   border-radius: 8px;
+   margin-left: 5px;
+}
+
+.boton-eliminar:hover{
+    background: rgb(255, 0, 0);
+}
+
+.icon-print{
+   width: 26px; 
+}
+.icon-print:hover{
+    color: white;
+}
+.boton-imprimir{
+    background: rgb(6, 0, 88);
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px; 
+    margin-left: 5px;
+}
+.boton-imprimir:hover{
+    background: rgb(17, 0, 255);
+    color: white;
+}
+
+.boton-service{
+    background: rgb(124, 124, 0);
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px; 
+}
+.boton-service:hover{
+    background: yellow;
+    color: white;
+}
+.boton-notificaciones{
+    background: rgb(0, 94, 0);
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px; 
+    margin-left: 5px;
+
+}
+.boton-notificaciones:hover{
+    background: rgb(11, 199, 11);
+    color: white;
+}
