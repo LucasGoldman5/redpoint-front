@@ -212,7 +212,7 @@ import { faMagnifyingGlass,faXmark } from '@fortawesome/free-solid-svg-icons';
           return inPath;
       }
   }
-const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, changeModal, errors, edit, closeForm, handleInputChange, selectCellphoneActive, selectCustomerActive, selectServiceActive, newCellphoneSelectedEdit, newCustomerSelectedEdit, newServiceSelectedEdit, filteredCellphones, filteredCustomers, filteredServices, activeInputSearch, dataStatesEdit, addEmail}) =>{
+const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, changeModal, errors, edit, closeForm, handleInputChange, selectCellphoneActive, selectCustomerActive, selectServiceActive, newCellphoneSelectedEdit, newCustomerSelectedEdit, newServiceSelectedEdit, filteredCellphones, filteredCustomers, filteredServices, activeInputSearch, dataStatesEdit, dataServiceStatusEdit, addEmail}) =>{
 
     const [checkboxOn, setCheckboxOn] = useState(false);
     const [firstCheckboxOn, setFirstCheckboxOn] = useState(false);
@@ -448,6 +448,22 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                   return <option className={itemToEdit ? itemToEdit.state_id.id ? itemToEdit.state_id.id == state.id ? "option-selected" :"option-modal" : "option-modal" : "option-modal"}  value={state.id} key={state.id}>{state.description}</option>
                 })}
               </select>
+            </div>
+
+            <div className="div-inputs">
+              <label>Estado del Servicio</label>
+              <select  className="form-select" defaultValue={itemToEdit ? itemToEdit.service_status_id? itemToEdit.service_status_id : null  : null}{...register("service_status_id",{
+              })}>
+                <option style={{visibility:"hidden", display:"none"}}  value={itemToEdit ?  itemToEdit.service_status_id ? itemToEdit.service_status_id.id : null : null}>{itemToEdit ? itemToEdit.service_status_id ? itemToEdit.service_status_id.description : "Seleccionar" : "Seleccionar"}</option>
+                {dataServiceStatusEdit.map((state) => {
+                  return <option className={itemToEdit ? itemToEdit.service_status_id ? itemToEdit.service_status_id.id == state.id ? "option-selected" :"option-modal" : "option-modal" : "option-modal"}  value={state.id} key={state.id}>{state.description}</option>
+                })}
+              </select>
+            </div>
+
+            <div className="div-inputs">
+              <label >Estado de envio al servicio</label>
+              <textarea className="form-control" type="text"  defaultValue={itemToEdit ? itemToEdit.device_status : ''}{...register('device_status')} />
             </div>
             
             <div className="div-inputs">

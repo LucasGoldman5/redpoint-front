@@ -26,6 +26,7 @@ const ModalAdd =({closeModal,actionModal, create,dataApi,errorsInTable,openModal
   const [dataServices, setDataServices] = useState([]);
   const [dataStates, setDataStates] = useState([]);
   const [dataRoles, setDataRoles] = useState([]);
+  const [dataServiceStatus, setDataServiceStatus] = useState([]);
   const [openModalAddBrand, setOpenModalAddBrand] = useState(false);
   const [openModalAddCustomer, setOpenModalAddCustomer] = useState(false);
   const [openModalAddCellphone, setOpenModalAddCellphone] = useState(false);
@@ -175,6 +176,26 @@ const ModalAdd =({closeModal,actionModal, create,dataApi,errorsInTable,openModal
                         },1000);
                     }else{                      
                         setDataServices(response);
+                    }  
+              };
+
+          }catch(error){
+            console.log(error)
+          }
+
+          try{
+                        
+            const config = await HelperBuildRequest("GET",null, "dataTable");
+            const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.serviceStatus}`, config);
+
+              if(request.status === 200){
+                  const response = await request.json();
+                    if(response.error){
+                        setTimeout(()=>{
+                          console.log(response.error);
+                        },1000);
+                    }else{                      
+                        setDataServiceStatus(response);
                     }  
               };
 
@@ -816,6 +837,7 @@ useEffect(() => {
            filteredCellphones={filteredCellphones}
            filteredServices={filteredServices}
            dataStates={dataStates}
+           dataServiceStatus={dataServiceStatus}
            addEmail={addEmail}
            changeError={changeError}
            closeForm={closeForm}

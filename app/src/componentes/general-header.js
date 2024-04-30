@@ -9,7 +9,7 @@ import ModalProfits from "./modal-profits";
 import { faM,faTruckRampBox, faHandHoldingDollar,faMobileRetro,faBuilding,faUsers,faScrewdriverWrench, faCaretDown, faCaretUp, faCircleXmark, faHourglassHalf, faCheck, faUserGear, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 
 
-const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,dataCellphones,dataServices,dataManagers,arrowIcon,seeNavReport,enviroment,urlTable} ) =>{
+const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,dataCellphones,dataServices,dataServiceStatus,dataManagers,arrowIcon,seeNavReport,enviroment,urlTable} ) =>{
 
   
 
@@ -18,21 +18,25 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
   const [liCellphoneHover, setLiCellphoneHover] = useState(false);
   const [liCustomerHover, setLiCustomerHover] = useState(false);
   const [liServiceHover, setLiServiceHover] = useState(false);
+  const [liServiceStateHover, setLiServiceStateHover] = useState(false);
   const [liManagerHover, setLiManagerHover] = useState(false);
   const [arrowBrand, setArrowBrand] = useState(true);
   const [arrowCellphone, setArrowCellphone] = useState(true);
   const [arrowCustomer, setArrowCustomer] = useState(true);
   const [arrowService, setArrowService] = useState(true);
   const [arrowManager, setArrowManager] = useState(true);
+  const [arrowServiceState, setArrowServiceState] = useState(true);
   const [chainBrands, setChainBrands] = useState("");
   const [chainCellphones, setChainCellphones] = useState("");
   const [chainCustomers, setChainCustomers] = useState("");
   const [chainServices, setChainServices] = useState("");
   const [chainManagers, setChainManagers] = useState("");
+  const [chainServiceStatus, setChainServiceStatus] = useState("")
   const [dropdown, setDropdown] = useState(true);
   const [seeingPBrand, setSeeingPBrand] = useState(false);
   const [seeingPCellphone, setSeeingPCellphone] = useState(false);
   const [seeingPService, setSeeingPService] = useState(false);
+  const [seeingPServiceStatus, setSeeingPServiceStatus] = useState(false);
   const [seeingPCustomer, setSeeingPCustomer] = useState(false);
   const [seeingPReparation, setSeeingPReparation] = useState(false);
   const [seeingPReparationPending, setSeeingPReparationPending] = useState(false);
@@ -160,7 +164,9 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
       setArrowCustomer(true);
       setArrowService(true);
       setArrowManager(true);
+      setArrowServiceState(true);
       setLiManagerHover(false);
+      setLiServiceStateHover(false);
       setLiCellphoneHover(false);
       setLiCustomerHover(false);
       setLiServiceHover(false);
@@ -171,7 +177,9 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
         setArrowCustomer(true);
         setArrowService(true);
         setArrowManager(true);
+        setArrowServiceState(true);
         setLiManagerHover(false);
+        setLiServiceStateHover(false);
         setLiBrandHover(false);
         setLiCustomerHover(false);
         setLiServiceHover(false);
@@ -182,7 +190,9 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
         setArrowCellphone(true);
         setArrowService(true);
         setArrowManager(true);
+        setArrowServiceState(true);
         setLiManagerHover(false);
+        setLiServiceStateHover(false);
         setLiBrandHover(false);
         setLiCellphoneHover(false);
         setLiServiceHover(false);
@@ -193,11 +203,27 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
         setArrowCustomer(true);
         setArrowCellphone(true);
         setArrowManager(true);
+        setArrowServiceState(true);
         setLiManagerHover(false);
+        setLiServiceStateHover(false);
         setLiBrandHover(false);
         setLiCustomerHover(false);
         setLiCellphoneHover(false);
     }
+    else if( e === "serviceStatus"){
+      setArrowServiceState(!arrowServiceState);
+      setLiServiceStateHover(!liServiceStateHover);
+      setArrowService(true);
+      setLiServiceHover(false);
+      setArrowBrand(true);
+      setArrowCustomer(true);
+      setArrowCellphone(true);
+      setArrowManager(true);
+      setLiManagerHover(false);
+      setLiBrandHover(false);
+      setLiCustomerHover(false);
+      setLiCellphoneHover(false);
+  }
     else if( e === "manager"){
       setArrowManager(!arrowManager);
       setLiManagerHover(!liManagerHover);
@@ -205,6 +231,8 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
       setArrowCustomer(true);
       setArrowCellphone(true);
       setArrowService(true);
+      setArrowServiceState(true);
+      setLiServiceStateHover(false);
       setLiServiceHover(false);
       setLiBrandHover(false);
       setLiCustomerHover(false);
@@ -225,7 +253,10 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
     }else if(e === "service"){
         setArrowService(!arrowService);
         setLiServiceHover(!liServiceHover);  
-    }else if(e === "manager"){
+    }else if(e === "serviceStatus"){
+      setArrowServiceState(!arrowServiceState);
+      setLiServiceStateHover(!liServiceStateHover);  
+  }else if(e === "manager"){
       setArrowManager(!arrowManager);
       setLiManagerHover(!liManagerHover);  
     };
@@ -299,6 +330,22 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
     return filteredDataServices;
   };
 
+  const dataServicesStatusFilter = (e) => {
+    let filteredDataServicesStatus = dataServiceStatus;
+  
+    if (e) {
+      setChainServiceStatus(e.target.value.toUpperCase());
+    }
+  
+    if (chainServiceStatus.length >= 1) {
+      filteredDataServicesStatus = filteredDataServicesStatus.filter((service) =>
+        service.description.toUpperCase().includes(chainServiceStatus)
+      );
+    }
+  
+    return filteredDataServicesStatus;
+  };
+
   const dataManagersFilter = (e) => {
     let filteredDataManagers = dataManagers;
   
@@ -357,6 +404,8 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
       return "R|Filtrada|Usuario"
     }else if(location.includes("imprimir")){
       return "Imprimir"
+    }else if(location.includes("reparaciones-por-estado-de-servicio")){
+      return "R|Filtrada|Servicio|Estado"
     }
   }
   const originUrl = window.location.href
@@ -590,6 +639,34 @@ const GeneralHeader =  ( {changeUrl,openNavReports,dataBrands,dataCustomers,data
                             loadElements
                             ?
                             <p>Cargando Servicios...</p>
+                            :
+                            <p>No hay resultados</p>
+                          }
+                      </div>
+                </div>
+                <div className="div-li-hover">
+                  <li onMouseEnter={() => mouseOverLi("serviceStatus")} className={(window.location.href.includes("por-estado-de-servicio")) ? "li-nav-report" : "li-nav-report-none"}>Estado de Servicio <FontAwesomeIcon icon={arrowServiceState ? faCaretDown : faCaretUp} /></li>
+                  </div>
+                <div className={liServiceStateHover ? "container-reparations-filter" : "container-reparations-filter-none"}>
+                  <div className="header-nav-reparations">
+                          <div className="div-input-search">
+                            <input className="search-reparations-input" type="search" placeholder="buscar..." onChange={(e) => dataServicesStatusFilter(e)}></input>
+                          </div>
+                          <div className="div-x">
+                            <FontAwesomeIcon onClick={() => closeGridFilter("serviceStatus")} icon={faCircleXmark}/>
+                          </div>
+                      </div>
+                      <div className="div-container-map-filter">
+                          {
+                            (dataServicesStatusFilter().length > 0) ? dataServicesStatusFilter().map((status)=>{
+                                return(
+                                <Link className="p-entity-filter" key={status.id} onClick={() => changeUrl(`${enviroment.entities.reparationsServiceStatus}`,status.id)} to={`${enviroment.selfUrl.dataTable}${enviroment.entities.reparationsServiceStatus}/${status.id}`}>{status.description}</Link>
+                                )
+                            })
+                            :
+                            loadElements
+                            ?
+                            <p>Cargando Estado de Servicios...</p>
                             :
                             <p>No hay resultados</p>
                           }

@@ -29,12 +29,14 @@ import { Helmet } from 'react-helmet';
   const [dataCustomers, setDataCustomers] = useState([]);
   const [dataCellphones, setDataCellPhones] = useState([]);
   const [dataServices, setDataServices] = useState([]);
+  const [dataServiceStatus, setDataServiceStatus] = useState([]);
   const [dataManagers, setDataManagers] = useState([]);
   const [dataTotal, setDataTotal] = useState([]);
   const [seeNavReport, setSeeNavReport] = useState(false);
   const [arrowIcon, setArrowIcon] = useState(true);
   const [error404, setError404] = useState(false)
   const [dataEnviroment, setDataEnviromet] = useState({});
+  const [currentUrl, setCurrentUrl]= useState(window.location.href.split("/").slice(4, -1).join("/"));
 
   const setEnviroment = async () =>{
     setDataEnviromet( await getEnviroment())
@@ -167,6 +169,31 @@ import { Helmet } from 'react-helmet';
         console.log(error)
       }
     }
+    if(dataServiceStatus.length < 1){
+      try{
+                    
+        const config = await HelperBuildRequest("GET",null, "dataTable");
+        const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.serviceStatus}`, config);
+
+          if(request.status === 200){
+              const response = await request.json();
+                if(response.error){
+                    setTimeout(()=>{
+                      console.log(response.error);
+                    },1000);
+                }else{                      
+                    setDataServiceStatus(response);
+                    setDataTotal((prevDataTotal) => [
+                      ...prevDataTotal,
+                      { serviceStatus: response },
+                    ]);
+                }  
+          };
+
+      }catch(error){
+        console.log(error)
+      }
+    }
     if(dataManagers.length < 1){
       try{
                     
@@ -196,6 +223,7 @@ import { Helmet } from 'react-helmet';
 
 
   const changeUrl = (url,id) =>{
+    setCurrentUrl(url)
     if(id){
       setSeeNavReport(false)
       return setUrlTable(`${url}/${id}`)
@@ -270,6 +298,7 @@ import { Helmet } from 'react-helmet';
            dataBrands={dataBrands}
            dataCustomers={dataCustomers}
            dataServices={dataServices}
+           dataServiceStatus={dataServiceStatus}
            dataCellphones={dataCellphones}
            dataManagers={dataManagers}
            enviroment={dataEnviroment}>
@@ -279,6 +308,7 @@ import { Helmet } from 'react-helmet';
                   <Route path={`/${dataEnviroment.selfUrl.dataTable}${urlTable}`} element={
                   <Table 
                   urlTable={urlTable} 
+                  currentUrl={currentUrl}
                   enviroment={dataEnviroment} 
                   dataTotal={dataTotal}
                   pagePrint={pagePrint}

@@ -1,6 +1,6 @@
 {
     "apiURL": {
-        "url": "http://localhost:8000/api/",
+        "url": "http://127.0.0.1:8000/api/",
         "selectBox": "select-box/",
         "generatePassword": "generate-password/",
         "getUser": "get-user/"
@@ -20,16 +20,20 @@
         "roles": "roles",
         "status": "status",
         "reparations": "reparations",
+        "serviceStatus":"service-status",
+        "byServiceStatus":"report/reparations-by-service-status/",
         "pending":"reporte/reparaciones-pendientes",
         "finished":"reporte/reparaciones-para-entregar",
         "delivered":"reporte/reparaciones-entregadas",
         "reparationsBrand": "reporte/reparaciones-por-marca",
         "reparationsCustomer": "reporte/reparaciones-por-cliente",
         "reparationsService": "reporte/reparaciones-por-servicio",
+        "reparationsServiceStatus":"reporte/reparaciones-por-estado-de-servicio",
         "reparationsManager": "reporte/reparaciones-por-manager",
         "reparationsCellphone": "reporte/reparaciones-por-celular",
         "reparationByDate":"/reparations-service-by-date/",
         "users": "users",
+        "quote":"reporte/reparaciones-a-presupuestar",
         "recovery": "recovery-password/"
     },
     "selfUrl":{
@@ -56,6 +60,7 @@
             "report/reparations-by-brand/": "reporte/reparaciones-por-marca",
             "report/reparations-by-customer/": "reporte/reparaciones-por-cliente",
             "report/reparations-by-service/": "reporte/reparaciones-por-servicio",
+            "report/reparations-by-service-status/": "reporte/reparaciones-por-estado-de-servicio",
             "report/reparations-by-cellphone/": "reporte/reparaciones-por-celular",
             "report/reparations-by-manager/": "reporte/reparaciones-por-manager",
             "users":"usuarios"

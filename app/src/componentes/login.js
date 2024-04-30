@@ -37,7 +37,7 @@ const Login = ({enviroment}) =>{
 
             const config = await HelperBuildRequest("POST", data, 'login');
             const request = await fetch(`${enviroment.apiURL.url}login`, config);
-
+            console.log(request);
             if(request.status === 200){
                 const response = await request.json();
                   if(response.error){

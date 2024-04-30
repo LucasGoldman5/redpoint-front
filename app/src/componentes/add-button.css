@@ -6,9 +6,9 @@
     align-items: center;
 }
 .container-button-no-results{
-    width: 50%;
+    width: 30%;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     height: 50px;
 }
@@ -22,10 +22,11 @@
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s;
+    color: white;
 }
 
 .boton:hover{
     background: rgb(0, 146, 0);
-    border:1px solid white;
+    border: none;
     color: white;
 }

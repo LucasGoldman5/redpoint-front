@@ -77,6 +77,28 @@ body{
     justify-content: flex-end;
 }
 
+.contenedor-barra-select{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+.contenedor-barra-select .barra-busqueda{
+    width: 40%;
+}
+.contenedor-barra-select .select-status{
+    width: 20%;
+    height: 30px;
+    border-radius: 5px;
+    background: transparent;
+    box-shadow: 3px 3px 5px rgb(134, 95, 110);
+    border: 1px solid  rgb(46, 46, 46);
+    outline: none;
+}
+.contenedor-barra-select .select-status:hover{
+    cursor: pointer;
+}
+
 .barra-busqueda{
     width: 100%;
     border: 0px;
@@ -90,7 +112,7 @@ body{
     box-shadow: 3px 3px 5px rgb(134, 95, 110);
 }
 .barra-busqueda::placeholder{
-    color: rgb(46, 46, 46);
+    color: rgb(97, 97, 97);
     font-weight: 700;
 }
 .contenedor-barra-botonagregar{
@@ -120,11 +142,12 @@ body{
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s;
+    color: white;
 }
 .button-ganancias:hover{
     background: blue;
     border:1px solid white;
-    color: white;
+    color: black;
 }
 /*Styles for Table*/
 

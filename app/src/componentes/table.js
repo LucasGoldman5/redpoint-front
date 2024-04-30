@@ -17,10 +17,14 @@ import Error404 from './page404';
 import ModalNotification from './notifications-modal';
 
 
-function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
+function Table ({urlTable, enviroment, dataTotal,pagePrint,currentUrl}) {
 
 
     const [dataApi, setDataApi] = useState([]);
+    const [dataServiceStatus, setDataServiceStatus] = useState([]);
+    const [dataFiltered, setDataFiltered] = useState(false);
+    const [oldData, setOldData] = useState([]);
+    const [requestApi, setrequestApi] = useState(null);
     const [dataColumns, setDataColumns] = useState([]);
     const [superAdmin, setSuperAdmin] = useState(null);
     const [openModal, setOpenModal] = useState(false);
@@ -180,19 +184,22 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
       }
      
       const key = Object.keys(enviroment.selfUrl.localEntities).find(key => enviroment.selfUrl.localEntities[key] === newUrl());
+
         if(id){
           return  enviroment.apiURL.url+key+id
         }else{
           return  enviroment.apiURL.url + key;
         }
+
+        
     }
+
 
     const urlLocal = () =>{
       return enviroment.selfUrl
     }
   
     const getData = async () => {
-
       setItemToEdit(null)
       const entiti = () =>{
         const result = window.location.href.split("-").slice(2).join("/");
@@ -229,7 +236,8 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
               },1000);
             }else{
               const data = await response
-              setDataApi(data)
+              setDataApi(data);
+              setOldData(data);
               setSpinnerLoadTable(false);
               setRowId(null);
             }
@@ -253,6 +261,32 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
           setNotFound(true);
          },500)
       }   
+
+      if(currentUrl === "reporte/reparaciones-por-servicio"){
+
+        const apiURL = enviroment.apiURL;
+        const entitiesUrl = enviroment.entities;
+
+        try{
+                        
+          const config = await HelperBuildRequest("GET",null, "dataTable");
+          const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.serviceStatus}`, config);
+
+            if(request.status === 200){
+                const response = await request.json();
+                  if(response.error){
+                      setTimeout(()=>{
+                        console.log(response.error);
+                      },1000);
+                  }else{                      
+                      setDataServiceStatus(response);
+                  }  
+            };
+
+        }catch(error){
+          console.log(error)
+        }
+      }
     };
 
 
@@ -267,12 +301,18 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
   }
 
     const create = async (data) =>{
-
+      
         if(data){
 
           if(data.has_security){
             if(data.pattern == "" && data.pin == "" && data.has_security === true){
               alert("Recuerde ingresar el 'Pin' o el 'Patron' de desbloqueo")
+            }
+          }
+
+          if(data.service_status_id){
+            if(data.service_status_id === "Seleccionar"){
+              data.service_status_id = null;
             }
           }
   
@@ -423,6 +463,13 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
               }
             }else{
               return data
+            }
+          }
+
+
+          if(data.service_status_id){
+            if(data.service_status_id === "Seleccionar"){
+              data.service_status_id = null;
             }
           }
   
@@ -746,61 +793,142 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
       window.open(link, '_blank');
     };
 
+    const filterServices = async (e) => {
+      const idService = window.location.href.split("/").slice(6).join('/');
+      const idStatus = e;
+      
+      const apiURL = enviroment.apiURL;
+      const entitiesUrl = enviroment.entities;
+
+        try{
+                        
+          const config = await HelperBuildRequest("GET",null, "dataTable");
+          const request = await fetch(`${apiURL.url}${entitiesUrl.byServiceStatus}${idStatus}/${idService}?search=`, config);
+
+            if(request.status === 200){
+                const response = await request.json();
+                  if(response.error){
+                      setTimeout(()=>{
+                        console.log(response.error);
+                      },1000);
+                  }else{      
+                    console.log(response);                
+                      setDataApi(response);
+                  }  
+            };
+
+        }catch(error){
+          console.log(error)
+        }
+
+    }
+
 
     if(dataApi.data && dataColumns && notfound === false){
 
-
-      const dataFilter = (e) => {
-        let filteredData = dataApi.data;
       
+      const apiURL = urlApi()
+      const dataFilter = async (e) => {
+      
+        setDataFiltered(true);
         if (e) {
-          setChain(e.target.value.toLowerCase());
-        }
-      
-        if (chain.length >= 1) {
-          filteredData = filteredData.filter((fact) => {
-         
-            for (let property in fact) {
-                const value = fact[property];
-                if (value && typeof value == 'string') {
-                  if (value.toLowerCase().includes(chain)) {
-                    return true;
-                  }
-                }
-                if (value && typeof value == 'number') {
-                  if (value.toString().includes(chain)) {
-                    return true;
-                  }
-                }
-                if (value && typeof value === "object" && value !== null) {
-                   if(value.model != undefined){
-                   if(value.model.toLowerCase().includes(chain)){
-                    return true
-                   }
-                  }
-                  if(value.customer != undefined && typeof value.customer !== "object"){
-                    if(value.customer.toLowerCase().includes(chain)){
-                     return true
+          let string = "";
+          if(e.target.value.toLowerCase()){
+            string = `${e.target.value.toLowerCase()}`;
+          }else{
+            string = "";
+          }
+          
+          const urlFilter = apiURL + `?search=${string}*`;
+          
+              if(string.length >= 3){
+                setSpinnerLoadTable(true);
+              
+                    try {
+                      const config = await HelperBuildRequest('GET', null, 'dataTable');
+                      const apiURL = urlFilter;
+                      const request = await fetch(apiURL, config);
+                
+                      if (request.status === 200) {
+                        const response = await request.json();
+                        if (response.error) {
+                          setTimeout(() => {
+                            console.log(response.error);
+                          }, 1000);
+                        } else {
+                    
+                          setDataApi(response)
+                          setSpinnerLoadTable(false);
+                          setrequestApi(false);
+                          setDataFiltered(null);
+                           // Asigna el valor de data directamente a filteredData
+                        }
+                      }
+                    } catch (error) {
+                      console.log(error);
+                      setSpinnerLoadTable(false)
+                      setrequestApi(null);
+                      setDataFiltered(null);
+                      setTimeout(() => {
+                        setNotFound(true);
+                      }, 500);
                     }
-                   }
-                   if(value.description != undefined && typeof value.description !== "object"){
-                    if(value.description.toLowerCase().includes(chain)){
-                     return true
-                    }
-                   }
-                  if(value.service != undefined && typeof value.service !== "object"){
-                    if(value.service.toLowerCase().includes(chain)){
-                     return true
-                    }
-                   }
-                }
                   
+                
+                }else{
+                    setDataApi(oldData)  
                 }
+          
+          
             
-            return false;
-          });
+            
+            
         }
-        return filteredData;
+        
+      
+        // if (chain.length >= 1) {
+        //   filteredData = filteredData.filter((fact) => {
+         
+        //     for (let property in fact) {
+        //         const value = fact[property];
+        //         if (value && typeof value == 'string') {
+        //           if (value.toLowerCase().includes(chain)) {
+        //             return true;
+        //           }
+        //         }
+        //         if (value && typeof value == 'number') {
+        //           if (value.toString().includes(chain)) {
+        //             return true;
+        //           }
+        //         }
+        //         if (value && typeof value === "object" && value !== null) {
+        //            if(value.model != undefined){
+        //            if(value.model.toLowerCase().includes(chain)){
+        //             return true
+        //            }
+        //           }
+        //           if(value.customer != undefined && typeof value.customer !== "object"){
+        //             if(value.customer.toLowerCase().includes(chain)){
+        //              return true
+        //             }
+        //            }
+        //            if(value.description != undefined && typeof value.description !== "object"){
+        //             if(value.description.toLowerCase().includes(chain)){
+        //              return true
+        //             }
+        //            }
+        //           if(value.service != undefined && typeof value.service !== "object"){
+        //             if(value.service.toLowerCase().includes(chain)){
+        //              return true
+        //             }
+        //            }
+        //         }
+                  
+        //         }
+            
+        //     return false;
+        //   });
+        // }
       };
 
     const uniqueKeys = {
@@ -823,8 +951,7 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
         <>
       
           {
-            (dataApi.data.length >= 1)
-            ?
+            
             (spinnerLoadPage === true)
             ?
             <div className='div-load-page'><PulseLoader color="#d41c1c" size={20}></PulseLoader></div>
@@ -842,12 +969,26 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                       :
                       <AddButton onClick={()=>openModalAdd()} dataApi={dataApi}></AddButton>
                     }
-                      <div className='contenedor-barra'>
-                        <input type='text' placeholder={`buscar...`} className='barra-busqueda' onChange={(e) => dataFilter(e)}/>
+                      <div className={currentUrl === "reporte/reparaciones-por-servicio" ? 'contenedor-barra-select' : 'contenedor-barra'}>
+                        <input type='text' placeholder={`Busca a partir de 3 caracteres...`} className='barra-busqueda' onChange={(e) => dataFilter(e)}/>
+                        {
+                          (currentUrl === "reporte/reparaciones-por-servicio" && dataServiceStatus.length > 0)
+                          ?
+                          <select className='select-status' onChange={(event) => filterServices(event.target.value)}>
+                            <option>Seleccionar Estado..</option>
+                            {
+                              dataServiceStatus.map((status) => {
+                                return <option key={status.id} value={status.id}>{status.description}</option>
+                              })
+                            }
+                          </select>
+                          :
+                          null
+                        }
                       </div>      
                   </div>
                   {
-                    (dataApi.columns)
+                    (dataApi.data)
                     ?
                     <>
                       <div className='general-container-table' id='myDiv'>
@@ -867,14 +1008,17 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                                 }
                               </tr>
                             </thead>
+                            
                             <tbody className='tbody' key={uniqueKeys.tbody}>
                               {
                               
-                              (dataFilter().length > 0 && spinnerLoadTable === false)
+                              (spinnerLoadTable === false)
                               ?
-                             
-                              dataFilter().map((element,index) =>
+                              (dataApi.data.length > 0)
+                              ?
+                              dataApi.data.map((element,index) =>
                               
+                                    
                                     <tr onClick={(event) => OpenModalEdit(element,event)}  id={index} className={rowId ? rowId == element.id ? "tr-active" : "tr-data" : "tr-data"} key={`${uniqueKeys.trBody}-${index}`}>
                                     {Object.keys(dataColumns).map((column)=>{
                                       for(let i = 0 ; i < Object.keys(element).length ; i++){
@@ -893,7 +1037,7 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                                           if(column === "id"){
                                             return <td className='td' key={`${uniqueKeys.tbody}-${i}`}>{item}</td>
                                           }
-                                          if(column === "service"  && dataFilter()[index].service){
+                                          if(column === "service"  && dataApi.data[index].service){
                                             
                                             return <td className='td-service'  key={`${uniqueKeys.tbody}-${i}`}>
                                               <p>{item.service ? item.service : ""}</p>
@@ -904,11 +1048,15 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                                             
                                             return <td className='td'  key={`${uniqueKeys.tbody}-${i}`}><p>{item.description}</p></td>
                                           }
-                                          if(column === "cellphone" && dataFilter()[index].cellphone){
+                                          if(column === "service_status_id"){
+                                            
+                                            return <td className='td'  key={`${uniqueKeys.tbody}-${i}`}><p>{item.description}</p></td>
+                                          }
+                                          if(column === "cellphone" && dataApi.data[index].cellphone){
                                             
                                             return <td className='td'  key={`${uniqueKeys.tbody}-${i}`}><p>{item.model ? item.model : ""}</p></td>
                                           }
-                                          if(column === "customer"  && dataFilter()[index].customer){  
+                                          if(column === "customer"  && dataApi.data[index].customer){  
                                             return <td className='td'  key={`${uniqueKeys.tbody}-${i}`}><p>{item.customer ? item.customer : ""}</p></td>
                                           }
                                           if(column === "rol_id"){         
@@ -992,13 +1140,13 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                                     </td>
                                     }
                                   </tr>
+                                  
+
                               )
                               :
-                              (spinnerLoadTable === true)
-                              ?
-                              <tr className='tr-coincidence'><td className='div-no-coincidence'><PulseLoader color="#d41c1c" size={16}></PulseLoader></td></tr>
+                                <tr className='tr-coincidence'><td className='p-no-coincidence'>No hay resultados</td></tr>
                               :
-                              <tr className='tr-coincidence'><td className='p-no-coincidence'>No hay coincidencias</td></tr>
+                              <tr className='tr-coincidence'><td className='div-no-coincidence'><PulseLoader color="#d41c1c" size={16}></PulseLoader></td></tr>
                               }
                             </tbody>
                           </table>
@@ -1065,40 +1213,10 @@ function Table  ({urlTable, enviroment, dataTotal,pagePrint}) {
                 </div>
               </div>
             </>
-              :
-              (spinnerLoadPage === true)
-              ?
-              <div className='div-load-page'><PulseLoader color="#d41c1c" size={20}></PulseLoader></div>
-              :
-            <>
-              <div className='div-no-results'>
               
-                <h1 className='h1-no-results'>No hay {titleTable()}</h1>
-                <ModalAdd
-                    create={create}
-                    closeModal={closeModal}
-                    closeForm={closeForm}
-                    dataApi={dataApi}
-                    openModal={openModal}
-                    errorsInTable={errors}
-                    enviroment={enviroment}
-                    resetSelectBox={resetSelectBox}
-                    urlTable={urlTable}
-                    checkBox={checkBox}
-                    modalClosed={modalClosed}
-                    actionModal={actionModal}>
-                  </ModalAdd>
 
 
-                {
-                  window.location.href.includes("por")
-                  ?
-                  ""
-                  :
-                  <AddButton onClick={()=>openModalAdd()} dataApi={dataApi}></AddButton>
-                }
-              </div>
-            </>
+                
           }
         </>
 

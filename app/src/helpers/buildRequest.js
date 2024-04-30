@@ -5,28 +5,25 @@ import getEnviroment from "./getEnviroment";
 /* global HelperBuildRequest */
 export default async function  HelperBuildRequest ( method, data = {}, type = null ) {
 
-    const headers = new Headers().append('Accept', 'application/json');
+    const headers = new Headers();
+    headers.append('Accept', 'application/json')
+    // headers.append('Referrer Policy', 'origin-when-cross-origin');
+    headers.append('Content-Type','application/json');
     const enviroment = await getEnviroment();
 
     
     if(type === 'login') {
-        return {
+      return {
             method: method,
-            headers:{
-                'Accept':'application/json',
-                'Content-Type':'application/json',
-            },
-            body: JSON.stringify(data)
+            headers,
+            body: JSON.stringify(data),
         };
     }
 
     if(type === 'register') {
         return {
             method: method,
-            headers:{
-                'Accept':'application/json',
-                'Content-Type':'application/json',
-            }
+            headers
         };
     }
         
@@ -49,13 +46,10 @@ export default async function  HelperBuildRequest ( method, data = {}, type = nu
     if( limit > 500000) {  
         return buildCallServer(method, data, type);
     } else {
+        headers.append('Authorization', tokenType + ' ' + userData().access_token); 
         const config ={ 
             "method": "GET",
-            "headers": {
-            'Accept':'application/json',
-            'Content-Type':'application/json',
-            'Authorization': tokenType + ' ' + userData().access_token
-            }
+            headers
         };
 
         if(enviroment){

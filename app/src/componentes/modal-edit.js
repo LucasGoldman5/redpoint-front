@@ -23,6 +23,7 @@ const ModalEdit = ({ getOpenModalEdit, selectRowOff, itemToEdit, edit, closeForm
   const [dataCellphonesEdit, setDataCellPhonesEdit] = useState([]);
   const [dataServicesEdit, setDataServicesEdit] = useState([]);
   const [dataRolesEdit, setDataRolesEdit] = useState([]);
+  const [dataServiceStatusEdit, setDataServiceStatusEdit] = useState([]);
   const [errors, setErrors] = useState([]);
   const [errorsApi, setErrorsApi] = useState([]);
   const [openModalEdit, setOpenModalEdit] = useState(false);
@@ -164,6 +165,26 @@ const ModalEdit = ({ getOpenModalEdit, selectRowOff, itemToEdit, edit, closeForm
                         },1000);
                     }else{                    
                         setDataStatesEdit(response);
+                    }  
+              };
+          }catch(error){
+            console.log(error)
+          }
+
+
+          try{
+                    
+            const config = await HelperBuildRequest("GET",null, "dataTable");
+            const request = await fetch(`${apiURL.url}${apiURL.selectBox}${entitiesUrl.serviceStatus}`, config);
+
+              if(request.status === 200){
+                  const response = await request.json();
+                    if(response.error){
+                        setTimeout(()=>{
+                          console.log(response.error);
+                        },1000);
+                    }else{                
+                        setDataServiceStatusEdit(response);
                     }  
               };
           }catch(error){
@@ -774,6 +795,7 @@ const ModalEdit = ({ getOpenModalEdit, selectRowOff, itemToEdit, edit, closeForm
               filteredServices={filteredServices}
               activeInputSearch={activeInputSearch}
               dataStatesEdit={dataStatesEdit}
+              dataServiceStatusEdit={dataServiceStatusEdit}
               addEmail={addEmail}
               />
 

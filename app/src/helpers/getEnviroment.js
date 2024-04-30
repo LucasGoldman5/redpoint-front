@@ -1,5 +1,5 @@
 
-import env from '../enviroment.json';
+import env from '../enviroment.example.json';
 /* global getEnviroment */
 export default async function getEnviroment(){
 

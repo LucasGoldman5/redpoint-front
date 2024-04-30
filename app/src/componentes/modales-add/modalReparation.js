@@ -213,7 +213,7 @@ class PatternPoint {
 }
 
 
-const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeError, handleInputChange, activeInputSearch, newCustomerSelected, newCellphoneSelected, newServiceSelected, filteredCellphones, filteredCustomers, filteredServices,dataStates, closeForm, changeModal, addEmail, selectCellphoneActive, selectCustomerActive, selectServiceActive, checkbox, checkBoxTrue, ifChangeModal}) =>{
+const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeError, handleInputChange, activeInputSearch, newCustomerSelected, newCellphoneSelected, newServiceSelected, filteredCellphones, filteredCustomers, filteredServices,dataStates, dataServiceStatus,closeForm, changeModal, addEmail, selectCellphoneActive, selectCustomerActive, selectServiceActive, checkbox, checkBoxTrue, ifChangeModal}) =>{
 
 
   const [selectCustomer, setSelectCustomer] = useState({})
@@ -470,6 +470,28 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
                   })
                 }
               </select>
+            </div>
+
+            <div className="div-inputs">
+              <label >Estado en el Servicio</label>
+              <select className="form-select" type="" name="" defaultValue={null} {...register('service_status_id',{ 
+                onChange: (Event) => addValues(Event)
+              })}>
+                <option value={null}>Seleccionar</option>
+                {
+                  dataServiceStatus.map((state) => {
+                    return <option className="option-modal" key={state.id} value={state.id}>{state.description}</option>
+                  })
+                }
+              </select>
+            </div>
+
+            <div className="div-inputs">
+              <label>Estado de envio a servicio</label>
+              <textarea className="form-control"  name="" {...register('device_status',{
+                shouldUnregister: ifChangeModal ? false : true,
+                value:null,
+                })} />
             </div>
             
             <div className="div-inputs">

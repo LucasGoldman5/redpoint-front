@@ -1,8 +1,8 @@
 /* global getManualColumns */
 
 
-export default async function getManualColumns (url,urlLocal){
 
+export default async function getManualColumns (url,urlLocal){
 
     if(url === `${urlLocal.main}${urlLocal.dataTable}reparaciones`){
         const columns = 
@@ -56,7 +56,7 @@ export default async function getManualColumns (url,urlLocal){
         }
         localStorage.setItem("column",JSON.stringify(columns));
 
-    }else if(url.includes("report")){
+    }else if(url.includes("report") && !url.includes("reparaciones-por-estado-de-servicio")){
         const columns = 
         {
             "id":"Orden",
@@ -68,6 +68,23 @@ export default async function getManualColumns (url,urlLocal){
             "state_id":"Estado",
             "failure":"Falla",
             "reception_date":"Recibido el",
+          }
+        localStorage.setItem("column",JSON.stringify(columns));
+
+    }else if(url.includes("reparaciones-por-estado-de-servicio")){
+        const columns = 
+        {
+            "id":"Orden",
+            "customer":"Cliente",
+            "service":"Servicio",
+            "service_order":"Orden Serv",
+            "cellphone":"Celular",
+            "number":"Numero",
+            "state_id":"Estado",
+            "service_status_id":"Estado del servicio",
+            "failure":"Falla",
+            "reception_date":"Recibido el"
+            
           }
         localStorage.setItem("column",JSON.stringify(columns));
 
