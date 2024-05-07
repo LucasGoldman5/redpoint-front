@@ -473,21 +473,7 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
             </div>
 
             <div className="div-inputs">
-              <label >Estado en el Servicio</label>
-              <select className="form-select" type="" name="" defaultValue={null} {...register('service_status_id',{ 
-                onChange: (Event) => addValues(Event)
-              })}>
-                <option value={null}>Seleccionar</option>
-                {
-                  dataServiceStatus.map((state) => {
-                    return <option className="option-modal" key={state.id} value={state.id}>{state.description}</option>
-                  })
-                }
-              </select>
-            </div>
-
-            <div className="div-inputs">
-              <label>Estado de envio a servicio</label>
+              <label>Estado de recepción del equipo</label>
               <textarea className="form-control"  name="" {...register('device_status',{
                 shouldUnregister: ifChangeModal ? false : true,
                 value:null,

@@ -154,7 +154,6 @@ const ModalAdd =({closeModal,actionModal, create,dataApi,errorsInTable,openModal
                         },1000);
                     }else{                      
                         setDataCustomers(response);
-                        
                     }  
               };
 
