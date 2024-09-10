@@ -237,6 +237,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
            patternInstance.setSequence(itemToEdit.pattern ? itemToEdit.pattern.toString().split('').join(',') : "");
         }
       },2000)
+      
     }, [openModalEdit]);
 
     useEffect(() => {
@@ -381,6 +382,7 @@ const ModalEditReparation = ({openModalEdit, onsubmit, itemToEdit, changeError, 
                 <h1 className="h1-add" onClick={()=>changeModal("customer")}>+</h1>
               </div>
               {errors.customer_id? <p className="p-errores">Debe seleccionar un cliente</p>: ""}
+              <div className="dni-container"><p className="dni">DNI: {customerSelected.dni ? customerSelected.dni : itemToEdit?.customer?.dni}</p></div>
             </div>
             
             <div className="div-inputs">

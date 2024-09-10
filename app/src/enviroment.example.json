@@ -1,6 +1,6 @@
 {
     "apiURL": {
-        "url": "http://127.0.0.1:8000/api/",
+        "url": "http://179.0.233.206:8080/api/",
         "selectBox": "select-box/",
         "generatePassword": "generate-password/",
         "getUser": "get-user/"

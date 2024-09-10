@@ -332,3 +332,12 @@
     font-weight: 900;
     font-size: 20px;
 }
+
+.dni-container{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+.dni{
+    margin: 0;
+}

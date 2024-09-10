@@ -399,6 +399,7 @@ const ModalAddReparation = ({openModalAdd, actionModal, create, errors, changeEr
                 <h1 className="h1-add" onClick={()=>changeModal("customer")}>+</h1>
               </div> 
               {errors.customer_id ? <p className="p-errores">Debe seleccionar un Cliente</p> : ""}
+              <div className="dni-container"><p className="dni">DNI: {selectCustomer.dni ? selectCustomer.dni : ""}</p></div>
             </div>
             <div className="div-inputs">
               <label >Numero de contacto</label>
